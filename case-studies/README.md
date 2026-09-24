@@ -17,5 +17,6 @@ Each one uses the same structure:
 3. [Companion Intelligence — Life OS](companion-intelligence-life-os.md)
 4. [Retail Demand Intelligence](retail-demand-intelligence.md)
 5. [EPMO Microsoft 365 Automation Portfolio](epmo-automation-portfolio.md)
+6. [Wireless Brain Interface](wireless-brain-interface.md)
 
 The intent is to make the distinction between **implemented work, prototypes, research, and architecture concepts** explicit.
