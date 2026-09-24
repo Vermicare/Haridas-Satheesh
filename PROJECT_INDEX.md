@@ -88,6 +88,38 @@ This index consolidates the projects, systems, prototypes, research programs and
 - Architecture Decision Records
 - Roadmap & Execution Workflows
 
+## Neurotechnology & Cognitive Systems
+- Wireless Brain Interface
+- Adaptive EEG Decoding for Real-world Use
+- EEG Foundation Models for Edge Deployment
+- Multimodal Neuroadaptive System
+- Multimodal BCI with Temporal Fusion
+- Cognitive Workload-aware BCI
+- Emotion-aware BCI Adaptation
+- Error-related Potential (ErrP) Correction
+- Artifact-aware Adaptive Filtering
+- SNR-aware EEG Enhancement
+- Spatial Filtering for Stable BCI Performance
+- Drift Detection & Drift-aware Adaptation
+- Confidence Calibration
+- Trust-gated Adaptation
+- Reversible Adaptation for Safer BCI Deployment
+- Memory Management for Long-term Stability
+- Idle-state False-positive Reduction
+- False-action Reduction
+- Calibration-light Latent Alignment
+- Geometry-aware Cross-device Adaptation
+- Motion-aware Neuroadaptive BCI
+- Uncertainty-aware Neuroadaptive Systems
+- Wearable BCI Synchronization & Stability
+- Long-term Personalization
+- Long-duration Wearable BCI Design
+- Wearable BCI Power-efficiency Research
+- Shared-autonomy BCI Control
+- Replay-stabilized Adaptation
+- Context-aware Neuroadaptive Companion
+- Simulated EEG + ECG Multimodal Physiology Experiments
+
 ## Human / Health Operating-System Concepts
 - Human OS
 - Health OS
