@@ -14,20 +14,67 @@ This repository is my **public project portfolio**. It separates implemented wor
 
 ---
 
-## Flagship work
+## Visual portfolio map
 
-| Project / Program | Domain | Status |
+```mermaid
+flowchart TD
+    A["Haridas Satheesh<br/>Systems & Innovation"] --> B["Enterprise AI & Governance"]
+    A --> C["Climate-Tech & Thermal Systems"]
+    A --> D["Retail Prediction & Decision Intelligence"]
+    A --> E["Personal Intelligence Software"]
+    A --> F["Hardware & IoT"]
+    A --> G["Health & Human Performance"]
+    A --> H["Sustainability & Social Impact"]
+    A --> I["Professional Delivery Systems"]
+
+    B --> B1["CORTEX"]
+    B --> B2["EDNS / ECOS"]
+    B --> B3["AI Meeting Brain"]
+    B --> B4["Core PM System FY26"]
+
+    C --> C1["Adaptive Non-AC Personal Cooling"]
+    C --> C2["THOS / Atmospheric Habitat"]
+    C --> C3["Comfort Persistence Models"]
+
+    D --> D1["Demand Opportunity Radar"]
+    D --> D2["Probabilistic Forecasting"]
+    D --> D3["Stockout-adjusted Demand"]
+
+    E --> E1["Companion Intelligence — Life OS"]
+    E --> E2["Spider Execution Engine"]
+    E --> E3["Evidence & Decision Systems"]
+
+    F --> F1["Raspberry Pi / ESP32-S3"]
+    F --> F2["Environmental Sensing"]
+    F --> F3["Thermal Imaging"]
+
+    G --> G1["Joint & Tissue Resilience"]
+    G --> G2["12-week Protocol"]
+    G --> G3["Readiness & Recovery Systems"]
+
+    H --> H1["VermiCare"]
+    H --> H2["AI Soil Health Monitor"]
+
+    I --> I1["EPMO Automation"]
+    I --> I2["LLM QA Operations"]
+    I --> I3["Workflow & Analytics Delivery"]
+```
+
+➡️ [Open the detailed system map](diagrams/portfolio-system-map.md)
+
+---
+
+## Flagship case studies
+
+| Case study | Domain | Maturity |
 |---|---|---|
-| **Companion Intelligence — Life OS** | Personal AI / Software Architecture | In Progress |
-| **CORTEX** | Enterprise AI / EPMO Governance | Architecture / R&D |
-| **Adaptive Non-AC Personal Cooling System** | Climate-Tech / Thermal Systems | Prototype / R&D |
-| **Retail Demand Intelligence** | Predictive Analytics / Retail | Research / Architecture |
-| **Our Core PM System — FY26** | EPMO / Microsoft 365 | Professional System Design |
-| **AI Meeting Brain** | AI Agents / Governance Automation | Prototype / Workflow Design |
-| **VermiCare** | Sustainability / Soil Health | Implemented Initiative |
-| **Raspberry Pi Environmental Sensing Platform** | IoT / Hardware | Prototype |
-| **Joint & Connective-Tissue Resilience Program** | Health / Evidence Synthesis | Research Program |
-| **Enterprise Decision Nervous System (EDNS)** | Enterprise Intelligence | Architecture |
+| [**CORTEX — Governance Intelligence Architecture**](case-studies/cortex-governance-intelligence.md) | Enterprise AI / EPMO | Architecture / R&D |
+| [**Adaptive Non-AC Personal Cooling System**](case-studies/adaptive-personal-cooling.md) | Climate-Tech / Thermal Systems | Prototype / R&D |
+| [**Companion Intelligence — Life OS**](case-studies/companion-intelligence-life-os.md) | Personal AI / Software Architecture | In Progress |
+| [**Retail Demand Intelligence**](case-studies/retail-demand-intelligence.md) | Predictive Analytics / Retail | Research / Architecture |
+| [**EPMO Microsoft 365 Automation Portfolio**](case-studies/epmo-automation-portfolio.md) | Enterprise Automation / Governance | Implemented / In Progress |
+
+➡️ [View all flagship case studies](case-studies/README.md)
 
 ---
 
@@ -36,22 +83,26 @@ This repository is my **public project portfolio**. It separates implemented wor
 ### Enterprise AI, EPMO & Governance
 CORTEX, governance memory, decision lineage, operational digital twins, meeting intelligence, project nervous systems, Microsoft-native PM architecture, RAID intelligence and AI-enabled governance.
 
-➡️ [Explore Enterprise AI & Governance](projects/enterprise-ai-governance.md)
+➡️ [Explore Enterprise AI & Governance](projects/enterprise-ai-governance.md)  
+➡️ [Architecture diagram](diagrams/cortex-governance-flow.md)
 
 ### Climate-Tech & Personal Cooling
 A family of thermal-comfort concepts investigating whether a person can be cooled efficiently without refrigerating an entire room.
 
-➡️ [Explore Climate-Tech & Cooling](projects/climate-tech-cooling.md)
+➡️ [Explore Climate-Tech & Cooling](projects/climate-tech-cooling.md)  
+➡️ [Cooling architecture diagram](diagrams/adaptive-cooling-flow.md)
 
 ### Retail Prediction & Decision Intelligence
 Demand Opportunity Radar, probabilistic forecasting, stockout-adjusted demand, feature engineering, model tournaments and outcome-driven retail experimentation.
 
-➡️ [Explore Retail Intelligence](projects/retail-intelligence.md)
+➡️ [Explore Retail Intelligence](projects/retail-intelligence.md)  
+➡️ [Decision loop diagram](diagrams/retail-decision-loop.md)
 
 ### Companion Intelligence — Life OS
 A private long-term software project for evidence-based personal decision support, bounded execution, privacy, memory and learning loops.
 
-➡️ [Explore Companion Intelligence](projects/companion-intelligence.md)
+➡️ [Explore Companion Intelligence](projects/companion-intelligence.md)  
+➡️ [Life OS architecture diagram](diagrams/companion-life-os-architecture.md)
 
 ### Hardware & IoT
 Raspberry Pi, ESP32-S3, environmental sensing, thermal imaging, instrumentation, soil-health monitoring and conversational-device experiments.
@@ -92,13 +143,8 @@ Writing and knowledge-translation work.
 
 ## Master index
 
-For the complete project list, including related subprojects and evolution paths:
-
-➡️ **[PROJECT_INDEX.md](PROJECT_INDEX.md)**
-
-For how I distinguish implemented work from research and concepts:
-
-➡️ **[STATUS_AND_EVIDENCE.md](STATUS_AND_EVIDENCE.md)**
+➡️ **[Complete Project Index](PROJECT_INDEX.md)**  
+➡️ **[Status & Evidence Rules](STATUS_AND_EVIDENCE.md)**
 
 ---
 
