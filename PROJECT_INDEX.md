@@ -58,6 +58,14 @@ This index consolidates the projects, systems, prototypes, research programs and
 
 ## Personal Intelligence Software
 - Companion Intelligence — Life OS
+- Minimum Viable Companion
+- Kingdom Graph
+- Daily Brief
+- Weekly Kingdom Review
+- Life Seasons Guided Journey
+- First-run Onboarding
+- Standalone Tester
+- Specialist Agents
 - Spider Execution Engine
 - Career & Income Decision Workspace
 - AI Architect Agent
@@ -68,10 +76,24 @@ This index consolidates the projects, systems, prototypes, research programs and
 - Explicit Claim Approval
 - Read-only Knowledge Source Boundary
 - Google Drive Knowledge Adapter
+- Knowledge Graph Workstreams
+- Recommendation Engines
+- Dashboards / Personal Intelligence Views
 - SQLCipher Research Probe
+- Production Encrypted Store Evaluation
 - Atomic Record / Receipt Transactions
 - Linux Secret Service Key-Custody Probe
 - Cross-platform Packaging & Interaction Simulation
+- Constitution / System Specification
+- Architecture Decision Records
+- Roadmap & Execution Workflows
+
+## Human / Health Operating-System Concepts
+- Human OS
+- Health OS
+- Athlete OS
+- Personal OS Health Protocol
+- Personal Health / Adventure System
 
 ## Hardware & IoT
 - Raspberry Pi Environmental Sensing Platform
@@ -85,8 +107,8 @@ This index consolidates the projects, systems, prototypes, research programs and
 ## Health & Human Performance
 - Joint, Synovial & Connective-Tissue Resilience
 - 12-week Tissue / Exercise Protocol
-- Personal OS Health Protocol
 - Exercise Protocol Research Program
+- Personal OS Health Protocol
 - Personal Health / Adventure System
 
 ## Sustainability & Social Impact
@@ -106,6 +128,13 @@ This index consolidates the projects, systems, prototypes, research programs and
 - LLM Training & QA Operations System
 - BYJU'S Agile Delivery & Workflow Automation
 - Enterprise WebEx / Network Migration Delivery
+- Sinclair + Verizon SD-WAN / IPCC Support
+- VoIP Migration / Porting / Webex Workstreams
+- CPE / MLAN / MPLS / VNS / Managed Services Delivery
+- Verizon Business Optical Rings Support
+- Jira / Asana / Trello / Microsoft Project Delivery Tooling
+- Odoo Dashboard / Functionality Customization & Team Operations
+- B2B Dashboard / UI-UX Design Work
 - JCPenney / Catalyst Brands EPMO Microsoft 365 Automation Portfolio
 
 ## Venture & Product Explorations

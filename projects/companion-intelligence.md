@@ -25,6 +25,67 @@ Companion Intelligence is a long-term Personal Operating System designed to help
 
 ---
 
+## Recovered early workstreams
+
+The project evolved through several named workstreams before the current architecture stabilized.
+
+### Minimum Viable Companion
+**Status:** Early Product / Architecture Workstream
+
+Focused on defining the smallest useful personal-intelligence system before expanding into a broader Life OS.
+
+### Kingdom Graph
+**Status:** Architecture / Knowledge Representation
+
+Early graph-oriented model for representing important life domains, relationships, commitments and context.
+
+### Daily Brief
+**Status:** Product / Workflow Concept
+
+A concise daily synthesis of priorities, context, evidence and recommended next actions.
+
+### Weekly Kingdom Review
+**Status:** Product / Workflow Concept
+
+A periodic review layer intended to summarize changes across projects, health, career, commitments and longer-term goals.
+
+### Life Seasons Guided Journey
+**Status:** Product / UX Workstream
+
+A guided structure for helping the user move through different life phases and priorities rather than treating every goal as equally active at all times.
+
+### First-run Onboarding
+**Status:** Product / UX Workstream
+
+Onboarding flow intended to establish trusted context, permissions and system expectations safely.
+
+### Standalone Tester
+**Status:** Engineering Workstream
+
+A standalone test surface used to validate system behavior outside the main application flow.
+
+### Specialist Agents
+**Status:** Architecture / Agent Workstream
+
+Specialized agents for bounded domains rather than one unrestricted general-purpose executor.
+
+### Human OS / Health OS / Athlete OS
+**Status:** Architecture Evolution
+
+Related operating-system concepts that explored domain-specific personal intelligence for general life, health and athletic performance.
+
+### Constitution / System Specification
+**Status:** Governance / Architecture
+
+A formal specification of system principles, boundaries, permissions, privacy, agency and architectural rules.
+
+### Roadmap & Execution Workflows
+**Status:** Program / Delivery Architecture
+
+Structured sequencing for engineering outcomes, milestones, ADRs and bounded execution.
+
+---
+
 ## Spider Execution Engine
 **Status:** In Progress
 
@@ -82,6 +143,13 @@ External knowledge connectors remain read-only unless an action is explicitly au
 **Status:** Research / Prototype
 
 Encrypted local-storage and backup exploration.
+
+---
+
+## Production Encrypted Store Evaluation
+**Status:** Research / Engineering
+
+Evaluation work around production-grade encrypted storage, backup integrity and failure handling.
 
 ---
 

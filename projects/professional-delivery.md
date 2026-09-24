@@ -55,6 +55,47 @@ Migration / delivery work involving:
 - escalation management,
 - cross-functional coordination.
 
+Related workstreams included:
+- Sinclair + Verizon SD-WAN / IPCC support,
+- VoIP migration and porting,
+- Webex migration support,
+- CPE,
+- MLAN,
+- MPLS,
+- VNS,
+- managed-services operations,
+- Verizon Business Optical Rings support.
+
+---
+
+## Project Management Tooling & Dashboard Operations
+**Status:** Implemented — Professional
+
+Work across:
+- Jira,
+- Asana,
+- Trello,
+- Microsoft Project,
+- Odoo,
+- dashboard customization,
+- task automation,
+- workflow visualization,
+- resource and schedule management,
+- team coordination.
+
+---
+
+## B2B Dashboard / UI-UX Design Work
+**Status:** Professional / Design Workstream
+
+Work involving:
+- KPI dashboard design,
+- user research,
+- prototyping,
+- usability testing,
+- design documentation,
+- business-facing information architecture.
+
 ---
 
 ## JCPenney / Catalyst Brands EPMO Microsoft 365 Automation Portfolio
