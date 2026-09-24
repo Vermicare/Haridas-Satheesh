@@ -26,6 +26,7 @@ flowchart TD
     A --> G["Health & Human Performance"]
     A --> H["Sustainability & Social Impact"]
     A --> I["Professional Delivery Systems"]
+    A --> J["Neurotechnology & Cognitive Systems"]
 
     B --> B1["CORTEX"]
     B --> B2["EDNS / ECOS"]
@@ -58,6 +59,10 @@ flowchart TD
     I --> I1["EPMO Automation"]
     I --> I2["LLM QA Operations"]
     I --> I3["Workflow & Analytics Delivery"]
+
+    J --> J1["Wireless Brain Interface"]
+    J --> J2["Adaptive EEG / BCI"]
+    J --> J3["Multimodal EEG + ECG Simulation"]
 ```
 
 ➡️ [Open the detailed system map](diagrams/portfolio-system-map.md)
@@ -73,6 +78,7 @@ flowchart TD
 | [**Companion Intelligence — Life OS**](case-studies/companion-intelligence-life-os.md) | Personal AI / Software Architecture | In Progress |
 | [**Retail Demand Intelligence**](case-studies/retail-demand-intelligence.md) | Predictive Analytics / Retail | Research / Architecture |
 | [**EPMO Microsoft 365 Automation Portfolio**](case-studies/epmo-automation-portfolio.md) | Enterprise Automation / Governance | Implemented / In Progress |
+| [**Wireless Brain Interface**](case-studies/wireless-brain-interface.md) | Neurotechnology / Adaptive BCI | Research / Simulation |
 
 ➡️ [View all flagship case studies](case-studies/README.md)
 
@@ -103,6 +109,12 @@ A private long-term software project for evidence-based personal decision suppor
 
 ➡️ [Explore Companion Intelligence](projects/companion-intelligence.md)  
 ➡️ [Life OS architecture diagram](diagrams/companion-life-os-architecture.md)
+
+### Neurotechnology & Cognitive Systems
+Wireless Brain Interface research using simulated EEG/ECG-style physiological streams to explore adaptive BCI decoding, multimodal temporal fusion, cognitive workload, safety, drift, confidence calibration and wearable deployment.
+
+➡️ [Explore Wireless Brain Interface](projects/wireless-brain-interface.md)  
+➡️ [Neuroadaptive architecture diagram](diagrams/wireless-brain-interface.md)
 
 ### Hardware & IoT
 Raspberry Pi, ESP32-S3, environmental sensing, thermal imaging, instrumentation, soil-health monitoring and conversational-device experiments.
@@ -157,6 +169,7 @@ Writing and knowledge-translation work.
 - Predictive analytics and experimentation
 - Systems architecture and feedback-loop design
 - Hardware / IoT prototyping
+- Neurotechnology, physiological-signal simulation and adaptive BCI research
 - Research synthesis and protocol design
 - Cross-functional program leadership
 - Product and innovation discovery
