@@ -1,97 +1,79 @@
 # CORTEX Synthetic Governance Benchmark
 
-**Status:** Benchmark specification — results not yet measured  
-**Project maturity:** Architecture / R&D  
-**Purpose:** Test whether bounded governance-memory extraction can preserve decisions, actions and lineage without creating excessive false positives or human review burden.
+**Project stage:** Architecture / R&D  
+**Benchmark status:** Specification — results are TBD
 
-## Hypothesis
+## Purpose
 
-A structured, provenance-preserving governance pipeline can extract useful decisions/actions/RAID/dependencies from a bounded meeting fixture while keeping unsupported assertions visible and requiring human approval before persistence or execution.
+Test whether a bounded governance-memory pipeline can extract and preserve decisions, actions and their lineage from a fully fictional workflow without creating unsupported governance facts. This benchmark uses synthetic content only; no employer, client, meeting, personal or proprietary data belongs here.
+
+## Evidence question
+
+Can CORTEX produce auditable governance records with useful precision and traceability while keeping false positives and human correction burden low enough to justify structured memory?
 
 ## Synthetic fixture
 
-The benchmark uses fictional data only. No employer, client, meeting transcript, internal URL or proprietary schema should be copied into this fixture.
-
-The fixture must contain ground truth for:
-- decisions and explicit reversals,
+Create a fictional meeting/transcript fixture with explicit ground truth for:
+- decisions and superseded/reversed decisions,
 - actions, owners and due dates,
-- risks, issues, assumptions and dependencies,
-- approvals and rejected proposals,
-- ambiguous statements that should **not** become records,
-- follow-up references to earlier decisions,
-- conflicting or incomplete ownership/date statements.
+- risks, assumptions, issues and dependencies,
+- approvals and source spans,
+- ambiguous statements and discussion that must not become an action/decision,
+- missing fields that must remain unknown.
 
-## Pipeline under test
-
-```
-synthetic meeting
-  -> candidate extraction
-  -> source-span provenance
-  -> type/schema validation
-  -> human review
-  -> approved governance memory
-  -> follow-up query/replay
-```
-
-No extracted candidate becomes an approved action solely because a model produced it.
+The fixture and ground truth must be versioned separately.
 
 ## Baselines
 
-1. **Literal/rule baseline:** deterministic extraction of explicit action/decision markers.
-2. **Structured extraction baseline:** schema-constrained extraction without persistent memory.
-3. **CORTEX candidate:** structured extraction + provenance + human approval + lineage/reversal handling.
+1. Deterministic/rule-oriented extraction baseline.
+2. Structured CORTEX extraction pipeline.
+3. Optional model-assisted variant only after the deterministic evaluation harness is reproducible.
 
 ## Predeclared metrics
 
-| Metric | Definition | Result |
-|---|---|---|
-| Extraction precision | correct extracted records / all extracted records | TBD |
-| Extraction recall | correct extracted records / ground-truth records | TBD |
-| F1 | harmonic mean of precision and recall | TBD |
-| False-positive rate | unsupported records emitted relative to negative opportunities | TBD |
-| Unsupported-field rate | populated fields lacking source evidence | TBD |
-| Owner attribution accuracy | correct owner assignments / ground-truth owner assignments | TBD |
-| Date attribution accuracy | correct due dates / ground-truth dated items | TBD |
-| Decision-lineage accuracy | correctly linked supersedes/reversal/follow-up relations / ground-truth relations | TBD |
-| Provenance coverage | extracted records with valid source-span evidence / extracted records | TBD |
-| Follow-up completeness | ground-truth unresolved items retrievable at next-cycle query | TBD |
-| Human correction burden | edits + deletions + additions required to reach ground truth | TBD |
-| Review time | measured reviewer time for bounded fixture | TBD |
+| Metric | Result |
+|---|---:|
+| Decision precision / recall / F1 | TBD |
+| Action precision / recall / F1 | TBD |
+| False-positive rate | TBD |
+| Unsupported-field rate | TBD |
+| Owner attribution accuracy | TBD |
+| Due-date attribution accuracy | TBD |
+| Source-span traceability | TBD |
+| Decision/reversal lineage accuracy | TBD |
+| Follow-up completeness | TBD |
+| Human correction/review burden | TBD |
 
-Metric implementation must freeze exact counting rules before results are generated.
+Metric definitions and matching rules must be fixed before publishing results.
 
-## Required artifacts
+## Minimal reproducible package
 
-- `fixture.json`: fictional transcript/events plus immutable ground truth.
-- `schema.json`: record and provenance schema.
-- baseline extraction script.
-- candidate CORTEX extraction/evaluation script.
-- deterministic evaluator.
-- machine-readable results file.
-- benchmark table generated from results.
-- failure/learning log.
-- README with environment, dependency versions, commands and expected outputs.
+- synthetic input fixture and machine-readable ground truth,
+- deterministic baseline and CORTEX evaluator,
+- pinned environment/dependencies,
+- fixed configuration/seed where applicable,
+- machine-readable output and benchmark table,
+- failure/learning log,
+- test instructions and limitations.
 
 ## Acceptance criteria
 
-The benchmark is reproducible from a clean environment; ground truth is separate from predictions; every approved memory record can be traced to source evidence and reviewer disposition; unsupported/ambiguous statements are represented in the negative set; metrics are generated by code rather than manually typed; and all unmeasured values remain `TBD`.
+- A clean environment can reproduce the evaluation.
+- Every extracted governance object can be traced to a source span or explicitly marked unsupported.
+- Ambiguous/non-action text is tested as a negative case.
+- Reversed/superseded decisions preserve lineage rather than silently overwriting history.
+- Unknown fields remain unknown rather than being inferred without evidence.
+- Results come from the evaluator and are never manually invented.
+- No private or employer-derived content is required.
 
-## Advancement gate
+## Advance criterion
 
-Do **not** advance CORTEX beyond Architecture / R&D merely because the harness exists. Advancement requires reproducible measured results showing useful extraction/lineage performance with a review burden low enough to justify structured memory over a simpler workflow.
+CORTEX remains **Architecture / R&D** until a reproducible synthetic benchmark demonstrates useful extraction and lineage performance with explicitly measured review burden.
 
-## Kill / reframe criteria
+## Kill / reframe criterion
 
-Simplify or reframe the architecture if:
-- structured memory creates more correction/review work than it removes,
-- lineage cannot reliably preserve reversals and superseded decisions,
-- provenance coverage is insufficient for reviewers to audit claims,
-- a simpler deterministic workflow performs comparably on the bounded use case.
+Simplify or reframe the structured-memory approach if false positives, unsupported attribution or correction burden erase its governance value, or if reliable source lineage cannot be maintained.
 
-## Security and confidentiality
+## Next implementation step
 
-Only synthetic/public-safe content belongs in this benchmark. Do not ingest real employer/client transcripts, names, credentials, tenant identifiers, internal URLs, private correspondence or proprietary schemas.
-
-## Failure log
-
-Record actual failed experiments only after execution. An unfinished implementation is not a negative result.
+Build the smallest executable fixture + evaluator before expanding the architecture or adding more narrative documentation.
