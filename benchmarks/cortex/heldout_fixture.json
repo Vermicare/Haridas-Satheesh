@@ -1,0 +1,118 @@
+{
+  "benchmark": "cortex-heldout-v0.1",
+  "meeting": {
+    "date": "2026-10-12",
+    "utterances": [
+      {
+        "id": "h04",
+        "speaker": "Noor",
+        "text": "Risk R-31 is open: certificate rotation could interrupt the staging gateway. I will obtain the provider maintenance window by October 15."
+      },
+      {
+        "id": "h01",
+        "speaker": "Maya",
+        "text": "Approved: shift the staging cutover to October 21. Ravi will publish the rollback checklist by October 17."
+      },
+      {
+        "id": "h06",
+        "speaker": "Ravi",
+        "text": "The October 21 cutover depends on the certificate rotation completing successfully."
+      },
+      {
+        "id": "h02",
+        "speaker": "Leo",
+        "text": "Maybe we should replace the monitoring dashboard next quarter, but no decision was made."
+      },
+      {
+        "id": "h07",
+        "speaker": "Maya",
+        "text": "If certificate rotation is not complete by October 19, escalate the cutover at the governance review."
+      },
+      {
+        "id": "h03",
+        "speaker": "Ravi",
+        "text": "I own the rollback checklist and will publish it by October 17."
+      },
+      {
+        "id": "h05",
+        "speaker": "Noor",
+        "text": "We could tidy the alert names sometime; there is no owner or deadline."
+      }
+    ]
+  },
+  "ground_truth": {
+    "decisions": [
+      {
+        "id": "HD1",
+        "source": [
+          "h01"
+        ],
+        "statement": "Shift staging cutover to 2026-10-21",
+        "status": "active"
+      }
+    ],
+    "actions": [
+      {
+        "id": "HA1",
+        "source": [
+          "h01",
+          "h03"
+        ],
+        "owner": "Ravi",
+        "due": "2026-10-17",
+        "action": "Publish rollback checklist"
+      },
+      {
+        "id": "HA2",
+        "source": [
+          "h04"
+        ],
+        "owner": "Noor",
+        "due": "2026-10-15",
+        "action": "Obtain provider maintenance window"
+      }
+    ],
+    "risks": [
+      {
+        "id": "R-31",
+        "source": [
+          "h04"
+        ],
+        "status": "open",
+        "statement": "Certificate rotation could interrupt the staging gateway"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "HD-09",
+        "source": [
+          "h06"
+        ],
+        "statement": "October 21 staging cutover depends on certificate rotation completing successfully"
+      }
+    ],
+    "conditional_followups": [
+      {
+        "source": [
+          "h07"
+        ],
+        "condition": "Certificate rotation not complete by 2026-10-19",
+        "action": "Escalate October 21 staging cutover at governance review"
+      }
+    ],
+    "negative_examples": [
+      {
+        "source": [
+          "h02"
+        ],
+        "reason": "proposal explicitly not decided"
+      },
+      {
+        "source": [
+          "h05"
+        ],
+        "reason": "suggestion has no owner or deadline"
+      }
+    ]
+  }
+}
