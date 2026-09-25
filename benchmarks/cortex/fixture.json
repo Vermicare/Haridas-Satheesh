@@ -1,0 +1,45 @@
+{
+  "benchmark": "cortex-synthetic-governance-v0.1",
+  "status": "fixture-design",
+  "synthetic": true,
+  "meeting": {
+    "id": "SYN-MTG-001",
+    "title": "Synthetic Program Governance Review",
+    "date": "2026-09-25",
+    "participants": ["Asha", "Ben", "Chen", "Divya"],
+    "utterances": [
+      {"id":"u01","speaker":"Asha","text":"We approved moving the API integration test to October 3. Ben owns the test plan and will circulate it by September 29."},
+      {"id":"u02","speaker":"Ben","text":"I can own the test plan. The vendor sandbox is still unstable, so the October 3 test depends on sandbox stability."},
+      {"id":"u03","speaker":"Chen","text":"Maybe we should also replace the reporting tool this quarter."},
+      {"id":"u04","speaker":"Divya","text":"No decision on replacing the reporting tool today. Keep that as a discussion item only."},
+      {"id":"u05","speaker":"Asha","text":"Risk R-17 remains open: sandbox instability may delay integration testing. Divya will ask the vendor for a recovery date by September 27."},
+      {"id":"u06","speaker":"Ben","text":"The earlier decision to freeze interface changes is superseded. Small interface fixes are allowed if Asha approves them first."},
+      {"id":"u07","speaker":"Asha","text":"Approved. Record that as the new interface-change rule and retain the old decision in history."},
+      {"id":"u08","speaker":"Chen","text":"Someone should probably clean up the dashboard when there is time."},
+      {"id":"u09","speaker":"Divya","text":"Dependency D-04 is the vendor sandbox. If it is not stable by September 30, escalate the October 3 test at the next governance review."}
+    ]
+  },
+  "ground_truth": {
+    "decisions": [
+      {"id":"D1","source":["u01"],"statement":"Move API integration test to 2026-10-03","status":"active"},
+      {"id":"D2","source":["u06","u07"],"statement":"Allow small interface fixes only with Asha approval","status":"active","supersedes":"D0"}
+    ],
+    "actions": [
+      {"id":"A1","source":["u01","u02"],"owner":"Ben","due":"2026-09-29","action":"Circulate API integration test plan"},
+      {"id":"A2","source":["u05"],"owner":"Divya","due":"2026-09-27","action":"Request vendor sandbox recovery date"}
+    ],
+    "risks": [
+      {"id":"R-17","source":["u05"],"status":"open","statement":"Sandbox instability may delay integration testing"}
+    ],
+    "dependencies": [
+      {"id":"D-04","source":["u02","u09"],"statement":"October 3 integration test depends on vendor sandbox stability"}
+    ],
+    "conditional_followups": [
+      {"id":"F1","source":["u09"],"condition":"Vendor sandbox not stable by 2026-09-30","action":"Escalate October 3 integration test at next governance review"}
+    ],
+    "negative_examples": [
+      {"source":["u03","u04"],"reason":"proposal explicitly not decided"},
+      {"source":["u08"],"reason":"vague suggestion without committed owner or due date"}
+    ]
+  }
+}
