@@ -18,7 +18,12 @@ def test_multidate_action_uses_explicit_deadline():
     assert a1["due"]=="2026-09-29", a1
     assert a1["due"]!="2026-10-03", a1
 
-def test_risk_statement_matches_canonical_ground_truth():\n    p=extract(fixture)\n    r17=next(r for r in p["risks"] if r["id"]=="R-17")\n    assert r17["statement"]=="Sandbox instability may delay integration testing", r17\n\ndef test_ambiguous_proposal_not_promoted():
+def test_risk_statement_matches_canonical_ground_truth():
+    p=extract(fixture)
+    r17=next(r for r in p["risks"] if r["id"]=="R-17")
+    assert r17["statement"]=="Sandbox instability may delay integration testing", r17
+
+def test_ambiguous_proposal_not_promoted():
     p=extract(fixture)
     text=json.dumps(p)
     assert "replace the reporting tool" not in text
@@ -31,5 +36,9 @@ def test_missing_approval_fails_closed():
     assert not any(d.get("supersedes")=="D0" for d in p["decisions"])
 
 if __name__=="__main__":
-    test_reference_fixture(); test_multidate_action_uses_explicit_deadline(); test_risk_statement_matches_canonical_ground_truth(); test_ambiguous_proposal_not_promoted(); test_missing_approval_fails_closed()
+    test_reference_fixture()
+    test_multidate_action_uses_explicit_deadline()
+    test_risk_statement_matches_canonical_ground_truth()
+    test_ambiguous_proposal_not_promoted()
+    test_missing_approval_fails_closed()
     print("5 tests passed")
