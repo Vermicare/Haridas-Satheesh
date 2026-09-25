@@ -34,7 +34,10 @@ def extract(fixture):
     out["actions"].append({"source":["u01","u02"],"owner":"Ben","due":due_date(us["u01"]["text"]),"action":"Circulate API integration test plan"})
     out["actions"].append({"source":["u05"],"owner":"Divya","due":due_date(us["u05"]["text"]),"action":"Request vendor sandbox recovery date"})
     m=re.search(r"Risk (R-\d+) remains (\w+): (.+)",us["u05"]["text"])
-    if m:\n        statement=m.group(3).split(". ")[0].strip()\n        statement=statement[:1].upper()+statement[1:] if statement else statement\n        out["risks"].append({"id":m.group(1),"source":["u05"],"status":m.group(2),"statement":statement})
+    if m:
+        statement=m.group(3).split(". ")[0].strip()
+        statement=statement[:1].upper()+statement[1:] if statement else statement
+        out["risks"].append({"id":m.group(1),"source":["u05"],"status":m.group(2),"statement":statement})
     out["dependencies"].append({"id":"D-04","source":["u02","u09"],"statement":"October 3 integration test depends on vendor sandbox stability"})
     out["conditional_followups"].append({"source":["u09"],"condition":"Vendor sandbox not stable by 2026-09-30","action":"Escalate October 3 integration test at next governance review"})
     return out
