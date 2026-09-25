@@ -21,6 +21,14 @@ def test_heldout_generalization():
     assert r["metrics"]["negative_case_false_actions"]["count"] == 0
     assert r["metrics"]["unsupported_fields"]["count"] == 0
 
+def test_conditional_followup_normalization():
+    original=extract(fixture)["conditional_followups"][0]
+    assert original["condition"]=="Vendor sandbox not stable by 2026-09-30", original
+    assert original["action"]=="Escalate October 3 test at next governance review", original
+    alternate=extract(heldout)["conditional_followups"][0]
+    assert alternate["condition"]=="Certificate rotation not complete by 2026-10-19", alternate
+    assert alternate["action"]=="Escalate October 21 staging cutover at governance review", alternate
+
 def test_multidate_action_uses_explicit_deadline():
     p=extract(fixture)
     a1=next(a for a in p["actions"] if a["owner"]=="Ben")
@@ -47,8 +55,9 @@ def test_missing_approval_fails_closed():
 if __name__=="__main__":
     test_reference_fixture()
     test_heldout_generalization()
+    test_conditional_followup_normalization()
     test_multidate_action_uses_explicit_deadline()
     test_risk_statement_matches_canonical_ground_truth()
     test_ambiguous_proposal_not_promoted()
     test_missing_approval_fails_closed()
-    print("6 tests passed")
+    print("7 tests passed")
