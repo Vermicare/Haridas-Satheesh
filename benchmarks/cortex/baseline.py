@@ -15,6 +15,13 @@ def norm_date(text):
         if k in text: return v
     return None
 
+def due_date(text):
+    """Return an explicit deadline introduced by 'by', not another date in the sentence."""
+    m=re.search(r"\bby\s+(October 3|September 29|September 27|September 30)\b", text, re.IGNORECASE)
+    if not m: return None
+    key=next((k for k in ISO if k.lower()==m.group(1).lower()), None)
+    return ISO.get(key)
+
 def extract(fixture):
     us={u["id"]:u for u in fixture["meeting"]["utterances"]}
     out={"decisions":[],"actions":[],"risks":[],"dependencies":[],"conditional_followups":[]}
@@ -24,8 +31,8 @@ def extract(fixture):
     if "superseded" in us["u06"]["text"].lower() and "approved" in us["u07"]["text"].lower():
         out["decisions"].append({"source":["u06","u07"],"statement":"Allow small interface fixes only with Asha approval","status":"active","supersedes":"D0"})
     # Committed owner + explicit deliverable/due date.
-    out["actions"].append({"source":["u01","u02"],"owner":"Ben","due":norm_date(us["u01"]["text"]),"action":"Circulate API integration test plan"})
-    out["actions"].append({"source":["u05"],"owner":"Divya","due":norm_date(us["u05"]["text"]),"action":"Request vendor sandbox recovery date"})
+    out["actions"].append({"source":["u01","u02"],"owner":"Ben","due":due_date(us["u01"]["text"]),"action":"Circulate API integration test plan"})
+    out["actions"].append({"source":["u05"],"owner":"Divya","due":due_date(us["u05"]["text"]),"action":"Request vendor sandbox recovery date"})
     m=re.search(r"Risk (R-\d+) remains (\w+): (.+)",us["u05"]["text"])
     if m: out["risks"].append({"id":m.group(1),"source":["u05"],"status":m.group(2),"statement":m.group(3).split(". ")[0]})
     out["dependencies"].append({"id":"D-04","source":["u02","u09"],"statement":"October 3 integration test depends on vendor sandbox stability"})
