@@ -125,3 +125,60 @@ Recovered project history confirms a sustained research program across April–M
    - power / compute budget.
 5. Validate multimodal fusion under deliberate desynchronization and artifact injection.
 6. Only then move toward hardware-in-the-loop experiments.
+
+
+## Reproducible public-data benchmark protocol
+
+The first evidence gate is tracked in **GitHub Issue #1**. The evaluation order is intentionally staged so increasingly realistic evidence is added without confusing simulation with real-world validation.
+
+### Stage A — deterministic smoke test
+Use fixed-seed synthetic EEG/physiology-like signals to verify preprocessing, confidence calibration, abstention/safety gating, metric calculation and machine-readable result generation. This stage validates the experiment machinery, not BCI performance.
+
+### Stage B — PhysioNet EEG Motor Movement/Imagery
+Use the public EEG Motor Movement/Imagery dataset as the first real-EEG benchmark. Its motor tasks and explicit rest annotations allow the project to measure false activation during idle/rest directly rather than treating classifier accuracy as a safety proxy.
+
+Primary comparison:
+1. conventional decoder,
+2. calibrated decoder/threshold baseline,
+3. uncertainty-calibrated decoder with a separate permission-to-act gate.
+
+The central question is whether gating reduces false actions without an unacceptable loss of useful actions.
+
+### Stage C — standardized MOABB evaluation
+Use MOABB-compatible evaluation where appropriate so preprocessing/evaluation choices can be compared through an established reproducibility framework rather than a bespoke benchmark alone. Record the exact MOABB and dependency versions used by every published run.
+
+### Stage D — longitudinal drift/adaptation
+Use a multi-session dataset such as Kumar2024 through MOABB to test recalibration/domain adaptation and drift recovery across sessions. This is a stronger test of adaptation than relying only on artificial perturbations of a single recording.
+
+### Benchmark registry fields
+
+| Field | Required value |
+|---|---|
+| Dataset + version/access date | TBD until run |
+| Subject/session scope | TBD until run |
+| Evaluation paradigm | TBD until run |
+| Preprocessing | TBD until run |
+| Baseline decoder | TBD until run |
+| Calibration method | TBD until run |
+| Action-gate rule | TBD until run |
+| Seed/config manifest | TBD until run |
+| Accuracy / balanced accuracy | TBD |
+| Calibration error | TBD |
+| Rest/idle false-action rate | TBD |
+| Idle precision / abstention | TBD |
+| Useful-action retention | TBD |
+| Drift recovery | TBD |
+| Inference latency | TBD |
+| Compute footprint | TBD |
+| Hardware power | TBD unless physically measured |
+| Run date | TBD |
+
+### Prior-art positioning
+
+Adaptive decoding, recalibration and domain adaptation are established BCI research areas. The project should therefore **not** claim novelty merely from being adaptive or calibration-light. The narrower research contribution to test is whether explicit uncertainty calibration, a distinct permission-to-act boundary and drift-aware adaptation produce safer behavior than simpler calibrated/adaptive baselines.
+
+Prior-art review here is technical awareness only; it is not a patentability or freedom-to-operate opinion.
+
+### Decision rule
+
+Advance only on measured, reproducible evidence. If the separate action gate does not materially reduce false actions after accounting for lost useful actions—or if the architecture reduces to an established simpler method—the project should be simplified or reframed rather than defended.
