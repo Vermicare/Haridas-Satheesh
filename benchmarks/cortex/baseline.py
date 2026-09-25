@@ -102,6 +102,8 @@ def extract(fixture):
             target=cond.group(5).strip()
             subject_norm=subject[:1].upper()+subject[1:]
             # Ground truth omits pronoun/copula scaffolding but preserves the governed state.
+            if subject_norm.lower().endswith(" is"):
+                subject_norm=subject_norm[:-3].strip()
             if subject_norm.lower()=="it" and "vendor sandbox" in low:
                 subject_norm="Vendor sandbox"
             condition=f"{subject_norm} not {state} by {date}"
