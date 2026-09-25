@@ -77,3 +77,21 @@ Simplify or reframe the structured-memory approach if false positives, unsupport
 ## Next implementation step
 
 Build the smallest executable fixture + evaluator before expanding the architecture or adding more narrative documentation.
+
+## Executable v0.1
+
+The current R&D branch adds a dependency-free deterministic baseline, negative tests and CI around the synthetic fixture.
+
+```bash
+cd benchmarks/cortex
+python baseline.py fixture.json > result.json
+python test_baseline.py
+```
+
+### Evidence boundary
+
+A perfect reference-fixture score **does not demonstrate generalization**. The v0.1 extractor deliberately keys off the known synthetic fixture structure and utterance identifiers. It establishes harness determinism and ground-truth comparison only—not production accuracy, real-world meeting performance, model quality, autonomous governance or external validation.
+
+### Next evidence gate
+
+Before any maturity advancement, replace fixture-specific assumptions with content-driven extraction and evaluate on held-out synthetic/adversarial cases that vary names, dates, utterance order, wording and distractors while preserving the underlying governance facts. Report per-class precision/recall/F1, false-promotion rate, owner/due-date exact match, supersession/linkage accuracy, conditional-follow-up accuracy and unsupported-field rate. Unmeasured values remain TBD.
