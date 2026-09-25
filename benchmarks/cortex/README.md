@@ -1,79 +1,55 @@
-# CORTEX Synthetic Governance Benchmark
+# CORTEX synthetic governance benchmark v0.1
 
-**Project stage:** Architecture / R&D  
-**Benchmark status:** Specification — results are TBD
+This package is a **reproducibility harness**, not evidence of general meeting understanding or real-world validation.
 
-## Purpose
+## What it tests
 
-Test whether a bounded governance-memory pipeline can extract and preserve decisions, actions and their lineage from a fully fictional workflow without creating unsupported governance facts. This benchmark uses synthetic content only; no employer, client, meeting, personal or proprietary data belongs here.
+The versioned synthetic fixture checks whether a deliberately transparent baseline can preserve:
+- explicit approved decisions and supersession;
+- committed actions with owner and due date;
+- an explicitly stated risk and dependency;
+- a conditional escalation;
+- negative cases that must not be promoted into decisions/actions.
 
-## Evidence question
+The fixture and its ground truth are synthetic and public-safe. No employer/client meeting data is used.
 
-Can CORTEX produce auditable governance records with useful precision and traceability while keeping false positives and human correction burden low enough to justify structured memory?
+## Run locally
 
-## Synthetic fixture
+Requires Python 3.11+ and no third-party packages.
 
-Create a fictional meeting/transcript fixture with explicit ground truth for:
-- decisions and superseded/reversed decisions,
-- actions, owners and due dates,
-- risks, assumptions, issues and dependencies,
-- approvals and source spans,
-- ambiguous statements and discussion that must not become an action/decision,
-- missing fields that must remain unknown.
+```bash
+cd benchmarks/cortex
+python baseline.py fixture.json > result.json
+python test_baseline.py
+```
 
-The fixture and ground truth must be versioned separately.
+Expected v0.1 reference-fixture behavior: the process exits successfully, the five scored extraction groups match the supplied synthetic ground truth, no negative-example source is emitted, and no unsupported `None` field is emitted.
 
-## Baselines
+## Evidence boundary
 
-1. Deterministic/rule-oriented extraction baseline.
-2. Structured CORTEX extraction pipeline.
-3. Optional model-assisted variant only after the deterministic evaluation harness is reproducible.
+A perfect reference-fixture score **does not** demonstrate generalization. The extractor intentionally keys off the known synthetic fixture structure and utterance identifiers. The current result therefore measures harness determinism and ground-truth comparison only.
 
-## Predeclared metrics
+Do not describe this benchmark as:
+- production accuracy;
+- real-world meeting extraction performance;
+- an LLM benchmark;
+- autonomous governance;
+- external validation.
 
-| Metric | Result |
-|---|---:|
-| Decision precision / recall / F1 | TBD |
-| Action precision / recall / F1 | TBD |
-| False-positive rate | TBD |
-| Unsupported-field rate | TBD |
-| Owner attribution accuracy | TBD |
-| Due-date attribution accuracy | TBD |
-| Source-span traceability | TBD |
-| Decision/reversal lineage accuracy | TBD |
-| Follow-up completeness | TBD |
-| Human correction/review burden | TBD |
+## Next evidence gate
 
-Metric definitions and matching rules must be fixed before publishing results.
+Before any maturity advancement, replace fixture-specific assumptions with content-driven extraction and evaluate on a held-out synthetic/adversarial set that changes names, dates, utterance order, wording and distractors without changing the underlying governance facts.
 
-## Minimal reproducible package
+Predeclare and report:
+- per-class precision / recall / F1;
+- false promotion rate for proposals and vague suggestions;
+- owner/due-date exact-match accuracy;
+- supersession/linkage accuracy;
+- conditional-follow-up accuracy;
+- unsupported-field rate.
 
-- synthetic input fixture and machine-readable ground truth,
-- deterministic baseline and CORTEX evaluator,
-- pinned environment/dependencies,
-- fixed configuration/seed where applicable,
-- machine-readable output and benchmark table,
-- failure/learning log,
-- test instructions and limitations.
-
-## Acceptance criteria
-
-- A clean environment can reproduce the evaluation.
-- Every extracted governance object can be traced to a source span or explicitly marked unsupported.
-- Ambiguous/non-action text is tested as a negative case.
-- Reversed/superseded decisions preserve lineage rather than silently overwriting history.
-- Unknown fields remain unknown rather than being inferred without evidence.
-- Results come from the evaluator and are never manually invented.
-- No private or employer-derived content is required.
-
-## Advance criterion
-
-CORTEX remains **Architecture / R&D** until a reproducible synthetic benchmark demonstrates useful extraction and lineage performance with explicitly measured review burden.
+Unknown or unmeasured values remain TBD.
 
 ## Kill / reframe criterion
 
-Simplify or reframe the structured-memory approach if false positives, unsupported attribution or correction burden erase its governance value, or if reliable source lineage cannot be maintained.
-
-## Next implementation step
-
-Build the smallest executable fixture + evaluator before expanding the architecture or adding more narrative documentation.
+If a content-driven baseline cannot preserve high precision on explicit governance facts without excessive false promotion on held-out synthetic cases, keep CORTEX as an architecture/exploration and narrow the extraction scope rather than adding model complexity to protect the concept.
