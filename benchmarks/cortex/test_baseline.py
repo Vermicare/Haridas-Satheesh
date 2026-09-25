@@ -4,11 +4,20 @@ from pathlib import Path
 from baseline import evaluate, extract
 
 fixture=json.loads(Path(__file__).with_name("fixture.json").read_text())
+heldout=json.loads(Path(__file__).with_name("heldout_fixture.json").read_text())
 
 def test_reference_fixture():
     r=evaluate(fixture)
     for name,m in r["metrics"].items():
         if "f1" in m: assert m["f1"] == 1.0, (name,m)
+    assert r["metrics"]["negative_case_false_actions"]["count"] == 0
+    assert r["metrics"]["unsupported_fields"]["count"] == 0
+
+def test_heldout_generalization():
+    r=evaluate(heldout)
+    for name,m in r["metrics"].items():
+        if "f1" in m:
+            assert m["f1"] == 1.0, (name,m)
     assert r["metrics"]["negative_case_false_actions"]["count"] == 0
     assert r["metrics"]["unsupported_fields"]["count"] == 0
 
@@ -37,8 +46,9 @@ def test_missing_approval_fails_closed():
 
 if __name__=="__main__":
     test_reference_fixture()
+    test_heldout_generalization()
     test_multidate_action_uses_explicit_deadline()
     test_risk_statement_matches_canonical_ground_truth()
     test_ambiguous_proposal_not_promoted()
     test_missing_approval_fails_closed()
-    print("5 tests passed")
+    print("6 tests passed")
