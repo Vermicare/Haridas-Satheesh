@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+import copy, json
+from pathlib import Path
+from baseline import evaluate, extract
+
+fixture=json.loads(Path(__file__).with_name("fixture.json").read_text())
+
+def test_reference_fixture():
+    r=evaluate(fixture)
+    for name,m in r["metrics"].items():
+        if "f1" in m: assert m["f1"] == 1.0, (name,m)
+    assert r["metrics"]["negative_case_false_actions"]["count"] == 0
+    assert r["metrics"]["unsupported_fields"]["count"] == 0
+
+def test_ambiguous_proposal_not_promoted():
+    p=extract(fixture)
+    text=json.dumps(p)
+    assert "replace the reporting tool" not in text
+    assert "clean up the dashboard" not in text
+
+def test_missing_approval_fails_closed():
+    x=copy.deepcopy(fixture)
+    x["meeting"]["utterances"][6]["text"]="Let's discuss that next time."
+    p=extract(x)
+    assert not any(d.get("supersedes")=="D0" for d in p["decisions"])
+
+if __name__=="__main__":
+    test_reference_fixture(); test_ambiguous_proposal_not_promoted(); test_missing_approval_fails_closed()
+    print("3 tests passed")

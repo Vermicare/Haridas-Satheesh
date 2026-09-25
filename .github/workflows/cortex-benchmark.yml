@@ -1,0 +1,26 @@
+name: CORTEX synthetic benchmark
+on:
+  push:
+    paths:
+      - 'benchmarks/cortex/**'
+      - '.github/workflows/cortex-benchmark.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/cortex/**'
+      - '.github/workflows/cortex-benchmark.yml'
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run negative tests
+        run: python benchmarks/cortex/test_baseline.py
+      - name: Run benchmark
+        run: python benchmarks/cortex/baseline.py > benchmarks/cortex/result.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cortex-synthetic-benchmark
+          path: benchmarks/cortex/result.json
