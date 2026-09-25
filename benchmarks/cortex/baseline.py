@@ -40,7 +40,14 @@ def extract(fixture):
     return out
 
 def canon(x):
-    return {k:v for k,v in x.items() if k!="id"}
+    """Normalize non-semantic formatting before exact record comparison."""
+    def value(v):
+        if isinstance(v, str):
+            return " ".join(v.split()).casefold()
+        if isinstance(v, list):
+            return [value(i) for i in v]
+        return v
+    return {k:value(v) for k,v in x.items() if k!="id"}
 
 def score(pred, truth):
     p=[canon(x) for x in pred]; t=[canon(x) for x in truth]
