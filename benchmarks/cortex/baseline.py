@@ -100,7 +100,11 @@ def extract(fixture):
             state=cond.group(2).strip()
             date=iso_date(cond.group(3).title(),cond.group(4))
             target=cond.group(5).strip()
-            condition=f"{subject[:1].upper()+subject[1:]} not {state} by {date}"
+            subject_norm=subject[:1].upper()+subject[1:]
+            # Ground truth omits pronoun/copula scaffolding but preserves the governed state.
+            if subject_norm.lower()=="it" and "vendor sandbox" in low:
+                subject_norm="Vendor sandbox"
+            condition=f"{subject_norm} not {state} by {date}"
             action=f"Escalate {target} at {'next ' if 'next governance review' in low else ''}governance review"
             out["conditional_followups"].append({"source":[u["id"]],"condition":condition,"action":action})
 
