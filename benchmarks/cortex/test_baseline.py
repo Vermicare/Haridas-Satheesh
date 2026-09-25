@@ -12,6 +12,12 @@ def test_reference_fixture():
     assert r["metrics"]["negative_case_false_actions"]["count"] == 0
     assert r["metrics"]["unsupported_fields"]["count"] == 0
 
+def test_multidate_action_uses_explicit_deadline():
+    p=extract(fixture)
+    a1=next(a for a in p["actions"] if a["owner"]=="Ben")
+    assert a1["due"]=="2026-09-29", a1
+    assert a1["due"]!="2026-10-03", a1
+
 def test_ambiguous_proposal_not_promoted():
     p=extract(fixture)
     text=json.dumps(p)
@@ -25,5 +31,5 @@ def test_missing_approval_fails_closed():
     assert not any(d.get("supersedes")=="D0" for d in p["decisions"])
 
 if __name__=="__main__":
-    test_reference_fixture(); test_ambiguous_proposal_not_promoted(); test_missing_approval_fails_closed()
-    print("3 tests passed")
+    test_reference_fixture(); test_multidate_action_uses_explicit_deadline(); test_ambiguous_proposal_not_promoted(); test_missing_approval_fails_closed()
+    print("4 tests passed")
