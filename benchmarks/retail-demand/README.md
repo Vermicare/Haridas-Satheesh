@@ -9,9 +9,23 @@ Does a stockout-aware, uncertainty-aware demand pipeline improve decision qualit
 
 The benchmark must separate **forecast quality** from **decision usefulness**. A more complex model does not advance the project merely because one forecasting metric improves.
 
-## Dataset gate
+## Dataset decision — v0.1
 
-Use a public dataset with time-indexed item/store demand and inventory/availability information when possible. Record:
+**Selected benchmark:** FreshRetailNet-50K (Dingdong Inc.), dataset version 1.0, released 2025-05-08, CC BY 4.0. The public release contains hourly sales plus explicit stock-status annotations, promotions, precipitation and temporal context across 50,000 store-product series. This makes stockout censoring directly testable rather than a guessed proxy.
+
+Primary references:
+
+- Dataset: https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K
+- Baseline code: https://github.com/Dingdong-Inc/frn-50k-baseline
+- Paper: https://arxiv.org/abs/2505.16319
+
+**Why this dataset:** the central project hypothesis is that observed sales during stockouts are censored observations of latent demand. A dataset without stock-status annotations cannot cleanly test that hypothesis. FreshRetailNet-50K was designed around exactly this measurement problem and therefore has higher evidentiary value than a generic retail-sales dataset.
+
+**Independence rule:** the authors' released baseline is prior art and a comparison/reference implementation, not evidence for this portfolio. Portfolio results remain `TBD` until independently reproduced from this repository's own pinned experiment package.
+
+**Scope for the first executable pass:** do not begin with all 50,000 series. Freeze a deterministic, documented subset large enough to contain both stockout and non-stockout intervals; use it for pipeline correctness, leakage tests and baseline reproduction. Scale only after the smoke benchmark is reproducible.
+
+Record:
 
 - canonical source URL and license,
 - exact dataset/version or retrieval date,
@@ -124,4 +138,4 @@ Simplify or reframe the thesis if:
 
 ## Next implementation step
 
-Choose and document one license-compatible public dataset, then implement the **seasonal-naive + chronological-split + evaluator** path before adding stockout correction or complex models.
+Implement the **FreshRetailNet-50K deterministic-subset + seasonal-naive + chronological-split + evaluator** path before adding stockout correction or complex models. The first artifact must prove data provenance, split integrity and metric correctness; it does not need a sophisticated model.
