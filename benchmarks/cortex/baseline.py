@@ -104,8 +104,12 @@ def extract(fixture):
             # Ground truth omits pronoun/copula scaffolding but preserves the governed state.
             if subject_norm.lower().endswith(" is"):
                 subject_norm=subject_norm[:-3].strip()
-            if subject_norm.lower()=="it" and "vendor sandbox" in low:
-                subject_norm="Vendor sandbox"
+            if subject_norm.lower()=="it":
+                # Resolve only an explicit local dependency declaration; otherwise fail closed.
+                antecedent=re.search(r"Dependency\\s+D-\\d+\\s+is\\s+(?:the\\s+)?([^.;]+)",text,re.I)
+                if antecedent:
+                    subject_norm=antecedent.group(1).strip()
+                    subject_norm=subject_norm[:1].upper()+subject_norm[1:]
             condition=f"{subject_norm} not {state} by {date}"
             action=f"Escalate {target} at {'next ' if 'next governance review' in low else ''}governance review"
             out["conditional_followups"].append({"source":[u["id"]],"condition":condition,"action":action})
