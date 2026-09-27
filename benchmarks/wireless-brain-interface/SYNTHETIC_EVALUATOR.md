@@ -1,10 +1,10 @@
 # Wireless Brain Interface — Frozen Synthetic Evaluator
 
-**Status:** synthetic protocol + executable evaluator.  
+**Status:** synthetic protocol specified; executable evaluator pending.  
 **Maturity remains:** Research / Simulation.  
 **Purpose:** satisfy the pre-EEG evidence gate in Issue #3 without using real EEG labels.
 
-This package is deliberately dependency-free (Python standard library only). It creates deterministic fictional calibration/test probabilities, selects operating thresholds on **calibration only**, freezes them, and evaluates three policies on held-out synthetic test rows:
+The planned evaluator is deliberately dependency-free (Python standard library only). It will create deterministic fictional calibration/test probabilities, select operating thresholds on **calibration only**, freeze them, and evaluate three policies on held-out synthetic test rows:
 
 1. ungated decoder;
 2. simple confidence abstention;
@@ -14,11 +14,7 @@ The fixture is not evidence that WBI works on EEG. Its job is to make the evalua
 
 ## Run
 
-```bash
-python3 benchmarks/wireless-brain-interface/synthetic_evaluator.py
-```
-
-The script writes `synthetic_results.csv` and `risk_coverage.csv` beside itself and runs hand-checkable contract tests before evaluation.
+**TBD — implementation not yet committed.** The documented protocol is not executable evidence yet. When implemented, the evaluator must emit machine-readable summary results and a risk–coverage table and must run hand-checkable contract tests before evaluation.
 
 ## Frozen contract
 
