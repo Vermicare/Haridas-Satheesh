@@ -256,4 +256,3 @@ The homepage intentionally exposes only the strongest active threads. The comple
 ---
 
 `// END OF INTRODUCTION`  
-`// BEGIN EXPERIMENTS ↓`
