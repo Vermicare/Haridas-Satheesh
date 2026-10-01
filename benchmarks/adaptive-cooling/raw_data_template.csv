@@ -1,0 +1,1 @@
+run_id,timestamp,condition,ambient_temp_c,ambient_rh_pct,target_temp_c,target_rh_pct,air_velocity_m_s,surface_temp_c,power_w,energy_wh,condensation_flag,notes
