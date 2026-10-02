@@ -1,0 +1,10 @@
+instrument_id,measurement,make_model,range,accuracy_or_uncertainty,resolution,sampling_interval_s,calibration_or_check_method,last_check_date,placement_or_geometry,notes
+TBD,ambient_temperature,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Do not use for claims until instrument identity and uncertainty are recorded
+TBD,ambient_relative_humidity,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Record location relative to inlet and heat sources
+TBD,target_zone_temperature,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Fix geometry across control fan-only and prototype conditions
+TBD,target_zone_relative_humidity,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Fix geometry across conditions
+TBD,air_velocity,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Record distance and orientation from outlet
+TBD,surface_temperature,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Record emissivity assumption if non-contact sensing is used
+TBD,electrical_power,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Measure whole prototype input power where possible
+TBD,electrical_energy,TBD,TBD,TBD,TBD,TBD,TBD,TBD,TBD,Integrate over the complete trial duration
+VISUAL-01,condensation_inspection,visual inspection,n/a,n/a,n/a,TBD,predefined inspection points,TBD,TBD,Record binary flag plus location and qualitative note; photographs may be retained as evidence when safe to publish
