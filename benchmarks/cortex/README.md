@@ -1,7 +1,7 @@
 # CORTEX Synthetic Governance Benchmark
 
 **Project stage:** Architecture / R&D  
-**Benchmark status:** Specification — results are TBD
+**Benchmark status:** Executable synthetic harness committed — verified results are TBD
 
 ## Purpose
 
@@ -13,7 +13,7 @@ Can CORTEX produce auditable governance records with useful precision and tracea
 
 ## Synthetic fixture
 
-Create a fictional meeting/transcript fixture with explicit ground truth for:
+The repository contains a fictional meeting/transcript fixture with explicit ground truth for:
 - decisions and superseded/reversed decisions,
 - actions, owners and due dates,
 - risks, assumptions, issues and dependencies,
@@ -74,6 +74,8 @@ CORTEX remains **Architecture / R&D** until a reproducible synthetic benchmark d
 
 Simplify or reframe the structured-memory approach if false positives, unsupported attribution or correction burden erase its governance value, or if reliable source lineage cannot be maintained.
 
-## Next implementation step
+## Next evidence gate
 
-Build the smallest executable fixture + evaluator before expanding the architecture or adding more narrative documentation.
+Run the committed `fixture.json` → `baseline.py` → `evaluator.py` pipeline twice in a clean environment. Preserve candidate and scored machine-readable outputs, runtime/dependency information, source commit SHA and output hashes. Require identical deterministic outputs and passing negative-case, source-span and reversal-lineage checks. Results remain **TBD** until produced by the evaluator.
+
+After reproducibility is verified, add a genuinely different distribution-shift fixture rather than tuning against the frozen fixture. Passing the synthetic harness alone does **not** advance CORTEX beyond **Architecture / R&D**.
