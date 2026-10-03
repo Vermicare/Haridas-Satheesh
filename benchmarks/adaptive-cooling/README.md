@@ -92,6 +92,16 @@ Numerical pass thresholds must be declared before evaluating the final benchmark
 
 Simplify or reframe if repeated evidence shows that fan-only airflow explains essentially all benefit, humidity or condensation dominates the design, heat rejection or energy demand erases the localized advantage, persistence is impractically short, or added complexity produces no measurable gain.
 
-## Next artifact
+## Next evidence gate
 
-Create the instrument manifest and blank CSV run template, then validate that the logging and analysis path works before collecting benchmark evidence.
+The blank raw-data and instrument-manifest schemas are already committed. Do not create duplicate templates.
+
+Before collecting benchmark evidence:
+
+1. Populate the instrument manifest with the actual instrument model/identifier, stated accuracy, calibration or check status, and the date of the check where known. Leave unknown fields blank/TBD.
+2. Freeze and document the measurement geometry and sensor positions so ambient, fan-only and prototype conditions are comparable.
+3. Run a clearly labelled logging dry run using the committed raw-data schema. A dry run validates capture only and is **not** benchmark evidence.
+4. Validate timestamp ordering, units, run IDs, missing-value handling and condition labels before any derived calculation.
+5. Only after the logging path passes, collect repeated ambient → fan-only → prototype trials under comparable starting conditions and preserve every raw run, including unfavorable results.
+
+The first evidence-bearing milestone is a reproducible bench package containing populated provenance, repeated raw observations and an analysis artifact derived from those observations. Until then, measured results remain **TBD** and the project remains **Prototype / Documented R&D**.
