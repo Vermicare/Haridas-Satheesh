@@ -1,7 +1,4 @@
 # HARIDAS SATHEESH
-
-`// HUMAN NODE ONLINE`
-
 I have no interest in teaching machines to imitate humans.
 
 **I want to know what happens when computation acquires continuity.**
@@ -254,5 +251,3 @@ The homepage intentionally exposes only the strongest active threads. The comple
 [**All Case Studies →**](case-studies/README.md)
 
 ---
-
-`// END OF INTRODUCTION`  
