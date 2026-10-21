@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Frozen Synthetic Evaluator
 
-**Status:** synthetic protocol specified; evaluator implementation committed; execution/results not yet verified.  
+**Status:** synthetic protocol specified and evaluator committed; a same-runtime deterministic execution record is published in [EXECUTION_RECORD.md](EXECUTION_RECORD.md). Independent cross-environment reproduction remains TBD.  
 **Maturity remains:** Research / Simulation.  
 **Purpose:** satisfy the pre-EEG evidence gate in Issue #3 without using real EEG labels.
 
@@ -14,7 +14,7 @@ The fixture is not evidence that WBI works on EEG. Its job is to make the evalua
 
 ## Run
 
-Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **Execution/results remain TBD until a reproducible run is independently inspected.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
+Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **A same-runtime deterministic execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent cross-environment execution remains TBD.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
 
 ## Frozen contract
 
