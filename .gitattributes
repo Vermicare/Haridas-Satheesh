@@ -1,0 +1,4 @@
+# Preserve the frozen synthetic WBI evaluator's exact LF source bytes.
+/benchmarks/wireless-brain-interface/synthetic_evaluator.py text eol=lf
+# The published reference CSV intentionally contains CRLF; do not normalize it.
+/benchmarks/wireless-brain-interface/synthetic_risk_coverage.csv -text
