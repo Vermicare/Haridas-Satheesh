@@ -8,7 +8,7 @@
 | Method | Manifest SHA-256 binding, per-sensor sequence and monotonic-time checks, SCD40 cadence, coverage, gap and origin diagnostics. |
 | Predeclared acceptance | All 18 synthetic tests pass; success explicitly says provenance unverified. |
 | Local execution | 2026-10-23, CPython 3.13.5, Linux, standard library only: 18/18 tests passed. |
-| GitHub CI | TBD until run on this branch. |
+| GitHub CI | 2026-10-23: both Python 3.13 Linux and Windows jobs passed the synthetic regression step in [run #39996795979](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/39996795979); this is not physical validation. |
 | Raw physical telemetry | TBD — not collected. |
 | Accuracy / device authenticity | TBD — not established by this preflight. |
 | Known failure | Fabricated input declared physical can pass structural checks; hashes prove nothing unless expected digest is independently trusted. |
