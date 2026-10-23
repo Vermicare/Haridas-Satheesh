@@ -1,0 +1,34 @@
+name: WBI synthetic coverage diagnostic
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/wireless-brain-interface/**"
+      - ".github/workflows/wbi-synthetic-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Contract tests and frozen synthetic result
+        working-directory: benchmarks/wireless-brain-interface
+        run: |
+          python -m unittest -v test_coverage_target_diagnostic.py
+          python coverage_target_diagnostic.py --out coverage_target_results.json
+          printf '%s  %s\n' '24979d49d9ed458f6a7ebea8af5700072d5e81b64f6540653ff4e2b7f1b5ab37' 'coverage_target_results.json' | sha256sum --check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-synthetic-coverage-results
+          path: benchmarks/wireless-brain-interface/coverage_target_results.json
+          if-no-files-found: error
