@@ -17,7 +17,7 @@ python -m unittest discover -v
 python demo_60s.py
 ```
 
-The demo generates its own **fictional** 84-day store/product sequence, runs three frozen rolling-origin folds, and labels all scores fictional. The same source and tests were locally executed on CPython 3.13.5/Linux on 2026-10-24: **22/22 tests passed**. CI is proposed; its outcome must be verified separately.
+The demo generates its own **fictional** 84-day store/product sequence, runs three frozen rolling-origin folds, and labels all scores fictional. The same source and tests were locally executed on CPython 3.13.5/Linux on 2026-10-24: **22/22 tests passed**. CI results must be verified separately for each revision.
 
 ## Frozen protocol
 
@@ -48,3 +48,21 @@ A discarded initial selection strategy checked future completeness *before* choo
 The observable in-stock-day evaluation conditions on availability and cannot identify latent stockout demand, forecast interval calibration, opportunity ranking, revenue uplift, causal interventions or commercial value. Those are **TBD**. Next: pinned official-data snapshot, deterministic export, clean reproducible fold execution, then multi-series and decision-layer evaluation. **Reframe** if correction consistently fails to outperform transparent baselines; do not advance maturity or release a product from this test harness.
 
 Four-lens review: **Hiring manager**—runnable evidence discipline; **technical reviewer**—schema and temporal leakage tests; **innovation leader**—clear falsifiable hypothesis; **founder**—no revenue or product claims.
+
+## Disk-backed evaluator — additional v0.2 research candidate (2026-10-24)
+
+The original in-memory JSONL reader materializes every row; the official train split has 4.5 million rows. For a large **verified** export, use the dependency-free, disk-backed `retail_sqlite.py` with the same flags and frozen forecast/metric functions:
+
+```bash
+python -m unittest discover -v
+python retail_sqlite.py --input verified_export.jsonl \
+  --source-sha256 <LOCAL_EXPORT_SHA256> \
+  --source-uri https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K \
+  --output measured_result.json
+```
+
+It ingests validated JSONL rows into temporary SQLite storage with a uniqueness constraint, selects the first eligible cohort using **only the first 42 training days**, and rejects missing future horizons without replacement selection. The database is removed after execution. A shuffled fictional 77,000-row/1,000-series fixture and six other adversarial tests matched the original in-memory report; both engines **share the frozen evaluator** and are not independent forecasting models. Python memory no longer scales with the number of input series, but temporary disk and SQLite cache are required. Real 4.5-million-row resource measurements: **TBD**.
+
+**Publisher metadata only, not downloaded-byte verification:** The [pinned official train.parquet file](https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/blob/08c1fab7f9257bc73679d415d65d644165d351d4/data/train.parquet) reports revision `08c1fab7f9257bc73679d415d65d644165d351d4`, 106 MB and SHA-256 `6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d`. The source parquet bytes, exact parquet-to-JSONL exporter, local source/export hashes, dependency versions, and actual public-data results remain **TBD**. A claimed source URI or locally supplied hash does not authenticate origin.
+
+This work removes a foreseeable memory-scaling obstacle but **does not** establish forecast improvement, latent-demand recovery, commercial value, or a higher maturity gate. Preserve positive or negative outcomes after real-data acquisition.
