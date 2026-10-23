@@ -24,14 +24,50 @@
   "clean_run_stdout_identical": true,
   "ci_linux": "PASS — GitHub Actions run 40005993954; Python 3.13 ubuntu-latest tests and demo passed",
   "ci_windows": "PASS — GitHub Actions run 40005993954; Python 3.13 windows-latest tests and demo passed",
-  "forecast_origins_days": [42, 56, 70],
+  "forecast_origins_days": [
+    42,
+    56,
+    70
+  ],
   "forecast_horizon_days": 7,
   "metric": "MAE on observed business-hour sales for held-out days with zero recorded business-hour stockouts",
-  "baselines": ["last_observed", "seasonal_naive"],
+  "baselines": [
+    "last_observed",
+    "seasonal_naive"
+  ],
   "candidate": "causal_stockout_history",
   "fictional_demo_observation": "Seasonal naive and history substitution tie on three fictional folds; no positive effect demonstrated.",
   "negative_learning": "Earlier selection strategy conditioned cohort selection on future completeness; corrected to training-only selection and fail-closed horizon validation.",
-  "unknowns": ["true latent demand", "real-data MAE", "forecast calibration", "ranking precision", "intervention impact", "commercial value"],
+  "unknowns": [
+    "true latent demand",
+    "real-data MAE",
+    "forecast calibration",
+    "ranking precision",
+    "intervention impact",
+    "commercial value"
+  ],
   "decision": "Publish as draft research harness only; no maturity change or release.",
-  "next_experiment": "Acquire and checksum official train parquet, export deterministically, run frozen folds, retain negative outcomes."
+  "next_experiment": "Acquire and checksum official train parquet, export deterministically, run frozen folds, retain negative outcomes.",
+  "disk_backed_ingestion_v02": {
+    "recorded_utc_date": "2026-10-24",
+    "data_kind": "FICTIONAL_TEST_ONLY",
+    "algorithm": "SQLite disk-backed ingestion, same frozen evaluator; distinct-series key list in memory",
+    "tests": "29/29 locally passed (22 existing + 7 new)",
+    "independent_clean_directory_runs": 2,
+    "local_demo_stdout_sha256": "7c5b4288a29aa8916d6f93cd4ac81c0e42efda5c1620ca54dd4537c70065f868",
+    "stress_fixture": "77,000 fictional daily records; 1,000 series; report matches in-memory evaluator",
+    "shared_evaluator": true,
+    "publisher_reported_train_revision": "08c1fab7f9257bc73679d415d65d644165d351d4",
+    "publisher_reported_train_parquet_sha256": "6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d",
+    "publisher_metadata_verified_as_local_download": false,
+    "source_parquet_local_sha256": "TBD",
+    "parquet_to_jsonl_exporter": "TBD",
+    "export_local_sha256": "TBD",
+    "public_data_results": "TBD",
+    "initial_ci_failure": "40021172407 Windows WinError 32; unclosed SQLite connection",
+    "second_ci_failure": "40021290007 Windows WinError 32 on intentional exception; active selection cursor",
+    "current_ci": "PENDING verification after explicit connection and cursor close",
+    "maturity_change": "NONE",
+    "next_experiment": "Acquire and independently checksum pinned parquet, create deterministic export, execute frozen benchmark on real data."
+  }
 }
