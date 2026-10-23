@@ -1,0 +1,26 @@
+name: CORTEX fictional fixture integrity
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/cortex/fixture_integrity_preflight.py'
+      - 'benchmarks/cortex/fixture.json'
+      - '.github/workflows/cortex-fixture-integrity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-fixture-contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run fictional fixture integrity regressions
+        working-directory: benchmarks/cortex
+        run: python -B -m unittest -v fixture_integrity_preflight.py
