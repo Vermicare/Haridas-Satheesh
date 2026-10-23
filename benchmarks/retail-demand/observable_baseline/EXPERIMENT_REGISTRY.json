@@ -66,8 +66,9 @@
     "public_data_results": "TBD",
     "initial_ci_failure": "40021172407 Windows WinError 32; unclosed SQLite connection",
     "second_ci_failure": "40021290007 Windows WinError 32 on intentional exception; active selection cursor",
-    "current_ci": "PENDING verification after explicit connection and cursor close",
+    "current_ci": "PASS — GitHub Actions 40021463498; Python 3.13 Linux and Windows, 29/29 tests and fictional demo",
     "maturity_change": "NONE",
-    "next_experiment": "Acquire and independently checksum pinned parquet, create deterministic export, execute frozen benchmark on real data."
+    "next_experiment": "Acquire and independently checksum pinned parquet, create deterministic export, execute frozen benchmark on real data.",
+    "windows_failure_recovery": "Explicit connection and selection cursor close; verified Windows job 120646794130"
   }
 }
