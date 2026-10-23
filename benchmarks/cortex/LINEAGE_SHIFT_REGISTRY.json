@@ -1,0 +1,40 @@
+{
+  "experiment_id": "cortex-archive-lineage-shift-20261024",
+  "recorded_utc_date": "2026-10-24",
+  "repo": "Vermicare/Haridas-Satheesh",
+  "target_pr": 4,
+  "stage_before": "Architecture / R&D",
+  "stage_after": "Architecture / R&D",
+  "data_kind": "AUTHOR_CREATED_FICTIONAL_ONLY",
+  "provenance": {
+    "frozen_fixture_git_blob": "6540101a695ddeae1eb9832e627dbbff67394e00",
+    "frozen_baseline_git_blob": "080fd86a451e2175c88c46339e8390072e3dcab6",
+    "frozen_evaluator_git_blob": "8119649def3e893da5371a55e3baae519477b908",
+    "additive_fixture_preflight_git_blob": "11cfe19cd7df398907a545f97fdcacf28fd9e865",
+    "independent_fixture_origin": "Local October 23 author-created synthetic test fixture, amended with fictional internal archive record",
+    "human_label_adjudication": "TBD",
+    "archive_authenticity": "TBD"
+  },
+  "question": "Can the committed frozen-only baseline transfer to a separately authored fictional scenario, and does historical record_ref resolve to an actual fixture-internal archive record?",
+  "baseline": "Committed v0.1 deterministic frozen-only extractor",
+  "metrics": "Exact-signature F1 per governance object kind, fixture-preflight codes, archive-reference audit codes",
+  "results": {
+    "frozen_f1_all_five_kinds": 1,
+    "independent_fictional_f1_all_five_kinds": 0,
+    "frozen_fixture_issue": "unresolved_predecessor:D0",
+    "old_preflight_missing_archive_negative_control": "INCORRECTLY_ACCEPTS",
+    "new_archive_preflight_missing_archive_negative_control": "REJECTS",
+    "output_sha256": "2c3d060df1932318cc64dba980946ebaad3c47fd56a7509b488f9f53e2dc6180",
+    "real_workflow_accuracy": "TBD",
+    "human_review_minutes": "TBD"
+  },
+  "run_conditions": "CPython 3.13, standard library only, no network, deterministic author-created fixtures",
+  "known_limitations": [
+    "Not a blinded scenario",
+    "Not a general-purpose extractor",
+    "Fictional archive cannot authenticate history",
+    "No independent human review",
+    "No employer data"
+  ],
+  "decision": "Preserve frozen baseline and negative results; no maturity change; prepare genuinely unseen independently annotated fixture"
+}
