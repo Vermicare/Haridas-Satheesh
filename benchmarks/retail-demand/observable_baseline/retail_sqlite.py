@@ -43,8 +43,11 @@ def _ingest(conn, path):
 
 def _select(conn):
     """Choose using only first 42 training days; fail on later gaps."""
-    cur = conn.execute("SELECT DISTINCT store, product FROM daily ORDER BY store, product")
-    for key in cur:
+    # Keep only the key list in RAM; close the cursor before any failure path.
+    # Windows cannot delete a SQLite file while a statement remains active.
+    with closing(conn.execute("SELECT DISTINCT store, product FROM daily ORDER BY store, product")) as cur:
+        keys = cur.fetchall()
+    for key in keys:
         training = conn.execute("""SELECT day, censored FROM daily
             WHERE store=? AND product=? ORDER BY day LIMIT ?""",
             (*key, ORIGINS[0])).fetchall()
