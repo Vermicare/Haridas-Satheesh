@@ -119,8 +119,7 @@ def main():
     p.add_argument("--out", type=Path, default=Path("synthetic_regime_stress.json"))
     args = p.parse_args()
     report = experiment()
-    args.out.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "
-", encoding="utf-8")
+    args.out.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
     for regime, result in report["summary"].items():
         print(f"FICTIONAL {regime}: {result['comparable']}/{result['cases']} comparable; "
               f"gate better/worse/tie={result['gate_better']}/{result['gate_worse']}/{result['ties']}; "
