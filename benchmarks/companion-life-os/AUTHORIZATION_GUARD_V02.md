@@ -17,7 +17,7 @@ python -m unittest -v test_authorization_guard_v02
 python demo_authorization_guard_v02.py > demo-v02.json
 ```
 
-Local execution on 2026-10-24, CPython 3.13.5 / Linux: **16/16 tests passed**; fictional one-time action accepted, replay/spoof/expiry cases **3/3 blocked**. GitHub-hosted CI: **TBD until observed**. Output includes `external_actions: 0`; it is a hardcoded design property, not a measurement of a real connector.
+Local execution on 2026-10-24, CPython 3.13.5 / Linux: **16/16 tests passed**; fictional one-time action accepted, replay/spoof/expiry cases **3/3 blocked**. GitHub-hosted CI: **16/16 tests passed on Ubuntu and Windows**; see [the CI execution record](CI_EXECUTION_RECORD_V02.md). Output includes `external_actions: 0`; it is a hardcoded design property, not a measurement of a real connector.
 
 ## Provenance / experiment registry
 
