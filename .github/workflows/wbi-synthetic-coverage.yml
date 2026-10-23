@@ -12,7 +12,11 @@ permissions:
 
 jobs:
   synthetic-contract:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -21,14 +25,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Contract tests and frozen synthetic result
+      - name: Frozen baseline and synthetic stress tests
+        shell: bash
         working-directory: benchmarks/wireless-brain-interface
         run: |
-          python -m unittest -v test_coverage_target_diagnostic.py
+          python -m unittest -v test_coverage_target_diagnostic.py test_synthetic_regime_stress.py
           python coverage_target_diagnostic.py --out coverage_target_results.json
           printf '%s  %s\n' '24979d49d9ed458f6a7ebea8af5700072d5e81b64f6540653ff4e2b7f1b5ab37' 'coverage_target_results.json' | sha256sum --check
+          python synthetic_regime_stress.py --out synthetic_regime_stress.json
+          cp synthetic_regime_stress.json synthetic_regime_stress_first.json
+          python synthetic_regime_stress.py --out synthetic_regime_stress.json
+          cmp -s synthetic_regime_stress_first.json synthetic_regime_stress.json
+          sha256sum synthetic_regime_stress.json
       - uses: actions/upload-artifact@v4
         with:
-          name: wbi-synthetic-coverage-results
-          path: benchmarks/wireless-brain-interface/coverage_target_results.json
+          name: wbi-synthetic-results-${{ matrix.os }}
+          path: |
+            benchmarks/wireless-brain-interface/coverage_target_results.json
+            benchmarks/wireless-brain-interface/synthetic_regime_stress.json
           if-no-files-found: error
