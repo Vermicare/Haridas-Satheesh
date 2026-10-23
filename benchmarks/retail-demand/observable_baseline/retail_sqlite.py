@@ -10,6 +10,7 @@ import json
 import sqlite3
 import tempfile
 from pathlib import Path
+from contextlib import closing
 from retail_gate import EvidenceError, HORIZON, ORIGINS, evaluate, parse_row, sha256_file
 
 
@@ -75,7 +76,7 @@ def benchmark_sqlite(path, expected_hash=None, source_uri=None, synthetic=False)
     if expected_hash and actual.lower() != expected_hash.lower():
         raise EvidenceError("source checksum mismatch")
     with tempfile.TemporaryDirectory(prefix="retail_evidence_") as folder:
-        with sqlite3.connect(str(Path(folder) / "daily.sqlite")) as conn:
+        with closing(sqlite3.connect(str(Path(folder) / "daily.sqlite"))) as conn:
             _ingest(conn, path)
             key, rows = _select(conn)
     return {"schema_version": "1.0",
