@@ -17,7 +17,7 @@ The six explicitly fictional events produce **4 accepted**, **2 rejected** (prem
 
 - CPython 3.13.5/Linux, Python standard library; executed **2026-10-24**. **19/19** local regression tests passed. Two independent clean-directory reruns each passed 19/19 and produced identical output SHA-256 **1b4c7e80f4e7338226aa3f020e51312baabf0d62805731ea978e60e1851939c7**.
 - Tests cover declared roles, approval ordering, scope, expiry, replay, duplicate IDs, time ordering, receipt binding, correction reasons, and digest tampering.
-- GitHub CI Linux/Windows is **TBD** until verified on the actual branch.
+- GitHub CI **verified**: [run #40041342338](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40041342338) passed on Python 3.13 **Linux and Windows**, with 19/19 regression tests and the fictional receipt assertion in both jobs.
 - Actor roles are **asserted by the fixture, not authenticated**. The digest chain can be recomputed and is not tamper-proof or signed. A correction changes **fictional state**, not any real external action.
 - This does **not** measure employer delivery, cycle time, handoff reduction, ROI, real-world security or operational readiness. All remain **TBD**.
 

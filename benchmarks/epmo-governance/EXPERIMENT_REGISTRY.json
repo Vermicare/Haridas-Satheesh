@@ -27,8 +27,8 @@
     "external_actions": 0,
     "output_sha256": "1b4c7e80f4e7338226aa3f020e51312baabf0d62805731ea978e60e1851939c7"
   },
-  "github_ci": "TBD",
-  "cross_platform": "TBD",
+  "github_ci": "PASS: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40041342338 (19/19 tests on both jobs; receipt assertions passed)",
+  "cross_platform": "Linux and Windows Python 3.13 CI PASS on commit 042cd317335c30b33a3da7079c9f08c4bb7a5a83",
   "real_workflow_latency": "TBD",
   "real_handoff_reduction": "TBD",
   "real_security_validation": "TBD",
