@@ -105,3 +105,7 @@ Before collecting benchmark evidence:
 5. Only after the logging path passes, collect repeated ambient → fan-only → prototype trials under comparable starting conditions and preserve every raw run, including unfavorable results.
 
 The first evidence-bearing milestone is a reproducible bench package containing populated provenance, repeated raw observations and an analysis artifact derived from those observations. Until then, measured results remain **TBD** and the project remains **Prototype / Documented R&D**.
+
+## Synthetic-fixture origin preflight (draft research contribution)
+
+[Explicit synthetic-origin gate](ORIGIN_GATE.md) checks the committed CSV headers and rejects inputs **marked fictional/synthetic** from bench-mode structural acceptance. This is not device authentication, physical logging, instrument calibration, thermal-performance validation, or evidence of energy savings. Run a real logging dry run and controlled comparisons before performance claims.
