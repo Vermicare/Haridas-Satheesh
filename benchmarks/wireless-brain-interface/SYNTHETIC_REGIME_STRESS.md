@@ -19,7 +19,7 @@ Both policies choose thresholds using only calibration probabilities and drift s
 
 ## Executed local synthetic result
 
-CPython 3.13.5, Linux, standard library only. Eleven new regression tests passed. The JSON report was deterministic across local reruns. These are local checks against a reconstructed interface; the public GitHub CI is the authoritative test against the exact committed sources.
+CPython 3.13.5, Linux, standard library only. Eleven new regression tests passed. The JSON report was deterministic across local reruns. These were initially local checks against a reconstructed interface. **[GitHub Actions run #40028555590](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40028555590) subsequently passed all 22 tests on Python 3.13 Linux and Windows against the exact committed sources.** Both jobs reported the same normalized JSON SHA-256 `d17b5e01c5d47d9fe1a6c2adaf564d30a0a4c75cc6849d24144fcad642158db1` and uploaded result artifacts (Linux `12533058930`, Windows `12533368594`).
 
 | Drift-score regime | Comparable / total | Gate better | Gate worse | Tie | Mean gate − confidence incorrect-action risk, comparable only |
 |---|---:|---:|---:|---:|---:|
@@ -41,11 +41,12 @@ python synthetic_regime_stress.py --out synthetic_regime_stress.json
 sha256sum synthetic_regime_stress.json
 ```
 
-Expected Linux CPython 3.13.5 local JSON SHA-256: `d17b5e01c5d47d9fe1a6c2adaf564d30a0a4c75cc6849d24144fcad642158db1`. The JSON contains all seed pairs, thresholds, counts, mismatch exclusions, per-case held-out risk and a machine-readable summary. GitHub CI reruns twice per OS and preserves result artifacts; confirm CI outcome before claiming cross-platform reproduction.
+Expected Linux CPython 3.13.5 local JSON SHA-256: `d17b5e01c5d47d9fe1a6c2adaf564d30a0a4c75cc6849d24144fcad642158db1`. The JSON contains all seed pairs, thresholds, counts, mismatch exclusions, per-case held-out risk and a machine-readable summary. GitHub CI reruns twice per OS, canonicalizes JSON CRLF to LF before checksum comparison, and preserves separate artifacts. The original frozen evaluator and CSV are unchanged.
 
 ## Failure, learning, and next decision gate
 
 - **Failure:** 18 of 60 candidate comparisons did not satisfy the declared held-out coverage tolerance. Exclude them; do not imply equal coverage or favorable gate risk.
+- **CI failure and recovery:** Windows [run #40028453719](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40028453719) and [run #40028506313](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40028506313) failed the *preexisting JSON hash check* because text-mode Windows writes CRLF. The workflow now normalizes generated JSON line endings to LF without changing the frozen evaluator; [run #40028555590](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40028555590) passed both OS jobs.
 - **Learning:** A drift score's numerical presence is not evidence of useful error detection. Inverted/permuted signals are negative controls; all regimes reuse the same fictional generator and are correlated.
 - **Decision:** retain Research / Simulation; do not merge or release as validated performance. Consider **reframing the drift gate as an unproven optional diagnostic** if it remains dominated after capacity-matched threshold grids, paired uncertainty analysis, independent generators, and real subject/session-separated EEG.
 - **Next:** preregister an external public EEG dataset and held-out subject/session split, calibration budget, baselines, operating coverage and stop rule **before** accessing test labels. Real EEG, streaming latency, action utility, generalization and safety: **TBD**.
