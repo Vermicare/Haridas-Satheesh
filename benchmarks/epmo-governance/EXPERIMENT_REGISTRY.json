@@ -1,0 +1,43 @@
+{
+  "id": "epmo-fictional-governance-v0.1",
+  "date": "2026-10-24",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "question": "Can deterministic fictional replay enforce declared approval ordering, scope, expiry, one-use and correction receipt contracts?",
+  "source": "governance_demo.py",
+  "fixture": "synthetic_scenario.json",
+  "tests": "test_governance_demo.py",
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "os": "Linux",
+    "dependencies": "standard library",
+    "network": "none",
+    "seed": "not applicable; fixed fixture"
+  },
+  "provenance": {
+    "source_sha256": "df11a7839eab8c9cc1763b178a2fdd684530b53a0b75f569da81200a7d167de3",
+    "fixture_sha256": "b998d0944b2d3a4a4d413ce578b2f1eb7b327f0dbde23ff158c586333b64a0ba",
+    "test_sha256": "799fdd239ecfd123e84b66cb6522639b64e5bfe5f2d836a812b79db0f63b9a64"
+  },
+  "local_results": {
+    "tests_passed": 19,
+    "tests_total": 19,
+    "isolated_reproductions": 2,
+    "accepted_fictional_events": 4,
+    "rejected_fictional_events": 2,
+    "external_actions": 0,
+    "output_sha256": "1b4c7e80f4e7338226aa3f020e51312baabf0d62805731ea978e60e1851939c7"
+  },
+  "github_ci": "TBD",
+  "cross_platform": "TBD",
+  "real_workflow_latency": "TBD",
+  "real_handoff_reduction": "TBD",
+  "real_security_validation": "TBD",
+  "limitations": [
+    "Role identities are asserted, not authenticated",
+    "Audit hashes are recomputable, not signed or tamper-proof",
+    "Execution and correction are simulated, no actual rollback",
+    "No employer data, customer, production or ROI evidence"
+  ],
+  "decision": "Keep at independent synthetic research/simulation gate; no maturity upgrade",
+  "next_experiment": "Authenticated durable sandbox approvals with concurrency, restart, receipt and correction tests"
+}

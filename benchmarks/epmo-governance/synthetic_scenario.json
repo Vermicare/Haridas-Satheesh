@@ -1,0 +1,12 @@
+{
+  "origin": "FICTIONAL_SYNTHETIC",
+  "declared_roles": {"demo_requester": "requester", "demo_reviewer": "reviewer", "demo_executor": "executor", "demo_auditor": "auditor"},
+  "events": [
+    {"event_id": "e1", "request_id": "fictional-RAID-01", "type": "submit", "actor": "demo_requester", "at": "2026-01-01T09:00:00Z", "payload": {"action": "publish_status", "scope": "fictional-program"}},
+    {"event_id": "e2", "request_id": "fictional-RAID-01", "type": "execute", "actor": "demo_executor", "at": "2026-01-01T09:01:00Z", "payload": {"approval_id": "e3", "action": "publish_status", "scope": "fictional-program", "receipt_id": "r1"}},
+    {"event_id": "e3", "request_id": "fictional-RAID-01", "type": "approve", "actor": "demo_reviewer", "at": "2026-01-01T09:02:00Z", "payload": {"action": "publish_status", "scope": "fictional-program", "expires_at": "2026-01-01T09:32:00Z"}},
+    {"event_id": "e4", "request_id": "fictional-RAID-01", "type": "execute", "actor": "demo_executor", "at": "2026-01-01T09:03:00Z", "payload": {"approval_id": "e3", "action": "publish_status", "scope": "fictional-program", "receipt_id": "r1"}},
+    {"event_id": "e5", "request_id": "fictional-RAID-01", "type": "execute", "actor": "demo_executor", "at": "2026-01-01T09:04:00Z", "payload": {"approval_id": "e3", "action": "publish_status", "scope": "fictional-program", "receipt_id": "r2"}},
+    {"event_id": "e6", "request_id": "fictional-RAID-01", "type": "correct", "actor": "demo_auditor", "at": "2026-01-01T09:05:00Z", "payload": {"receipt_id": "r1", "reason": "fictional status correction"}}
+  ]
+}
