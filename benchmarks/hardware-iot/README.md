@@ -56,3 +56,26 @@ v0.2 requires each sensor to appear within 15,000 ms of the global first and las
 Reproduce with `python -B -m unittest -v test_capture_preflight.py`. Four added tests bring the local synthetic-only suite to **22**. Two independent process executions on CPython 3.13.5/Linux passed 22/22 each; [GitHub Actions #40045980176](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40045980176) independently passed **22/22 tests on both Python 3.13 Linux and Windows**; both job logs were inspected. This CI was triggered at test commit `d0cbf227a03f67bd4c70ca003f50f2572a0e66df` and verifies the source/test blobs recorded below. Source/test Git blob SHAs: `792aa151aa37caaa6c0584319e364d1c1286264f` and `4400f47550839225d393ec0289c7a1df57d4d0e7`.
 
 **Decision:** retain Prototype / Hardware Architecture. The next evidence-producing step is still a genuine, independently inspectable ten-minute BH1750 + SCD40 hardware capture with raw serial evidence and firmware provenance. Physical accuracy, calibration and device authenticity: **TBD**.
+
+
+## v0.3 — raw-serial bundle packaging (2026-10-24; synthetic tests only)
+
+The separate [serial_bundle.py](serial_bundle.py) takes **already captured** raw UTF-8 serial bytes, a locally supplied firmware binary, an operator-declared device identifier and an explicit UTC session start. It extracts lines that begin exactly with `IOTCSV,` followed by the seven fields listed above. Other serial lines remain in `raw_serial.log`; prefixed ESP-IDF monitor lines are intentionally rejected rather than silently transformed. This script **does not open COM ports, flash firmware, acquire sensor readings or attest origin**. Capture raw serial with a suitable local serial logger configured to preserve bytes and without monitor prefixes.
+
+Example after a **genuine physical session**, with the operator verifying these values against actual hardware (replace every placeholder):
+
+```bash
+python serial_bundle.py build --raw /path/to/actual_raw_serial.log \
+  --firmware /path/to/exact_flashed_firmware.bin \
+  --out /path/to/new_session_directory \
+  --device-id YOUR_DEVICE_ID \
+  --recorded-start-utc 2026-10-24T00:00:00Z \
+  --capture-origin physical
+python serial_bundle.py verify /path/to/new_session_directory
+```
+
+The timestamp above is an **example**, not an actual session time. Without `--capture-origin physical`, the default is `synthetic` and the physical preflight rejects it. The origin flag is an **operator assertion**, not proof; a fabricated stream falsely declared physical can still pass. Do not publish a real session until independent wiring, source, flashed-binary identity, operator clock, perturbation and instrument checks are reviewed.
+
+The new directory contains `raw_serial.log`, `samples.csv`, `manifest.json`, and `preflight.json`. It refuses to overwrite an existing directory; records raw, CSV and supplied firmware hashes; verifies that CSV is exactly re-extracted from preserved raw bytes; and then calls the existing v0.2 structural validator. It does **not** embed or verify the flashed firmware binary, authenticate device-monotonic timestamps, prove sensor calibration, or guarantee crash-atomic multi-file publication. If interrupted, retain the partial directory as a failed capture; do not infer a pass.
+
+**Tested:** 14 new adversarial fictional tests plus 22 existing tests = **36/36 local passes** in two isolated CPython 3.13.5/Linux directories; normalized output SHA-256 `89fd2364b76a43759d8368419377306a91c40d308a6aaae25b33a82662971a8c`. Exact executed source Git blobs: `serial_bundle.py` `28ecfb570f42c3a50b68f8e3e918803fe7440df8`, `test_serial_bundle.py` `bd9af27c95715c055fc60876216b0ba407aca1b7`. CI is configured to execute all 36 tests on Linux and Windows; **CI outcome TBD until verified**. All readings in these tests are fictional. Physical session count remains **zero**. **No stage change.**
