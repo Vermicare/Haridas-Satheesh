@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "epmo-fictional-replay-ledger-reconciliation-v0.4",
+  "recorded_local_date": "2026-10-25",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "hypothesis": "A read-only checkpoint detects disagreement between accepted fictional governance replay events and durable SQLite receipts.",
+  "maturity": "Research / Simulation",
+  "prior_evidence_preserved": true,
+  "inputs": {
+    "scenario": "benchmarks/epmo-governance/synthetic_scenario.json",
+    "scenario_revision": "existing committed fixture; unchanged",
+    "policy": "benchmarks/epmo-governance/governance_demo.py",
+    "ledger": "benchmarks/epmo-governance/durable_receipt_sandbox.py",
+    "seed": "N/A"
+  },
+  "new_artifacts": {
+    "checker": {
+      "path": "benchmarks/epmo-governance/reconcile_fictional_replay.py",
+      "git_blob_sha": "550d8d6849f319a8d12ff44ccbaa09adfcbb3504"
+    },
+    "checker_tests": {
+      "path": "benchmarks/epmo-governance/test_reconcile_fictional_replay.py",
+      "git_blob_sha": "d39434fc694aa06299795b2b64811f28edffc8fe"
+    },
+    "demo": {
+      "path": "benchmarks/epmo-governance/demo_reconciliation_45s.py",
+      "git_blob_sha": "f7ea8da0898d6a12b7120448878226a5762c5085"
+    },
+    "demo_tests": {
+      "path": "benchmarks/epmo-governance/test_reconciliation_demo.py",
+      "git_blob_sha": "5c7566ec1aa0196f7ceb14c317d41a6fd840ddfd"
+    }
+  },
+  "run_conditions": {
+    "runner": "GitHub Actions",
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python": "3.13",
+    "dependencies": "Python standard library only",
+    "network_required": false,
+    "physical_instruments": "none"
+  },
+  "verification": {
+    "ci_run_id": 40135124046,
+    "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40135124046",
+    "tested_commit": "553cdefef836d872c4854e2c4521a1c89e37c7ff",
+    "ubuntu": "passed",
+    "windows": "passed",
+    "tests_per_os": 52,
+    "new_tests": 14,
+    "published_blobs_reread": true
+  },
+  "synthetic_results": {
+    "accepted_events": 4,
+    "rejected_events": 2,
+    "accepted_executions": 1,
+    "corrected_receipts": 1,
+    "positive_reconciliation": true,
+    "extra_row_negative_control_detected": true,
+    "external_actions": 0
+  },
+  "limits": {
+    "authenticated_identity": "TBD",
+    "trusted_clock": "TBD",
+    "atomic_policy_consumption": "TBD",
+    "real_action_or_compensation": "TBD",
+    "human_reviewer_correction_time": "TBD",
+    "independent_external_review": "TBD",
+    "real_world_security_claim": false
+  },
+  "decision": "retain maturity; next implement atomic policy-checked approval consumption and adversarial concurrency/restart tests; no release"
+}
