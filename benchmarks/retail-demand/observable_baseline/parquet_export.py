@@ -92,6 +92,15 @@ def export_batches(batches, output_path, manifest_path, *, source_path,
         raise ExportError("source revision must be an immutable 40-character commit SHA")
     if not re.fullmatch(r"[a-fA-F0-9]{64}", expected_source_sha256):
         raise ExportError("expected source SHA256 must contain 64 hex characters")
+    # An external export is labeled as the publisher-pinned train snapshot.
+    # Do not allow a caller to silently substitute a different revision or
+    # checksum while retaining that declaration. Synthetic injection is
+    # intentionally exempt and always labeled FICTIONAL_TEST_ONLY.
+    if not synthetic:
+        if source_revision != PINNED_REVISION:
+            raise ExportError("external source revision must match publisher-pinned revision")
+        if expected_source_sha256.lower() != PUBLISHER_REPORTED_TRAIN_SHA256:
+            raise ExportError("external source hash must match publisher-reported train SHA256")
     source_hash = sha256_file(source_path)
     if source_hash != expected_source_sha256.lower():
         raise ExportError("local source SHA256 mismatch")
