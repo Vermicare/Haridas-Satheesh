@@ -1,7 +1,7 @@
 # Companion Intelligence — Sanitized Vertical-Slice Benchmark
 
 **Project stage:** In Progress; implementation private  
-**Public benchmark status:** Fictional v0.1 validator is committed and exercised in CI; [v0.2 negative controls](AUTHORIZATION_GUARD_V02.md), [v0.3 SQLite restart/concurrency evidence](DURABLE_SQLITE_V03.md), and [v0.2 CI record](CI_EXECUTION_RECORD_V02.md) document synthetic reproducibility and limitations. Real identity, consent, integration and performance remain **TBD**.
+**Public benchmark status:** Fictional v0.1 validator is committed and exercised in CI; [v0.2 negative controls](AUTHORIZATION_GUARD_V02.md), [v0.3 SQLite restart/concurrency evidence](DURABLE_SQLITE_V03.md), [v0.4 fictional evidence-identity negative controls](EVIDENCE_IDENTITY_V04.md), and [v0.2 CI record](CI_EXECUTION_RECORD_V02.md) document synthetic reproducibility and limitations. Real identity, consent, integration and performance remain **TBD**.
 
 ## Purpose
 
@@ -68,4 +68,4 @@ Reframe any module that cannot maintain explicit authorization, provenance, reve
 
 ## Next implementation step
 
-The committed validator and machine-readable synthetic checks already exist. Preserve them as the baseline. Next, independently review [v0.2 negative controls](AUTHORIZATION_GUARD_V02.md) and the [v0.3 SQLite local-only durability experiment](DURABLE_SQLITE_V03.md). [Issue #11](https://github.com/Vermicare/Haridas-Satheesh/issues/11) remains open for authenticated identity, trusted time, real connector idempotency, durable correction lineage, physical crash recovery and measured reviewer burden. Do not add real integrations or private data to the public benchmark.
+The committed validator and machine-readable synthetic checks already exist. Preserve them as the baseline. Next, independently review [v0.2 negative controls](AUTHORIZATION_GUARD_V02.md) the [v0.3 SQLite local-only durability experiment](DURABLE_SQLITE_V03.md), and [v0.4 evidence identity/type-confusion checks](EVIDENCE_IDENTITY_V04.md). [Issue #11](https://github.com/Vermicare/Haridas-Satheesh/issues/11) remains open for authenticated identity, trusted time, real connector idempotency, durable correction lineage, physical crash recovery and measured reviewer burden. Do not add real integrations or private data to the public benchmark.
