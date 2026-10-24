@@ -90,5 +90,47 @@ class SupersessionGraphTests(unittest.TestCase):
         self.assertEqual(['malformed_ground_truth'], audit_supersession({}))
 
 
+    def test_very_long_acyclic_history_without_recursive_walk(self):
+        # Fictional stress fixture: tests linear traversal without wall-clock
+        # assertions, which are unstable across CI operating systems.
+        rows = [{'id': 'D0'}] + [
+            {'id': f'D{i}', 'supersedes': f'D{i-1}'}
+            for i in range(1, 12000)
+        ]
+        self.assertEqual([], audit_supersession(
+            {'ground_truth': {'decisions': rows}}))
+
+    def test_seeded_graph_cycle_oracle(self):
+        # Independently compare cycle presence to a deliberately simple
+        # quadratic reference on small, fictional graphs.
+        import random
+        rng = random.Random(20261024)
+        for trial in range(80):
+            rows = [{'id': f'D{i}'} for i in range(20)]
+            for row in rows:
+                if rng.randrange(4):
+                    row['supersedes'] = f'D{rng.randrange(20)}'
+            graph = {r['id']: r['supersedes'] for r in rows
+                     if 'supersedes' in r}
+            expected_cycle = False
+            for start in graph:
+                seen = set()
+                node = start
+                while node in graph:
+                    if node in seen:
+                        expected_cycle = True
+                        break
+                    seen.add(node)
+                    node = graph[node]
+                if expected_cycle:
+                    break
+            actual = audit_supersession(
+                {'ground_truth': {'decisions': rows}})
+            self.assertEqual(expected_cycle,
+                             'cyclic_supersession' in actual,
+                             msg=f'fictional trial {trial}')
+
+
+
 if __name__ == '__main__':
     unittest.main()
