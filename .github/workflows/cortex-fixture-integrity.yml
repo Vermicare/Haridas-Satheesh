@@ -26,7 +26,9 @@ jobs:
         shell: bash
         working-directory: benchmarks/cortex
         run: |
-          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py
+          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py
+          python -B blind_review_preflight.py manifest blind_case_20261024.json blind_archive_20261024.json
+          python -c "import hashlib,pathlib; a=pathlib.Path('blind_case_20261024.json').read_bytes(); b=pathlib.Path('blind_archive_20261024.json').read_bytes(); assert hashlib.sha256(a).hexdigest() == 'f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d'; assert hashlib.sha256(b).hexdigest() == '897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046'"
           python -B run_lineage_shift.py
           python -c "import hashlib,pathlib; p=pathlib.Path('synthetic_lineage_shift_results.json'); assert hashlib.sha256(p.read_bytes()).hexdigest() == '2c3d060df1932318cc64dba980946ebaad3c47fd56a7509b488f9f53e2dc6180'"
       - name: Compare fictional graph traversal scaling (non-gating timing)
