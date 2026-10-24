@@ -29,7 +29,7 @@ The [SQLite experiment](authorization_store_v03.py) calls the unchanged v0.2 fic
 | Runtime | CPython 3.13.5 / Linux local; GitHub-hosted OS/version per workflow run |
 | Randomness | None; 16 concurrent attempts use one identical fictional grant |
 | Predeclared outcomes | 1 first receipt, 15 idempotent replies; restart replay; rollback on pre-commit injected exception; idempotent retry after post-commit injected exception; changed scope/actor/expired grant rejected |
-| Local execution | 26/26 v0.2 + v0.3 tests passed in two independent local Linux runs (CPython 3.13.5; source blobs verified; fictional fixture reconstructed semantically for local runs, not claimed byte-identical) |
+| Local execution | 26/26 v0.2 + v0.3 tests passed in two independent local Linux runs (CPython 3.13.5; original v0.1 fixture, baseline validator, v0.2 guard and v0.2 test Git blob SHAs verified byte-identical) |
 | GitHub CI | [PR CI run #40071368125](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40071368125) **passed** at head `ddbc2e9ffc4140299046d8ca66e9c6a4687f2d93`: Ubuntu **26 tests, OK** and Windows **26 tests, OK**, plus both fictional demos/artifact uploads; original Companion benchmark [CI #40071368127](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40071368127) also passed |
 | Real actions | 0 by construction, not an observed production metric |
 | Real authentication, clock integrity, real connector, distributed exactly-once, physical crash/power loss, correction receipts, reviewer time | **TBD** |
