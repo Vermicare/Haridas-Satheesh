@@ -107,6 +107,35 @@ class CaptureContract(unittest.TestCase):
             c.write_bytes(c.read_bytes() + b"\n")
             self.assertIn("CSV SHA-256 mismatch", check(m, c)["errors"])
 
+    def test_scd40_stops_early_despite_global_ten_minute_span(self):
+        def stop_early(rows, _):
+            rows[:] = [r for r in rows if r["sensor"] != "SCD40" or int(r["elapsed_ms"]) <= 500000]
+        self.assert_rejected(stop_early, reason="trailing coverage gap")
+
+    def test_scd40_starts_late_despite_global_ten_minute_span(self):
+        def start_late(rows, _):
+            rows[:] = [r for r in rows if r["sensor"] != "SCD40" or int(r["elapsed_ms"]) >= 100000]
+        self.assert_rejected(start_late, reason="leading coverage gap")
+
+    def test_small_per_sensor_boundary_offsets_are_tolerated(self):
+        def small_offsets(rows, _):
+            rows[:] = [r for r in rows if r["sensor"] != "SCD40" or 5000 <= int(r["elapsed_ms"]) <= 595000]
+        result = self.run_fixture(small_offsets)
+        self.assertEqual(result["status"], "STRUCTURAL_PASS_PROVENANCE_UNVERIFIED")
+
+    def test_extra_csv_field_rejected_even_with_matching_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest_path, csv_path = fixture(Path(directory))
+            lines = csv_path.read_text(encoding="utf-8").splitlines()
+            lines[-1] += ",INJECTED_FIELD"
+            csv_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["csv_sha256"] = hashlib.sha256(csv_path.read_bytes()).hexdigest()
+            manifest_path.write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")
+            result = check(manifest_path, csv_path)
+            self.assertEqual(result["status"], "REJECT_INVALID")
+            self.assertIn("extra CSV fields", " ".join(result["errors"]))
+
     def test_report_is_deterministic(self):
         with tempfile.TemporaryDirectory() as directory:
             m, c = fixture(Path(directory))
