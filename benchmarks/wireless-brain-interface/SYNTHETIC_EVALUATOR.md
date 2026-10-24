@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Frozen Synthetic Evaluator
 
-**Status:** synthetic protocol specified and evaluator committed; a same-runtime deterministic execution record is published in [EXECUTION_RECORD.md](EXECUTION_RECORD.md). Independent cross-environment reproduction remains TBD.  
+**Status:** synthetic protocol specified and evaluator committed; a same-runtime deterministic execution record is published in [EXECUTION_RECORD.md](EXECUTION_RECORD.md). [Independent cross-platform reproduction](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md) passed on Linux and Windows in draft-branch [CI #40059209875](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40059209875); real EEG validation remains TBD.  
 **Maturity remains:** Research / Simulation.  
 **Purpose:** satisfy the pre-EEG evidence gate in Issue #3 without using real EEG labels.
 
@@ -14,7 +14,7 @@ The fixture is not evidence that WBI works on EEG. Its job is to make the evalua
 
 ## Run
 
-Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **A same-runtime deterministic execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent cross-environment execution remains TBD.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
+Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **A same-runtime deterministic execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent Linux/Windows reproduction is recorded separately in [FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md); no real EEG was decoded.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
 
 ## Frozen contract
 
