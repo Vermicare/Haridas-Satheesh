@@ -1,0 +1,80 @@
+{
+  "artifact": "adaptive_cooling_dry_run_integrity_v0.1",
+  "date_utc": "2026-10-24",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cooling-explicit-fixture-gate-20261023",
+  "baseline": "Committed raw_data_template.csv plus earlier explicit synthetic-origin preflight",
+  "hypothesis": "A deterministic offline preflight can reject internally inconsistent timestamp/power/energy records before physical bench claims.",
+  "dataset": "fictional, generated in temporary directories by test_dry_run_integrity.py",
+  "actual_sensor_capture": "TBD",
+  "physical_instrument_identity": "TBD",
+  "real_energy_measurement": "TBD",
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "platform": "Linux",
+    "dependencies": "standard library only",
+    "unit_tests": 14
+  },
+  "local_result": "14/14 fictional-only regression tests passed; physical evidence not obtained",
+  "tested_source_git_blob_sha": "c5269110c0a4f391b9468fed245fba839e765043",
+  "tested_test_git_blob_sha": "a626258a097ef1c6c13e926a0e71f1a038a3a7cf",
+  "thresholds": {
+    "minimum_duration_seconds": 600,
+    "maximum_sample_gap_seconds": 60,
+    "energy_absolute_tolerance_wh": 0.5,
+    "energy_relative_tolerance": 0.3
+  },
+  "negative_controls": [
+    "unchanged energy with nonzero power",
+    "energy counter reset",
+    "timestamp reversal",
+    "short duration",
+    "sample gap",
+    "mixed run IDs",
+    "mixed conditions",
+    "invalid humidity",
+    "missing numeric",
+    "extra CSV field",
+    "naive timestamp",
+    "negative power",
+    "nonfinite numeric"
+  ],
+  "decision": "Keep at Prototype / Documented R&D; perform actual instrumented logging dry run next",
+  "limitations": "Internal consistency only; invented records can pass; energy integration assumes representative sampling; no meter calibration or provenance authentication",
+  "ci_status": "VERIFIED: GitHub Actions run 40051385064; Python 3.13 Linux and Windows each 25/25 tests passed (11 existing origin + 14 new dry-run)",
+  "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40051385064",
+  "ci_head_sha": "08cc7f0a5e7eb76c78b94947e51c277f247fda98",
+  "v0_2_raw_snapshot_provenance": {
+    "hypothesis": "A single-read SHA-256 snapshot and optional pinned digest prevent reuse of a passing structural report for changed CSV bytes.",
+    "prior_defect": "v0.1 output was not bound to exact raw CSV bytes; a post-audit edit could be overlooked.",
+    "changes": "Read bytes once; hash and parse same snapshot; report digest and byte count; reject mismatched or malformed optional pinned SHA-256.",
+    "source_blob_sha": "9438017485c2151b5b3d34bdbf07f78bf0e44c68",
+    "test_blob_sha": "39e897f1299c0445811ac304801fafe20c11054e",
+    "tests_added": 5,
+    "total_dry_run_tests": 19,
+    "total_origin_gate_tests": 11,
+    "test_fixture": "Fictional CSV rows generated in Python unittest temporary directories",
+    "actual_physical_capture": "TBD",
+    "pinned_real_capture_sha256": "TBD",
+    "physical_origin_authenticated": false,
+    "energy_performance_claim_permitted": false,
+    "local_execution": "TBD; GitHub Actions cross-platform CI is verification target",
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40095057391",
+      "head_sha": "c4d97ed9bcd5cef6da5ec3ca3b15e31a609ca0a6",
+      "ubuntu": "30/30 passed",
+      "windows": "30/30 passed",
+      "scope": "11 origin-gate and 19 dry-run tests; fictional-only, no hardware",
+      "source_blob_sha": "9438017485c2151b5b3d34bdbf07f78bf0e44c68",
+      "test_blob_sha": "39e897f1299c0445811ac304801fafe20c11054e"
+    },
+    "negative_controls": [
+      "CSV edited after SHA-256 pinning",
+      "malformed pinned digest",
+      "filesystem mutation after snapshot acquisition"
+    ],
+    "limits": "SHA-256 binds report to bytes read, not to a real sensor, calibration, firmware, timestamp authority, or unmodified later filesystem state.",
+    "decision": "No stage change; preserve physical dry-run gate in issue #15."
+  }
+}

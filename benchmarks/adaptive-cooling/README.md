@@ -105,3 +105,19 @@ Before collecting benchmark evidence:
 5. Only after the logging path passes, collect repeated ambient → fan-only → prototype trials under comparable starting conditions and preserve every raw run, including unfavorable results.
 
 The first evidence-bearing milestone is a reproducible bench package containing populated provenance, repeated raw observations and an analysis artifact derived from those observations. Until then, measured results remain **TBD** and the project remains **Prototype / Documented R&D**.
+
+## Synthetic-fixture origin preflight (draft research contribution)
+
+[Explicit synthetic-origin gate](ORIGIN_GATE.md) checks the committed CSV headers and rejects inputs **marked fictional/synthetic** from bench-mode structural acceptance. This is not device authentication, physical logging, instrument calibration, thermal-performance validation, or evidence of energy savings. Run a real logging dry run and controlled comparisons before performance claims.
+
+## Dry-run timestamp and energy consistency preflight (draft)
+
+[Dry-run integrity contract](DRY_RUN_INTEGRITY.md) adds a **fictional-test-only** check of timestamp ordering, minimum capture duration, sampling gaps, fixed run/condition identity, numerical units/ranges and consistency between logged power and the cumulative energy counter. [Executable tests](test_dry_run_integrity.py) and [versioned experiment registry](DRY_RUN_EXPERIMENT_REGISTRY.json) document the limits and negative controls. This software is preparation for a **genuine** instrumented logging dry run; no physical data have been captured or authenticated. Passing a consistency check does **not** demonstrate thermal benefit, energy efficiency or safety. Keep all real metrics TBD until repeated controlled measurements are independently inspectable.
+
+## Measurement endpoint and standards decision (2026-10-24)
+
+The physical bench endpoint is **instrumented local environmental change**, not perceived comfort, clinical benefit, standards compliance, or room-AC energy superiority. Temperature alone cannot support a comfort claim: the [ASHRAE Standard 55-2023 official overview](https://www.ashrae.org/technical-resources/bookstore/standard-55-thermal-environmental-conditions-for-human-occupancy) identifies temperature, thermal radiation, humidity, air speed, clothing and activity as interacting factors. The current single surface-temperature field is **not** a complete mean-radiant-temperature measurement. A later human-comfort study would require its own predeclared protocol and appropriate participant protections; it must not be inferred from the engineering CSV.
+
+For instrument selection, consult the published [ISO 7726:2025 official scope](https://www.iso.org/standard/78238.html), which concerns instrument characteristics and methods for measuring thermal-environment physical quantities. It supersedes ISO 7726:1998; this project has **not** purchased, implemented, or certified compliance with the full standard. The immediate decision is to document actual instrument uncertainties, locations and measurement methods before the physical dry run. Do not invent tolerances or assert conformance from the abstract.
+
+**Decision:** retain separate gates: (1) authenticated, hashed logging dry run; (2) repeated ambient/fan/prototype physical comparison with uncertainty and heat-rejection accounting; (3) only if justified, a separately designed thermal-comfort evaluation. All real outcomes remain TBD.
