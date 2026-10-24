@@ -1,0 +1,24 @@
+{
+  "case_id": "CORTEX-BLIND-20261024-A",
+  "provenance": "AUTHOR_CREATED_FICTIONAL",
+  "synthetic": true,
+  "meeting": {
+    "id": "SYN-GARDEN-LAB-004",
+    "date": "2026-10-24",
+    "title": "Fictional greenhouse instrumentation rehearsal",
+    "utterances": [
+      {"id": "b01", "speaker": "Mina", "text": "We can rehearse the greenhouse sensor demonstration on November 10, but this is not approval for a public demonstration."},
+      {"id": "b02", "speaker": "Ivo", "text": "Archive H-11 suspended the public demonstration pending a signed safety checklist. I think that hold also prevents any rehearsal."},
+      {"id": "b03", "speaker": "Mina", "text": "Correction: H-11 applies to the public demonstration, not a bench rehearsal. The public hold remains in force."},
+      {"id": "b04", "speaker": "Nora", "text": "Maybe we should replace the entire greenhouse with a robot gardener."},
+      {"id": "b05", "speaker": "Mina", "text": "No decision or assigned work on the robot gardener proposal."},
+      {"id": "b06", "speaker": "Ivo", "text": "The previous calibration checklist H-12 is too limited. I propose version B with a sensor timestamp check."},
+      {"id": "b07", "speaker": "Mina", "text": "Approved for the internal rehearsal: version B replaces checklist H-12. Preserve H-12 in the history."},
+      {"id": "b08", "speaker": "Nora", "text": "I will publish the version B calibration checklist by November 6."},
+      {"id": "b09", "speaker": "Ivo", "text": "Risk R-09: condensation may affect the fictional sensor bench. We do not have an owner for the mitigation yet."},
+      {"id": "b10", "speaker": "Mina", "text": "If the mock humidity monitor is offline by November 9, cancel the November 10 rehearsal and document the reason."},
+      {"id": "b11", "speaker": "Nora", "text": "The supplier might deliver a replacement cable on Monday, but nobody has accepted a delivery deadline."},
+      {"id": "b12", "speaker": "Ivo", "text": "The rehearsal depends on the mock telemetry service; this is a simulated service, not a real customer system."}
+    ]
+  }
+}
