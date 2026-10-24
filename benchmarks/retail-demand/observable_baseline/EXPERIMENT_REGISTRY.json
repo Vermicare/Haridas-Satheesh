@@ -70,5 +70,29 @@
     "maturity_change": "NONE",
     "next_experiment": "Acquire and independently checksum pinned parquet, create deterministic export, execute frozen benchmark on real data.",
     "windows_failure_recovery": "Explicit connection and selection cursor close; verified Windows job 120646794130"
+  },
+  "parquet_export_v03": {
+    "recorded_utc_date": "2026-10-24",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "publisher_revision_declared": "08c1fab7f9257bc73679d415d65d644165d351d4",
+    "publisher_train_sha256_declared": "6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d",
+    "publisher_file_locally_downloaded": false,
+    "pyarrow_available_in_local_test_environment": false,
+    "parquet_io_executed": false,
+    "source_git_blob": "a373dea0053fdd5b785009fa86e356d3fc89ac78",
+    "tests_git_blob": "abb91a61066fc6136380a7b1a4796f93e9c50d19",
+    "protocol_git_blob": "904e0054b0cac44b89ef04d0332d881f314a2c2f",
+    "local_environment": "CPython 3.13.5 Linux; standard library",
+    "local_clean_reproductions": 2,
+    "local_tests_each": "42/42 PASS",
+    "ci_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40063224438",
+    "ci_linux": "PASS 42/42 CPython 3.13",
+    "ci_windows": "PASS 42/42 CPython 3.13",
+    "reproduced_failure": "Original os.replace silently overwrote unrelated output created after preflight; deterministic fictional negative control",
+    "correction": "Atomic same-filesystem os.link publication refuses mid-export output/manifest collisions; two new regression tests",
+    "known_limit": "Not a crash-atomic two-file transaction; orphan output possible; consumer must verify manifest and hashes",
+    "public_data_forecast_results": "TBD",
+    "stage_change": "NONE",
+    "next_experiment": "Acquire publisher-pinned parquet, independently checksum, run actual pyarrow export, verify row schema and downstream frozen forecast comparison"
   }
 }
