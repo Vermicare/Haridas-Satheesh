@@ -1,0 +1,76 @@
+{
+  "id": "epmo-fictional-durable-sqlite-v0.3",
+  "date": "2026-10-24",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "question": "Can a local SQLite ledger enforce durable fictional receipt uniqueness, idempotent retry and correction markers across concurrent callers and controlled transaction failures?",
+  "stage": "Research / Simulation (unchanged)",
+  "baseline": "Original fictional six-event replay retained unchanged",
+  "source": "durable_receipt_sandbox.py",
+  "tests": "test_durable_receipt_sandbox.py",
+  "documentation": "DURABLE_SQLITE_V03.md",
+  "provenance": {
+    "source_git_blob": "5d7902c468b34dfa20e34a9325c63a93e155d7fc",
+    "tests_git_blob": "a4c3550022e907a59511538e550141ad544aa937",
+    "source_sha256": "67487f7b09c09cee0b644e18ae4778a7df3e12925d5200f25906649b82ed4ff9",
+    "tests_sha256": "308244009ba17256d388f0ae6087529ba6e1a4bd95304888ae1397b4e19215f3",
+    "demo_json_sha256": "1dd567faf378ebc9ab6a8a625151667a4d495c94c6901b35b46fa23b6d9997e3"
+  },
+  "run_conditions": {
+    "local_python": "CPython 3.13.5",
+    "local_os": "Linux",
+    "github_python": "3.13",
+    "github_os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "dependencies": "Python standard library sqlite3",
+    "network": "none",
+    "seed": "not applicable; fixed fictional input",
+    "database": "temporary local SQLite file",
+    "database_version": "TBD",
+    "git_branch": "research/epmo-fictional-governance-20261024"
+  },
+  "verified": {
+    "local_additive_tests_passed": 17,
+    "local_additive_tests_total": 17,
+    "clean_directory_reproductions": 2,
+    "github_total_tests_passed_per_os": 38,
+    "github_total_tests_per_os": 38,
+    "github_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40112459325",
+    "concurrent_identical_calls": 16,
+    "created": 1,
+    "idempotent": 15,
+    "external_actions": 0
+  },
+  "negative_controls": [
+    "cross-request receipt reuse after correction",
+    "same request changed scope/receipt",
+    "two distinct concurrent requests same receipt",
+    "reservation before/after commit injected failure",
+    "correction before/after commit injected failure",
+    "changed correction reason",
+    "wrong correction request binding",
+    "nonfictional origin",
+    "blank fields"
+  ],
+  "unknown": {
+    "authenticated_identity": "TBD",
+    "policy_verified_approval": "TBD",
+    "trusted_timestamps": "TBD",
+    "external_adapter": "TBD",
+    "real_compensation": "TBD",
+    "human_correction_minutes": "TBD",
+    "external_review": "TBD",
+    "production_security": "TBD"
+  },
+  "limitations": [
+    "Standalone local storage primitive, not integrated with governance_demo.py",
+    "Caller-declared approval ID is not authenticated or checked",
+    "No real action or rollback; correction is a fictional marker",
+    "Thread concurrency on one SQLite file, not distributed consensus",
+    "No signed or tamper-proof audit, power-loss test, or external validation"
+  ],
+  "decision": "Keep independent EPMO synthetic evidence at Research / Simulation; no release or stage change",
+  "next_experiment": "Authenticated fictional sandbox policy gate with approval expiry and stubbed adapter receipts/compensation; then blinded reviewer burden versus manual notes",
+  "kill_reframe": "Simplify if durable approval policy cannot be enforced or reviewer burden exceeds manual notes"
+}
