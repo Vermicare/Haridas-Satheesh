@@ -19,7 +19,9 @@
     "platform": "Linux",
     "focused_tests": 3,
     "passed": 3,
-    "independent_hosted_ci": "TBD"
+    "independent_hosted_ci": "VERIFIED",
+    "independent_clean_directory_reproductions": 2,
+    "before_fix_clean_directory_reproductions": 2
   },
   "regression_scope": [
     "marker in non-notes raw column",
@@ -37,7 +39,14 @@
   "next_experiment": "Issue #15: genuine >=10-minute logging dry run, then preregistered repeated ambient/fan-only/prototype comparison",
   "decision": "Keep Prototype / Documented R&D; no physical claims or release",
   "limitations": "Marker absence cannot authenticate source; dry-run mode deliberately permits fictional test data; separate timestamp/energy preflight still required.",
-  "ci_url": "TBD",
-  "tested_source_blob": "TBD (verify after publication)",
-  "tested_test_blob": "TBD (verify after publication)"
+  "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40143976331",
+  "tested_source_blob": "25378c7160a840e71164f5b8153976364550f38e",
+  "tested_test_blob": "4092816ad5c051e898593a1e09fc0ba1feac55e1",
+  "ci_head_sha": "b1f7a417944ba2551d8a8e725eb751a5c2c704fa",
+  "hosted_ci": {
+    "ubuntu": "33/33 passed",
+    "windows": "33/33 passed",
+    "test_scope": "14 origin-gate and 19 dry-run tests; fictional only",
+    "workflow": "cooling-origin-gate.yml"
+  }
 }
