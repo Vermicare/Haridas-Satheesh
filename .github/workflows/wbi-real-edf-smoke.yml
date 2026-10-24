@@ -22,17 +22,16 @@ jobs:
           python-version: "3.13"
       - name: Fictional adversarial header and checksum tests
         run: python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_smoke.py -v
-      - name: Retrieve one public training EDF twice and compare source-bound reports
+      - name: Retrieve ONE training EDF; verify publisher checksum and frozen observed digest
         shell: bash
         run: |
           set -euo pipefail
-          python benchmarks/wireless-brain-interface/edf_smoke.py --fetch --out "$RUNNER_TEMP/edf-smoke-1.json"
-          python benchmarks/wireless-brain-interface/edf_smoke.py --fetch --out "$RUNNER_TEMP/edf-smoke-2.json"
-          cmp "$RUNNER_TEMP/edf-smoke-1.json" "$RUNNER_TEMP/edf-smoke-2.json"
-          sha256sum "$RUNNER_TEMP/edf-smoke-1.json"
+          python benchmarks/wireless-brain-interface/edf_smoke.py --fetch --out "$RUNNER_TEMP/edf-smoke.json"
+          python -c 'import json,os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"edf-smoke.json"; r=json.loads(p.read_text()); assert r["source_sha256"] == "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d"; assert r["source_checksum_matches_index"] and r["subject_split"] == "train" and not r["decoder_trained"]'
+          sha256sum "$RUNNER_TEMP/edf-smoke.json"
       - name: Preserve only metadata report (not raw EEG)
         uses: actions/upload-artifact@v4
         with:
           name: wbi-one-training-edf-structural-report
-          path: ${{ runner.temp }}/edf-smoke-1.json
+          path: ${{ runner.temp }}/edf-smoke.json
           retention-days: 14
