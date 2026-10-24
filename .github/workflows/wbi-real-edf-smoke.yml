@@ -10,6 +10,11 @@ on:
       - ".github/workflows/wbi-real-edf-smoke.yml"
   workflow_dispatch:
 
+# Avoid multiple simultaneous public EDF downloads from successive PR commits.
+concurrency:
+  group: wbi-real-edf-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
