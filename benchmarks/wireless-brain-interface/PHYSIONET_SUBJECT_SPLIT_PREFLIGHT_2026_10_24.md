@@ -27,7 +27,7 @@ python eegmmidb_split_contract.py --out eegmmidb_subject_splits.json
 sha256sum eegmmidb_subject_splits.json
 ```
 
-Local CPython 3.11 run on 2026-10-24: **11/11 contract tests passed**, including adversarial mutation of test membership, run IDs and fabricated data-verification status. The generated canonical JSON SHA-256 was `b626225f4560c30de94f6f7953c1f80c867712cb59e3bd929eeba4c0bdb26b67`; the generator source Git blob is `cd791df405dcf256984434c689eb239aff732162`, test source blob `de5bd64431afc13b6c9a88a85dff7f73c273bf9b`. Cross-platform GitHub CI is configured to check the manifest digest and repeated bytes; **CI status must be independently checked after this commit**.
+Local CPython 3.13.5 run on 2026-10-24: **11/11 contract tests passed**, including adversarial mutation of test membership, run IDs and fabricated data-verification status. The generated canonical JSON SHA-256 was `b626225f4560c30de94f6f7953c1f80c867712cb59e3bd929eeba4c0bdb26b67`; the generator source Git blob is `cd791df405dcf256984434c689eb239aff732162`, test source blob `de5bd64431afc13b6c9a88a85dff7f73c273bf9b`. Cross-platform GitHub CI is configured to check the manifest digest and repeated bytes; **CI status must be independently checked after this commit**.
 
 The original [frozen synthetic evaluator](SYNTHETIC_EVALUATOR.md), [same-runtime execution record](EXECUTION_RECORD.md), and [cross-platform reproduction record](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md) remain unchanged. This split preflight does not replace the frozen evaluator or supply real EEG evidence.
 
