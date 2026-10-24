@@ -27,9 +27,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Reproduce baseline gaps and v0.2 guard tests
+      - name: Reproduce v0.2 contract and v0.3 SQLite crash/replay tests
         working-directory: benchmarks/companion-life-os
-        run: python -m unittest -v test_authorization_guard_v02
+        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03
       - name: Generate fictional machine-readable demo
         working-directory: benchmarks/companion-life-os
         run: python demo_authorization_guard_v02.py > demo-v02.json
