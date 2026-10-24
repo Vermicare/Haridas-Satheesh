@@ -31,7 +31,15 @@
     "fictional_demo_sha256": "f167367cd7489479cf85a0028a16468b97c79c4926faa90d7eb603e962313349",
     "real_external_actions": 0
   },
-  "github_ci": "TBD (await final-head Linux and Windows workflow completion)",
+  "github_ci": {
+    "source_test_run": 40099350590,
+    "source_test_head": "e65e7ccc5a893d10a7b10ff4c46648533d175c4b",
+    "ubuntu": "31/31 passed; demo and artifact passed",
+    "windows": "31/31 passed; demo and artifact passed",
+    "original_benchmark_run": 40099350593,
+    "original_benchmark": "passed",
+    "documentation_only_followup_ci": "TBD until subsequent head completes"
+  },
   "limitations": [
     "caller-supplied fictional principal and time",
     "not authenticated evidence provenance",
