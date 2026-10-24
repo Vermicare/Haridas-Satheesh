@@ -29,6 +29,6 @@
 | Positive control | 5,000 ms SCD40 startup/shutdown offsets remain structurally accepted, origin unverified. |
 | Execution | CPython 3.13.5, Linux x86_64, standard library only; before: 19/22 tests pass, three fail; after: 22/22 pass in two independent process runs. |
 | Source/test blob SHAs | `792aa151aa37caaa6c0584319e364d1c1286264f` / `4400f47550839225d393ec0289c7a1df57d4d0e7` |
-| GitHub-hosted CI | TBD until published workflow run is inspected. |
+| GitHub-hosted CI | [Run #40045980176](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40045980176), head `d0cbf227a03f67bd4c70ca003f50f2572a0e66df`: Python 3.13 Linux and Windows jobs passed; both logs explicitly show `Ran 22 tests` and `OK`. |
 | Limitations | Structural screening only; a dishonest synthetic capture labeled physical can still pass. No real sensor, timing-accuracy, calibration or deployment claims. |
 | Decision / next gate | No stage advance. Capture genuine dual-sensor raw serial for ten minutes, preserve independent provenance and failed sessions, inspect setup and perturbation response. |
