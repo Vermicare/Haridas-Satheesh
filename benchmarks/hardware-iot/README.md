@@ -46,3 +46,13 @@ This explains why a fixed 5-second sampling-mode declaration is necessary; the v
 ## 30–60 second demonstration
 
 Run the unit tests and show that explicit synthetic origin, empty/single-sample logs, missing SCD40, duplicate sequence, clock reversal, fast SCD40 samples, 20-second gaps and CSV tampering are rejected. Show the provenance-unverified status even for the structurally valid fabricated fixture.
+
+## v0.2 — dual-sensor coverage-window and malformed-row negative controls (2026-10-24)
+
+The original v0.1 validator accepted **fabricated** logs where BH1750 covered the entire 600,000 ms window but SCD40 stopped after 500,000 ms or began at 100,000 ms. SCD40 still had at least 100 samples, no interior gap exceeded 15 seconds, and the global span appeared valid. It also accepted a row containing an extra CSV field when the manifest hash was recomputed. All three adversarial cases were reproduced as unexpectedly accepted **before** the correction.
+
+v0.2 requires each sensor to appear within 15,000 ms of the global first and last device-monotonic timestamps; rejects extra/missing CSV columns; and reports per-sensor span and leading/trailing coverage gaps. A 5,000 ms start/end offset remains accepted as a tolerance control. The 15-second boundary is a **predeclared structural tolerance**, not a claim about sensor synchronization accuracy. It does not detect a fabricated capture, an omitted intermediate event, replay, a device clock fault, or physical provenance.
+
+Reproduce with `python -B -m unittest -v test_capture_preflight.py`. Four added tests bring the local synthetic-only suite to **22**. Two independent process executions on CPython 3.13.5/Linux passed 22/22 each; published GitHub CI results require separate verification. Source/test Git blob SHAs: `792aa151aa37caaa6c0584319e364d1c1286264f` and `4400f47550839225d393ec0289c7a1df57d4d0e7`.
+
+**Decision:** retain Prototype / Hardware Architecture. The next evidence-producing step is still a genuine, independently inspectable ten-minute BH1750 + SCD40 hardware capture with raw serial evidence and firmware provenance. Physical accuracy, calibration and device authenticity: **TBD**.
