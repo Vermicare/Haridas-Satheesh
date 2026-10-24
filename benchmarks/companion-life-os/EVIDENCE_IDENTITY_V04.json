@@ -1,0 +1,51 @@
+{
+  "experiment_id": "companion-fictional-evidence-identity-v0.4",
+  "date": "2026-10-24",
+  "classification": "synthetic-contract-test",
+  "stage": "Simulation / contract testing (no advancement)",
+  "hypothesis": "Ambiguous evidence IDs and type-confused principal allowlists must fail closed before a simulated receipt is returned or inserted.",
+  "provenance": {
+    "before_source_git_blob": "fc52ef2d4aaf157b0ded2f330d3c742df5ad579f",
+    "corrected_source_git_blob": "910374f1d643d45199c961c48bed29b6f2fd265f",
+    "corrected_test_git_blob": "18726f6a523ef1de937f83b0829c5eeee7707651",
+    "fixture": "scenario.json; fictional and extended in memory",
+    "frozen_v01_modified": false,
+    "guard_v02_modified": false
+  },
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "os": "Linux x86_64",
+    "dependencies": "Python standard library",
+    "database": "temporary SQLite database per test",
+    "independent_clean_directories": 2,
+    "random_seed": "N/A; no random fixture generation"
+  },
+  "before_fix": {
+    "new_negative_controls": 3,
+    "incorrectly_accepted": 3
+  },
+  "after_fix": {
+    "total_tests_passed_per_run": 31,
+    "local_runs": 2,
+    "normalized_test_log_sha256": "699e9a5084049cd828c781edeca2a8d61db58d95724f7ebd3b53227c463bc4a6",
+    "fictional_demo_sha256": "f167367cd7489479cf85a0028a16468b97c79c4926faa90d7eb603e962313349",
+    "real_external_actions": 0
+  },
+  "github_ci": "TBD (await final-head Linux and Windows workflow completion)",
+  "limitations": [
+    "caller-supplied fictional principal and time",
+    "not authenticated evidence provenance",
+    "SQLite contents can be modified by local adversary",
+    "no real connector or external exactly-once guarantee",
+    "no append-only correction lineage"
+  ],
+  "unknowns": {
+    "identity_authentication": "TBD",
+    "trusted_time": "TBD",
+    "real_connector_idempotency": "TBD",
+    "external_review": "TBD",
+    "reviewer_correction_time": "TBD"
+  },
+  "decision": "retain stage; independent technical review before merge",
+  "next_experiment": "Issue #11 authenticated sandbox identity and transactional outbox with failure injection"
+}
