@@ -1,22 +1,30 @@
-name: Cooling synthetic-origin gate
+name: Cooling evidence integrity (synthetic contracts)
 on:
   pull_request:
     paths:
       - 'benchmarks/adaptive-cooling/fixture_origin_gate.py'
       - 'benchmarks/adaptive-cooling/test_fixture_origin_gate.py'
+      - 'benchmarks/adaptive-cooling/dry_run_integrity.py'
+      - 'benchmarks/adaptive-cooling/test_dry_run_integrity.py'
+      - 'benchmarks/adaptive-cooling/DRY_RUN_INTEGRITY.md'
+      - 'benchmarks/adaptive-cooling/DRY_RUN_EXPERIMENT_REGISTRY.json'
       - '.github/workflows/cooling-origin-gate.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  origin-gate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+  integrity:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Run fictional-only origin gate regressions
+      - name: Run fictional-only origin and dry-run integrity regressions
         working-directory: benchmarks/adaptive-cooling
-        run: python -B -m unittest -v test_fixture_origin_gate.py
+        run: python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py
