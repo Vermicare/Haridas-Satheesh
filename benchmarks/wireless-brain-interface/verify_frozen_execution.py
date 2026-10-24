@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 import json
 import platform
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -31,7 +30,7 @@ def git_blob_sha(data: bytes) -> str:
 
 
 def verify(source: Path) -> dict:
-    raw = source.read_bytes()
+    raw = source.read_bytes().replace(b"\r\n", b"\n")
     actual_blob = git_blob_sha(raw)
     if actual_blob != SOURCE_BLOB:
         raise ValueError(f"frozen source mismatch: {actual_blob} != {SOURCE_BLOB}")
@@ -39,7 +38,7 @@ def verify(source: Path) -> dict:
     for _ in range(2):
         with tempfile.TemporaryDirectory(prefix="wbi-frozen-") as tmp:
             work = Path(tmp)
-            shutil.copyfile(source, work / "synthetic_evaluator.py")
+            (work / "synthetic_evaluator.py").write_bytes(raw)
             completed = subprocess.run(
                 [sys.executable, "-B", str(work / "synthetic_evaluator.py")],
                 cwd=work, check=True, capture_output=True, text=True, encoding="utf-8",
