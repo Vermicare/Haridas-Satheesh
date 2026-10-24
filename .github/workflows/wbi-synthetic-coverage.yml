@@ -40,10 +40,18 @@ jobs:
           python -c "from pathlib import Path; p=Path('synthetic_regime_stress.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
           cmp -s synthetic_regime_stress_first.json synthetic_regime_stress.json
           sha256sum synthetic_regime_stress.json
+          # Subject-disjoint public-EEG preregistration only; no EEG downloaded.
+          python -m unittest -v test_eegmmidb_split_contract.py
+          python eegmmidb_split_contract.py --out eegmmidb_subject_splits.json
+          printf '%s  %s\n' 'b626225f4560c30de94f6f7953c1f80c867712cb59e3bd929eeba4c0bdb26b67' 'eegmmidb_subject_splits.json' | sha256sum --check
+          cp eegmmidb_subject_splits.json eegmmidb_subject_splits_first.json
+          python eegmmidb_split_contract.py --out eegmmidb_subject_splits.json
+          cmp -s eegmmidb_subject_splits_first.json eegmmidb_subject_splits.json
       - uses: actions/upload-artifact@v4
         with:
           name: wbi-synthetic-results-${{ matrix.os }}
           path: |
             benchmarks/wireless-brain-interface/coverage_target_results.json
             benchmarks/wireless-brain-interface/synthetic_regime_stress.json
+            benchmarks/wireless-brain-interface/eegmmidb_subject_splits.json
           if-no-files-found: error
