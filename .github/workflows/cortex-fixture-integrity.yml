@@ -29,6 +29,10 @@ jobs:
           python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py
           python -B run_lineage_shift.py
           python -c "import hashlib,pathlib; p=pathlib.Path('synthetic_lineage_shift_results.json'); assert hashlib.sha256(p.read_bytes()).hexdigest() == '2c3d060df1932318cc64dba980946ebaad3c47fd56a7509b488f9f53e2dc6180'"
+      - name: Compare fictional graph traversal scaling (non-gating timing)
+        shell: bash
+        working-directory: benchmarks/cortex
+        run: python -B benchmark_supersession_scaling.py
       - uses: actions/upload-artifact@v4
         with:
           name: cortex-fictional-shift-${{ matrix.os }}
