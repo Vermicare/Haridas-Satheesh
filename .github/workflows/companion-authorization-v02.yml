@@ -1,0 +1,43 @@
+name: Companion synthetic authorization negative controls
+
+on:
+  push:
+    paths:
+      - "benchmarks/companion-life-os/**"
+      - ".github/workflows/companion-authorization-v02.yml"
+  pull_request:
+    paths:
+      - "benchmarks/companion-life-os/**"
+      - ".github/workflows/companion-authorization-v02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fictional-authorization:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Reproduce v0.2 contract and v0.3 SQLite crash/replay tests
+        working-directory: benchmarks/companion-life-os
+        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03
+      - name: Generate fictional machine-readable demos
+        working-directory: benchmarks/companion-life-os
+        run: |
+          python demo_authorization_guard_v02.py > demo-v02.json
+          python demo_authorization_store_v03.py > demo-v03.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: companion-authorization-${{ matrix.os }}
+          path: |
+            benchmarks/companion-life-os/demo-v02.json
+            benchmarks/companion-life-os/demo-v03.json
