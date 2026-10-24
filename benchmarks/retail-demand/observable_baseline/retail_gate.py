@@ -8,6 +8,7 @@ import datetime as dt
 import hashlib
 import json
 import math
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -30,8 +31,20 @@ def sha256_file(path):
 
 def parse_row(obj, line):
     try:
+        # Mirror parquet_export.normalized_row: never coerce IDs or truncate
+        # timestamps into dates. Coercion can collapse distinct source rows.
+        if not isinstance(obj, dict):
+            raise EvidenceError('expected JSON object')
+        for field in ('store_id', 'product_id'):
+            if type(obj[field]) is not int or obj[field] < 0:
+                raise EvidenceError(f'{field} must be a nonnegative integer')
+        date_text = obj['dt']
+        if type(date_text) is not str or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', date_text):
+            raise EvidenceError('dt must be canonical YYYY-MM-DD')
+        day = dt.date.fromisoformat(date_text)
+        if day.isoformat() != date_text:
+            raise EvidenceError('dt must be canonical YYYY-MM-DD')
         key = (str(obj['store_id']), str(obj['product_id']))
-        day = dt.date.fromisoformat(str(obj['dt'])[:10])
         sale = obj['hours_sale']
         status = obj['hours_stock_status']
         count = obj['stock_hour6_22_cnt']
