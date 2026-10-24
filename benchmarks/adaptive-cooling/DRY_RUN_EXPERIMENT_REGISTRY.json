@@ -43,5 +43,29 @@
   "limitations": "Internal consistency only; invented records can pass; energy integration assumes representative sampling; no meter calibration or provenance authentication",
   "ci_status": "VERIFIED: GitHub Actions run 40051385064; Python 3.13 Linux and Windows each 25/25 tests passed (11 existing origin + 14 new dry-run)",
   "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40051385064",
-  "ci_head_sha": "08cc7f0a5e7eb76c78b94947e51c277f247fda98"
+  "ci_head_sha": "08cc7f0a5e7eb76c78b94947e51c277f247fda98",
+  "v0_2_raw_snapshot_provenance": {
+    "hypothesis": "A single-read SHA-256 snapshot and optional pinned digest prevent reuse of a passing structural report for changed CSV bytes.",
+    "prior_defect": "v0.1 output was not bound to exact raw CSV bytes; a post-audit edit could be overlooked.",
+    "changes": "Read bytes once; hash and parse same snapshot; report digest and byte count; reject mismatched or malformed optional pinned SHA-256.",
+    "source_blob_sha": "9438017485c2151b5b3d34bdbf07f78bf0e44c68",
+    "test_blob_sha": "39e897f1299c0445811ac304801fafe20c11054e",
+    "tests_added": 5,
+    "total_dry_run_tests": 19,
+    "total_origin_gate_tests": 11,
+    "test_fixture": "Fictional CSV rows generated in Python unittest temporary directories",
+    "actual_physical_capture": "TBD",
+    "pinned_real_capture_sha256": "TBD",
+    "physical_origin_authenticated": false,
+    "energy_performance_claim_permitted": false,
+    "local_execution": "TBD; GitHub Actions cross-platform CI is verification target",
+    "hosted_ci": "TBD",
+    "negative_controls": [
+      "CSV edited after SHA-256 pinning",
+      "malformed pinned digest",
+      "filesystem mutation after snapshot acquisition"
+    ],
+    "limits": "SHA-256 binds report to bytes read, not to a real sensor, calibration, firmware, timestamp authority, or unmodified later filesystem state.",
+    "decision": "No stage change; preserve physical dry-run gate in issue #15."
+  }
 }
