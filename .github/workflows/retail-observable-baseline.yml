@@ -1,0 +1,27 @@
+name: Retail observable baseline (synthetic contract)
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/retail-demand/observable_baseline/**'
+      - '.github/workflows/retail-observable-baseline.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-contract:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run schema, chronology, provenance and disk-backed equivalence tests
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -m unittest discover -v
+      - name: Demonstrate fictional-only output
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python demo_60s.py
