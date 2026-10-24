@@ -14,6 +14,7 @@ FIELDS = ["boot_id", "sensor", "seq", "elapsed_ms", "value", "unit", "ready"]
 UNITS = {"BH1750": "lux", "SCD40": "ppm"}
 MODES = {"BH1750": "continuous_high_res", "SCD40": "periodic_5s"}
 MAX_BYTES = 5_000_000
+MAX_BOUNDARY_GAP_MS = 15000  # permitted sensor startup/shutdown skew, not proof of continuity
 
 
 def check(manifest_path, csv_path):
@@ -64,12 +65,18 @@ def check(manifest_path, csv_path):
         errors.append("CSV header mismatch")
         return {"status": "REJECT_INVALID", "errors": sorted(set(errors)), "warnings": warnings, "metrics": metrics}
     count = defaultdict(int)
-    last_seq, last_time, gaps = {}, {}, defaultdict(list)
+    last_seq, last_time, first_time, gaps = {}, {}, {}, defaultdict(list)
     first, last, previous_global = None, None, None
     for index, row in enumerate(reader, start=2):
         if index > 10002:
             errors.append("more than 10000 samples")
             break
+        if None in row:
+            errors.append(f"line {index}: extra CSV fields")
+            continue
+        if any(value is None for value in row.values()):
+            errors.append(f"line {index}: missing CSV fields")
+            continue
         sensor = row["sensor"]
         if sensor not in UNITS:
             errors.append(f"line {index}: unknown sensor")
@@ -105,13 +112,18 @@ def check(manifest_path, csv_path):
             elif sensor == "SCD40" and delta < 4000:
                 errors.append(f"line {index}: SCD40 interval below 4 seconds")
             gaps[sensor].append(delta)
+        first_time.setdefault(sensor, elapsed)
         last_seq[sensor], last_time[sensor] = seq, elapsed
         count[sensor] += 1
         first = elapsed if first is None else min(first, elapsed)
         last = elapsed if last is None else max(last, elapsed)
     duration = (last - first) if first is not None else 0
     metrics.update({"duration_ms": duration, "sample_counts": dict(count),
-                    "max_gap_ms": {s: max(gaps[s], default=0) for s in UNITS}})
+                    "max_gap_ms": {s: max(gaps[s], default=0) for s in UNITS},
+                    "sensor_span_ms": {s: last_time[s] - first_time[s] for s in UNITS if s in first_time},
+                    "boundary_gap_ms": {s: {"leading": first_time[s] - first,
+                                             "trailing": last - last_time[s]}
+                                        for s in UNITS if s in first_time}})
     if duration < 600000:
         errors.append("less than ten minutes of device-monotonic span")
     for sensor in UNITS:
@@ -119,6 +131,11 @@ def check(manifest_path, csv_path):
             errors.append(f"{sensor}: fewer than 100 samples")
         if max(gaps[sensor], default=0) > 15000:
             errors.append(f"{sensor}: gap exceeds 15 seconds")
+        if sensor in first_time:
+            if first_time[sensor] - first > MAX_BOUNDARY_GAP_MS:
+                errors.append(f"{sensor}: leading coverage gap exceeds 15 seconds")
+            if last - last_time[sensor] > MAX_BOUNDARY_GAP_MS:
+                errors.append(f"{sensor}: trailing coverage gap exceeds 15 seconds")
     for sensor in UNITS:
         details = manifest.get("instruments", {}).get(sensor, {}) if isinstance(manifest.get("instruments"), dict) else {}
         if not isinstance(details, dict) or not details.get("model") or not details.get("address"):
