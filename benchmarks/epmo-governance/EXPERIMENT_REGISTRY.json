@@ -39,5 +39,39 @@
     "No employer data, customer, production or ROI evidence"
   ],
   "decision": "Keep at independent synthetic research/simulation gate; no maturity upgrade",
-  "next_experiment": "Authenticated durable sandbox approvals with concurrency, restart, receipt and correction tests"
+  "next_experiment": "Authenticated durable sandbox approvals with concurrency, restart, receipt and correction tests",
+  "followup_v02": {
+    "date": "2026-10-24",
+    "question": "Can two distinct fictional requests reuse the same execution receipt identifier after the first request has been corrected?",
+    "provenance": {
+      "input": "fully fictional events extended from synthetic_scenario.json",
+      "baseline_source_git_blob": "1c7550d6e9f10b0be73a8bbf9cb2dc2ab9218532",
+      "corrected_source_git_blob": "0e1aab3fe657847d3be871fafaddce095c85fc69",
+      "new_test_git_blob": "9b1df5f493f11ea10422ee4db56cabd8885b4cb8",
+      "fixed_fixture": "synthetic_scenario.json (unchanged)",
+      "python": "GitHub Actions CPython 3.13, Linux and Windows; standard library"
+    },
+    "negative_control": {
+      "finding": "Baseline incorrectly accepted a second fictional request reusing receipt_id r1 after the first request was corrected.",
+      "github_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40082736541",
+      "result": "Ubuntu 20/21 tests passed; duplicate-receipt regression failed as expected; Windows job cancelled by superseding push."
+    },
+    "correction": "Reserve each accepted receipt_id across the complete fictional replay, including corrected requests; reject cross-request reuse.",
+    "verified": {
+      "github_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40082777613",
+      "linux": "21/21 tests passed",
+      "windows": "21/21 tests passed",
+      "original_fixture": "4 accepted, 2 rejected, 0 external actions; unchanged",
+      "new_positive_control": "second fictional request with distinct receipt accepted",
+      "new_negative_control": "second fictional request reusing corrected first request receipt rejected"
+    },
+    "limitations": [
+      "Only in-memory uniqueness during one fictional replay, not a durable/global identifier registry",
+      "Actor identities and timestamps are fixture-declared, not authenticated",
+      "Audit hashes are not tamper-proof; simulated corrections do not reverse real actions",
+      "No employer, customer, production, performance or security assurance"
+    ],
+    "decision": "Keep independent EPMO demo at Research / Simulation; no stage change or release",
+    "next_experiment": "Authenticated durable sandbox with cross-restart global receipt uniqueness, concurrency and correction lineage"
+  }
 }
