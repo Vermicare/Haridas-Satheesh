@@ -23,7 +23,7 @@ The second command is **not** executed here; no actual physical capture director
 - New Git blob SHAs: `verify_host_capture.py` = `c8b1b2a94f5c834a7941d8b0952b9a5619acbcd0`; `test_verify_host_capture.py` = `11fb995eee14985b85ccc6f7eb17ceaed37f1e0e`.
 - Local environment: CPython 3.13.5, Linux, GCC 14.2.0; standard library only; no serial device.
 - Two separate local process executions: **21/21 passed each** (11 existing v0.4 tests + 10 new adversarial/positive tests).
-- Cross-platform CI: **TBD until the exact final commit is verified in GitHub Actions**.
+- [GitHub Actions #40130671456](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40130671456): **57/57 tests passed on both Ubuntu and Windows**, including the new 10 tests, at executable/test head `0d416d05948666caabfe34aeef98c928068d3284` (both job logs inspected). Later documentation-only changes require separate final-head verification.
 - Actual physical capture: **TBD**; measurement accuracy: **TBD**; device-monotonic continuity: **TBD**.
 - No claim of before-fix acceptance by a prior independent verifier: **no prior verifier existed**.
 
