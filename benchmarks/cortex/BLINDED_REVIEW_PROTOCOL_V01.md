@@ -48,3 +48,9 @@ For each kind: TP = an adjudicated object with semantically equivalent fields **
 ## Limits and confidentiality
 
 No actual people, meetings, employers, customer records, hardware measurements, model accuracy, reviewer results or deployments are represented. The source checker does not authenticate physical or organizational history, evaluate semantic correctness, verify reviewer independence, enforce confidentiality, or prevent a malicious author from falsifying times. Public source files may be published; completed reviewer submissions, contacts and outreach tracking remain private until separately consented and sanitized. This is a preparation artifact, not evidence of external review.
+
+## Cross-platform failure and learning (2026-10-24)
+
+The first CI run with strict raw-byte SHA-256 pins ([Actions #40117620698](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40117620698)) passed **52/52 structural tests** on both Ubuntu and Windows, but the Windows job **failed the input-byte hash assertion**. Git for Windows had checked out the two JSON files with CRLF, changing their raw bytes from the LF-encoded Git blobs: Windows observed case `c3bb8745473d5552b818bf7a6863d9d646b32987ae19861cd8941813e579a635` and archive `c01ead62706e456de0cc9e2421060e1acff5828a6152e7325c38d2feb79dea64`. The manifest was structurally valid, but **the same raw-byte identity claim was false across platforms**. Do not suppress or normalize away this negative control while calling it byte identity.
+
+Remediation: explicit `.gitattributes` rules require `text eol=lf` for the two hash-bound JSON inputs. The CI hash assertion remains unchanged. Cross-platform verification after the remediation must pass before claiming a portable byte-pinned packet. This is a source-provenance correctness fix, not a governance extraction performance result.
