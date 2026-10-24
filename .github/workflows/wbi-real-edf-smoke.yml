@@ -1,0 +1,38 @@
+name: WBI single real EDF structural preflight
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/wireless-brain-interface/edf_smoke.py"
+      - "benchmarks/wireless-brain-interface/test_edf_smoke.py"
+      - ".github/workflows/wbi-real-edf-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-edf-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Fictional adversarial header and checksum tests
+        run: python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_smoke.py -v
+      - name: Retrieve one public training EDF twice and compare source-bound reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python benchmarks/wireless-brain-interface/edf_smoke.py --fetch --out "$RUNNER_TEMP/edf-smoke-1.json"
+          python benchmarks/wireless-brain-interface/edf_smoke.py --fetch --out "$RUNNER_TEMP/edf-smoke-2.json"
+          cmp "$RUNNER_TEMP/edf-smoke-1.json" "$RUNNER_TEMP/edf-smoke-2.json"
+          sha256sum "$RUNNER_TEMP/edf-smoke-1.json"
+      - name: Preserve only metadata report (not raw EEG)
+        uses: actions/upload-artifact@v4
+        with:
+          name: wbi-one-training-edf-structural-report
+          path: ${{ runner.temp }}/edf-smoke-1.json
+          retention-days: 14
