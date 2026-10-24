@@ -59,7 +59,16 @@
     "physical_origin_authenticated": false,
     "energy_performance_claim_permitted": false,
     "local_execution": "TBD; GitHub Actions cross-platform CI is verification target",
-    "hosted_ci": "TBD",
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40095057391",
+      "head_sha": "c4d97ed9bcd5cef6da5ec3ca3b15e31a609ca0a6",
+      "ubuntu": "30/30 passed",
+      "windows": "30/30 passed",
+      "scope": "11 origin-gate and 19 dry-run tests; fictional-only, no hardware",
+      "source_blob_sha": "9438017485c2151b5b3d34bdbf07f78bf0e44c68",
+      "test_blob_sha": "39e897f1299c0445811ac304801fafe20c11054e"
+    },
     "negative_controls": [
       "CSV edited after SHA-256 pinning",
       "malformed pinned digest",
