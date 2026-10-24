@@ -32,7 +32,7 @@ def evaluate(scenario):
     roles = scenario["declared_roles"]
     if not isinstance(roles, dict) or not isinstance(scenario["events"], list):
         raise ValueError("invalid scenario structure")
-    requests, seen, audit, previous_hash = {}, set(), [], "GENESIS"
+    requests, seen, receipt_ids, audit, previous_hash = {}, set(), set(), [], "GENESIS"
     for index, event in enumerate(scenario["events"]):
         accepted, reason = False, ""
         event_hash = digest(event)
@@ -87,6 +87,9 @@ def evaluate(scenario):
                     raise ValueError("missing receipt id")
                 if at >= state["expires_at"]:
                     raise ValueError("expired approval")
+                if payload["receipt_id"] in receipt_ids:
+                    raise ValueError("duplicate receipt_id across requests")
+                receipt_ids.add(payload["receipt_id"])
                 state.update(status="executed", receipt_id=payload["receipt_id"], last_at=at)
             elif typ == "correct":
                 if state is None or state["status"] != "executed":
