@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 KINDS = {"decisions", "actions", "risks", "dependencies", "conditional_followups"}
-PSEUDONYM = re.compile(r"R[0-9]{2}\\Z")
+PSEUDONYM = re.compile(r"R[0-9]{2}\Z")
 
 
 def digest(data):
