@@ -4,9 +4,12 @@ from __future__ import annotations
 import argparse
 import csv
 from datetime import datetime
+import hashlib
+import io
 import json
 import math
 from pathlib import Path
+import re
 
 HEADER = ('run_id,timestamp,condition,ambient_temp_c,ambient_rh_pct,'
           'target_temp_c,target_rh_pct,air_velocity_m_s,surface_temp_c,'
@@ -18,7 +21,8 @@ CONDITIONS = {'ambient', 'fan_only', 'prototype'}
 
 def audit(path: str | Path, *, min_duration_s: float = 600.0,
           max_gap_s: float = 60.0, energy_abs_tol_wh: float = 0.5,
-          energy_rel_tol: float = 0.30) -> dict:
+          energy_rel_tol: float = 0.30,
+          expected_sha256: str | None = None) -> dict:
     """Fail-closed structural and coarse energy-consistency check.
 
     No evidence of sensor authenticity, calibration, physical origin, or efficiency.
@@ -26,8 +30,15 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
     """
     problems = []
     records = []
+    raw_sha256 = None
+    raw_byte_count = None
     try:
-        with Path(path).open(encoding='utf-8-sig', newline='') as handle:
+        # Parse precisely the bytes whose digest is reported; do not hash one
+        # filesystem read and then parse a second potentially changed read.
+        snapshot = Path(path).read_bytes()
+        raw_sha256 = hashlib.sha256(snapshot).hexdigest()
+        raw_byte_count = len(snapshot)
+        with io.StringIO(snapshot.decode('utf-8-sig'), newline='') as handle:
             reader = csv.DictReader(handle, strict=True)
             if reader.fieldnames != HEADER:
                 problems.append('HEADER_MISMATCH')
@@ -35,6 +46,12 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
                 records = list(reader)
     except (OSError, UnicodeError, csv.Error):
         problems.append('CSV_UNREADABLE')
+    if expected_sha256 is not None:
+        if not isinstance(expected_sha256, str) or not re.fullmatch(
+                r'[0-9a-fA-F]{64}', expected_sha256):
+            problems.append('INVALID_EXPECTED_SHA256')
+        elif raw_sha256 is not None and raw_sha256 != expected_sha256.lower():
+            problems.append('RAW_SHA256_MISMATCH')
     if not records:
         problems.append('NO_ROWS')
     parsed = []
@@ -100,6 +117,7 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
     return {
         'status': 'REJECTED' if problems else 'STRUCTURE_ONLY_PROVENANCE_UNVERIFIED',
         'problems': sorted(set(problems)), 'rows': len(records),
+        'raw_sha256': raw_sha256, 'raw_byte_count': raw_byte_count,
         'duration_s': duration_s,
         'power_integral_estimate_wh': integrated_wh,
         'energy_counter_delta_wh': counter_wh,
@@ -113,8 +131,10 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--raw', required=True, help='Existing raw CSV; never modified')
+    parser.add_argument('--expected-sha256', default=None,
+                        help='Optional pinned SHA-256 of the exact raw CSV bytes')
     args = parser.parse_args()
-    result = audit(args.raw)
+    result = audit(args.raw, expected_sha256=args.expected_sha256)
     print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
     raise SystemExit(2 if result['status'] == 'REJECTED' else 0)
 
