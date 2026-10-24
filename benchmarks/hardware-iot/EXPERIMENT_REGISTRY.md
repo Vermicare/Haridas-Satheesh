@@ -32,3 +32,23 @@
 | GitHub-hosted CI | [Run #40045980176](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40045980176), head `d0cbf227a03f67bd4c70ca003f50f2572a0e66df`: Python 3.13 Linux and Windows jobs passed; both logs explicitly show `Ran 22 tests` and `OK`. |
 | Limitations | Structural screening only; a dishonest synthetic capture labeled physical can still pass. No real sensor, timing-accuracy, calibration or deployment claims. |
 | Decision / next gate | No stage advance. Capture genuine dual-sensor raw serial for ten minutes, preserve independent provenance and failed sessions, inspect setup and perturbation response. |
+
+
+## v0.3 raw-serial-to-CSV evidence chain — 2026-10-24
+
+| Field | Evidence |
+|---|---|
+| Question | Can operator-supplied raw serial bytes be preserved and deterministically bound to a manifest/CSV, rejecting corrupted or mislabeled bundles before a physical evidence claim? |
+| Inputs | Fully **fictional** serial lines and firmware bytes; no hardware connected. |
+| Baseline | v0.2 structural CSV preflight accepted a declared CSV without independently retained raw serial; no raw-to-CSV chain. |
+| Method | Strict `IOTCSV,` framing; exact CSV re-extraction; raw/CSV/firmware SHA-256; boot consistency; explicit UTC declaration; no-overwrite session directory; v0.2 structural preflight. |
+| Tests | 14 new adversarial fictional tests + 22 existing = **36/36**, twice in isolated CPython 3.13.5/Linux directories. |
+| Determinism | Elapsed-time-normalized log SHA-256 `89fd2364b76a43759d8368419377306a91c40d308a6aaae25b33a82662971a8c` in both runs. |
+| Git blobs | Source `28ecfb570f42c3a50b68f8e3e918803fe7440df8`; tests `bd9af27c95715c055fc60876216b0ba407aca1b7`; matches locally executed files. |
+| Cross-platform CI | **TBD** until GitHub-hosted jobs verified. |
+| Physical telemetry / firmware flash attestation | **TBD**; no physical sample or independent source authentication. |
+| Negative controls | Altered raw/CSV, mixed boot IDs, malformed markers/rows, invalid UTC, manifest tampering, existing output directory and false origin assertions. |
+| Decision | Keep Prototype / Hardware Architecture; no physical or bench claim. |
+| Next experiment | Use a genuine dual-sensor ESP32-S3 session with raw logger and exact flashed firmware, preserve wiring/instrument/perturbation evidence and independent review under Issue #8. |
+
+A fabricated stream labeled `physical` can still pass. Neither a local hash nor the operator-declared UTC time authenticates origin; the hash of a supplied firmware file does not prove those bytes were flashed.
