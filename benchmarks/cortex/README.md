@@ -1,7 +1,7 @@
 # CORTEX Synthetic Governance Benchmark
 
 **Project stage:** Architecture / R&D  
-**Benchmark status:** Executable synthetic harness committed — verified results are TBD
+**Benchmark status:** Frozen fictional exact-match harness committed; additive fixture-integrity and fictional archive/transfer stress are under draft PR #4. Real-workflow and human-review results are TBD.
 
 ## Purpose
 
@@ -76,6 +76,6 @@ Simplify or reframe the structured-memory approach if false positives, unsupport
 
 ## Next evidence gate
 
-Run the committed `fixture.json` → `baseline.py` → `evaluator.py` pipeline twice in a clean environment. Preserve candidate and scored machine-readable outputs, runtime/dependency information, source commit SHA and output hashes. Require identical deterministic outputs and passing negative-case, source-span and reversal-lineage checks. Results remain **TBD** until produced by the evaluator.
+The frozen fixture's `D2` refers to missing historical decision `D0`. The original hard-coded baseline may score perfect exact-match F1 on that fixture without valid history. Draft PR #4 adds structural preflight and a separately authored **fictional** archive-linked scenario: the frozen-only baseline returns zero objects there, an expected generalization limitation. The new archive check detects dangling fixture-internal historical references, but does not authenticate them. See [archive and transfer evidence](LINEAGE_SHIFT_EVIDENCE.md).
 
-After reproducibility is verified, add a genuinely different distribution-shift fixture rather than tuning against the frozen fixture. Passing the synthetic harness alone does **not** advance CORTEX beyond **Architecture / R&D**.
+**Next:** independently adjudicate a genuinely unseen fictional meeting and historical record with at least two reviewers, freeze labels/source spans before evaluating a general extractor, and measure disagreements, false positives, lineage validity and correction time against manual notes. All real-workflow metrics and human review time remain **TBD**. No stage advancement or release.

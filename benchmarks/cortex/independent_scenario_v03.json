@@ -1,0 +1,124 @@
+{
+  "benchmark": "cortex-independent-synthetic-scenario-v0.3-archive-linked",
+  "synthetic": true,
+  "meeting": {
+    "id": "SYN-MTG-NEW-002",
+    "date": "2026-10-23",
+    "participants": [
+      "Mira",
+      "Owen",
+      "Lia"
+    ],
+    "utterances": [
+      {
+        "id": "n01",
+        "speaker": "Mira",
+        "text": "The fictional solar-lab demo is approved for November 5. The previous freeze decision H0 is superseded."
+      },
+      {
+        "id": "n02",
+        "speaker": "Owen",
+        "text": "I will circulate the fictional sensor calibration sheet by October 28."
+      },
+      {
+        "id": "n03",
+        "speaker": "Lia",
+        "text": "Risk R-42: the training simulator may reset unexpectedly."
+      },
+      {
+        "id": "n04",
+        "speaker": "Mira",
+        "text": "The demonstration depends on the mock telemetry service."
+      },
+      {
+        "id": "n05",
+        "speaker": "Owen",
+        "text": "If the mock telemetry service is offline on November 4, postpone the demo."
+      },
+      {
+        "id": "n06",
+        "speaker": "Lia",
+        "text": "Perhaps we should buy a spaceship."
+      }
+    ]
+  },
+  "ground_truth": {
+    "historical_decisions": [
+      {
+        "id": "H0",
+        "record_ref": "SYN-ARCHIVE-001",
+        "status": "superseded"
+      }
+    ],
+    "decisions": [
+      {
+        "id": "D3",
+        "source": [
+          "n01"
+        ],
+        "statement": "Approve fictional solar-lab demo for 2026-11-05",
+        "status": "active",
+        "supersedes": "H0"
+      }
+    ],
+    "actions": [
+      {
+        "id": "A3",
+        "source": [
+          "n02"
+        ],
+        "owner": "Owen",
+        "due": "2026-10-28",
+        "action": "Circulate fictional sensor calibration sheet"
+      }
+    ],
+    "risks": [
+      {
+        "id": "R-42",
+        "source": [
+          "n03"
+        ],
+        "status": "open",
+        "statement": "Training simulator may reset unexpectedly"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "D-05",
+        "source": [
+          "n04"
+        ],
+        "statement": "Demo depends on mock telemetry service"
+      }
+    ],
+    "conditional_followups": [
+      {
+        "id": "F2",
+        "source": [
+          "n05"
+        ],
+        "condition": "Mock telemetry service offline on 2026-11-04",
+        "action": "Postpone demo"
+      }
+    ],
+    "negative_examples": [
+      {
+        "source": [
+          "n06"
+        ],
+        "reason": "Uncommitted suggestion"
+      }
+    ]
+  },
+  "history": {
+    "records": [
+      {
+        "record_ref": "SYN-ARCHIVE-001",
+        "decision_id": "H0",
+        "text": "FICTIONAL ARCHIVE: freeze the solar-lab demonstration schedule until instrumentation is confirmed.",
+        "status": "superseded",
+        "origin": "AUTHOR_CREATED_SYNTHETIC_TEST_ONLY"
+      }
+    ]
+  }
+}
