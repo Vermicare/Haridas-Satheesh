@@ -23,7 +23,7 @@
   "source_origin_independently_attested": false,
   "local_fictional_tests": "10/10 PASS CPython 3.13.5 Linux",
   "second_ci_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40122474197",
-  "second_ci_result": "TBD",
+  "second_ci_result": "PASS — 10/10 fictional contract tests; one actual EDF SHA256 and structural verification; metadata-only artifact uploaded",
   "raw_eeg_committed": false,
   "raw_eeg_artifact_uploaded": false,
   "event_labels_decoded": false,
@@ -33,6 +33,10 @@
   "longitudinal_validation": "TBD",
   "clinical_or_device_validation": "NONE",
   "failure_learning": "Network acquisition took ~4.5 minutes; two downloads exceeded eight-minute CI budget. Reduce to one acquisition with pinned SHA verification.",
-  "next_experiment": "Obtain passing one-download CI artifact; then verify real EDF+ annotation events and preregistered train-only preprocessing before held-out scoring.",
-  "decision": "No maturity advancement, no release."
+  "next_experiment": "Decode real EDF+ annotations from train-only R04; inspect 128-Hz train exceptions S088 and S100 while keeping held-out S092 untouched; freeze leakage-safe baseline before held-out scoring.",
+  "decision": "No maturity advancement, no release.",
+  "second_ci_environment": "Ubuntu latest, CPython 3.13.16, 2026-10-24 18:54:45 UTC",
+  "second_ci_report_sha256": "b5d741cab5edd890c65042161e3d8ecd949c19d98cf114de45722faa806cff83",
+  "second_ci_artifact_id": 12571867632,
+  "second_ci_artifact_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40122474197/artifacts/12571867632"
 }
