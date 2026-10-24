@@ -78,6 +78,32 @@ class ExportContractTests(unittest.TestCase):
             self.convert([[fictional_row()]])
         self.assertEqual(before, (out.read_bytes(), manifest.read_bytes()))
 
+    def test_output_created_during_export_is_never_overwritten(self):
+        out = self.dir / "out.jsonl"
+        manifest = self.dir / "out.manifest.json"
+        sentinel = b"UNRELATED WRITER OUTPUT"
+        def batches():
+            yield [fictional_row()]
+            out.write_bytes(sentinel)  # after preflight, before publication
+            yield []
+        with self.assertRaisesRegex(ExportError, "refusing to overwrite"):
+            self.convert(batches())
+        self.assertEqual(out.read_bytes(), sentinel)
+        self.assertFalse(manifest.exists())
+
+    def test_manifest_created_during_export_is_never_overwritten(self):
+        out = self.dir / "out.jsonl"
+        manifest = self.dir / "out.manifest.json"
+        sentinel = b"UNRELATED WRITER MANIFEST"
+        def batches():
+            yield [fictional_row()]
+            manifest.write_bytes(sentinel)  # after preflight, before publication
+            yield []
+        with self.assertRaisesRegex(ExportError, "refusing to overwrite"):
+            self.convert(batches())
+        self.assertEqual(manifest.read_bytes(), sentinel)
+        self.assertFalse(out.exists())
+
     def test_date_suffix_and_impossible_date_rejected(self):
         for date in ("2024-03-28T09:00:00", "2024-02-30", "2024-3-28"):
             with self.subTest(date=date):
