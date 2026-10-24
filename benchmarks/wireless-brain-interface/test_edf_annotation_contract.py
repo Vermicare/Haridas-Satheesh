@@ -11,10 +11,9 @@ def with_tals(*tals):
     ann_samples = 64
     start = len(edf) - ann_samples * 2
     payload = b'\x00'.join(tals) + b'\x00'
-    if len(payload) > ann_samples:
+    if len(payload) > ann_samples * 2:
         raise ValueError('too many TAL bytes')
-    for i, value in enumerate(payload):
-        edf[start + 2 * i] = value
+    edf[start:start + len(payload)] = payload
     return bytes(edf)
 
 
@@ -57,11 +56,10 @@ class EDFAnnotationContractTests(unittest.TestCase):
         with self.assertRaisesRegex(SmokeError, 'onset'):
             parse_tal(b'+nan\x14T1\x14')
 
-    def test_corrupt_high_byte_rejected(self):
-        edf = bytearray(with_tals(b'+0.1\x150.2\x14T1\x14'))
-        edf[-127] = 1
-        with self.assertRaisesRegex(SmokeError, 'high bytes'):
-            extract_annotations(bytes(edf))
+    def test_non_ascii_task_label_rejected(self):
+        edf = with_tals(b'+0.1\x150.2\x14T\xff\x14')
+        with self.assertRaisesRegex(SmokeError, 'non-ASCII'):
+            extract_annotations(edf)
 
     def test_duplicate_labels_same_tal_are_counted(self):
         edf = with_tals(b'+0.1\x150.2\x14T1\x14T1\x14')
