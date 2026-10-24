@@ -69,6 +69,18 @@ def normalized_row(row, line_no):
             "stock_hour6_22_cnt": count}
 
 
+def _publish_exclusive(staged_path, destination):
+    """Atomically publish complete staged bytes without replacing an existing path.
+
+    Staging and destination are in the same directory/filesystem. Hard-link
+    creation fails if another writer created the destination after preflight.
+    """
+    try:
+        os.link(staged_path, destination)
+    except FileExistsError as exc:
+        raise ExportError("refusing to overwrite an output or manifest created during export") from exc
+
+
 def export_batches(batches, output_path, manifest_path, *, source_path,
                    expected_source_sha256, source_revision, pyarrow_version="TBD",
                    synthetic=False):
@@ -115,11 +127,15 @@ def export_batches(batches, output_path, manifest_path, *, source_path,
         try:
             with os.fdopen(fd2, "w", encoding="utf-8", newline="\n") as mf:
                 mf.write(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
-            os.replace(temp_name, output_path)
+            _publish_exclusive(temp_name, output_path)
             try:
-                os.replace(temp_manifest, manifest_path)
+                _publish_exclusive(temp_manifest, manifest_path)
             except Exception:
-                output_path.unlink(missing_ok=True)
+                # Roll back our own published link, not an unrelated replacement.
+                # A process crash between publishes can still leave an orphan
+                # output; consumers must verify the manifest and its hashes.
+                if output_path.exists() and os.path.samefile(temp_name, output_path):
+                    output_path.unlink()
                 raise
         finally:
             if os.path.exists(temp_manifest):
