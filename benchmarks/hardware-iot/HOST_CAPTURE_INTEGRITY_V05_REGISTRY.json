@@ -1,0 +1,38 @@
+{
+  "schema_version": "iot-host-capture-integrity-registry-v1",
+  "date_utc": "2026-10-25",
+  "project": "Hardware/IoT",
+  "stage": "Prototype / Hardware Architecture",
+  "experiment": "independent host serial raw/manifest consistency verification",
+  "evidence_kind": "synthetic injected-port regression tests",
+  "baseline_git_blobs": {
+    "serial_acquire_py": "3088ea54c4dda40ee7e8849bf688b846dce8c2b2",
+    "test_serial_acquire_py": "42606fb3863dacaf13cf3da31b38d2b04a25a321"
+  },
+  "new_git_blobs": {
+    "verify_host_capture_py": "c8b1b2a94f5c834a7941d8b0952b9a5619acbcd0",
+    "test_verify_host_capture_py": "11fb995eee14985b85ccc6f7eb17ceaed37f1e0e"
+  },
+  "run_conditions": {
+    "local": "CPython 3.13.5 / Linux / GCC 14.2.0; injected fake serial; no physical sensor",
+    "ci": "GitHub Actions Python 3.13 ubuntu-latest and windows-latest; unittest discover"
+  },
+  "tests": {
+    "local_reproductions": 2,
+    "local_tests_each": 21,
+    "new_tests": 10,
+    "ci_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40130671456",
+    "ci_test_count_each_os": 57,
+    "ci_outcome": "success"
+  },
+  "limits": {
+    "physical_sensor_origin_verified": false,
+    "device_monotonic_span_verified": false,
+    "firmware_attested": false,
+    "actual_bh1750_scd40_capture": "TBD",
+    "accuracy": "TBD",
+    "field_performance": "TBD"
+  },
+  "next_experiment": "Issue #8: independently reviewed genuine >=600s dual-sensor capture with firmware/raw/CSV hashes, coverage gaps and controlled light perturbation",
+  "release_decision": "no release; PR draft"
+}
