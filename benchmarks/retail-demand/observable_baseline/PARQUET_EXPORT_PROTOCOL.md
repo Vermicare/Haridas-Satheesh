@@ -4,7 +4,7 @@
 
 ## Decision addressed
 
-The v0.2 SQLite evaluator consumes validated daily JSONL, while the publisher provides Parquet. This exporter bridges the format gap with a bounded-memory row-batch conversion, strict schema checks, immutable-revision declaration, local source/export hashes, deterministic UTF-8 JSONL serialization, non-overwrite behavior and fail-closed cleanup. It does not alter the frozen forecasting/metric logic.
+The v0.2 SQLite evaluator consumes validated daily JSONL, while the publisher provides Parquet. This exporter bridges the format gap with a bounded-memory row-batch conversion, strict schema checks, immutable-revision declaration, local source/export hashes, deterministic UTF-8 JSONL serialization, exclusive non-overwrite publication and fail-closed cleanup. It does not alter the frozen forecasting/metric logic.
 
 ## Official dataset and independently unverified metadata
 
@@ -36,3 +36,7 @@ Preserve exact `pyarrow` version, Python/OS versions, official file hash, export
 ## Evidence limits / kill conditions
 
 A locally matching SHA-256 does not independently authenticate the claimed publisher origin. Do not label the exporter as real-data validated until pinned Parquet bytes are actually acquired and processed, schema compatibility is checked, and the output is independently reproduced. Reframe the pipeline if the official schema differs, the pinned hash cannot be reproduced, or the selected cohort has incomplete held-out data. Even a successful export does **not** demonstrate forecasting uplift, latent-demand recovery, causal intervention, deployment or commercial value. Keep retail at **Research / Architecture**.
+
+## 2026-10-24 — exclusive publication negative control
+
+A deterministic fictional-row test exposed a time-of-check/time-of-use (TOCTOU) defect: another writer could create the output or manifest **after** the initial `exists()` check; `os.replace()` then silently overwrote the unrelated file. The corrected exporter uses an atomic same-filesystem hard-link publication (`os.link`), which refuses to replace a destination created during conversion. Two adversarial tests create output/manifest sentinel files mid-stream and require preservation; existing deterministic-output tests must still pass. The manifest is published last as the completion marker and consumers must check its declared hashes. This is **not** a two-file atomic transaction: a process crash between publications can leave an orphan output requiring manual review. No real Parquet I/O or forecasting validation was performed.
