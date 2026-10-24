@@ -47,16 +47,22 @@ def audit_supersession(fixture):
             issues.append('self_supersession')
         parents[row['id']] = predecessor
     # Every node has at most one predecessor in this declared schema.
-    # Detect cycles by traversing only valid edges, not using recursion.
+    # Three-state, nonrecursive traversal visits each node/edge once, even
+    # for long fictional histories. 0=unseen, 1=current path, 2=complete.
+    state = {}
     for start in parents:
-        seen = set()
+        if state.get(start, 0):
+            continue
+        path = []
         node = start
-        while node in parents:
-            if node in seen:
-                issues.append('cyclic_supersession')
-                break
-            seen.add(node)
+        while node in parents and state.get(node, 0) == 0:
+            state[node] = 1
+            path.append(node)
             node = parents[node]
+        if state.get(node, 0) == 1:
+            issues.append('cyclic_supersession')
+        for visited in path:
+            state[visited] = 2
     # Multiple descendants may be intentional branching. Surface for human
     # review, without asserting that the underlying history is false.
     successors = Counter(parents.values())
