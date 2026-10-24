@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import platform
 import subprocess
 import sys
@@ -42,7 +43,7 @@ def verify(source: Path) -> dict:
             completed = subprocess.run(
                 [sys.executable, "-B", str(work / "synthetic_evaluator.py")],
                 cwd=work, check=True, capture_output=True, text=True, encoding="utf-8",
-                timeout=45,
+                timeout=45, env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"},
             )
             stdout = completed.stdout.replace("\r\n", "\n")
             csv_digest = hashlib.sha256((work / "synthetic_risk_coverage.csv").read_bytes()).hexdigest()
