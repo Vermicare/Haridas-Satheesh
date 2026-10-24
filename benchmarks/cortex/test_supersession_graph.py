@@ -1,6 +1,7 @@
 """Fictional-only adversarial lineage tests. No real meetings or people."""
 import copy
 import unittest
+from fixture_integrity_preflight import audit_fixture
 from supersession_graph import audit_supersession
 
 BASE = {'ground_truth': {'historical_decisions': [
@@ -63,6 +64,26 @@ class SupersessionGraphTests(unittest.TestCase):
     def test_malformed_decision_id(self):
         self.assertEqual(['invalid_decision_id'],
                          audit_supersession({'ground_truth': {'decisions': [{'id': ''}]}}))
+
+    def test_earlier_membership_gate_misses_self_loop(self):
+        f = {'meeting': {'utterances': [{'id': 'n01'}]},
+             'ground_truth': {'historical_decisions': [
+                 {'id': 'H0', 'record_ref': 'FICTIONAL-ARCHIVE'}],
+                 'decisions': [{'id': 'D3', 'source': ['n01'],
+                                'statement': 'Fictional approval', 'status': 'active',
+                                'supersedes': 'D3'}]}}
+        self.assertEqual([], audit_fixture(f))  # prior membership-only gate
+        self.assertIn('self_supersession', audit_supersession(f))
+
+    def test_earlier_membership_gate_misses_two_node_cycle(self):
+        f = {'meeting': {'utterances': [{'id': 'n01'}]},
+             'ground_truth': {'historical_decisions': [
+                 {'id': 'H0', 'record_ref': 'FICTIONAL-ARCHIVE', 'supersedes': 'D3'}],
+                 'decisions': [{'id': 'D3', 'source': ['n01'],
+                                'statement': 'Fictional approval', 'status': 'active',
+                                'supersedes': 'H0'}]}}
+        self.assertEqual([], audit_fixture(f))  # prior membership-only gate
+        self.assertIn('cyclic_supersession', audit_supersession(f))
 
     def test_malformed_top_level(self):
         self.assertEqual(['malformed_fixture'], audit_supersession(None))
