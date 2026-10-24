@@ -29,3 +29,13 @@ The original `fixture.json`, `baseline.py` and `evaluator.py` are unchanged. `in
 - Reframe if structured-memory false positives or correction time outweigh the value of traceable decisions.
 
 **No release, stage change, public real-world performance claim, or employer information.**
+
+## Addendum — supersession graph negative controls (2026-10-24)
+
+Source inspection of the earlier `audit_fixture` shows that a declared predecessor is accepted when its identifier belongs to the current-or-historical ID set. This membership check does **not** detect a decision superseding itself or multi-node cycles. Such graphs make the ordering of historical decisions internally contradictory even when every referenced ID resolves.
+
+Added [`supersession_graph.py`](supersession_graph.py) with [13 fictional-only adversarial tests](test_supersession_graph.py). The new additive structural preflight reports self-loops, multi-node cycles, missing predecessors, duplicate IDs, malformed collections and branching successors. A branch is marked `forked_supersession_review`, **not** automatically declared false: concurrent policy forks can be legitimate and require reviewer adjudication. The original frozen evaluator, fixture, lineage-shift outputs and scores are untouched.
+
+**Local reproduction:** CPython 3.11/Linux standard library; two independent invocations of `python -B -m unittest -v test_supersession_graph.py` passed **13/13** with byte-identical output (SHA-256 `67e12876b60bb4306317cc3673e233e7bf951302d37bdbc8f264b0d07bd4949e`). Git blob IDs: source `a7477749e0be070dbbfa985f01dcc1bb0e54a3ce`; tests `1e74d7cc81a59855a784833c280930644dea9791`. CI now runs these tests alongside the earlier tests; hosted result should be verified separately.
+
+**Evidence boundary:** This is a structural consistency check on author-created fictional decision graphs. It does not prove archive authenticity, temporal truth, real extraction accuracy, legal validity, authorization, or usefulness. The stage remains **Architecture / R&D**. Next gate: independently annotated unseen fictional decisions and real reviewer-time measurements, including adjudication of deliberate forks.
