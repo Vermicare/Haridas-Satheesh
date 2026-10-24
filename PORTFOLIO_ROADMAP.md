@@ -67,3 +67,12 @@ After that: **Retail public-data benchmark → CORTEX synthetic governance pilot
 | Companion | [Authorization gate](benchmarks/companion-life-os/OCTOBER_2026_AUTHORIZATION_GATE.md) | Fictional consent and reversal flow only | Independent identity-bound replay/expiry adversarial tests |
 
 **Release rule:** publish executable source, fixtures, licenses, manifests and reproducible CI only after package-level review for correctness, dependency and confidentiality risks. Do not infer that this documentation imports the research ZIPs or that local test claims were independently verified on GitHub.
+
+
+## October 25, 2026 — Hardware/IoT host capture integrity v0.5 (draft PR #7 only)
+
+**Stage remains Prototype / Hardware Architecture.** The strongest new **software-only** evidence is an independent raw-serial/manifest verifier with 10 injected-port tests, two local CPython 3.13.5/Linux runs of 21/21 relevant tests, and [57/57 tests on both Ubuntu and Windows at executable head](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40130671456). See [evidence note](benchmarks/hardware-iot/HOST_CAPTURE_INTEGRITY_V05.md) and [machine-readable registry](benchmarks/hardware-iot/HOST_CAPTURE_INTEGRITY_V05_REGISTRY.json). The verifier detects altered raw bytes, mismatched counts, status swaps, malformed duplicate-key manifests and false completion, but cannot authenticate device, firmware, sensor readings or a jointly forged manifest/raw pair.
+
+**Largest gap:** no independently reviewed genuine >=600-second BH1750/SCD40 raw capture or device-monotonic coverage. Physical origin, sensor accuracy and field reliability remain **TBD**.
+
+**Next experiment:** [Issue #8](https://github.com/Vermicare/Haridas-Satheesh/issues/8) — preserve raw bytes, actual firmware binary hash, timestamp source, wiring/modes, independently inspectable controlled light perturbation, separate parsed CSV and gap accounting. **Advance only** after genuine repeated sensor evidence and independent setup review; **reframe** as logging tooling if provenance cannot be established or coverage repeatedly fails. No release or physical-performance claim. This paragraph exists on draft PR #7's branch and is **not yet merged into main**.
