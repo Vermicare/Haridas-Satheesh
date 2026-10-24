@@ -36,7 +36,7 @@ python demo_authorization_store_v03.py
 | Normalized test-log SHA-256 | `699e9a5084049cd828c781edeca2a8d61db58d95724f7ebd3b53227c463bc4a6` (both runs; elapsed seconds normalized only) |
 | Fictional demo SHA-256 | `f167367cd7489479cf85a0028a16468b97c79c4926faa90d7eb603e962313349` (both runs, byte-identical) |
 | Randomness | None in fixtures; concurrent scheduling is not deterministic but receipt count is asserted |
-| GitHub Actions | **TBD until the final branch head completes Linux/Windows CI** |
+| GitHub Actions | [v0.4 source/test CI #40099350590](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40099350590) passed **31/31 tests** on both Ubuntu and Windows; job logs and demo/artifact steps verified at head `e65e7ccc5a893d10a7b10ff4c46648533d175c4b`. [Original benchmark CI #40099350593](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40099350593) passed. Subsequent documentation-only commits require their own status check. |
 | Actual identity, signed source, trusted clock, real connector, multi-host exactly-once, correction lineage, reviewer burden | **TBD** |
 
 ## Decision and limits
