@@ -52,3 +52,20 @@
 | Next experiment | Use a genuine dual-sensor ESP32-S3 session with raw logger and exact flashed firmware, preserve wiring/instrument/perturbation evidence and independent review under Issue #8. |
 
 A fabricated stream labeled `physical` can still pass. Neither a local hash nor the operator-declared UTC time authenticates origin; the hash of a supplied firmware file does not prove those bytes were flashed.
+
+## v0.4 direct host serial acquisition — 2026-10-24
+
+| Field | Evidence |
+|---|---|
+| Hypothesis | A private host-port logger can preserve original serial bytes and failure context for the pending real sensor evidence gate, without converting host read completion into physical validation. |
+| Provenance | **Injected fictional serial reader only**; no COM/tty hardware was accessed. |
+| Baseline gap | v0.3 bundle builder required an already captured raw file and provided no acquisition mechanism. |
+| Method | New directory outside Git; byte-exact streaming; 10 MB size limit; UTC + host-monotonic metadata; SHA-256; failure partial retention; explicit no-attestation fields. |
+| Local conditions | CPython 3.13.5, Linux, Python standard library core; two independent process runs of 11/11 injected-port tests passed. Actual serial CLI requires separately installed `pyserial==3.5` (not executed here). |
+| Source/test Git blobs | `3088ea54c4dda40ee7e8849bf688b846dce8c2b2` / `42606fb3863dacaf13cf3da31b38d2b04a25a321` (verified after GitHub publication). |
+| CI | **TBD until final branch-head workflow run is inspected**. |
+| Real measurements / device firmware authenticity / sensor calibration | **TBD / TBD / TBD**. |
+| Known failure limits | Host duration is not device-monotonic coverage; a complete raw read can contain malformed or fictional telemetry; serial output may expose secrets; capture can fail when the port is busy or disconnected. |
+| Decision | No stage advancement or physical performance claim. |
+| Next experiment | Operator captures 630 seconds of genuine dual-sensor ESP32-S3 serial outside Git, packages with v0.3, verifies >=600,000 ms device span, performs a controlled light perturbation and independently documents provenance. |
+
