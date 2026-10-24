@@ -16,3 +16,19 @@
 | Next experiment | Actual ten-minute ESP32-S3 dual-sensor capture; raw serial and firmware hashes; independent review; controlled BH1750 light perturbation. |
 
 **No novelty, deployment, sensor reliability or hardware performance claims.**
+
+## Follow-up negative-control record — 2026-10-24
+
+| Field | Evidence |
+|---|---|
+| Question | Can a capture pass despite one sensor starting late/stopping early, or an extra CSV field? |
+| Baseline | Public v0.1 preflight at blob `a50196aaf15f7cb86e491dae7509fda78df5d15d`. |
+| Input provenance | Three independently constructed **fictional** adversarial fixtures; no device data. |
+| Negative finding | 3/3 adversarial inputs were unexpectedly accepted by the baseline despite valid manifest SHA-256 and 600,000 ms **global** span. |
+| Correction | Require per-sensor leading/trailing coverage gap <=15,000 ms; reject extra/missing CSV columns. |
+| Positive control | 5,000 ms SCD40 startup/shutdown offsets remain structurally accepted, origin unverified. |
+| Execution | CPython 3.13.5, Linux x86_64, standard library only; before: 19/22 tests pass, three fail; after: 22/22 pass in two independent process runs. |
+| Source/test blob SHAs | `792aa151aa37caaa6c0584319e364d1c1286264f` / `4400f47550839225d393ec0289c7a1df57d4d0e7` |
+| GitHub-hosted CI | TBD until published workflow run is inspected. |
+| Limitations | Structural screening only; a dishonest synthetic capture labeled physical can still pass. No real sensor, timing-accuracy, calibration or deployment claims. |
+| Decision / next gate | No stage advance. Capture genuine dual-sensor raw serial for ten minutes, preserve independent provenance and failed sessions, inspect setup and perturbation response. |
