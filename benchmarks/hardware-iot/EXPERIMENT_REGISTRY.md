@@ -63,7 +63,7 @@ A fabricated stream labeled `physical` can still pass. Neither a local hash nor 
 | Method | New directory outside Git; byte-exact streaming; 10 MB size limit; UTC + host-monotonic metadata; SHA-256; failure partial retention; explicit no-attestation fields. |
 | Local conditions | CPython 3.13.5, Linux, Python standard library core; two independent process runs of 11/11 injected-port tests passed. Actual serial CLI requires separately installed `pyserial==3.5` (not executed here). |
 | Source/test Git blobs | `3088ea54c4dda40ee7e8849bf688b846dce8c2b2` / `42606fb3863dacaf13cf3da31b38d2b04a25a321` (verified after GitHub publication). |
-| CI | **TBD until final branch-head workflow run is inspected**. |
+| CI | [GitHub Actions #40091162076](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40091162076), commit `ead998e183a27600d830b45d58087c80c373c340`: **47/47 passed on Ubuntu/Python 3.13 and 47/47 passed on Windows/Python 3.13**; both job logs independently inspected. These are fictional-port tests only. |
 | Real measurements / device firmware authenticity / sensor calibration | **TBD / TBD / TBD**. |
 | Known failure limits | Host duration is not device-monotonic coverage; a complete raw read can contain malformed or fictional telemetry; serial output may expose secrets; capture can fail when the port is busy or disconnected. |
 | Decision | No stage advancement or physical performance claim. |
