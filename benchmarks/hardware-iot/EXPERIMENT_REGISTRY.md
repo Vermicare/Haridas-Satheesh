@@ -45,7 +45,7 @@
 | Tests | 14 new adversarial fictional tests + 22 existing = **36/36**, twice in isolated CPython 3.13.5/Linux directories. |
 | Determinism | Elapsed-time-normalized log SHA-256 `89fd2364b76a43759d8368419377306a91c40d308a6aaae25b33a82662971a8c` in both runs. |
 | Git blobs | Source `28ecfb570f42c3a50b68f8e3e918803fe7440df8`; tests `bd9af27c95715c055fc60876216b0ba407aca1b7`; matches locally executed files. |
-| Cross-platform CI | **TBD** until GitHub-hosted jobs verified. |
+| Cross-platform CI | [GitHub Actions #40079273378](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40079273378) **passed 36/36 on Ubuntu and Windows (Python 3.13)**; job logs inspected at head `4134b0ee90ec22fc57fef1ca5f9641e6a73f0978`. |
 | Physical telemetry / firmware flash attestation | **TBD**; no physical sample or independent source authentication. |
 | Negative controls | Altered raw/CSV, mixed boot IDs, malformed markers/rows, invalid UTC, manifest tampering, existing output directory and false origin assertions. |
 | Decision | Keep Prototype / Hardware Architecture; no physical or bench claim. |
