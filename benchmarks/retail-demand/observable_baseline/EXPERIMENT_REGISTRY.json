@@ -131,7 +131,12 @@
     "pyarrow_real_parquet_integration": "TBD",
     "actual_public_data_metrics": "TBD",
     "stage_change": "NONE",
-    "final_ci": "TBD",
-    "next_experiment": "Acquire exact pinned Parquet bytes, independently hash, run documented CLI, verify manifest and frozen benchmark."
+    "final_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40108313562",
+    "next_experiment": "Acquire exact pinned Parquet bytes, independently hash, run documented CLI, verify manifest and frozen benchmark.",
+    "code_bearing_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40108284178",
+    "code_bearing_ci_linux": "PASS 47/47 Python 3.13",
+    "code_bearing_ci_windows": "PASS 47/47 Python 3.13",
+    "final_ci_linux": "PASS 47/47 Python 3.13",
+    "final_ci_windows": "PASS 47/47 Python 3.13"
   }
 }
