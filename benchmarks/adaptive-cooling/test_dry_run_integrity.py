@@ -1,8 +1,10 @@
 """Entirely fictional cooling CSV fixtures. No physical experiments."""
 import csv
 from datetime import datetime, timedelta, timezone
+import hashlib
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from dry_run_integrity import HEADER, audit
 
@@ -93,6 +95,46 @@ class DryRunIntegrityTests(unittest.TestCase):
     def test_nonfinite_rejected(self):
         self.rows[2]['power_w'] = 'nan'; self.write()
         self.assertIn('INVALID_NUMERIC', self.codes())
+
+
+    def test_snapshot_digest_matches_exact_parsed_raw_bytes(self):
+        raw = self.path.read_bytes()
+        result = audit(self.path, expected_sha256=hashlib.sha256(raw).hexdigest())
+        self.assertEqual(result['status'], 'STRUCTURE_ONLY_PROVENANCE_UNVERIFIED')
+        self.assertEqual(result['raw_sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(result['raw_byte_count'], len(raw))
+
+    def test_pinned_digest_rejects_changed_raw_bytes(self):
+        pinned = hashlib.sha256(self.path.read_bytes()).hexdigest()
+        self.rows[3]['notes'] = 'fictional edited after pinning'
+        self.write()
+        result = audit(self.path, expected_sha256=pinned)
+        self.assertIn('RAW_SHA256_MISMATCH', result['problems'])
+        self.assertFalse(result['performance_claim_permitted'])
+
+    def test_malformed_pinned_digest_rejected(self):
+        result = audit(self.path, expected_sha256='not-a-sha256')
+        self.assertIn('INVALID_EXPECTED_SHA256', result['problems'])
+
+    def test_uppercase_pinned_digest_accepted(self):
+        pinned = hashlib.sha256(self.path.read_bytes()).hexdigest().upper()
+        self.assertEqual(audit(self.path, expected_sha256=pinned)['problems'], [])
+
+    def test_parse_uses_hashed_snapshot_not_second_filesystem_read(self):
+        original = self.path.read_bytes()
+        real_read_bytes = Path.read_bytes
+        def replace_after_snapshot_read(path):
+            if path == self.path:
+                self.rows[4]['notes'] = 'fictional later filesystem mutation'
+                self.write()
+                return original
+            return real_read_bytes(path)
+        with patch.object(Path, 'read_bytes', replace_after_snapshot_read):
+            result = audit(self.path, expected_sha256=hashlib.sha256(original).hexdigest())
+        self.assertEqual(result['status'], 'STRUCTURE_ONLY_PROVENANCE_UNVERIFIED')
+        self.assertEqual(result['raw_sha256'], hashlib.sha256(original).hexdigest())
+        self.assertNotEqual(result['raw_sha256'], hashlib.sha256(self.path.read_bytes()).hexdigest())
+        self.assertFalse(result['physical_origin_authenticated'])
 
 
 if __name__ == '__main__':
