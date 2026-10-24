@@ -98,6 +98,42 @@ class DurableStoreTests(unittest.TestCase):
         with self.assertRaises(sqlite3.DatabaseError):
             self.run_once()
 
+    def test_duplicate_evidence_ids_rejected_before_receipt(self):
+        # Two records with one ID are ambiguous; the v0.2 dict silently kept last.
+        changed = copy.deepcopy(self.s)
+        shadow = copy.deepcopy(changed['evidence'][0])
+        shadow['trusted'] = False
+        shadow['content']['task'] = 'DIFFERENT FICTIONAL TASK'
+        changed['evidence'].insert(0, shadow)
+        with self.assertRaisesRegex(ContractError, 'duplicate evidence id'):
+            self.run_once(scenario_override=changed)
+        self.assertEqual(self.store.receipt_count(), 0)
+
+    def test_string_principal_allowlist_rejected(self):
+        # Python substring membership must not be mistaken for set membership.
+        with self.assertRaisesRegex(ContractError, 'trusted_principals must be'):
+            self.run_once(trusted_principals='prefixfictional-user-suffix')
+        self.assertEqual(self.store.receipt_count(), 0)
+
+    def test_duplicate_decision_evidence_references_rejected(self):
+        changed = copy.deepcopy(self.s)
+        changed['proposed_decision']['evidence'].append('E1')
+        with self.assertRaisesRegex(ContractError, 'duplicate decision evidence reference'):
+            self.run_once(scenario_override=changed)
+        self.assertEqual(self.store.receipt_count(), 0)
+
+    def test_frozenset_principal_allowlist_is_valid(self):
+        result = self.run_once(trusted_principals=frozenset({'fictional-user'}))
+        self.assertFalse(result['idempotent_replay'])
+        self.assertEqual(self.store.receipt_count(), 1)
+
+    def test_empty_evidence_id_rejected_before_receipt(self):
+        changed = copy.deepcopy(self.s)
+        changed['evidence'][1]['id'] = ''
+        with self.assertRaisesRegex(ContractError, 'invalid fictional evidence id'):
+            self.run_once(scenario_override=changed)
+        self.assertEqual(self.store.receipt_count(), 0)
+
     def test_memory_database_rejected(self):
         with self.assertRaises(ValueError):
             FictionalDurableStore(':memory:')
