@@ -1,0 +1,27 @@
+name: WBI frozen synthetic reproduction
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/wireless-brain-interface/**"
+      - ".github/workflows/wbi-frozen-synthetic-repro.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-frozen-contract:
+    name: Frozen source and output / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify unchanged synthetic source and repeatable outputs
+        run: python benchmarks/wireless-brain-interface/verify_frozen_execution.py

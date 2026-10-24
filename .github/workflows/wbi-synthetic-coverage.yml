@@ -1,0 +1,49 @@
+name: WBI synthetic coverage diagnostic
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/wireless-brain-interface/**"
+      - ".github/workflows/wbi-synthetic-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Frozen baseline and synthetic stress tests
+        shell: bash
+        working-directory: benchmarks/wireless-brain-interface
+        run: |
+          python -m unittest -v test_coverage_target_diagnostic.py test_synthetic_regime_stress.py
+          python coverage_target_diagnostic.py --out coverage_target_results.json
+          python -c "from pathlib import Path; p=Path('coverage_target_results.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\n' '24979d49d9ed458f6a7ebea8af5700072d5e81b64f6540653ff4e2b7f1b5ab37' 'coverage_target_results.json' | sha256sum --check
+          python synthetic_regime_stress.py --out synthetic_regime_stress.json
+          python -c "from pathlib import Path; p=Path('synthetic_regime_stress.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          cp synthetic_regime_stress.json synthetic_regime_stress_first.json
+          python synthetic_regime_stress.py --out synthetic_regime_stress.json
+          python -c "from pathlib import Path; p=Path('synthetic_regime_stress.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          cmp -s synthetic_regime_stress_first.json synthetic_regime_stress.json
+          sha256sum synthetic_regime_stress.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-synthetic-results-${{ matrix.os }}
+          path: |
+            benchmarks/wireless-brain-interface/coverage_target_results.json
+            benchmarks/wireless-brain-interface/synthetic_regime_stress.json
+          if-no-files-found: error
