@@ -40,3 +40,12 @@ A new adversarial test exposed a concrete failure: after request 01 was **correc
 The corrected replay reserves receipt identifiers for the entire in-memory fictional session, even after correction, and rejects reuse across requests. A distinct-receipt positive control remains accepted. The [corrected CI run](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40082777613) passed **21/21 tests on Linux and 21/21 on Windows** (CPython 3.13, standard library). The original six-event demo remains **4 accepted / 2 rejected / 0 external actions**. The original source/fixture v0.1 evidence above is preserved; follow-up source/test Git blobs, failure and run conditions are recorded in [EXPERIMENT_REGISTRY.json](EXPERIMENT_REGISTRY.json).
 
 **Boundary:** uniqueness exists only within one fictional replay, not across restarts or distributed workers. Roles and times are operator-declared; receipts are not authenticated, signed, or bound to real actions. No real-world security, governance accuracy, production deployment or employer performance is established. **No maturity advancement.** Next: durable globally unique receipts, authenticated sandbox actors, transactional replay protection, and inspectable correction lineage.
+
+
+## v0.3–v0.4 — durable receipts and replay/ledger reconciliation (2026-10-24–25)
+
+The [v0.3 SQLite receipt experiment](DURABLE_SQLITE_V03.md) adds local durable uniqueness, idempotent retry, concurrent caller and crash/restart tests. The [v0.4 read-only reconciliation experiment](REPLAY_LEDGER_RECONCILIATION_V04.md) now checks that **all** persisted fictional receipts match accepted replay executions/corrections; it rejects missing, extra, scope/approval/correction mismatches. A [short fictional demonstration](demo_reconciliation_45s.py) shows both a positive match and a deliberately injected extra-row failure.
+
+**Verified v0.4:** [GitHub CI #40135124046](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40135124046) passed **52/52 tests separately on Ubuntu and Windows** (Python 3.13, standard library); [machine-readable registry](REPLAY_LEDGER_RECONCILIATION_V04_REGISTRY.json). The original fictional 4 accepted / 2 rejected / 0 external-action baseline remains unchanged.
+
+**Critical boundary:** read-only reconciliation is not transactional approval consumption or actor authentication. A mutually forged scenario and ledger can still agree. Trusted timestamps, action/compensation, human review and employer metrics are **TBD**. No maturity advancement or release.
