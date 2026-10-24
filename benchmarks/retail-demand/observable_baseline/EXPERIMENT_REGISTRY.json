@@ -117,5 +117,21 @@
     "public_data_forecast_results": "TBD",
     "stage_change": "NONE",
     "next_experiment": "Acquire publisher-pinned Parquet, verify downloaded bytes, execute exporter, independently reproduce frozen forecasting comparison; retain negative results."
+  },
+  "publisher_pin_v05": {
+    "recorded_utc_date": "2026-10-24",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "hypothesis": "An external export must reject alternate revision or local hash even when both are syntactically valid and the local file matches the supplied hash.",
+    "before_fix_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40108245246",
+    "before_fix_linux": "45/47 passed; 2 expected-rejection failures exposed defect",
+    "before_fix_windows": "cancelled after corrective commit; not verified",
+    "correction": "Non-synthetic export requires exact pinned publisher revision and publisher-reported train SHA-256; local file must also hash-match.",
+    "source_origin_independently_attested": false,
+    "actual_parquet_downloaded": false,
+    "pyarrow_real_parquet_integration": "TBD",
+    "actual_public_data_metrics": "TBD",
+    "stage_change": "NONE",
+    "final_ci": "TBD",
+    "next_experiment": "Acquire exact pinned Parquet bytes, independently hash, run documented CLI, verify manifest and frozen benchmark."
   }
 }
