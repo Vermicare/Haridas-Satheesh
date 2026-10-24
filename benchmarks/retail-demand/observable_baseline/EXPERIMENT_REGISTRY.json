@@ -138,5 +138,23 @@
     "code_bearing_ci_windows": "PASS 47/47 Python 3.13",
     "final_ci_linux": "PASS 47/47 Python 3.13",
     "final_ci_windows": "PASS 47/47 Python 3.13"
+  },
+  "ingest_schema_v06": {
+    "recorded_utc_date": "2026-10-24/25",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "hypothesis": "Downstream JSONL ingestion must enforce exporter-equivalent canonical store/product IDs and dates, without lossy coercion or timestamp truncation.",
+    "before_fix_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40139601095",
+    "before_fix_ubuntu": "55 tests; 8 failing assertions/subtests exposing silent acceptance; valid control passed",
+    "before_fix_windows": "cancelled after corrective commit; not verified",
+    "correction": "Shared parse_row now rejects nonnegative-integer-ID violations and noncanonical dates in both in-memory and SQLite evaluators; forecasting functions unchanged.",
+    "source_git_blob": "ce2f326aab21655a1f853dd93e8821effd7be6d8",
+    "tests_git_blob": "dae11e648ae5a1757a0c19c750531e15a122ef65",
+    "corrected_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40139612476",
+    "corrected_ci_ubuntu": "PASS 55/55 Python 3.13",
+    "corrected_ci_windows": "PASS 55/55 Python 3.13",
+    "real_parquet_processed": false,
+    "real_forecasting_results": "TBD",
+    "stage_change": "NONE",
+    "next_experiment": "Acquire and independently checksum pinned publisher Parquet, test real schema compatibility, export deterministically, execute frozen forecasts."
   }
 }
