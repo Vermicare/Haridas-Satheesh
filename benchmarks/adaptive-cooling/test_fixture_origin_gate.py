@@ -83,5 +83,27 @@ class OriginGateTests(unittest.TestCase):
         self.assertFalse(r['physical_origin_authenticated'])
 
 
+    def test_explicit_fictional_raw_marker_in_other_column_rejected(self):
+        self.record['surface_temp_c'] = 'FICTIONAL 27'
+        self.write()
+        self.assertIn('EXPLICIT_FICTIONAL_RAW', self.codes())
+
+    def test_explicit_mock_optional_instrument_rejected(self):
+        extra = {key: 'value' for key in INSTRUMENT_HEADER}
+        extra.update(instrument_id='EXTRA', measurement='optional_thermal_camera',
+                     notes='MOCK DEVICE')
+        self.instruments.append(extra)
+        self.write()
+        self.assertIn('EXPLICIT_FICTIONAL_INSTRUMENT', self.codes())
+
+    def test_unmarked_optional_instrument_is_allowed(self):
+        extra = {key: 'value' for key in INSTRUMENT_HEADER}
+        extra.update(instrument_id='EXTRA', measurement='optional_thermal_camera',
+                     notes='')
+        self.instruments.append(extra)
+        self.write()
+        self.assertEqual(check(self.raw, self.manifest, self.plan)['status'],
+                         'STRUCTURE_ONLY_ORIGIN_UNVERIFIED')
+
 if __name__=='__main__':
     unittest.main()

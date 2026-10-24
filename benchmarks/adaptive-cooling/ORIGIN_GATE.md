@@ -31,3 +31,13 @@ Exit code 2 means rejected; exit code 0 means **structure-only origin unverified
 - Reframe: if controlled measurements cannot distinguish prototype benefit from fan-only or energy/condensation constraints erase any advantage.
 
 No release, stage upgrade, patentability claim or real-world performance claim is authorized by this artifact.
+
+## v0.2 — adversarial full-row marker coverage (2026-10-25)
+
+**Reproduced negative controls:** the previous origin-only gate accepted an explicitly `FICTIONAL` marker placed in a raw column other than `notes` or `run_id`; it also accepted an explicitly `MOCK` optional instrument because only the eight required measurement rows were screened. Both inputs received `STRUCTURE_ONLY_ORIGIN_UNVERIFIED`, despite containing overt synthetic markers. The separate numeric/timestamp preflight can reject some malformed values, but the origin-only gate must not silently miss explicit markers.
+
+**Correction:** scan all values of every structurally parsed raw row and all instrument rows for the same four existing marker strings. Keep the required-instrument coverage and provenance checks restricted to the eight required measurements; a legitimate unmarked optional instrument must not cause rejection. Do not change the dry-run mode's documented fictional-fixture allowance.
+
+**Evidence:** two pre-fix negative controls failed as expected, then three focused tests passed on CPython 3.13.5/Linux after correction. Hosted Linux/Windows CI: **TBD until inspected**. The tests are fictional only; a malicious actor can remove markers. This is a narrow evidence-presentation guard, **not** physical sensor authentication, calibrated instrument validation, energy efficiency, safety, comfort, or cooling performance evidence. No maturity advancement.
+
+[Versioned experiment registry](ORIGIN_GATE_V02_REGISTRY.json). **Next physical gate remains Issue #15**: actual instrument inventory, geometry, ≥10-minute original logging capture and repeated ambient/fan-only/prototype trials.

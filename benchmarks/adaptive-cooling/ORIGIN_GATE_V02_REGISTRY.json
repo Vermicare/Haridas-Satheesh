@@ -1,0 +1,43 @@
+{
+  "artifact": "adaptive_cooling_explicit_marker_coverage_v0.2",
+  "date_utc": "2026-10-25",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cooling-explicit-fixture-gate-20261023",
+  "parent_commit": "d6358392bff0676d933fc22b0d4e2e8fe0db32bd",
+  "hypothesis": "Explicit synthetic markers anywhere in raw or optional instrument metadata should be rejected by bench-mode origin screening.",
+  "baseline_source_blob": "9189c1b088842ecf31d2c1824001aee2485b27ad",
+  "before_fix_negative_controls": {
+    "attempted": 2,
+    "exposed": 2,
+    "detail": [
+      "FICTIONAL raw surface_temp_c was accepted by origin gate",
+      "MOCK optional instrument row was accepted by origin gate"
+    ]
+  },
+  "after_fix_local": {
+    "python": "CPython 3.13.5",
+    "platform": "Linux",
+    "focused_tests": 3,
+    "passed": 3,
+    "independent_hosted_ci": "TBD"
+  },
+  "regression_scope": [
+    "marker in non-notes raw column",
+    "marker in optional instrument row",
+    "unmarked optional instrument remains allowed"
+  ],
+  "dataset": "fictional temporary CSV and JSON fixtures only",
+  "actual_instruments": "TBD",
+  "real_dry_run": "TBD",
+  "controlled_comparison": "TBD",
+  "physical_origin_authenticated": false,
+  "performance_claim_permitted": false,
+  "strongest_evidence": "Software-only explicit-marker screening with before/after negative controls",
+  "largest_gap": "No actual instrumented cooling capture or comparison",
+  "next_experiment": "Issue #15: genuine >=10-minute logging dry run, then preregistered repeated ambient/fan-only/prototype comparison",
+  "decision": "Keep Prototype / Documented R&D; no physical claims or release",
+  "limitations": "Marker absence cannot authenticate source; dry-run mode deliberately permits fictional test data; separate timestamp/energy preflight still required.",
+  "ci_url": "TBD",
+  "tested_source_blob": "TBD (verify after publication)",
+  "tested_test_blob": "TBD (verify after publication)"
+}

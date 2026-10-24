@@ -56,8 +56,10 @@ def check(raw_path, manifest_path, plan_path, mode='bench'):
     if mode=='bench':
         if marked(json.dumps(plan,sort_keys=True)):
             problems.append('EXPLICIT_FICTIONAL_PLAN')
-        if any(marked(row.get('notes','')) or marked(row.get('run_id','')) for row in raw):
+        if any(marked(value) for row in raw for value in row.values()):
             problems.append('EXPLICIT_FICTIONAL_RAW')
+        if any(marked(value) for row in instruments for value in row.values()):
+            problems.append('EXPLICIT_FICTIONAL_INSTRUMENT')
         counts={key:0 for key in REQUIRED}
         for row in instruments:
             name=row.get('measurement')
@@ -65,8 +67,6 @@ def check(raw_path, manifest_path, plan_path, mode='bench'):
                 counts[name]+=1
                 if any(str(row.get(key,'')).strip().upper() in UNKNOWN for key in PROVENANCE):
                     problems.append('INSTRUMENT_PROVENANCE_TBD')
-                if marked(json.dumps(row,sort_keys=True)):
-                    problems.append('EXPLICIT_FICTIONAL_INSTRUMENT')
         if any(n!=1 for n in counts.values()):
             problems.append('INSTRUMENT_COVERAGE')
         if any(str(plan.get(key,'')).strip().upper() in UNKNOWN for key in
