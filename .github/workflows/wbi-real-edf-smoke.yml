@@ -1,10 +1,12 @@
-name: WBI single real EDF structural preflight
+name: WBI single real EDF annotation preflight
 
 on:
   pull_request:
     paths:
       - "benchmarks/wireless-brain-interface/edf_smoke.py"
       - "benchmarks/wireless-brain-interface/test_edf_smoke.py"
+      - "benchmarks/wireless-brain-interface/edf_annotation_contract.py"
+      - "benchmarks/wireless-brain-interface/test_edf_annotation_contract.py"
       - ".github/workflows/wbi-real-edf-smoke.yml"
   workflow_dispatch:
 
@@ -12,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  public-edf-smoke:
+  public-edf-annotations:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -20,18 +22,30 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Fictional adversarial header and checksum tests
-        run: python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_smoke.py -v
-      - name: Retrieve ONE training EDF; verify publisher checksum and frozen observed digest
+      - name: Synthetic adversarial EDF and TAL contract tests (no public EEG)
+        run: |
+          python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_smoke.py -v
+          python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_annotation_contract.py -v
+      - name: Bounded real training-EDF acquisition and checksum-bound TAL parsing
         shell: bash
         run: |
           set -euo pipefail
-          python benchmarks/wireless-brain-interface/edf_smoke.py --fetch --out "$RUNNER_TEMP/edf-smoke.json"
-          python -c 'import json,os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"edf-smoke.json"; r=json.loads(p.read_text()); assert r["source_sha256"] == "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d"; assert r["source_checksum_matches_index"] and r["subject_split"] == "train" and not r["decoder_trained"]'
-          sha256sum "$RUNNER_TEMP/edf-smoke.json"
-      - name: Preserve only metadata report (not raw EEG)
+          for attempt in 1 2; do
+            if timeout 160s python benchmarks/wireless-brain-interface/edf_annotation_contract.py --fetch --out "$RUNNER_TEMP/edf-annotations.json"; then
+              break
+            fi
+            if [ "$attempt" -eq 2 ]; then
+              echo "::error::Real EDF acquisition or TAL validation failed after two bounded attempts; inspect log. Do not interpret network timeout as EEG evidence."
+              exit 1
+            fi
+            echo "::warning::First attempt failed; retrying once with same pinned source."
+            sleep 5
+          done
+          python -c 'import json,os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"edf-annotations.json"; r=json.loads(p.read_text()); assert r["source_sha256"] == "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d"; assert r["publisher_checksum_matches"] and r["split"] == "train" and not r["decoder_trained"] and not r["test_subjects_accessed"]; assert r["annotations"]["total_events"] > 0'
+          sha256sum "$RUNNER_TEMP/edf-annotations.json"
+      - name: Preserve only metadata and task annotations (not raw EEG)
         uses: actions/upload-artifact@v4
         with:
-          name: wbi-one-training-edf-structural-report
-          path: ${{ runner.temp }}/edf-smoke.json
+          name: wbi-one-training-edf-annotation-report
+          path: ${{ runner.temp }}/edf-annotations.json
           retention-days: 14
