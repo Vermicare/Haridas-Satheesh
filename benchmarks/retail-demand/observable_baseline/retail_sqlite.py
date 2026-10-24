@@ -82,6 +82,8 @@ def benchmark_sqlite(path, expected_hash=None, source_uri=None, synthetic=False)
         with closing(sqlite3.connect(str(Path(folder) / "daily.sqlite"))) as conn:
             _ingest(conn, path)
             key, rows = _select(conn)
+    if sha256_file(path) != actual:
+        raise EvidenceError("source changed during benchmark ingestion; aborting")
     return {"schema_version": "1.0",
             "data_kind": "FICTIONAL_TEST_ONLY" if synthetic else
                          "EXTERNAL_SNAPSHOT_ORIGIN_NOT_INDEPENDENTLY_ATTESTED",
