@@ -41,5 +41,7 @@
   ],
   "decision": "Keep at Prototype / Documented R&D; perform actual instrumented logging dry run next",
   "limitations": "Internal consistency only; invented records can pass; energy integration assumes representative sampling; no meter calibration or provenance authentication",
-  "ci_status": "TBD until hosted run inspected"
+  "ci_status": "VERIFIED: GitHub Actions run 40051385064; Python 3.13 Linux and Windows each 25/25 tests passed (11 existing origin + 14 new dry-run)",
+  "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40051385064",
+  "ci_head_sha": "08cc7f0a5e7eb76c78b94947e51c277f247fda98"
 }
