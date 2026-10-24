@@ -13,8 +13,8 @@ from collections import Counter
 from pathlib import Path
 from edf_smoke import BASE, REL, MAX_BYTES, MAX_SUMS_BYTES, SmokeError, fetch, inspect_edf, verify
 
-_NUMBER = re.compile(rb'[+-](?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][+-]?\d+)?\Z')
-_DURATION = re.compile(rb'(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][+-]?\d+)?\Z')
+_NUMBER = re.compile(rb'[+-](?:\d+(?:\.\d*)?|\.\d+)\Z')
+_DURATION = re.compile(rb'(?:\d+(?:\.\d*)?|\.\d+)\Z')
 _LABELS = {'T0': 'rest', 'T1': 'imagined_left_fist', 'T2': 'imagined_right_fist'}
 
 
@@ -83,9 +83,9 @@ def extract_annotations(edf: bytes) -> dict:
         pair_bytes = edf[begin:begin + annotation_size]
         if len(pair_bytes) != annotation_size:
             raise SmokeError('truncated EDF+ annotation channel')
-        if any(pair_bytes[i] != 0 for i in range(1, len(pair_bytes), 2)):
-            raise SmokeError('unexpected EDF+ annotation high bytes')
-        tal_bytes = pair_bytes[::2]
+        # EDF+ annotation characters are packed as consecutive bytes into
+        # the 2-byte sample storage, NOT interleaved with zero high bytes.
+        tal_bytes = pair_bytes
         found_clock = False
         for chunk in tal_bytes.split(b'\x00'):
             if not chunk:
