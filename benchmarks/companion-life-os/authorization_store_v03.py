@@ -22,6 +22,32 @@ def _fingerprint(scenario, requested_scope, principal):
     }).encode('utf-8')).hexdigest()
 
 
+def _check_fictional_evidence_identity(scenario, trusted_principals):
+    """Reject ambiguous fictional sources and string-substring trust membership.
+
+    This is structural validation only; it cannot authenticate a source or actor.
+    """
+    if not isinstance(trusted_principals, (set, frozenset)) or not trusted_principals or any(
+        not isinstance(p, str) or not p.strip() for p in trusted_principals
+    ):
+        raise ContractError('trusted_principals must be a nonempty set of identities')
+    evidence = scenario.get('evidence') if isinstance(scenario, dict) else None
+    if not isinstance(evidence, list):
+        raise ContractError('fictional evidence must be a list')
+    seen = set()
+    for record in evidence:
+        if not isinstance(record, dict) or not isinstance(record.get('id'), str) or not record['id'].strip():
+            raise ContractError('invalid fictional evidence id')
+        if record['id'] in seen:
+            raise ContractError('duplicate evidence id')
+        seen.add(record['id'])
+    decision = scenario.get('proposed_decision')
+    refs = decision.get('evidence') if isinstance(decision, dict) else None
+    if isinstance(refs, list) and all(isinstance(ref, str) for ref in refs):
+        if len(refs) != len(set(refs)):
+            raise ContractError('duplicate decision evidence reference')
+
+
 class FictionalDurableStore:
     """Single-host local SQLite sandbox. Callers supply a fictional principal/clock."""
 
@@ -47,6 +73,7 @@ class FictionalDurableStore:
         if failure_point not in (None, 'before_commit', 'after_commit'):
             raise ValueError('unsupported failure injection')
         # Validate the entire fictional contract *before* revealing a prior receipt.
+        _check_fictional_evidence_identity(scenario, trusted_principals)
         receipt = simulate_once(scenario, requested_scope, principal=principal,
                                 now=now, consumed=set(),
                                 trusted_principals=trusted_principals)
