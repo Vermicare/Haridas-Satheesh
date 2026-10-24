@@ -1,0 +1,45 @@
+{
+  "artifact": "adaptive_cooling_dry_run_integrity_v0.1",
+  "date_utc": "2026-10-24",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cooling-explicit-fixture-gate-20261023",
+  "baseline": "Committed raw_data_template.csv plus earlier explicit synthetic-origin preflight",
+  "hypothesis": "A deterministic offline preflight can reject internally inconsistent timestamp/power/energy records before physical bench claims.",
+  "dataset": "fictional, generated in temporary directories by test_dry_run_integrity.py",
+  "actual_sensor_capture": "TBD",
+  "physical_instrument_identity": "TBD",
+  "real_energy_measurement": "TBD",
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "platform": "Linux",
+    "dependencies": "standard library only",
+    "unit_tests": 14
+  },
+  "local_result": "14/14 fictional-only regression tests passed; physical evidence not obtained",
+  "tested_source_git_blob_sha": "c5269110c0a4f391b9468fed245fba839e765043",
+  "tested_test_git_blob_sha": "a626258a097ef1c6c13e926a0e71f1a038a3a7cf",
+  "thresholds": {
+    "minimum_duration_seconds": 600,
+    "maximum_sample_gap_seconds": 60,
+    "energy_absolute_tolerance_wh": 0.5,
+    "energy_relative_tolerance": 0.3
+  },
+  "negative_controls": [
+    "unchanged energy with nonzero power",
+    "energy counter reset",
+    "timestamp reversal",
+    "short duration",
+    "sample gap",
+    "mixed run IDs",
+    "mixed conditions",
+    "invalid humidity",
+    "missing numeric",
+    "extra CSV field",
+    "naive timestamp",
+    "negative power",
+    "nonfinite numeric"
+  ],
+  "decision": "Keep at Prototype / Documented R&D; perform actual instrumented logging dry run next",
+  "limitations": "Internal consistency only; invented records can pass; energy integration assumes representative sampling; no meter calibration or provenance authentication",
+  "ci_status": "TBD until hosted run inspected"
+}
