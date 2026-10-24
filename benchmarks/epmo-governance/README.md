@@ -32,3 +32,11 @@ Fictional input -> schema/time check -> declared-role and approval policy -> acc
 **Four-lens review:** Hiring managers can inspect executable workflow policy; technical reviewers can challenge the untrusted actor map and hash limits; innovation reviewers can test reuse; founders have no evidence yet of market demand or commercial return.
 
 **Confidentiality:** This is a deliberately invented, vendor-neutral scenario. It does not reproduce internal company logic, documents, identifiers or architecture.
+
+## v0.2 — cross-request receipt uniqueness (2026-10-24; fictional-only)
+
+A new adversarial test exposed a concrete failure: after request 01 was **corrected**, a second fictional request could reuse the first request's execution `receipt_id` (`r1`) and still be accepted. Reusing receipt identifiers makes an audit receipt ambiguous across requests. The [before-fix CI run](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40082736541) reproduced this false acceptance: Ubuntu **20/21** tests passed and the duplicate-receipt negative control failed as expected (Windows was cancelled by the superseding push).
+
+The corrected replay reserves receipt identifiers for the entire in-memory fictional session, even after correction, and rejects reuse across requests. A distinct-receipt positive control remains accepted. The [corrected CI run](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40082777613) passed **21/21 tests on Linux and 21/21 on Windows** (CPython 3.13, standard library). The original six-event demo remains **4 accepted / 2 rejected / 0 external actions**. The original source/fixture v0.1 evidence above is preserved; follow-up source/test Git blobs, failure and run conditions are recorded in [EXPERIMENT_REGISTRY.json](EXPERIMENT_REGISTRY.json).
+
+**Boundary:** uniqueness exists only within one fictional replay, not across restarts or distributed workers. Roles and times are operator-declared; receipts are not authenticated, signed, or bound to real actions. No real-world security, governance accuracy, production deployment or employer performance is established. **No maturity advancement.** Next: durable globally unique receipts, authenticated sandbox actors, transactional replay protection, and inspectable correction lineage.
