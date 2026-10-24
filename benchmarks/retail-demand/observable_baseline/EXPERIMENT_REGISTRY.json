@@ -94,5 +94,28 @@
     "public_data_forecast_results": "TBD",
     "stage_change": "NONE",
     "next_experiment": "Acquire publisher-pinned parquet, independently checksum, run actual pyarrow export, verify row schema and downstream frozen forecast comparison"
+  },
+  "source_integrity_v04": {
+    "recorded_utc_date": "2026-10-24",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "hypothesis": "Pre-ingestion SHA-256 alone can misattribute a benchmark report if source bytes change after hashing and before ingestion.",
+    "negative_control": "Two deterministic fictional post-hash mutations were silently accepted by the previous JSONL and SQLite evaluators; 2/2 expected-rejection tests failed before correction.",
+    "correction": "In-memory and SQLite evaluators recompute SHA-256 after ingestion/cohort selection and reject changed source before reporting.",
+    "local_environment": "CPython 3.13.5 Linux; standard library; archived retail harness, same frozen forecasting evaluator",
+    "local_before_fix": "2/2 mutation-rejection tests failed (expected, reproducing defect)",
+    "local_after_fix": "44/44 tests passed in each of two local runs; forecast algorithms and metrics unchanged",
+    "github_source_git_blobs": {
+      "retail_gate_py": "c9c834d9a77c1e1c6a4ee82b3dbec5031ed9ab42",
+      "retail_sqlite_py": "1dcf72818a40bceb1f9d98ef5719e113912b9429",
+      "test_source_integrity_py": "c145bcdb69e2296c88dd0663e872fb86dbc252d4"
+    },
+    "github_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40074990302",
+    "github_ci_linux": "PASS 44/44 Python 3.13",
+    "github_ci_windows": "PASS 44/44 Python 3.13",
+    "limits": "Two point-in-time hashes do not independently authenticate publisher origin or protect against an adversary restoring original bytes; actual Parquet I/O remains untested.",
+    "publisher_parquet_local_downloaded": false,
+    "public_data_forecast_results": "TBD",
+    "stage_change": "NONE",
+    "next_experiment": "Acquire publisher-pinned Parquet, verify downloaded bytes, execute exporter, independently reproduce frozen forecasting comparison; retain negative results."
   }
 }
