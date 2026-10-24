@@ -37,8 +37,7 @@
     "ubuntu": "31/31 passed; demo and artifact passed",
     "windows": "31/31 passed; demo and artifact passed",
     "original_benchmark_run": 40099350593,
-    "original_benchmark": "passed",
-    "documentation_only_followup_ci": "TBD until subsequent head completes"
+    "original_benchmark": "passed"
   },
   "limitations": [
     "caller-supplied fictional principal and time",
