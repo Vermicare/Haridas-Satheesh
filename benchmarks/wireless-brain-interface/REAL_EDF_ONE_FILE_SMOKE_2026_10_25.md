@@ -27,7 +27,7 @@ The second command needs network access to the public dataset. The JSON report e
 
 ## Evidence and failure log
 
-- Local CPython 3.11 / Linux: **10/10 fictional adversarial contract tests passed** (bad SHA, duplicate/missing index entry, truncated bytes, 128 Hz substitution, missing annotations, corrupt header, duplicate channel).
+- Local CPython 3.13.5 / Linux: **10/10 fictional adversarial contract tests passed** (bad SHA, duplicate/missing index entry, truncated bytes, 128 Hz substitution, missing annotations, corrupt header, duplicate channel).
 - [First CI run #40121746984](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40121746984): 10/10 tests passed on CPython 3.13.16 / Ubuntu. **One real S001R04 EDF acquisition and checksum/structure validation completed** at 18:44:36 UTC on 2026-10-24; the log reports SHA-256 `3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d`, **125 data records, 64 EEG channels at 160 Hz**. The redundant second network acquisition exceeded the eight-minute job budget; CI was cancelled and **no report artifact was uploaded**. This is a **partial success with an operational timeout**, not a passing workflow.
 - **Recovery:** use one bounded network acquisition per job and verify against both the publisher checksum index and the first observed fixed SHA-256. A new CI attempt is required; until it passes, complete CI status is **TBD**.
 - **Negative result:** independent repeated download is not yet demonstrated; network latency was significant. Do not claim two successful acquisitions.
