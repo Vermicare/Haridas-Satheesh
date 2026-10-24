@@ -109,3 +109,7 @@ The first evidence-bearing milestone is a reproducible bench package containing 
 ## Synthetic-fixture origin preflight (draft research contribution)
 
 [Explicit synthetic-origin gate](ORIGIN_GATE.md) checks the committed CSV headers and rejects inputs **marked fictional/synthetic** from bench-mode structural acceptance. This is not device authentication, physical logging, instrument calibration, thermal-performance validation, or evidence of energy savings. Run a real logging dry run and controlled comparisons before performance claims.
+
+## Dry-run timestamp and energy consistency preflight (draft)
+
+[Dry-run integrity contract](DRY_RUN_INTEGRITY.md) adds a **fictional-test-only** check of timestamp ordering, minimum capture duration, sampling gaps, fixed run/condition identity, numerical units/ranges and consistency between logged power and the cumulative energy counter. [Executable tests](test_dry_run_integrity.py) and [versioned experiment registry](DRY_RUN_EXPERIMENT_REGISTRY.json) document the limits and negative controls. This software is preparation for a **genuine** instrumented logging dry run; no physical data have been captured or authenticated. Passing a consistency check does **not** demonstrate thermal benefit, energy efficiency or safety. Keep all real metrics TBD until repeated controlled measurements are independently inspectable.
