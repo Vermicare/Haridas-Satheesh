@@ -135,10 +135,15 @@ def select_series(groups):
         if not any(not r['censored'] for r in train):
             continue
         # Do not skip a cohort after seeing its future: that would select on test availability.
-        if len(rows) < max(ORIGINS) + HORIZON or any(
-                (b['day'] - a['day']).days != 1 for a, b in zip(rows, rows[1:])):
+        # Only days 0..76 can affect the three frozen origins (42, 56, 70)
+        # and their seven-day horizons. Later dates must not decide cohort
+        # eligibility; doing so would leak irrelevant post-horizon availability.
+        required = max(ORIGINS) + HORIZON
+        window = rows[:required]
+        if len(window) < required or any(
+                (b['day'] - a['day']).days != 1 for a, b in zip(window, window[1:])):
             raise EvidenceError('preselected cohort has incomplete held-out horizon; do not select replacement using test data')
-        return key, rows
+        return key, window
     raise EvidenceError('no eligible first-42-day training cohort; do not relax selection')
 
 
