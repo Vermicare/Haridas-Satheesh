@@ -12,7 +12,7 @@ def tal():
 
 
 def events():
-    return [(t['label'], int(t['onset_s'] * 160)) for t in tal()]
+    return [(t['label'], int(t['onset_s'] * 160), t['duration_s']) for t in tal()]
 
 
 class CrossFormatTests(unittest.TestCase):
@@ -21,18 +21,18 @@ class CrossFormatTests(unittest.TestCase):
 
     def test_one_sample_tolerance(self):
         x = events()
-        x[1] = (x[1][0], x[1][1] + 1)
+        x[1] = (x[1][0], x[1][1] + 1, x[1][2])
         self.assertEqual(compare_tal_to_wfdb(tal(), x)['total_events'], 30)
 
     def test_wrong_label(self):
         x = events()
-        x[1] = ('T2', x[1][1])
+        x[1] = ('T2', x[1][1], x[1][2])
         with self.assertRaises(CrossFormatError):
             compare_tal_to_wfdb(tal(), x)
 
     def test_wrong_time(self):
         x = events()
-        x[1] = (x[1][0], x[1][1] + 2)
+        x[1] = (x[1][0], x[1][1] + 2, x[1][2])
         with self.assertRaisesRegex(CrossFormatError, 'onset mismatch'):
             compare_tal_to_wfdb(tal(), x)
 
@@ -47,8 +47,8 @@ class CrossFormatTests(unittest.TestCase):
             compare_tal_to_wfdb(t, events())
 
     def test_valid_aux_note(self):
-        ann = SimpleNamespace(sample=[0, 160], aux_note=['T0', 'T1'], symbol=['"', '"'])
-        self.assertEqual(wfdb_events(ann), [('T0', 0), ('T1', 160)])
+        ann = SimpleNamespace(sample=[0, 160], aux_note=['T0 duration: 1.0', 'T1 duration: 4.1'], symbol=['"', '"'])
+        self.assertEqual(wfdb_events(ann), [('T0', 0, 1.0), ('T1', 160, 4.1)])
 
     def test_unknown_label(self):
         ann = SimpleNamespace(sample=[0], aux_note=['NOPE'], symbol=['"'])
@@ -56,18 +56,29 @@ class CrossFormatTests(unittest.TestCase):
             wfdb_events(ann)
 
     def test_duplicate_event(self):
-        ann = SimpleNamespace(sample=[0, 0], aux_note=['T0', 'T0'], symbol=['"', '"'])
+        ann = SimpleNamespace(sample=[0, 0], aux_note=['T0 duration: 1.0', 'T0 duration: 1.0'], symbol=['"', '"'])
         with self.assertRaisesRegex(CrossFormatError, 'duplicate'):
             wfdb_events(ann)
 
     def test_unsorted_events(self):
-        ann = SimpleNamespace(sample=[160, 0], aux_note=['T0', 'T1'], symbol=['"', '"'])
+        ann = SimpleNamespace(sample=[160, 0], aux_note=['T0 duration: 1.0', 'T1 duration: 4.1'], symbol=['"', '"'])
         with self.assertRaisesRegex(CrossFormatError, 'out-of-order'):
             wfdb_events(ann)
 
     def test_reject_negative_sample(self):
-        ann = SimpleNamespace(sample=[-1], aux_note=['T0'], symbol=['"'])
+        ann = SimpleNamespace(sample=[-1], aux_note=['T0 duration: 1.0'], symbol=['"'])
         with self.assertRaisesRegex(CrossFormatError, 'negative'):
+            wfdb_events(ann)
+
+    def test_duration_mismatch(self):
+        x = events()
+        x[1] = (x[1][0], x[1][1], x[1][2] + 0.1)
+        with self.assertRaisesRegex(CrossFormatError, 'duration mismatch'):
+            compare_tal_to_wfdb(tal(), x)
+
+    def test_reject_malformed_duration_note(self):
+        ann = SimpleNamespace(sample=[0], aux_note=['T0 duration: nan'], symbol=['"'])
+        with self.assertRaisesRegex(CrossFormatError, 'unknown'):
             wfdb_events(ann)
 
     def test_checksum_mismatch(self):
