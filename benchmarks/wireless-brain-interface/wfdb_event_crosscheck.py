@@ -2,7 +2,7 @@
 """Checksum-gated, one-record WFDB .event versus EDF+ TAL annotation comparison.
 
 No waveform decoding, model training, held-out access or clinical inference.
-WFDB annotation sample times are quantized; EDF+ durations are NOT validated here.
+WFDB annotation sample times are quantized; auxiliary-note durations are compared.
 """
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ import math
 import operator
 from pathlib import Path
 import platform
+import re
 
 from edf_annotation_contract import validate_and_summarize
 from edf_smoke import checksum_from_index
@@ -39,8 +40,8 @@ def verify_event_digest(event_bytes: bytes, index: str) -> str:
     return actual
 
 
-def wfdb_events(annotation: object) -> list[tuple[str, int]]:
-    """Accept only explicit T0/T1/T2 WFDB auxiliary notes or symbols."""
+def wfdb_events(annotation: object) -> list[tuple[str, int, float]]:
+    """Parse exact publisher WFDB auxiliary-note form: 'T1 duration: 4.1'."""
     samples = list(annotation.sample)
     notes = list(annotation.aux_note)
     symbols = list(annotation.symbol)
@@ -56,40 +57,48 @@ def wfdb_events(annotation: object) -> list[tuple[str, int]]:
             raise CrossFormatError('noninteger WFDB sample index') from exc
         if sample < 0:
             raise CrossFormatError('negative WFDB sample index')
-        label_candidates = [v.strip() for v in (note, symbol) if isinstance(v, str) and v.strip() in EXPECTED_COUNTS]
-        if len(set(label_candidates)) != 1:
-            raise CrossFormatError(f'unknown or ambiguous WFDB event label at {event_index}: '
+        match = re.fullmatch(r'(T[012]) duration: ([0-9]+(?:\.[0-9]+)?)', note.strip()) if isinstance(note, str) else None
+        if match is None:
+            raise CrossFormatError(f'unknown or ambiguous WFDB event label/duration at {event_index}: '
                                    f'aux_note={str(note)[:64]!r}, symbol={str(symbol)[:32]!r}')
-        result.append((label_candidates[0], sample))
+        label, duration = match.group(1), float(match.group(2))
+        if not math.isfinite(duration) or duration <= 0:
+            raise CrossFormatError('nonpositive or nonfinite WFDB duration')
+        result.append((label, sample, duration))
     if len(result) != len(set(result)) or any(b[1] < a[1] for a, b in zip(result, result[1:])):
         raise CrossFormatError('duplicate or out-of-order WFDB events')
     return result
 
 
-def compare_tal_to_wfdb(tal: list[dict], events: list[tuple[str, int]]) -> dict:
+def compare_tal_to_wfdb(tal: list[dict], events: list[tuple[str, int, float]]) -> dict:
     if len(tal) != len(events):
         raise CrossFormatError(f'event count mismatch: TAL={len(tal)}, WFDB={len(events)}')
     if len(events) != 30:
         raise CrossFormatError('pinned recording event count differs from 30')
-    counts = dict(sorted(Counter(label for label, _ in events).items()))
+    counts = dict(sorted(Counter(label for label, _, _ in events).items()))
     if counts != EXPECTED_COUNTS:
         raise CrossFormatError(f'WFDB label counts differ: {counts}')
     if dict(sorted(Counter(t['label'] for t in tal).items())) != EXPECTED_COUNTS:
         raise CrossFormatError('TAL label counts differ from frozen training run')
-    max_delta = 0.0
-    for i, (source, (label, sample)) in enumerate(zip(tal, events)):
+    max_onset, max_duration = 0.0, 0.0
+    for i, (source, (label, sample, duration)) in enumerate(zip(tal, events)):
         if source['label'] != label:
             raise CrossFormatError(f'cross-format label mismatch at event {i}')
-        onset = source['onset_s']
-        if type(onset) not in (float, int) or not math.isfinite(onset) or onset < 0:
-            raise CrossFormatError('invalid TAL onset')
+        onset, tal_duration = source['onset_s'], source['duration_s']
+        if any(type(v) not in (float, int) or not math.isfinite(v) or v < 0 for v in (onset, tal_duration)):
+            raise CrossFormatError('invalid TAL timing')
         delta = abs(onset - sample / FS)
         if delta > TOLERANCE_S:
             raise CrossFormatError(f'cross-format onset mismatch at event {i}: delta={delta:.9g}s')
-        max_delta = max(max_delta, delta)
-    return {'total_events': 30, 'counts': counts, 'max_onset_delta_s': max_delta,
-            'predeclared_onset_tolerance_s': TOLERANCE_S,
-            'duration_agreement': 'TBD (not encoded/verified by this comparison)'}
+        delta_duration = abs(tal_duration - duration)
+        if delta_duration > 1e-6:
+            raise CrossFormatError(f'cross-format duration mismatch at event {i}: delta={delta_duration:.9g}s')
+        max_onset = max(max_onset, delta)
+        max_duration = max(max_duration, delta_duration)
+    return {'total_events': 30, 'counts': counts, 'max_onset_delta_s': max_onset,
+            'max_duration_delta_s': max_duration,
+            'onset_tolerance_s': TOLERANCE_S, 'duration_tolerance_s': 1e-6,
+            'duration_source': 'WFDB auxiliary-note duration text (encoding discovered in first failed CI run)'}
 
 
 def review(edf_path: Path, event_path: Path, index_path: Path) -> dict:
@@ -114,7 +123,7 @@ def review(edf_path: Path, event_path: Path, index_path: Path) -> dict:
             'wfdb_event_pairs_sha256': hashlib.sha256(canonical).hexdigest(),
             'agreement': agreement, 'decoder_trained': False, 'held_out_subjects_accessed': False,
             'real_eeg_decoding_accuracy': 'TBD', 'clinical_validation': False,
-            'limitations': 'One source recording; WFDB sample onsets versus EDF+ TAL onsets only. Neither event durations nor independent human labels are validated.'}
+            'limitations': 'One source recording; WFDB sample onsets versus EDF+ TAL onsets only. Duration text is cross-checked; independent human labels remain unvalidated.'}
 
 
 def main() -> None:
