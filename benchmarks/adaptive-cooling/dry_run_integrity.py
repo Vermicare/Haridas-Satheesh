@@ -88,6 +88,7 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
     duration_s = None
     integrated_wh = None
     counter_wh = None
+    interval_energy_mismatch_count = 0
     if len(parsed) >= 2:
         if len({r[1] for r in parsed}) != 1:
             problems.append('MIXED_RUN_IDS')
@@ -105,6 +106,19 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
                       for a, b in zip(parsed, parsed[1:])]
         if any(increment < -1e-9 for increment in increments):
             problems.append('ENERGY_COUNTER_DECREASE')
+        # A whole-run energy comparison can hide opposing interval errors.
+        # This is a conservative *review gate*, not a meter-calibration test:
+        # coarse/lagged cumulative meters may trigger false positives.
+        if all(dt > 0 for dt in elapsed):
+            for (a, b), dt, observed in zip(zip(parsed, parsed[1:]), elapsed, increments):
+                estimate = (a[3]['power_w'] / 2 + b[3]['power_w'] / 2) * (dt / 3600)
+                tolerance = energy_abs_tol_wh + energy_rel_tol * estimate
+                if not math.isfinite(estimate) or not math.isfinite(tolerance):
+                    problems.append('NONFINITE_INTERVAL_ENERGY')
+                elif abs(observed - estimate) > tolerance:
+                    interval_energy_mismatch_count += 1
+            if interval_energy_mismatch_count:
+                problems.append('INTERVAL_POWER_ENERGY_DISAGREEMENT')
         if all(dt > 0 for dt in elapsed):
             # Half-before-add prevents overflow in (a+b)/2 for large but
             # individually finite inputs. Interval conversion precedes power
@@ -134,6 +148,7 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
         'duration_s': duration_s,
         'power_integral_estimate_wh': integrated_wh,
         'energy_counter_delta_wh': counter_wh,
+        'interval_energy_mismatch_count': interval_energy_mismatch_count,
         'checks': {'min_duration_s': min_duration_s, 'max_gap_s': max_gap_s,
                    'energy_abs_tol_wh': energy_abs_tol_wh,
                    'energy_rel_tol': energy_rel_tol},
