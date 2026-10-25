@@ -17,12 +17,39 @@ MAX_BYTES = 5_000_000
 MAX_BOUNDARY_GAP_MS = 15000  # permitted sensor startup/shutdown skew, not proof of continuity
 
 
+
+def _unique_manifest_pairs(pairs):
+    """Reject ambiguous JSON keys at every nesting depth."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate manifest key: " + key)
+        result[key] = value
+    return result
+
+
+def _reject_nonfinite_manifest_constant(token):
+    raise ValueError("nonfinite JSON constant: " + token)
+
+
+def _finite_manifest_float(token):
+    value = float(token)
+    if not math.isfinite(value):
+        raise ValueError("nonfinite or overflowed JSON number: " + token)
+    return value
+
+
 def check(manifest_path, csv_path):
     """Return machine-readable diagnostics, never a physical-validation certificate."""
     errors, warnings = [], []
     metrics = {}
     try:
-        manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+        manifest = json.loads(
+            Path(manifest_path).read_text(encoding="utf-8"),
+            object_pairs_hook=_unique_manifest_pairs,
+            parse_constant=_reject_nonfinite_manifest_constant,
+            parse_float=_finite_manifest_float,
+        )
         if not isinstance(manifest, dict):
             raise ValueError("manifest must be a JSON object")
         raw = Path(csv_path).read_bytes()
