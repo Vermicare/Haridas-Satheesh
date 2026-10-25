@@ -76,5 +76,38 @@
     ],
     "limits": "SHA-256 binds report to bytes read, not to a real sensor, calibration, firmware, timestamp authority, or unmodified later filesystem state.",
     "decision": "No stage change; preserve physical dry-run gate in issue #15."
+  },
+  "v0_3_finite_derived_arithmetic": {
+    "date_utc": "2026-10-25",
+    "hypothesis": "A finite but very large instantaneous-power pair can overflow naive trapezoidal averaging, bypass energy consistency, and break strict JSON.",
+    "prior_failure": "v0.2 returned STRUCTURE_ONLY_PROVENANCE_UNVERIFIED for fictional power_w=1e308 with a stalled counter; power integral became Infinity, Infinity>Infinity evaluated false, and strict JSON serialization raised ValueError.",
+    "source_git_blob_sha": "f9c38f9b5308d16f4e22fac99d1ad5639d30f37e",
+    "test_git_blob_sha": "1cd4cca06416cae4bcd34eb288398d5f9288a4af",
+    "fix": "Compute a/2+b/2 before integration; reject nonfinite derived energy/counter/tolerance and return JSON-safe null for invalid derived energy.",
+    "new_tests": 4,
+    "total_tests_per_os": 37,
+    "local_reproduction": {
+      "runtime": "CPython 3.13.5/Linux",
+      "independent_fictional_reproducer": "3 failing cases before fix; 4/4 after fix in two local executions",
+      "raw_physical_capture": "TBD"
+    },
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40185598055",
+      "ubuntu": "37/37 passed",
+      "windows": "37/37 passed",
+      "scope": "14 origin gate and 23 dry-run tests; synthetic only"
+    },
+    "negative_controls": [
+      "finite-input arithmetic overflow hides unchanged energy counter",
+      "derived energy integral overflow on pathological timestamp gaps",
+      "overflowing derived tolerance bypass",
+      "positive finite arithmetic control"
+    ],
+    "actual_sensor_capture": "TBD",
+    "physical_origin_authenticated": false,
+    "performance_claim_permitted": false,
+    "maturity_advanced": false,
+    "decision": "Keep Prototype / Documented R&D; physical instrumented logging dry run and controlled comparisons are the next evidence gate."
   }
 }
