@@ -1,7 +1,7 @@
 # Companion Intelligence — Sanitized Vertical-Slice Benchmark
 
 **Project stage:** In Progress; implementation private  
-**Public benchmark status:** Specification — results are TBD
+**Public benchmark status:** Fictional v0.1 validator is committed and exercised in CI; [v0.2 negative controls](AUTHORIZATION_GUARD_V02.md), [v0.3 SQLite restart/concurrency evidence](DURABLE_SQLITE_V03.md), [v0.4 fictional evidence-identity negative controls](EVIDENCE_IDENTITY_V04.md), the [v0.5 fictional correction ledger](CORRECTION_LINEAGE_V05.md), the [v0.6 actual-v0.3-receipt integration](ACTUAL_RECEIPT_INTEGRATION_V06.md), and [v0.2 CI record](CI_EXECUTION_RECORD_V02.md) document synthetic reproducibility and limitations. Real identity, consent, integration and performance remain **TBD**.
 
 ## Purpose
 
@@ -68,4 +68,6 @@ Reframe any module that cannot maintain explicit authorization, provenance, reve
 
 ## Next implementation step
 
-Add the deterministic validator and simulated connector around `scenario.json`, then publish machine-readable pass/fail output. Do not add real integrations to the public benchmark.
+The original fictional validator and all stronger existing tests remain unchanged. The [v0.6 integration tests](test_actual_receipt_integration_v06.py) now generate an original receipt by actually invoking `FictionalDurableStore.execute` (v0.3), then record a v0.5 correction against that same SQLite database. The [short demonstration](demo_actual_receipt_integration_v06.py) is executable without external services. This closes the earlier **test-seeded-original** integration gap, but only in fictional local software; it does not establish real consent, trusted time, authenticated actors, a reversible connector, or protection from coordinated database tampering.
+
+[Issue #11](https://github.com/Vermicare/Haridas-Satheesh/issues/11) remains open for authenticated sandbox identity, trusted timestamps, transactional outbox/ack behavior, physical crash recovery, independent review, and measured reviewer burden. Do not add real integrations or private data to the public benchmark.
