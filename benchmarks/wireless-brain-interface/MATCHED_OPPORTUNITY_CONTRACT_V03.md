@@ -28,7 +28,7 @@ python matched_opportunity_contract_v03.py > matched_opportunity_v03_demo.json
 sha256sum matched_opportunity_v03_demo.json
 ```
 
-Local execution on **CPython 3.13.5 / Linux**, 2026-10-26: **18/18 tests passed**. Deterministic demo SHA-256 (LF): `74196ae82435526dfb21cf2a7a50606de5dd1484fb3eb611d504f1e42d41372b`. Tests include rest rate, imagery misdirection, coverage mismatch withholding, zero-action withholding, segmentation invariance, half-open boundaries, duplicate/missing/extra decisions, invalid metadata and annotations. Repository CI and independent review: **TBD** until verified.
+Local execution on **CPython 3.13.5 / Linux**, 2026-10-26: **18/18 tests passed**. Deterministic demo SHA-256 (LF): `74196ae82435526dfb21cf2a7a50606de5dd1484fb3eb611d504f1e42d41372b`. Tests include rest rate, imagery misdirection, coverage mismatch withholding, zero-action withholding, segmentation invariance, half-open boundaries, duplicate/missing/extra decisions, invalid metadata and annotations. **GitHub CI #40227676669** passed all 18 new tests and the pinned demonstration checksum on **Ubuntu and Windows (Python 3.13)** at code-bearing commit `b02b52f9945b056777ad95766f2b448bb4b9100d`; both job logs were inspected. Independent technical review: **TBD**.
 
 **Deliberately unfavorable comparison:** fictional abstention acts on both imagery opportunities (coverage 1.0, incorrect-action risk 0.5); fictional gate acts on one (coverage 0.5, risk 0.0). Coverage gap **0.5 > 0.05**, so **no gate advantage is reported** (`null` delta). Ungated makes 4 fictional T0 actions over 40 seconds of T0 exposure = **6/minute**. These are invented inputs to test arithmetic, not observations.
 
