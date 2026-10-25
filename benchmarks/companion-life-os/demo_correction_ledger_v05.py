@@ -1,6 +1,7 @@
 """30-second fictional-only correction lineage demo; zero external actions."""
 import json
 import sqlite3
+from contextlib import closing
 import tempfile
 from pathlib import Path
 from correction_ledger_v05 import FictionalCorrectionLedger
@@ -10,7 +11,7 @@ from test_correction_ledger_v05 import ORIGINAL, request
 def main():
     with tempfile.TemporaryDirectory() as directory:
         path = Path(directory) / 'fixture.sqlite3'
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute('CREATE TABLE receipts (nonce TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, receipt_json TEXT NOT NULL)')
             db.execute('INSERT INTO receipts VALUES (?,?,?)',
                        (ORIGINAL['nonce'], 'fictional-seed-digest', json.dumps(ORIGINAL, sort_keys=True)))
@@ -19,7 +20,7 @@ def main():
                   'trusted_principals': {'fictional-user'}}
         first = ledger.record(ORIGINAL['nonce'], request(), **kwargs)
         retry = FictionalCorrectionLedger(path).record(ORIGINAL['nonce'], request(), **kwargs)
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             original_unchanged = json.loads(db.execute('SELECT receipt_json FROM receipts').fetchone()[0]) == ORIGINAL
         result = {'synthetic': True, 'first': first, 'retry_after_restart': retry,
                   'correction_events': ledger.correction_count(),
