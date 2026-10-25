@@ -1,0 +1,53 @@
+{
+  "id": "epmo-fictional-approval-ledger-integrity-v0.6",
+  "date": "2026-10-25",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "question": "Can a read-only independent auditor detect inconsistent approval/receipt state in the v0.5 fictional SQLite transaction model?",
+  "files": {
+    "source": "verify_approval_ledger_v06.py",
+    "tests": "test_verify_approval_ledger_v06.py",
+    "demo": "demo_approval_ledger_integrity_45s.py",
+    "evidence": "APPROVAL_LEDGER_INTEGRITY_V06.md"
+  },
+  "sha256": {
+    "source": "05c07a53261c3ec7f040d6303b3825b7b46f8f2b62276313783f8831e029f6e5",
+    "tests": "ffb760e858727f594e72262f7cc7b80f2c142c44d9307f6c77eb851eaac73813",
+    "demo": "cd8bad8aa0af0f7abe5096e9465ecc2560b62cc8214df47f409b02818cbd4e23",
+    "demo_json_local": "09cffbf0490577907399a3b6b105344ff86f9bb0adad338583b6304e70960cd0"
+  },
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "sqlite": "3.46.1",
+    "os": "Linux 6.18.55",
+    "dependencies": "Python standard library",
+    "network": "none",
+    "data": "generated fictional temporary SQLite records",
+    "clock": "caller-supplied untrusted integer"
+  },
+  "local_results": {
+    "tests_passed": 22,
+    "tests_total": 22,
+    "clean_directory_reruns": 1,
+    "additional_local_reruns": 1,
+    "controlled_inconsistent_scope_detected": true,
+    "coordinated_forgery_detected": false,
+    "external_actions": 0
+  },
+  "github_ci": {
+    "status": "TBD",
+    "run": "TBD",
+    "commit": "TBD",
+    "linux_tests": "TBD",
+    "windows_tests": "TBD"
+  },
+  "known_failure": "Initial test used '100' string in INTEGER affinity field; SQLite coerced to 100. Test changed to 'not-a-time'.",
+  "limitations": [
+    "Only structural internal consistency, not authenticity",
+    "Coordinated forgery of approval and receipt actor remains accepted",
+    "Untrusted issuer and clock",
+    "No external action, correction, outbox or authenticated identity",
+    "No real deployment, users or employer metrics"
+  ],
+  "maturity": "Research / Simulation (unchanged)",
+  "next_experiment": "Authenticated sandbox identity/trusted clock/transactional fake-action outbox integrated with v0.4 replay and v0.5 consumption; crash/replay controls."
+}
