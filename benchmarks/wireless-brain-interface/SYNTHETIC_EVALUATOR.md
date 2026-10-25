@@ -36,7 +36,7 @@ A risk–coverage table is emitted for confidence thresholds from 0.50 to 0.95. 
 
 Passing these contract tests only permits the next experiment. It does **not** advance maturity.
 
-Next gate: connect this evaluator logic unchanged to a longitudinal public motor-imagery EEG benchmark, report per-subject/per-session results, and compare the authorization gate with both ungated decoding and simple abstention at comparable coverage.
+Next gate: connect the frozen evaluation definitions to **subject-disjoint public motor-imagery EEG** (the preregistered PhysioNet EEGMMIDB is **single-session**, not longitudinal), report per-subject results, and compare authorization gating with both ungated decoding and simple abstention at matched imagery coverage and common decision opportunities. Any longitudinal drift claim requires a **separate multi-session dataset**. The additive [v0.3 fictional matched-opportunity preflight](MATCHED_OPPORTUNITY_CONTRACT_V03.md) tests comparison integrity but is not EEG validation.
 
 Reframe the claimed contribution if lower incorrect-action risk is mainly purchased by near-total abstention, or if the authorization gate does not improve on simple abstention at comparable coverage.
 
