@@ -71,38 +71,49 @@ def wfdb_events(annotation: object) -> list[tuple[str, int, float]]:
 
 
 def compare_tal_to_wfdb(tal: list[dict], events: list[tuple[str, int, float]]) -> dict:
-    if len(tal) != len(events):
-        raise CrossFormatError(f'event count mismatch: TAL={len(tal)}, WFDB={len(events)}; '
-                               f'TAL_counts={dict(Counter(t["label"] for t in tal))}; '
-                               f'WFDB_counts={dict(Counter(e[0] for e in events))}; '
-                               f'TAL_first_last={(tal[0] if tal else None, tal[-1] if tal else None)}; '
-                               f'WFDB_first_last={(events[0] if events else None, events[-1] if events else None)}')
-    if len(events) != 30:
-        raise CrossFormatError('pinned recording event count differs from 30')
-    counts = dict(sorted(Counter(label for label, _, _ in events).items()))
-    if counts != EXPECTED_COUNTS:
-        raise CrossFormatError(f'WFDB label counts differ: {counts}')
+    """Match all shared events, explicitly surfacing one verified omitted initial rest."""
+    omission = None
+    aligned = tal
+    if len(tal) == 30 and len(events) == 29:
+        first = tal[0]
+        if (first.get('label') == 'T0' and first.get('onset_s') == 0.0
+                and first.get('duration_s') == 4.2 and events[0][1] == 672):
+            omission = first
+            aligned = tal[1:]
+        else:
+            raise CrossFormatError('29/30 discrepancy is not the frozen initial T0 omission')
+    elif len(tal) != len(events):
+        raise CrossFormatError(f'unexplained event count mismatch: TAL={len(tal)}, WFDB={len(events)}')
+    if len(tal) != 30:
+        raise CrossFormatError('pinned EDF TAL event count differs from 30')
     if dict(sorted(Counter(t['label'] for t in tal).items())) != EXPECTED_COUNTS:
         raise CrossFormatError('TAL label counts differ from frozen training run')
+    counts = dict(sorted(Counter(label for label, _, _ in events).items()))
+    expected = {'T0': 14, 'T1': 8, 'T2': 7} if omission else EXPECTED_COUNTS
+    if counts != expected:
+        raise CrossFormatError(f'WFDB label counts differ: {counts}')
     max_onset, max_duration = 0.0, 0.0
-    for i, (source, (label, sample, duration)) in enumerate(zip(tal, events)):
+    for i, (source, (label, sample, duration)) in enumerate(zip(aligned, events)):
         if source['label'] != label:
-            raise CrossFormatError(f'cross-format label mismatch at event {i}')
+            raise CrossFormatError(f'cross-format label mismatch at aligned event {i}')
         onset, tal_duration = source['onset_s'], source['duration_s']
         if any(type(v) not in (float, int) or not math.isfinite(v) or v < 0 for v in (onset, tal_duration)):
             raise CrossFormatError('invalid TAL timing')
         delta = abs(onset - sample / FS)
         if delta > TOLERANCE_S:
-            raise CrossFormatError(f'cross-format onset mismatch at event {i}: delta={delta:.9g}s')
+            raise CrossFormatError(f'cross-format onset mismatch at aligned event {i}: delta={delta:.9g}s')
         delta_duration = abs(tal_duration - duration)
         if delta_duration > 1e-6:
-            raise CrossFormatError(f'cross-format duration mismatch at event {i}: delta={delta_duration:.9g}s')
+            raise CrossFormatError(f'cross-format duration mismatch at aligned event {i}: delta={delta_duration:.9g}s')
         max_onset = max(max_onset, delta)
         max_duration = max(max_duration, delta_duration)
-    return {'total_events': 30, 'counts': counts, 'max_onset_delta_s': max_onset,
-            'max_duration_delta_s': max_duration,
+    return {'edf_tal_events': 30, 'wfdb_companion_events': len(events),
+            'matched_events': len(events), 'wfdb_counts': counts,
+            'omitted_from_wfdb': [omission] if omission else [],
+            'status': 'RECONCILED_WITH_INITIAL_REST_OMISSION' if omission else 'FULL_MATCH',
+            'max_onset_delta_s': max_onset, 'max_duration_delta_s': max_duration,
             'onset_tolerance_s': TOLERANCE_S, 'duration_tolerance_s': 1e-6,
-            'duration_source': 'WFDB auxiliary-note duration text (encoding discovered in first failed CI run)'}
+            'duration_source': 'WFDB auxiliary-note duration text (format discovered in initial failed CI run)'}
 
 
 def review(edf_path: Path, event_path: Path, index_path: Path) -> dict:
@@ -120,14 +131,14 @@ def review(edf_path: Path, event_path: Path, index_path: Path) -> dict:
     events = wfdb_events(ann)
     agreement = compare_tal_to_wfdb(own['annotations']['events'], events)
     canonical = json.dumps(events, separators=(',', ':')).encode('ascii')
-    return {'status': 'PASS_SINGLE_TRAIN_CROSS_FORMAT_ANNOTATION',
+    return {'status': 'RECONCILED_29_OF_30_INITIAL_REST_OMITTED' if agreement['omitted_from_wfdb'] else 'PASS_FULL_CROSS_FORMAT_AGREEMENT',
             'source': 'PhysioNet EEGMMIDB v1.0.0 S001/S001R04.edf (train only)',
             'edf_sha256': EXPECTED_EDF, 'event_sha256': event_sha,
             'wfdb_version': wfdb.__version__, 'python_version': platform.python_version(),
             'wfdb_event_pairs_sha256': hashlib.sha256(canonical).hexdigest(),
             'agreement': agreement, 'decoder_trained': False, 'held_out_subjects_accessed': False,
             'real_eeg_decoding_accuracy': 'TBD', 'clinical_validation': False,
-            'limitations': 'One source recording; WFDB sample onsets versus EDF+ TAL onsets only. Duration text is cross-checked; independent human labels remain unvalidated.'}
+            'limitations': 'One training recording; companion omits initial EDF+ T0 event when status is RECONCILED. All shared event labels, onsets and durations must match; no independent human labels or EEG decoding.'}
 
 
 def main() -> None:
@@ -144,7 +155,7 @@ def main() -> None:
                   'reason': str(exc)[:300], 'real_eeg_decoding_accuracy': 'TBD'}
     a.out.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n', encoding='utf-8')
     print(result['status'], result.get('agreement', result.get('reason')))
-    if result['status'] != 'PASS_SINGLE_TRAIN_CROSS_FORMAT_ANNOTATION':
+    if result['status'] not in ('PASS_FULL_CROSS_FORMAT_AGREEMENT', 'RECONCILED_29_OF_30_INITIAL_REST_OMITTED'):
         raise SystemExit(1)
 
 
