@@ -195,10 +195,13 @@
     ],
     "new_test_file": "test_json_duplicate_keys_v08.py",
     "correction": "Shared strict JSON parser rejects duplicate keys and nonfinite JSON constants before both engines parse rows.",
-    "after_fix_ci": "TBD",
+    "after_fix_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40203119602",
     "real_publisher_parquet_downloaded": false,
     "real_forecast_results": "TBD",
     "maturity_change": "NONE",
-    "next_experiment": "Acquire exact publisher-pinned Parquet; independently verify source SHA256; execute real pyarrow export and frozen chronological benchmark."
+    "next_experiment": "Acquire exact publisher-pinned Parquet; independently verify source SHA256; execute real pyarrow export and frozen chronological benchmark.",
+    "after_fix_ubuntu": "PASS 63/63 tests and fictional demo, Python 3.13",
+    "after_fix_windows": "PASS 63/63 tests and fictional demo, Python 3.13",
+    "corrected_code_commit": "53e7830bc221287044161334d1da990bf85ed058"
   }
 }
