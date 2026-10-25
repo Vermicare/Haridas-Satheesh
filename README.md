@@ -79,6 +79,8 @@ The interesting problem is not decoding a signal once.
 
 `Research / Simulation → public-data benchmark → drift + calibration evidence → TBD`
 
+**Verified data-integrity gate:** [One training EEG annotation cross-format review](benchmarks/wireless-brain-interface/WFDB_COMPANION_RECONCILIATION_2026_10_25.md) found **30 EDF+ annotations versus 29 publisher companion events** (initial T0 rest omitted); all 29 shared labels/onsets/durations matched. **No EEG decoding or stage upgrade.**
+
 ### 03 // HUMAN ↔ DIGITAL CONTINUITY — [Companion Intelligence](case-studies/companion-intelligence-life-os.md)
 
 Most assistants suffer from digital amnesia.
