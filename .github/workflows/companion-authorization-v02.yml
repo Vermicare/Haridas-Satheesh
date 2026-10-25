@@ -36,6 +36,7 @@ jobs:
           python demo_authorization_guard_v02.py > demo-v02.json
           python demo_authorization_store_v03.py > demo-v03.json
           python demo_correction_ledger_v05.py > demo-v05.json
+          python demo_actual_receipt_integration_v06.py > demo-v06.json
       - uses: actions/upload-artifact@v4
         with:
           name: companion-authorization-${{ matrix.os }}
@@ -43,3 +44,4 @@ jobs:
             benchmarks/companion-life-os/demo-v02.json
             benchmarks/companion-life-os/demo-v03.json
             benchmarks/companion-life-os/demo-v05.json
+            benchmarks/companion-life-os/demo-v06.json
