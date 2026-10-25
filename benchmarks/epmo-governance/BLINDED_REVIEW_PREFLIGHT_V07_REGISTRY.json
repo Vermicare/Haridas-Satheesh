@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "project": "EPMO fictional governance",
+  "experiment_id": "epmo-blinded-review-preflight-v0.7",
+  "date": "2026-10-26",
+  "maturity": "Research / Simulation",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "hypothesis": "Structured reviewer packet may reduce false approvals and review burden versus manual notes; not tested with humans.",
+  "source_provenance": {
+    "branch": "research/epmo-fictional-governance-20261024",
+    "code": {
+      "path": "benchmarks/epmo-governance/blinded_review_preflight_v07.py",
+      "git_blob_sha1": "9550b8819c7bf45942fa39e77dee06a75ed042eb"
+    },
+    "tests": {
+      "path": "benchmarks/epmo-governance/test_blinded_review_preflight_v07.py",
+      "git_blob_sha1": "49b12c93648aa353c12b921a265e6cd93e778a39"
+    },
+    "policy_oracle": "benchmarks/epmo-governance/governance_demo.py",
+    "frozen_seed": 20261026,
+    "ci_head_commit": "624eaa3e67d34233717efba0ad1a04e4b3842724"
+  },
+  "run_conditions": {
+    "python": "3.13 (GitHub Actions)",
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "dependencies": "Python standard library only",
+    "real_human_responses": 0,
+    "external_actions": 0,
+    "employer_data": false
+  },
+  "predeclared_metrics": [
+    "false_approvals/negative_cases",
+    "true_approval_recall",
+    "total_review_seconds",
+    "median_review_seconds",
+    "case-level disagreement"
+  ],
+  "verified_results": {
+    "cases": 16,
+    "gold_positive": 3,
+    "gold_negative": 13,
+    "additive_tests": 16,
+    "full_tests_per_os": 117,
+    "ubuntu": "PASS",
+    "windows": "PASS",
+    "ci_runs": [
+      "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40222942313",
+      "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40222952196"
+    ]
+  },
+  "unknown_results": {
+    "independent_human_review": "TBD",
+    "false_approval_rate": "TBD",
+    "median_human_review_seconds": "TBD",
+    "manual_vs_structured_difference": "TBD",
+    "identity_authentication": "NOT IMPLEMENTED",
+    "real_action_reversal": "NOT IMPLEMENTED"
+  },
+  "negative_controls": [
+    "incomplete/duplicate/unknown response rejected",
+    "invalid boolean/negative/NaN duration rejected",
+    "wrong arm/version/key mismatch rejected",
+    "test-only perfect/all-denied responses verify scorer arithmetic, not human performance"
+  ],
+  "limitations": [
+    "public deterministic generator permits key reconstruction; procedural blinding only",
+    "policy oracle is synthetic and not independently validated real-world ground truth",
+    "no independent participants, random assignment, washout or statistical comparison",
+    "no authentication, trusted time, real actions, commercial ROI or employer evidence"
+  ],
+  "decision": "retain Research / Simulation; do not claim reviewer effectiveness or stage advancement",
+  "next_experiment": "Privately recruit independent consenting reviewers, predeclare assignment and correction-burden comparison; separately integrate sandbox identity/trusted clock and fake transactional outbox.",
+  "kill_reframe": "Reframe if blinded independent reviewers show worse burden than manual notes or false approvals remain unacceptable; stop any security claim if identity or replay safety fails."
+}
