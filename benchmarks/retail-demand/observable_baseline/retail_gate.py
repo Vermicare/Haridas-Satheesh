@@ -143,7 +143,7 @@ def select_series(groups):
         if len(window) < required or any(
                 (b['day'] - a['day']).days != 1 for a, b in zip(window, window[1:])):
             raise EvidenceError('preselected cohort has incomplete held-out horizon; do not select replacement using test data')
-        return key, window
+        return key, rows
     raise EvidenceError('no eligible first-42-day training cohort; do not relax selection')
 
 
