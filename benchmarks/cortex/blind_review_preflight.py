@@ -8,6 +8,7 @@ Usage:
 """
 import hashlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -20,9 +21,36 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def _unique_members(pairs):
+    """Fail closed on ambiguous JSON object names (RFC 8259, section 4)."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate JSON member")
+        result[key] = value
+    return result
+
+
+def _finite_float(token):
+    value = float(token)
+    if not math.isfinite(value):
+        raise ValueError("out-of-range JSON number")
+    return value
+
+
+def _reject_non_json_constant(token):
+    raise ValueError("non-JSON numeric constant")
+
+
 def _load(path):
     data = Path(path).read_bytes()
-    return json.loads(data.decode("utf-8")), digest(data)
+    document = json.loads(
+        data.decode("utf-8"),
+        object_pairs_hook=_unique_members,
+        parse_constant=_reject_non_json_constant,
+        parse_float=_finite_float,
+    )
+    return document, digest(data)
 
 
 def validate_packet(case, archive):
@@ -131,15 +159,27 @@ def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     if len(argv) not in (3, 4) or argv[0] not in ("manifest", "check") or (argv[0] == "manifest") != (len(argv) == 3):
         raise SystemExit("usage: blind_review_preflight.py manifest CASE ARCHIVE | check CASE ARCHIVE PRIVATE_SUBMISSION")
-    case, case_sha = _load(argv[1]); archive, archive_sha = _load(argv[2])
+    try:
+        case, case_sha = _load(argv[1])
+        archive, archive_sha = _load(argv[2])
+        if argv[0] == "check":
+            submission, _ = _load(argv[3])
+    except (OSError, UnicodeError, ValueError):
+        # Never echo private submission contents, paths or parser diagnostics.
+        print(json.dumps({"fictional": True, "errors": ["input:invalid_json_or_read"],
+                          "scores": "TBD"}, sort_keys=True, indent=2))
+        return 1
     if argv[0] == "manifest":
         errors = validate_packet(case, archive)
+        meeting = case.get("meeting") if isinstance(case, dict) else None
+        utterances = meeting.get("utterances") if isinstance(meeting, dict) else None
+        records = archive.get("records") if isinstance(archive, dict) else None
         result = {"fictional": True, "case_sha256": case_sha, "archive_sha256": archive_sha,
-                  "utterance_count": len(case.get("meeting", {}).get("utterances", [])),
-                  "archive_record_count": len(archive.get("records", [])),
+                  "utterance_count": len(utterances) if isinstance(utterances, list) else 0,
+                  "archive_record_count": len(records) if isinstance(records, list) else 0,
                   "errors": errors, "reviewer_study": "TBD", "ground_truth": "TBD"}
     else:
-        submission, _ = _load(argv[3]); errors = validate_submission(case, archive, submission, case_sha, archive_sha)
+        errors = validate_submission(case, archive, submission, case_sha, archive_sha)
         result = {"fictional": True, "submission_valid": not errors, "errors": errors, "scores": "TBD"}
     print(json.dumps(result, sort_keys=True, indent=2))
     return 1 if errors else 0
