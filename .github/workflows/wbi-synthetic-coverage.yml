@@ -57,6 +57,11 @@ jobs:
           python rest_exposure_rate_v02.py > rest_exposure_v02_demo.json
           python -c "from pathlib import Path; p=Path('rest_exposure_v02_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
           printf '%s  %s\n' '120229c77704bc4c23229f932513176d15f38f1153724319f34f63c1299aaae2' 'rest_exposure_v02_demo.json' | sha256sum --check
+          # Matched-opportunity fictional safety comparison; no real EEG.
+          python -m unittest -v test_matched_opportunity_contract_v03.py
+          python matched_opportunity_contract_v03.py > matched_opportunity_v03_demo.json
+          python -c "from pathlib import Path; p=Path('matched_opportunity_v03_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\\n' '74196ae82435526dfb21cf2a7a50606de5dd1484fb3eb611d504f1e42d41372b' 'matched_opportunity_v03_demo.json' | sha256sum --check
       - uses: actions/upload-artifact@v4
         with:
           name: wbi-synthetic-results-${{ matrix.os }}
@@ -66,4 +71,5 @@ jobs:
             benchmarks/wireless-brain-interface/eegmmidb_subject_splits.json
             benchmarks/wireless-brain-interface/rest_aware_contract_demo.json
             benchmarks/wireless-brain-interface/rest_exposure_v02_demo.json
+            benchmarks/wireless-brain-interface/matched_opportunity_v03_demo.json
           if-no-files-found: error
