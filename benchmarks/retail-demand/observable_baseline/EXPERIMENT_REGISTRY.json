@@ -156,5 +156,29 @@
     "real_forecasting_results": "TBD",
     "stage_change": "NONE",
     "next_experiment": "Acquire and independently checksum pinned publisher Parquet, test real schema compatibility, export deterministically, execute frozen forecasts."
+  },
+  "numeric_evidence_v07": {
+    "recorded_utc_date": "2026-10-25",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "question": "Can individually finite hourly sales values overflow a business-hour aggregate and silently contaminate both benchmark engines?",
+    "negative_controls": "16 x 1e308 business-hour sales accepted before fix; both engines returned reports; 10**400 hourly integer caused uncaught OverflowError.",
+    "before_fix_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40159020949",
+    "before_fix_ubuntu": "59 tests: 3 failing assertions/subtests plus 1 uncaught OverflowError; valid large-finite control passed",
+    "before_fix_windows": "cancelled, not verified",
+    "correction": "Exporter and shared evaluator parser reject nonfinite business-hour totals and convert extreme integer overflow to structured validation errors.",
+    "valid_control": "single 1e300 hourly sale accepted as finite",
+    "new_tests": 4,
+    "final_head_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40159084816",
+    "final_head_ci_ubuntu": "PASS 59/59 Python 3.13",
+    "final_head_ci_windows": "PASS 59/59 Python 3.13",
+    "github_blobs": {
+      "retail_gate_py": "142b4c7ae851cc85543a6a301cc26ca0bac55b5f",
+      "parquet_export_py": "0903d3284d680f07630c8fc29b9b75bdd8019f26",
+      "test_numeric_evidence_bounds_py": "e39b1463675521d6e68f25831eecd95cdc5daae0"
+    },
+    "actual_parquet_downloaded": false,
+    "real_forecasting_metrics": "TBD",
+    "stage_change": "NONE",
+    "next_experiment": "Acquire and verify publisher-pinned train Parquet; execute actual pyarrow conversion and frozen chronological benchmark."
   }
 }
