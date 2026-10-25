@@ -1,5 +1,6 @@
 """Adversarial structural audit of the exact v0.5 fictional SQLite schema."""
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 from pathlib import Path
@@ -26,8 +27,9 @@ class LedgerIntegrityTests(unittest.TestCase):
         self.assertEqual(consume_fictional_approval(self.path, **self.request)["outcome"], "consumed")
 
     def tamper(self, statement, params=()):
-        with sqlite3.connect(self.path) as db:
-            db.execute(statement, params)
+        with closing(sqlite3.connect(self.path)) as db:
+            with db:
+                db.execute(statement, params)
 
     def rejects(self, statement, params=()):
         self.consume()
@@ -46,7 +48,7 @@ class LedgerIntegrityTests(unittest.TestCase):
         self.assertEqual(first, verify(self.path))
         self.assertEqual(first["receipts"], 1)
         self.assertFalse(first["tamper_proof"])
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db:
             self.assertEqual(db.execute("SELECT COUNT(*) FROM consumption_receipts").fetchone()[0], 1)
 
     def test_wrong_origin_rejected(self):
