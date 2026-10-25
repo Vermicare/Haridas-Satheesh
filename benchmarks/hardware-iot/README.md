@@ -99,3 +99,14 @@ The output directory must not exist; its parent must exist. On success it contai
 After an actual session, preserve an independently identified exact flashed firmware binary, device/wiring photos and operator notes **privately**, then run `serial_bundle.py build --raw <private/raw_serial.log> --firmware <exact_binary> --out <new_private_bundle_dir> --device-id <operator_verified_id> --recorded-start-utc <actual_UTC_start> --capture-origin physical` and `serial_bundle.py verify <bundle_dir>`. The origin field remains an operator assertion, not independent attestation. Do not reuse the example date or fabricate physical evidence. Any incomplete, interrupted or structurally rejected session stays a failure; do not cherry-pick it away.
 
 **Verification boundary:** `test_serial_acquire.py` has 11 fictional injected-port tests (exact bytes, non-UTF8 preservation, no data, read/port failure, size cap, invalid inputs, preexisting directory, and Git-tree privacy guard). Two CPython 3.13.5/Linux process runs passed 11/11 each. Locally executed Git blobs: acquisition source `3088ea54c4dda40ee7e8849bf688b846dce8c2b2`; tests `42606fb3863dacaf13cf3da31b38d2b04a25a321`. [GitHub Actions #40091162076](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40091162076) passed **47/47 tests on Linux and 47/47 on Windows (Python 3.13)**, with both job logs inspected at commit `ead998e183a27600d830b45d58087c80c373c340`. Physical capture remains **TBD**. Maturity stays **Prototype / Hardware Architecture**. Next gate remains Issue #8: a genuine ten-minute dual-sensor session, firmware provenance, controlled BH1750 light perturbation and independent review.
+
+## v0.7 host-to-bundle integrity chain — 2026-10-25
+
+After collecting private raw serial bytes with `serial_acquire.py` and deriving a bundle with `serial_bundle.py`, run:
+
+```sh
+python host_bundle_chain.py PRIVATE_HOST_CAPTURE_DIR PRIVATE_DERIVED_BUNDLE_DIR
+python -m unittest -v test_host_bundle_chain_v07.py
+```
+
+The new verifier binds the exact host raw bytes to the derived bundle, requires at least 600 seconds of host elapsed time **and** first-to-last byte arrival **and** 600,000 ms of device-monotonic telemetry, and rejects short-burst replay, mismatches, incomplete sessions and invalid bundles. These are **operator-controlled structural checks, not physical authentication**. All 75 tests passed on [Ubuntu and Windows CI #40217485476](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40217485476), including two fictional full-chain integration tests per OS. [Evidence and failure record](HOST_BUNDLE_CHAIN_V07.md) · [Registry](HOST_BUNDLE_CHAIN_V07_REGISTRY.json). No real hardware was accessed. The genuine instrumented session remains [Issue #8](https://github.com/Vermicare/Haridas-Satheesh/issues/8).
