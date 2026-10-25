@@ -186,5 +186,39 @@ class DryRunIntegrityTests(unittest.TestCase):
         self.assertEqual(result['status'], 'REJECTED')
         json.dumps(result, allow_nan=False)
 
+
+    def test_cancelling_interval_errors_do_not_pass_global_energy_check(self):
+        # FICTIONAL negative control: 60 W for ten minutes -> 10 Wh.
+        # Counter is stalled for five minutes, then catches up by 2 Wh/min.
+        # Whole-run totals agree exactly; interval records contradict power.
+        for i, row in enumerate(self.rows):
+            row['energy_wh'] = str(max(0, 2 * (i - 5)))
+        self.write()
+        result = audit(self.path)
+        self.assertAlmostEqual(result['power_integral_estimate_wh'], 10)
+        self.assertAlmostEqual(result['energy_counter_delta_wh'], 10)
+        self.assertEqual(result['interval_energy_mismatch_count'], 10)
+        self.assertIn('INTERVAL_POWER_ENERGY_DISAGREEMENT', result['problems'])
+        self.assertEqual(result['status'], 'REJECTED')
+        self.assertFalse(result['performance_claim_permitted'])
+
+    def test_valid_one_wh_per_minute_has_zero_interval_mismatches(self):
+        result = audit(self.path)
+        self.assertEqual(result['interval_energy_mismatch_count'], 0)
+        self.assertNotIn('INTERVAL_POWER_ENERGY_DISAGREEMENT', result['problems'])
+        self.assertEqual(result['status'], 'STRUCTURE_ONLY_PROVENANCE_UNVERIFIED')
+
+    def test_coarse_meter_update_requires_review_not_false_physical_claim(self):
+        # FICTIONAL: an energy meter may report every other sample.
+        # Reject structural pass pending inspection of real meter cadence.
+        for i, row in enumerate(self.rows):
+            row['energy_wh'] = str(2 * (i // 2))
+        self.write()
+        result = audit(self.path)
+        self.assertAlmostEqual(result['power_integral_estimate_wh'], 10)
+        self.assertAlmostEqual(result['energy_counter_delta_wh'], 10)
+        self.assertIn('INTERVAL_POWER_ENERGY_DISAGREEMENT', result['problems'])
+        self.assertFalse(result['physical_origin_authenticated'])
+
 if __name__ == '__main__':
     unittest.main()
