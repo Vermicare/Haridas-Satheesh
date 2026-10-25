@@ -24,7 +24,15 @@
     "standalone_passed": 17,
     "repo_integration_skipped_locally": 4
   },
-  "ci_tests": "TBD",
+  "ci_tests": {
+    "run_id": 40241271339,
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40241271339",
+    "executable_commit": "e5f95d771a1427772d9cc1dead8b16cfce2a6577",
+    "ubuntu": "90/90 PASS",
+    "windows": "90/90 PASS",
+    "job_logs_inspected": true,
+    "final_documentation_head": "TBD"
+  },
   "demo_sha256": "76e54d346299c9a8bb0d2b3485eae6f5b0a834c27128135cf6302d458f44420a",
   "real_reviewer_count": 0,
   "semantic_support_validation": "TBD",
@@ -38,5 +46,7 @@
   "decision": "No maturity advance; keep draft",
   "next_experiment": "Independent blinded fictional annotations and source-span adjudication with measured correction burden",
   "kill_reframe": "Reframe if unsupported lineage or reviewer burden outweighs manual notes",
-  "primary_standard": "https://www.w3.org/TR/prov-o/#wasRevisionOf"
+  "primary_standard": "https://www.w3.org/TR/prov-o/#wasRevisionOf",
+  "published_source_git_blob": "65efbcb816cb45b866573d61bd743a6cddcc94a3",
+  "published_tests_git_blob": "d008ce2ad1e5ca656012a77ad7b6d1887abbf424"
 }
