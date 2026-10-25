@@ -20,7 +20,10 @@
   "multi_host_atomicity": "TBD",
   "independent_review": "TBD",
   "reviewer_burden": "TBD",
-  "github_publication": "TBD",
-  "github_ci": "TBD",
-  "decision": "retain fictional-only contract evidence; no maturity advancement or release"
+  "github_publication": "verified Git blob source/test/demo on draft PR #10",
+  "github_ci": "PASS: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40148356063 (49/49 Ubuntu, 49/49 Windows) at code head c36937070f382cd0bf346c43cc91244bce7e1dda",
+  "decision": "retain fictional-only contract evidence; no maturity advancement or release",
+  "original_benchmark_ci": "PASS: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40148356065",
+  "cross_platform_failure_learning": "Windows first-run 18 cleanup errors from sqlite3 connections not closed by context manager; explicit closing fixed",
+  "final_head_ci_after_documentation": "not rerun; later changes documentation only"
 }
