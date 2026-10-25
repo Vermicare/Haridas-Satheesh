@@ -2,6 +2,8 @@
 import csv
 from datetime import datetime, timedelta, timezone
 import hashlib
+import json
+import math
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -136,6 +138,53 @@ class DryRunIntegrityTests(unittest.TestCase):
         self.assertNotEqual(result['raw_sha256'], hashlib.sha256(self.path.read_bytes()).hexdigest())
         self.assertFalse(result['physical_origin_authenticated'])
 
+
+    def test_large_finite_power_stalled_counter_rejected(self):
+        # Pre-fix: (1e308 + 1e308)/2 overflowed to inf; inf > inf
+        # was false, allowing an invalid structural PASS.
+        for row in self.rows:
+            row['power_w'] = '1e308'
+            row['energy_wh'] = '0'
+        self.write()
+        result = audit(self.path)
+        self.assertIn('POWER_ENERGY_INCONSISTENCY', result['problems'])
+        self.assertEqual(result['status'], 'REJECTED')
+        self.assertTrue(math.isfinite(result['power_integral_estimate_wh']))
+        json.dumps(result, allow_nan=False)
+
+    def test_large_finite_consistent_power_counter_stays_finite(self):
+        # Positive arithmetic control; fictional values are NOT physical evidence.
+        for i, row in enumerate(self.rows):
+            row['power_w'] = '1e308'
+            row['energy_wh'] = str((i / 60) * 1e308)
+        self.write()
+        result = audit(self.path)
+        self.assertEqual(result['status'], 'STRUCTURE_ONLY_PROVENANCE_UNVERIFIED')
+        self.assertTrue(math.isfinite(result['power_integral_estimate_wh']))
+        self.assertFalse(result['performance_claim_permitted'])
+        json.dumps(result, allow_nan=False)
+
+    def test_nonfinite_derived_integral_rejected_json_safely(self):
+        # Pathological timestamp gaps already fail, but must never emit Infinity.
+        for i, row in enumerate(self.rows):
+            row['timestamp'] = f'{2000 + i * 100:04d}-01-01T00:00:00+00:00'
+            row['power_w'] = '1e308'
+            row['energy_wh'] = '0'
+        self.write()
+        result = audit(self.path)
+        self.assertIn('NONFINITE_DERIVED_ENERGY', result['problems'])
+        self.assertIsNone(result['power_integral_estimate_wh'])
+        self.assertEqual(result['status'], 'REJECTED')
+        json.dumps(result, allow_nan=False)
+
+    def test_nonfinite_derived_tolerance_rejected(self):
+        for row in self.rows:
+            row['energy_wh'] = '0'
+        self.write()
+        result = audit(self.path, energy_rel_tol=1e308)
+        self.assertIn('NONFINITE_ENERGY_TOLERANCE', result['problems'])
+        self.assertEqual(result['status'], 'REJECTED')
+        json.dumps(result, allow_nan=False)
 
 if __name__ == '__main__':
     unittest.main()
