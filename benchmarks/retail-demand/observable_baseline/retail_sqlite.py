@@ -60,11 +60,15 @@ def _select(conn):
         rows = [{"key": key, "day": dt.date.fromisoformat(day), "y": y,
                  "censored": bool(censored), "stockout_hours": stockout_hours}
                 for day,y,censored,stockout_hours in raw]
-        if len(rows) < max(ORIGINS) + HORIZON or any(
-            (b["day"]-a["day"]).days != 1 for a,b in zip(rows, rows[1:])
+        # Freeze eligibility at the last scored horizon; trailing dates are
+        # outside the declared benchmark and cannot disqualify this cohort.
+        required = max(ORIGINS) + HORIZON
+        window = rows[:required]
+        if len(window) < required or any(
+            (b["day"]-a["day"]).days != 1 for a,b in zip(window, window[1:])
         ):
             raise EvidenceError("preselected cohort has incomplete held-out horizon; do not select replacement using test data")
-        return key, rows
+        return key, window
     raise EvidenceError("no eligible first-42-day training cohort; do not relax selection")
 
 
