@@ -32,7 +32,7 @@ The short demonstration returns `consumed → idempotent → rejected`, exactly 
 | Demo tests | `test_demo_approval_consumption_45s.py`; SHA-256 `fbdbbb8c3a1598038e79fc7a5d5d3e66050e7ca5f9009ff7bdc5962a9e613ae2` |
 | Local execution | Linux, CPython 3.13.5, SQLite via standard library; 27/27 tests passed in each of two reruns |
 | Deterministic demo JSON SHA-256 | `03df1a111f97be02b7ddca49c8e21cec9fb875a103b2c8d71b5fba6f61fa5c50` |
-| Cross-platform GitHub CI | **TBD** until final-head job logs are checked |
+| Cross-platform GitHub CI | **PASS**: [GitHub Actions #40151625112](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40151625112), 79/79 tests separately on Ubuntu and Windows, Python 3.13; both jobs passed (test and demo assertions) |
 | Human reviewer burden / external actions | **TBD** / 0 |
 
 The first local run revealed a **test assertion error**, not an implementation failure: the test assumed a fixed row index despite `ORDER BY approval_id`. It was corrected to select the named approval and the entire suite reran successfully. The failed run is retained as engineering learning, not reported as a policy defect.
