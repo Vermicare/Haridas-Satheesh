@@ -47,7 +47,7 @@ def wfdb_events(annotation: object) -> list[tuple[str, int]]:
     if not samples or not (len(samples) == len(notes) == len(symbols)):
         raise CrossFormatError('invalid WFDB annotation arrays')
     result = []
-    for sample, note, symbol in zip(samples, notes, symbols):
+    for event_index, (sample, note, symbol) in enumerate(zip(samples, notes, symbols)):
         if isinstance(sample, bool):
             raise CrossFormatError('noninteger WFDB sample index')
         try:
@@ -58,7 +58,8 @@ def wfdb_events(annotation: object) -> list[tuple[str, int]]:
             raise CrossFormatError('negative WFDB sample index')
         label_candidates = [v.strip() for v in (note, symbol) if isinstance(v, str) and v.strip() in EXPECTED_COUNTS]
         if len(set(label_candidates)) != 1:
-            raise CrossFormatError('unknown or ambiguous WFDB event label')
+            raise CrossFormatError(f'unknown or ambiguous WFDB event label at {event_index}: '
+                                   f'aux_note={str(note)[:64]!r}, symbol={str(symbol)[:32]!r}')
         result.append((label_candidates[0], sample))
     if len(result) != len(set(result)) or any(b[1] < a[1] for a, b in zip(result, result[1:])):
         raise CrossFormatError('duplicate or out-of-order WFDB events')
