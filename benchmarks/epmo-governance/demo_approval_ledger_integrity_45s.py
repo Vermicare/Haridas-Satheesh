@@ -1,6 +1,7 @@
 """Short side-effect-free demonstration of fictional v0.6 ledger auditing."""
 import json
 import sqlite3
+from contextlib import closing
 import tempfile
 from pathlib import Path
 
@@ -21,8 +22,9 @@ def run():
         request.update(request_id="fictional-demo-req", receipt_id="fictional-demo-rc", now=100)
         outcome = consume_fictional_approval(path, **request)["outcome"]
         before = verify(path)
-        with sqlite3.connect(path) as db:
-            db.execute("UPDATE consumption_receipts SET scope='fictional-forged-scope'")
+        with closing(sqlite3.connect(path)) as db:
+            with db:
+                db.execute("UPDATE consumption_receipts SET scope='fictional-forged-scope'")
         try:
             verify(path)
         except LedgerIntegrityError as exc:
