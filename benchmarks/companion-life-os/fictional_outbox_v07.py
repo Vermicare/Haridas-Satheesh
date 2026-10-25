@@ -36,6 +36,8 @@ def _decode(value):
                     check_finite(nested)
         check_finite(parsed)
         return parsed
+    except OutboxContractError:
+        raise
     except (TypeError, ValueError) as exc:
         raise OutboxContractError('invalid stored JSON') from exc
 
