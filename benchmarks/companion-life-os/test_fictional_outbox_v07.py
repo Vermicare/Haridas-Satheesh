@@ -4,6 +4,7 @@ import sqlite3
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from pathlib import Path
 
 from fictional_outbox_v07 import FictionalIdempotentSink, FictionalOutbox, OutboxContractError
@@ -15,7 +16,7 @@ class OutboxTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.db = Path(self.tmp.name) / 'receipt.sqlite3'
         self.sinkdb = Path(self.tmp.name) / 'sink.sqlite3'
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             db.execute('CREATE TABLE receipts (nonce TEXT PRIMARY KEY, fingerprint TEXT, receipt_json TEXT)')
             db.execute('INSERT INTO receipts VALUES(?,?,?)', ('n1', 'test-only', json.dumps({
                 'nonce': 'n1', 'decision': 'D1', 'action': 'A1',
@@ -68,7 +69,7 @@ class OutboxTests(unittest.TestCase):
 
     def test_original_changed_after_stage_rejected(self):
         self.outbox.stage('n1')
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?', (json.dumps({
                 'nonce': 'n1', 'decision': 'D1', 'action': 'A2',
                 'synthetic': True, 'external_actions': 0}), 'n1'))
@@ -77,14 +78,14 @@ class OutboxTests(unittest.TestCase):
         self.assertEqual(self.sink.count(), 0)
 
     def test_nonfinite_original_rejected(self):
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?',
                        ('{"nonce":"n1","decision":"D1","action":"A1","synthetic":true,"external_actions":NaN}', 'n1'))
         with self.assertRaises(OutboxContractError):
             self.outbox.stage('n1')
 
     def test_overflowed_numeric_json_rejected(self):
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?',
                        ('{"nonce":"n1","decision":"D1","action":"A1","synthetic":true,"external_actions":0,"extra":1e400}', 'n1'))
         with self.assertRaisesRegex(OutboxContractError, 'non-finite'):
@@ -92,7 +93,7 @@ class OutboxTests(unittest.TestCase):
         self.assertIsNone(self.outbox.status('n1'))
 
     def test_invalid_source_is_not_staged(self):
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?', (json.dumps({
                 'nonce': 'n1', 'decision': 'D1', 'action': 'A1',
                 'synthetic': True, 'external_actions': True}), 'n1'))
