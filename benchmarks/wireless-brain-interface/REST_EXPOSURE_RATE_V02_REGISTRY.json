@@ -1,0 +1,35 @@
+{
+  "schema": "wbi-rest-exposure-v0.2",
+  "date": "2026-10-25",
+  "branch": "research/wbi-coverage-target-diagnostic-20261023",
+  "source_revision_before_change": "8694db7fa86ea9bbf61029bc5a21bfb96af2a9bb",
+  "evidence_class": "FICTIONAL_TIMESTAMP_CONTRACT_ONLY",
+  "environment": {
+    "python": "3.13.5",
+    "os": "Linux",
+    "ci_final_head": "TBD"
+  },
+  "fixture": {
+    "sample_rate_hz": 100,
+    "n_samples": 6000,
+    "rest_samples": 4000,
+    "source": "hand-authored fictional timestamps"
+  },
+  "tests": {
+    "local_passed": 17,
+    "local_failed": 0,
+    "ci_ubuntu": "TBD",
+    "ci_windows": "TBD"
+  },
+  "demo_sha256": "120229c77704bc4c23229f932513176d15f38f1153724319f34f63c1299aaae2",
+  "fictional_demo": {
+    "ungated_rest_actions": 3,
+    "ungated_per_rest_minute": 4.5,
+    "abstention_rest_actions": 0,
+    "gate_rest_actions": 0
+  },
+  "real_eeg_metrics": "TBD",
+  "external_review": "TBD",
+  "stage": "Research / Simulation",
+  "decision": "No advancement; next gate is complete source annotations and subject-disjoint matched-coverage real EEG evaluation"
+}
