@@ -156,13 +156,41 @@ def corrected_training_history(rows, origin):
             out.append(r['y'])  # conservative fallback, never pretend known latent demand
         else:
             recent = sorted(candidates[-4:])
-            out.append(recent[len(recent) // 2] if len(recent) % 2 else
-                       (recent[len(recent)//2-1] + recent[len(recent)//2]) / 2)
+            if len(recent) % 2:
+                replacement = recent[len(recent) // 2]
+            else:
+                lo, hi = recent[len(recent)//2-1], recent[len(recent)//2]
+                try:
+                    replacement = (lo + hi) / 2
+                except OverflowError:
+                    replacement = math.inf
+                if not math.isfinite(replacement):
+                    # Two finite inputs may overflow when added before halving.
+                    replacement = lo / 2 + hi / 2
+            if not math.isfinite(replacement):
+                raise EvidenceError('nonfinite corrected training median')
+            out.append(replacement)
     return out
 
 
 def mae(pairs):
-    return sum(abs(a - b) for a, b in pairs) / len(pairs) if pairs else None
+    if not pairs:
+        return None
+    errors = [abs(a - b) for a, b in pairs]
+    try:
+        if any(not math.isfinite(e) for e in errors):
+            raise EvidenceError('nonfinite individual forecast error')
+        total = sum(errors)
+        if math.isfinite(total):
+            # Preserve the previously frozen ordinary-input result exactly.
+            return total / len(errors)
+    except OverflowError as exc:
+        raise EvidenceError('unrepresentable individual forecast error') from exc
+    # Finite errors can overflow in the sum even when their mean is finite.
+    mean = math.fsum(e / len(errors) for e in errors)
+    if not math.isfinite(mean):
+        raise EvidenceError('nonfinite forecast MAE')
+    return mean
 
 
 def forecast_at_origin(rows, origin):
@@ -221,7 +249,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
     report = benchmark(a.input, a.source_sha256, a.source_uri, a.synthetic)
-    a.output.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+    a.output.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + '\n', encoding='utf-8')
     print(f"{report['data_kind']}: {len(report['folds'])} folds, report={a.output}")
 
 
