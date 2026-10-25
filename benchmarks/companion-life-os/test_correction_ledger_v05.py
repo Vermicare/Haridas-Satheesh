@@ -5,6 +5,7 @@ import sqlite3
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from pathlib import Path
 
 from correction_ledger_v05 import FictionalCorrectionLedger, CorrectionContractError
@@ -33,7 +34,7 @@ class CorrectionLedgerTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / 'fictional.sqlite3'
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute('CREATE TABLE receipts (nonce TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, receipt_json TEXT NOT NULL)')
             db.execute('INSERT INTO receipts VALUES (?,?,?)',
                        ('fictional-nonce-1', 'fixture-digest-not-cryptographic-proof',
@@ -47,12 +48,11 @@ class CorrectionLedgerTests(unittest.TestCase):
         return (ledger or self.store).record('fictional-nonce-1', correction or request(), **kw)
 
     def test_happy_path_preserves_original_receipt(self):
-        before = self.path.read_bytes()  # DB changes; verify original row instead.
         r = self.record()
         self.assertFalse(r['idempotent_replay'])
         self.assertEqual(r['external_actions'], 0)
         self.assertEqual(self.store.correction_count(), 1)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             self.assertEqual(json.loads(db.execute('SELECT receipt_json FROM receipts').fetchone()[0]), ORIGINAL)
 
     def test_restart_idempotent(self):
@@ -137,13 +137,13 @@ class CorrectionLedgerTests(unittest.TestCase):
             self.record(bad)
 
     def test_missing_original_receipt_rejected(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute('DELETE FROM receipts')
         with self.assertRaisesRegex(CorrectionContractError, 'not found'):
             self.record()
 
     def test_wrong_original_binding_rejected(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute('UPDATE receipts SET receipt_json=?', (json.dumps({**ORIGINAL, 'decision': 'D2'}),))
         with self.assertRaisesRegex(CorrectionContractError, 'binding mismatch'):
             self.record()
