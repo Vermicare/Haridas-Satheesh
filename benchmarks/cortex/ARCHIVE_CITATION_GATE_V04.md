@@ -39,10 +39,10 @@ python -B archive_citation_gate_v04.py check blind_case_20261024.json blind_arch
 | New behavior | v0.4 rejects missing/wrong archival evidence link |
 | Local runner | CPython 3.13.5, Linux x86_64, 2026-10-26 |
 | Local test status | 17/17 standalone tests passed; 4 integration tests require repository v0.1 and frozen files (local skip) |
-| CI result | TBD until final-head Ubuntu/Windows workflow verified |
+| CI result | [GitHub Actions #40241271339](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40241271339): **90/90 tests passed on Ubuntu and Windows** at executable head `e5f95d771a1427772d9cc1dead8b16cfce2a6577`; both job logs inspected; demo hash assertion passed |
 | Demo SHA-256 (UTF-8 LF) | `76e54d346299c9a8bb0d2b3485eae6f5b0a834c27128135cf6302d458f44420a` |
 | Seeds | None; fixed fictional inputs |
-| Source and test blob hashes | Verify in GitHub after publication |
+| Source and test blob hashes | Source Git blob `65efbcb816cb45b866573d61bd743a6cddcc94a3`; test Git blob `d008ce2ad1e5ca656012a77ad7b6d1887abbf424` (reread from draft branch) |
 | Real reviewers, timings, extraction precision, ROI | TBD |
 | Decision | Keep draft; do not advance maturity |
 
