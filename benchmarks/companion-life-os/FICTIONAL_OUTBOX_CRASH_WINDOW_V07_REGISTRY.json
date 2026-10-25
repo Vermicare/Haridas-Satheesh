@@ -1,0 +1,61 @@
+{
+  "experiment_id": "companion-fictional-outbox-crash-window-v07",
+  "recorded_on": "2026-10-25",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/companion-auth-negative-controls-20261024",
+  "pull_request": 10,
+  "stage": "Simulation / fictional contract",
+  "evidence_class": "synthetic software contract only",
+  "source_files": [
+    "benchmarks/companion-life-os/fictional_outbox_v07.py",
+    "benchmarks/companion-life-os/test_fictional_outbox_v07.py",
+    "benchmarks/companion-life-os/demo_fictional_outbox_v07.py",
+    "benchmarks/companion-life-os/authorization_store_v03.py",
+    "benchmarks/companion-life-os/scenario.json"
+  ],
+  "baseline": "v0.6 receipt-to-correction integration without outbox acknowledgment",
+  "method": "Separate SQLite receipt/outbox and fictional sink stores; nonce/digest idempotency; crash injection after fake sink write before outbox ack; restart and concurrent replay",
+  "predeclared_checks": [
+    "original v0.3 receipt integration",
+    "13 synthetic regression methods",
+    "one fake sink row after crash/retry",
+    "16 concurrent dispatch requests produce one fake sink row",
+    "non-idempotent negative control duplicates fake effects",
+    "malformed and overflowed JSON rejected",
+    "changed source and nonce collision rejected"
+  ],
+  "observations_local": {
+    "tests_passed": 13,
+    "tests_total": 13,
+    "concurrent_requests": 16,
+    "idempotent_sink_rows_after_replay": 1,
+    "nonidempotent_fake_effects_after_crash_retry": 2,
+    "real_external_actions": 0
+  },
+  "execution": {
+    "local_python_exact": "TBD",
+    "local_sqlite_version": "TBD",
+    "ci_python_requested": "3.13",
+    "ci_operating_systems": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "ci_final_head_result": "TBD",
+    "seed": "not applicable"
+  },
+  "unknowns": [
+    "real identity",
+    "trusted clock",
+    "external adapter idempotency",
+    "physical power cut",
+    "latency",
+    "production exactly-once",
+    "tamper resistance",
+    "real reversal",
+    "user value"
+  ],
+  "decision": "retain Simulation; no maturity advancement",
+  "next_experiment": "authenticated sandbox principal and trusted clock with idempotent adapter acknowledgment and crash replay",
+  "privacy": "no employer data, personal records, private credentials, or outreach tracking",
+  "release": "none"
+}
