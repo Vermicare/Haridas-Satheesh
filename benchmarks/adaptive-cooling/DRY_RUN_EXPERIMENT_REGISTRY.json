@@ -109,5 +109,26 @@
     "performance_claim_permitted": false,
     "maturity_advanced": false,
     "decision": "Keep Prototype / Documented R&D; physical instrumented logging dry run and controlled comparisons are the next evidence gate."
+  },
+  "v0_4_interval_cancellation": {
+    "date_utc": "2026-10-26",
+    "hypothesis": "Whole-run energy counter and power totals can agree while opposing interval errors cancel",
+    "negative_control": "FICTIONAL 11 samples/600 seconds, constant 60W, cumulative counter stalled five minutes then increases 2Wh/min",
+    "independent_arithmetic": {
+      "power_integral_wh": 10,
+      "counter_delta_wh": 10,
+      "global_disagreement_wh": 0,
+      "interval_disagreements": 10
+    },
+    "implementation": "Add interval-level trapezoidal comparison, conservative provisional tolerance and explicit mismatch count",
+    "source_git_blob_sha": "57f2ce45129f7521933ba69469af5160f218778b",
+    "test_git_blob_sha": "b43dcd8d6992a584a065da5e48f2585d3095a5d2",
+    "new_fictional_tests": 3,
+    "hosted_ci": "TBD — verify current branch head workflow runs",
+    "caveat": "Meter quantization/update latency can cause false positives; inspect cadence and uncertainty, do not infer physical tampering",
+    "real_capture": "TBD",
+    "performance_claim_permitted": false,
+    "maturity_advanced": false,
+    "decision": "Hold Prototype / Documented R&D; require instrumented dry run"
   }
 }
