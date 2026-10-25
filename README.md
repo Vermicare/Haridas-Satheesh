@@ -234,7 +234,7 @@ The long game is understanding what happens when those layers begin to converge 
 |---|---|---|
 | **CORTEX** | Architecture / R&D; synthetic benchmark | [Case study](case-studies/cortex-governance-intelligence.md) · [Benchmark](benchmarks/cortex/README.md) |
 | **Wireless Brain Interface** | Research / Simulation | [Case study](case-studies/wireless-brain-interface.md) · [Project](projects/wireless-brain-interface.md) |
-| **Companion Intelligence** | In Progress; implementation private | [Case study](case-studies/companion-intelligence-life-os.md) · [Synthetic benchmark](benchmarks/companion-life-os/README.md) |
+| **Companion Intelligence** | Public fictional Simulation; private implementation unverified | [Case study](case-studies/companion-intelligence-life-os.md) · [Synthetic benchmark](benchmarks/companion-life-os/README.md) · [Crash/retry negative evidence](benchmarks/companion-life-os/FICTIONAL_OUTBOX_CRASH_WINDOW_V07.md) |
 | **Adaptive Personal Cooling** | Prototype / R&D; bench evidence pending | [Case study](case-studies/adaptive-personal-cooling.md) · [Bench protocol](benchmarks/adaptive-cooling/README.md) |
 | **Retail Demand Intelligence** | Research / Architecture | [Case study](case-studies/retail-demand-intelligence.md) · [Benchmark](benchmarks/retail-demand/README.md) |
 | **EPMO Microsoft 365 Automation** | Implemented / In Progress | [Case study](case-studies/epmo-automation-portfolio.md) |
