@@ -40,8 +40,13 @@
       "ubuntu-latest",
       "windows-latest"
     ],
-    "ci_final_head_result": "TBD",
-    "seed": "not applicable"
+    "ci_final_head_result": "passed at tested code commit 7bbc0e6f000acdc48ad6e3e71844a24780ace9e7; 71/71 on Ubuntu and 71/71 on Windows; later documentation commits not yet separately verified",
+    "seed": "not applicable",
+    "ci_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40194636544",
+    "ci_jobs": {
+      "ubuntu": "121172727682",
+      "windows": "121172727885"
+    }
   },
   "unknowns": [
     "real identity",
@@ -57,5 +62,14 @@
   "decision": "retain Simulation; no maturity advancement",
   "next_experiment": "authenticated sandbox principal and trusted clock with idempotent adapter acknowledgment and crash replay",
   "privacy": "no employer data, personal records, private credentials, or outreach tracking",
-  "release": "none"
+  "release": "none",
+  "observations_ci": {
+    "ubuntu_tests_passed": 71,
+    "windows_tests_passed": 71,
+    "demo_step": "passed on both platforms"
+  },
+  "failure_learning": [
+    "Windows initially failed with 14 temp-directory cleanup errors because sqlite3 context manager does not close handles; explicit closing() fixed them",
+    "Overflowed JSON 1e400 initially produced a non-finite rejection that was wrapped into a generic invalid-JSON error; corrected and retested"
+  ]
 }
