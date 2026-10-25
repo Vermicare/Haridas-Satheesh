@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "cortex-json-intake-ambiguity-v03",
+  "date": "2026-10-25",
+  "project": "CORTEX",
+  "stage": "Architecture / R&D",
+  "stage_change": false,
+  "input_type": "AUTHOR_CREATED_FICTIONAL",
+  "hypothesis": "Malformed or ambiguous JSON and manifest inputs fail closed without silently accepted conflicting evidence",
+  "source_path": "benchmarks/cortex/blind_review_preflight.py",
+  "source_git_blob_sha": "e069d485bbcf9e1df63325f978352b8796f55fe9",
+  "test_path": "benchmarks/cortex/test_blind_review_preflight.py",
+  "test_git_blob_sha": "e183cc1817682f35cc0af869bebb48b6ac5d1a39",
+  "before_fix": {
+    "commit": "3e8c52036beee17cbc408c545bf8271d4ad6612a",
+    "workflow_run_id": 40199073982,
+    "ubuntu": {
+      "tests": 69,
+      "failed_assertions": 4,
+      "uncaught_errors": 5
+    },
+    "windows": {
+      "tests": 69,
+      "failed_assertions": 4,
+      "uncaught_errors": 5
+    },
+    "new_negative_controls": 9
+  },
+  "after_fix": {
+    "commit": "7e3686b86d612628469890eaf74b39666ead621f",
+    "workflow_run_id": 40199139641,
+    "ubuntu": {
+      "tests": 69,
+      "passed": 69
+    },
+    "windows": {
+      "tests": 69,
+      "passed": 69
+    },
+    "frozen_input_hash_assertions": "PASS",
+    "synthetic_lineage_output_hash_assertion": "PASS"
+  },
+  "conditions": {
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python_requested": "3.13",
+    "python_exact_patch": "TBD",
+    "runner_image_revision": "TBD",
+    "dependencies": "Python standard library",
+    "seed": "N/A (fixed adversarial fixtures)",
+    "command": "python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py"
+  },
+  "standards": [
+    {
+      "name": "RFC 8259",
+      "url": "https://www.rfc-editor.org/rfc/rfc8259",
+      "decision": "Reject duplicate member names and nonfinite values for a stricter reproducible evidence-intake profile"
+    }
+  ],
+  "limitations": [
+    "Fictional tests only; no real human reviewer annotations or timings",
+    "No semantic extraction accuracy or authenticated history",
+    "No exploit or deployment claim",
+    "Real workflow performance TBD"
+  ],
+  "human_correction_seconds": "TBD",
+  "external_review": "TBD",
+  "decision": "Keep strict JSON intake and structured errors; next independently adjudicated fictional case and timed correction burden versus manual notes"
+}

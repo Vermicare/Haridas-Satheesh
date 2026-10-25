@@ -1,0 +1,9 @@
+{
+  "archive_id": "CORTEX-BLIND-ARCHIVE-20261024-A",
+  "provenance": "AUTHOR_CREATED_FICTIONAL",
+  "synthetic": true,
+  "records": [
+    {"record_ref": "SYN-ARC-11", "decision_id": "H-11", "text": "The public greenhouse demonstration is suspended until a signed safety checklist is accepted. This does not specify a restriction on internal bench rehearsals.", "status": "active"},
+    {"record_ref": "SYN-ARC-12", "decision_id": "H-12", "text": "Calibration checklist version A is mandatory for the next internal rehearsal.", "status": "historical"}
+  ]
+}

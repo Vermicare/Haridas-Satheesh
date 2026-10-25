@@ -1,0 +1,52 @@
+{
+  "experiment_id": "CORTEX-ARCHIVE-CITATION-V04",
+  "date": "2026-10-26",
+  "project": "CORTEX",
+  "stage": "Architecture / R&D",
+  "evidence_class": "FICTIONAL_STRUCTURAL_SOFTWARE_TEST_ONLY",
+  "hypothesis": "A valid historical decision ID can be cited without identifying its actual archived record in the v0.1 reviewer intake.",
+  "baseline": "blind_review_preflight.py v0.1, original frozen packet unchanged",
+  "method": "additive archive_citation_gate_v04.py with exact predecessor-to-archive-record citation match",
+  "fixture_provenance": "AUTHOR_CREATED_FICTIONAL",
+  "case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+  "archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046",
+  "run_conditions": {
+    "local_python": "CPython 3.13.5",
+    "local_os": "Linux x86_64",
+    "ci_python": "3.13",
+    "ci_os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "seed": "N/A"
+  },
+  "local_tests": {
+    "standalone_passed": 17,
+    "repo_integration_skipped_locally": 4
+  },
+  "ci_tests": {
+    "run_id": 40241271339,
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40241271339",
+    "executable_commit": "e5f95d771a1427772d9cc1dead8b16cfce2a6577",
+    "ubuntu": "90/90 PASS",
+    "windows": "90/90 PASS",
+    "job_logs_inspected": true,
+    "final_documentation_head": "TBD"
+  },
+  "demo_sha256": "76e54d346299c9a8bb0d2b3485eae6f5b0a834c27128135cf6302d458f44420a",
+  "real_reviewer_count": 0,
+  "semantic_support_validation": "TBD",
+  "human_correction_seconds": "TBD",
+  "independent_review": "TBD",
+  "limitations": [
+    "Structural matching cannot verify truth or relevance of cited text",
+    "No external reviewer, authenticated archive or actual organizational decision",
+    "Original v0.1 CLI remains unchanged; v0.4 strict CLI must be invoked explicitly"
+  ],
+  "decision": "No maturity advance; keep draft",
+  "next_experiment": "Independent blinded fictional annotations and source-span adjudication with measured correction burden",
+  "kill_reframe": "Reframe if unsupported lineage or reviewer burden outweighs manual notes",
+  "primary_standard": "https://www.w3.org/TR/prov-o/#wasRevisionOf",
+  "published_source_git_blob": "65efbcb816cb45b866573d61bd743a6cddcc94a3",
+  "published_tests_git_blob": "d008ce2ad1e5ca656012a77ad7b6d1887abbf424"
+}

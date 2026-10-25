@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "cortex-blinded-intake-failclosed-v02",
+  "date": "2026-10-25",
+  "project": "CORTEX",
+  "stage": "Architecture / R&D",
+  "input_type": "AUTHOR_CREATED_FICTIONAL",
+  "hypothesis": "Malformed blinded-review packet inputs return structured rejection rather than uncaught exceptions",
+  "source_path": "benchmarks/cortex/blind_review_preflight.py",
+  "source_git_blob_sha": "a051f57af02802863bd9c536d5372efcefd178a1",
+  "test_path": "benchmarks/cortex/test_blind_review_preflight.py",
+  "test_git_blob_sha": "39785f659cc64f760af4d977e36918b9c477159f",
+  "before_fix": {
+    "commit": "cfc37ace477b4409e0a9c7939285f00580697d39",
+    "workflow_run_id": 40155101712,
+    "ubuntu": {
+      "tests": 60,
+      "errors": 7
+    },
+    "windows": {
+      "tests": 60,
+      "errors": 7
+    },
+    "eight_new_negative_controls": 8
+  },
+  "after_fix": {
+    "commit": "725d40831c96e38a5cb56acdd0e29a95f557fbec",
+    "workflow_run_id": 40155139147,
+    "ubuntu": {
+      "tests": 60,
+      "passed": 60
+    },
+    "windows": {
+      "tests": 60,
+      "passed": 60
+    },
+    "frozen_input_hash_assertions": "PASS",
+    "synthetic_lineage_output_hash_assertion": "PASS"
+  },
+  "conditions": {
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python_requested": "3.13",
+    "python_exact_patch": "TBD",
+    "runner_image_revision": "TBD",
+    "dependencies": "Python standard library",
+    "seed": "N/A",
+    "command": "python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py"
+  },
+  "limitations": [
+    "No real reviewer annotations or timings",
+    "No independent semantic extraction evaluation",
+    "No authenticated archive or identity",
+    "No security exploit claim"
+  ],
+  "stage_change": false,
+  "external_review": "TBD",
+  "human_correction_seconds": "TBD",
+  "decision": "Keep fix; pursue independently adjudicated blinded review before stage advancement"
+}

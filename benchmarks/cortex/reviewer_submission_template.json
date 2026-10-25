@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+  "archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046",
+  "reviewer_code": "R00",
+  "method": "manual_structured_notes",
+  "review_seconds": "TBD",
+  "correction_seconds": "TBD",
+  "objects": []
+}
