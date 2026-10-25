@@ -180,5 +180,25 @@
     "real_forecasting_metrics": "TBD",
     "stage_change": "NONE",
     "next_experiment": "Acquire and verify publisher-pinned train Parquet; execute actual pyarrow conversion and frozen chronological benchmark."
+  },
+  "json_evidence_v08": {
+    "date": "2026-10-25",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "hypothesis": "Default JSONL decoding can silently discard conflicting duplicate object keys and accept non-standard NaN constants.",
+    "before_fix_commit": "8837e3bff027857a23f806a8e3297f04fb529913",
+    "before_fix_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40203087915",
+    "before_fix_ubuntu": "63 tests; 6 expected failure subtests across both engines; valid control passed",
+    "before_fix_windows": "test step failed before cancellation; full failure count not claimed",
+    "fix_commits": [
+      "6dca021b2cbe64c1099f759611606f6115d69fe7",
+      "53e7830bc221287044161334d1da990bf85ed058"
+    ],
+    "new_test_file": "test_json_duplicate_keys_v08.py",
+    "correction": "Shared strict JSON parser rejects duplicate keys and nonfinite JSON constants before both engines parse rows.",
+    "after_fix_ci": "TBD",
+    "real_publisher_parquet_downloaded": false,
+    "real_forecast_results": "TBD",
+    "maturity_change": "NONE",
+    "next_experiment": "Acquire exact publisher-pinned Parquet; independently verify source SHA256; execute real pyarrow export and frozen chronological benchmark."
   }
 }
