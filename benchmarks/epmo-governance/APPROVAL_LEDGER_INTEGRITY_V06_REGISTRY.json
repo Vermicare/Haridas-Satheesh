@@ -34,11 +34,13 @@
     "external_actions": 0
   },
   "github_ci": {
-    "status": "TBD",
-    "run": "TBD",
-    "commit": "TBD",
-    "linux_tests": "TBD",
-    "windows_tests": "TBD"
+    "status": "PASS",
+    "run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40174154959",
+    "commit": "23454519876742dcb8d334463f6b9e25a543cb99",
+    "linux_tests": "101/101",
+    "windows_tests": "101/101",
+    "python": "3.13",
+    "note": "Verified implementation at this commit; later documentation-only commits preserve executable code."
   },
   "known_failure": "Initial test used '100' string in INTEGER affinity field; SQLite coerced to 100. Test changed to 'not-a-time'. Initial v0.6 Windows CI failed with 19 temporary-file cleanup errors because test sqlite3 context managers did not close connections; fixed with contextlib.closing. Before-fix CI: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40174083703",
   "limitations": [
