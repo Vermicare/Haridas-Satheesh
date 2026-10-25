@@ -10,7 +10,7 @@ on:
       - ".github/workflows/wbi-real-edf-smoke.yml"
   workflow_dispatch:
 
-# Avoid multiple simultaneous public EDF downloads from successive PR commits.
+# Avoid overlapping public-data downloads from successive PR commits.
 concurrency:
   group: wbi-real-edf-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -21,7 +21,7 @@ permissions:
 jobs:
   public-edf-annotations:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -31,24 +31,49 @@ jobs:
         run: |
           python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_smoke.py -v
           python -m unittest discover -s benchmarks/wireless-brain-interface -p test_edf_annotation_contract.py -v
-      - name: Bounded real training-EDF acquisition and checksum-bound TAL parsing
+      - name: Official publisher S3 one-file acquisition; HTTPS fallback only on transport failure
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in 1 2; do
-            if timeout 160s python benchmarks/wireless-brain-interface/edf_annotation_contract.py --fetch --out "$RUNNER_TEMP/edf-annotations.json"; then
-              break
+          EDF="$RUNNER_TEMP/S001R04.edf"
+          SUMS="$RUNNER_TEMP/SHA256SUMS.txt"
+          S3="s3://physionet-open/eegmmidb/1.0.0"
+          # PhysioNet's published no-sign-request S3 distribution route.
+          # Fetch ONLY predeclared S001/R04 training EDF and checksum index.
+          # Raw EDF remains runner-local and is never uploaded.
+          acquired=0
+          if command -v aws >/dev/null 2>&1; then
+            if timeout 180s aws s3 cp --no-sign-request --region us-east-1 --only-show-errors "$S3/S001/S001R04.edf" "$EDF" &&
+               timeout 60s aws s3 cp --no-sign-request --region us-east-1 --only-show-errors "$S3/SHA256SUMS.txt" "$SUMS"; then
+              acquired=1
+              echo "Publisher S3 transport completed; integrity verification still required."
+            else
+              echo "::warning::Publisher S3 transport unavailable; attempting bounded HTTPS fallback."
             fi
-            if [ "$attempt" -eq 2 ]; then
-              echo "::error::Real EDF acquisition or TAL validation failed after two bounded attempts; inspect log. Do not interpret network timeout as EEG evidence."
-              exit 1
-            fi
-            echo "::warning::First attempt failed; retrying once with same pinned source."
-            sleep 5
-          done
-          python -c 'import json,os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"edf-annotations.json"; r=json.loads(p.read_text()); assert r["source_sha256"] == "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d"; assert r["publisher_checksum_matches"] and r["split"] == "train" and not r["decoder_trained"] and not r["test_subjects_accessed"]; assert r["annotations"]["total_events"] > 0'
-          sha256sum "$RUNNER_TEMP/edf-annotations.json"
-      - name: Preserve only metadata and task annotations (not raw EEG)
+          else
+            echo "::warning::AWS CLI unavailable on runner; attempting bounded HTTPS fallback."
+          fi
+          if [ "$acquired" -eq 0 ]; then
+            rm -f "$EDF" "$SUMS"
+            # The original HTTPS path remains an explicit bounded fallback.
+            timeout 180s python benchmarks/wireless-brain-interface/edf_annotation_contract.py --fetch --out "$RUNNER_TEMP/edf-annotations.json"
+          else
+            test "$(stat -c %s "$EDF")" -le 8388608
+            test "$(stat -c %s "$SUMS")" -le 524288
+            python benchmarks/wireless-brain-interface/edf_annotation_contract.py --edf "$EDF" --sha256-index "$SUMS" --out "$RUNNER_TEMP/edf-annotations.json"
+          fi
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          p = pathlib.Path(os.environ["RUNNER_TEMP"]) / "edf-annotations.json"
+          r = json.loads(p.read_text())
+          assert r["source_sha256"] == "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d"
+          assert r["publisher_checksum_matches"] and r["split"] == "train" and r["run"] == "R04"
+          assert not r["decoder_trained"] and not r["test_subjects_accessed"]
+          assert r["annotations"]["total_events"] > 0
+          print("Metadata-only report SHA256:", hashlib.sha256(p.read_bytes()).hexdigest())
+          print("Event counts:", r["annotations"]["event_counts"])
+          PY
+      - name: Preserve metadata and task annotations only (never raw EEG)
         uses: actions/upload-artifact@v4
         with:
           name: wbi-one-training-edf-annotation-report
