@@ -72,7 +72,11 @@ def wfdb_events(annotation: object) -> list[tuple[str, int, float]]:
 
 def compare_tal_to_wfdb(tal: list[dict], events: list[tuple[str, int, float]]) -> dict:
     if len(tal) != len(events):
-        raise CrossFormatError(f'event count mismatch: TAL={len(tal)}, WFDB={len(events)}')
+        raise CrossFormatError(f'event count mismatch: TAL={len(tal)}, WFDB={len(events)}; '
+                               f'TAL_counts={dict(Counter(t["label"] for t in tal))}; '
+                               f'WFDB_counts={dict(Counter(e[0] for e in events))}; '
+                               f'TAL_first_last={(tal[0] if tal else None, tal[-1] if tal else None)}; '
+                               f'WFDB_first_last={(events[0] if events else None, events[-1] if events else None)}')
     if len(events) != 30:
         raise CrossFormatError('pinned recording event count differs from 30')
     counts = dict(sorted(Counter(label for label, _, _ in events).items()))
