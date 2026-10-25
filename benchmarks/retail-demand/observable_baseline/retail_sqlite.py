@@ -103,7 +103,7 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     a = p.parse_args()
     report = benchmark_sqlite(a.input, a.source_sha256, a.source_uri, a.synthetic)
-    a.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    a.output.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
     print(f"{report['data_kind']}: {len(report['folds'])} folds, report={a.output}")
 
 
