@@ -11,7 +11,7 @@ import sqlite3
 import tempfile
 from pathlib import Path
 from contextlib import closing
-from retail_gate import EvidenceError, HORIZON, ORIGINS, evaluate, parse_row, sha256_file
+from retail_gate import EvidenceError, HORIZON, ORIGINS, evaluate, parse_row, sha256_file, parse_json_evidence
 
 
 def _ingest(conn, path):
@@ -24,10 +24,7 @@ def _ingest(conn, path):
         for n, line in enumerate(f, 1):
             if not line.strip():
                 continue
-            try:
-                obj = json.loads(line)
-            except json.JSONDecodeError as e:
-                raise EvidenceError(f"line {n}: malformed JSON") from e
+            obj = parse_json_evidence(line, n)
             row = parse_row(obj, n)
             try:
                 conn.execute("INSERT INTO daily VALUES (?,?,?,?,?,?)",
