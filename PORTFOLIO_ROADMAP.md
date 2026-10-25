@@ -67,3 +67,8 @@ After that: **Retail public-data benchmark → CORTEX synthetic governance pilot
 | Companion | [Authorization gate](benchmarks/companion-life-os/OCTOBER_2026_AUTHORIZATION_GATE.md) | Fictional consent and reversal flow only | Independent identity-bound replay/expiry adversarial tests |
 
 **Release rule:** publish executable source, fixtures, licenses, manifests and reproducible CI only after package-level review for correctness, dependency and confidentiality risks. Do not infer that this documentation imports the research ZIPs or that local test claims were independently verified on GitHub.
+
+
+## October 26, 2026 — Retail v1.0 horizon-boundary regression (draft branch)
+
+[Reproducible evidence and failure log](benchmarks/retail-demand/observable_baseline/HORIZON_BOUNDED_SELECTION_V10.md) · [machine-readable registry](benchmarks/retail-demand/observable_baseline/HORIZON_BOUNDED_SELECTION_V10_REGISTRY.json). A fictional 84-day negative control exposed an erroneous cohort rejection caused by a missing day **after** the last scored horizon. The first correction exposed a separate selected-series API regression; both failures are preserved. Final code-bearing [CI #40237113875](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40237113875) passed **71/71 tests on Ubuntu and Windows**. No publisher Parquet or real forecasting benchmark was executed; real-data metrics remain **TBD**, stage **Research / Architecture**. Next: acquire and checksum publisher data, verify stockout semantics, run chronological baseline and independently review PR #9 before merge.
