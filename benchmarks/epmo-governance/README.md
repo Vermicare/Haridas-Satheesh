@@ -49,3 +49,9 @@ The [v0.3 SQLite receipt experiment](DURABLE_SQLITE_V03.md) adds local durable u
 **Verified v0.4:** [GitHub CI #40135124046](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40135124046) passed **52/52 tests separately on Ubuntu and Windows** (Python 3.13, standard library); [machine-readable registry](REPLAY_LEDGER_RECONCILIATION_V04_REGISTRY.json). The original fictional 4 accepted / 2 rejected / 0 external-action baseline remains unchanged.
 
 **Critical boundary:** read-only reconciliation is not transactional approval consumption or actor authentication. A mutually forged scenario and ledger can still agree. Trusted timestamps, action/compensation, human review and employer metrics are **TBD**. No maturity advancement or release.
+
+## v0.5 — atomic one-use fictional approval consumption (2026-10-25)
+
+The isolated [v0.5 SQLite gate](FICTIONAL_APPROVAL_CONSUMPTION_V05.md) now creates an approval-consumption receipt **atomically** under a single `BEGIN IMMEDIATE` transaction. The [27 new adversarial tests](test_approval_consumption_v05.py) and [short deterministic demo](demo_approval_consumption_45s.py) cover concurrent callers, exact one-use semantics, idempotent retry, scope/nonce/expiry checks, request/receipt collisions, and crash-before/after-commit recovery. [GitHub CI #40151625112](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40151625112) passed **79/79 tests separately on Ubuntu and Windows** (Python 3.13); [registry](APPROVAL_CONSUMPTION_V05_REGISTRY.json).
+
+**Limits:** fictional test-seeded approvals, declared (unauthenticated) actors, untrusted test clock, no external actions or correction adapter, and **no integration** yet with the v0.4 replay reconciler. No security certification, employer-data claim, maturity advancement, release or deployment. Next: identity/time-bound integration and transactional fake-action/outbox tests.
