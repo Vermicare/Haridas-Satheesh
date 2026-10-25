@@ -233,7 +233,7 @@ The long game is understanding what happens when those layers begin to converge 
 | Experiment | Current boundary | Inspect |
 |---|---|---|
 | **CORTEX** | Architecture / R&D; synthetic benchmark | [Case study](case-studies/cortex-governance-intelligence.md) · [Benchmark](benchmarks/cortex/README.md) |
-| **Wireless Brain Interface** | Research / Simulation | [Case study](case-studies/wireless-brain-interface.md) · [Project](projects/wireless-brain-interface.md) |
+| **Wireless Brain Interface** | Research / Simulation; synthetic only | [Case study](case-studies/wireless-brain-interface.md) · [Verified same-runtime synthetic execution](benchmarks/wireless-brain-interface/EXECUTION_RECORD.md) |
 | **Companion Intelligence** | In Progress; implementation private | [Case study](case-studies/companion-intelligence-life-os.md) · [Synthetic benchmark](benchmarks/companion-life-os/README.md) |
 | **Adaptive Personal Cooling** | Prototype / R&D; bench evidence pending | [Case study](case-studies/adaptive-personal-cooling.md) · [Bench protocol](benchmarks/adaptive-cooling/README.md) |
 | **Retail Demand Intelligence** | Research / Architecture | [Case study](case-studies/retail-demand-intelligence.md) · [Benchmark](benchmarks/retail-demand/README.md) |
