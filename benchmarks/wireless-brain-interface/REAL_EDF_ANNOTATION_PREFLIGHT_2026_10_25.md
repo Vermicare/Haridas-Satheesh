@@ -1,6 +1,6 @@
 # WBI — EDF+ task-annotation preflight (2026-10-25)
 
-**Maturity: Research / Simulation (unchanged).** This is a bounded **single training-subject** annotation-integrity experiment, not a decoder benchmark, drift study, clinical result, or device validation. A passing source-pinned GitHub Actions run now establishes **real training-file annotation extraction only**; independent annotation-reader agreement, EEG decoding and performance remain **TBD**.
+**Maturity: Research / Simulation (unchanged).** This is a bounded **single training-subject** annotation-integrity experiment, not a decoder benchmark, drift study, clinical result, or device validation. A passing source-pinned GitHub Actions run now establishes **real training-file annotation extraction only**; an independent **MNE 1.13.2 software-reader agreement** has now passed separately in [CI #40166652769](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40166652769) for all 30 labels/onsets/durations; companion `.edf.event` agreement, independent human labels, EEG decoding and performance remain **TBD**.
 
 ## Decision-changing protocol finding
 
@@ -40,7 +40,7 @@ The last command requires public dataset access; local offline input requires bo
 
 ## Gate / limitations
 
-Real TAL parsing has now passed the pinned single-file gate. **Next, independently compare all task events against the publisher's companion `.event` file or another EDF+ reader** (counts, event onsets, durations and run-specific labels) **before** freezing preprocessing. No independent comparison has yet been executed. Then perform subject-disjoint train/calibration baseline experiments without accessing held-out labels.
+Real TAL parsing has now passed the pinned single-file gate. **Independent EDF+ software-reader agreement is now complete**: the project's TAL reader and MNE 1.13.2 matched all 30 task labels, onsets and durations with maximum observed differences 0.0 s ([evidence record](INDEPENDENT_EDF_ANNOTATION_AGREEMENT_2026_10_25.md); [registry](INDEPENDENT_EDF_ANNOTATION_MNE_REGISTRY_2026_10_25.json)). **Next compare the publisher's companion `.edf.event` cross-format file**, noting that its duration representation may differ, **before** freezing preprocessing. No independent human annotation or EEG decoding has been performed. Then perform subject-disjoint train/calibration baseline experiments without accessing held-out labels.
 
 If annotation timing or label mapping cannot be independently reconciled, stop decoder work and repair the data contract; do not silently relabel. The existing [frozen synthetic evaluator](SYNTHETIC_EVALUATOR.md), its [cross-platform reproduction](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md), and prior stronger results remain unchanged.
 
