@@ -106,12 +106,25 @@ def audit(path: str | Path, *, min_duration_s: float = 600.0,
         if any(increment < -1e-9 for increment in increments):
             problems.append('ENERGY_COUNTER_DECREASE')
         if all(dt > 0 for dt in elapsed):
-            integrated_wh = sum((a[3]['power_w'] + b[3]['power_w']) / 2 * dt / 3600
-                                for (a, b), dt in zip(zip(parsed, parsed[1:]), elapsed))
+            # Half-before-add prevents overflow in (a+b)/2 for large but
+            # individually finite inputs. Interval conversion precedes power
+            # multiplication; derived results still require a finite check.
+            integrated_wh = sum(
+                (a[3]['power_w'] / 2 + b[3]['power_w'] / 2) * (dt / 3600)
+                for (a, b), dt in zip(zip(parsed, parsed[1:]), elapsed))
             counter_wh = parsed[-1][3]['energy_wh'] - parsed[0][3]['energy_wh']
-            if (abs(counter_wh - integrated_wh) >
-                    energy_abs_tol_wh + energy_rel_tol * integrated_wh):
-                problems.append('POWER_ENERGY_INCONSISTENCY')
+            if not math.isfinite(integrated_wh) or not math.isfinite(counter_wh):
+                problems.append('NONFINITE_DERIVED_ENERGY')
+                if not math.isfinite(integrated_wh):
+                    integrated_wh = None  # JSON-safe; never emit Infinity/NaN
+                if not math.isfinite(counter_wh):
+                    counter_wh = None
+            else:
+                tolerance_wh = energy_abs_tol_wh + energy_rel_tol * integrated_wh
+                if not math.isfinite(tolerance_wh):
+                    problems.append('NONFINITE_ENERGY_TOLERANCE')
+                elif abs(counter_wh - integrated_wh) > tolerance_wh:
+                    problems.append('POWER_ENERGY_INCONSISTENCY')
     else:
         problems.append('INSUFFICIENT_SAMPLES')
     return {
