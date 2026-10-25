@@ -1,0 +1,75 @@
+{
+  "experiment_id": "WBI_EEGMMIDB_S001R04_MNE_INDEPENDENT_EDF_2026_10_25",
+  "status": "PASS_INDEPENDENT_SOFTWARE_READER_AGREEMENT_SINGLE_TRAIN_EDF",
+  "maturity": "Research / Simulation (unchanged)",
+  "source": {
+    "publisher": "PhysioNet",
+    "dataset": "EEG Motor Movement/Imagery Dataset",
+    "version": "1.0.0",
+    "doi": "10.13026/C28G6P",
+    "file": "S001/S001R04.edf",
+    "subject_partition": "train",
+    "run": "R04",
+    "sha256": "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d",
+    "publisher_checksum_index": "SHA256SUMS.txt",
+    "acquisition": "unsigned s3://physionet-open/eegmmidb/1.0.0/",
+    "held_out_subjects_accessed": false
+  },
+  "method": {
+    "reader_a": "edf_annotation_contract.py (project TAL parser)",
+    "reader_b": "MNE-Python read_raw_edf(preload=False)",
+    "mne_version": "1.13.2",
+    "python": "3.13",
+    "platform": "GitHub Actions ubuntu-latest",
+    "reader_dependency_versions": "CI artifact reader-dependencies.txt",
+    "predeclared_absolute_tolerance_seconds": 0.0001,
+    "checks": [
+      "source SHA256 and publisher index",
+      "same file bytes",
+      "all T0/T1/T2 labels",
+      "all 30 onsets",
+      "all 30 durations",
+      "independent event counts",
+      "no EEG waveform preloading"
+    ],
+    "synthetic_negative_control_tests": 12
+  },
+  "verified_results": {
+    "event_counts": {
+      "T0": 15,
+      "T1": 8,
+      "T2": 7
+    },
+    "total_events": 30,
+    "max_onset_difference_seconds": 0,
+    "max_duration_difference_seconds": 0,
+    "real_eeg_decoding_accuracy": "TBD",
+    "longitudinal_drift": "TBD",
+    "external_annotator_agreement": "TBD",
+    "physionet_companion_event_agreement": "TBD",
+    "clinical_validation": false
+  },
+  "provenance": {
+    "branch": "research/wbi-coverage-target-diagnostic-20261023",
+    "commit": "c9f762ca19e6e058ae804ad563212095055483f9",
+    "workflow": ".github/workflows/wbi-independent-edf-review.yml",
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40166652769",
+    "artifact_id": 12588468001,
+    "artifact_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40166652769/artifacts/12588468001",
+    "metadata_report_sha256": "46cf5a93af885c0170ed9ec1ddbe001805d70d292c07e5963fbae835e37966b9",
+    "artifact_retention_days": 14,
+    "synthetic_contract_test_result": "12/12 passed",
+    "prior_real_tal_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40163082196",
+    "frozen_synthetic_reproduction_preserved": true
+  },
+  "limitations": [
+    "Both readers consume the same EDF+ annotation channel, not independent human labels or independent recording provenance",
+    "Publisher .edf.event companion file not yet cross-checked",
+    "One training subject and one run only",
+    "No EEG samples decoded for model evaluation, no decoder, no held-out evaluation, no real-world authorization gate, no clinical validation",
+    "MNE version pinned, transitive dependencies logged in CI artifact; dependency lock hashes TBD"
+  ],
+  "decision": "Independent software-reader agreement on the single predeclared training EDF passes. Remain Research / Simulation; no accuracy or drift claims.",
+  "next_experiment": "Compare publisher .edf.event annotation timestamps against both readers, then freeze subject-disjoint EEG preprocessing and matched-coverage decoder/abstention/gate protocol before accessing held-out subjects.",
+  "kill_reframe": "Stop preprocessing on any label/timing disagreement; reframe the drift gate if held-out matched-coverage evidence fails to beat confidence abstention."
+}

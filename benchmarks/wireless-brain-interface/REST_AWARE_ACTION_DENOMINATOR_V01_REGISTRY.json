@@ -1,0 +1,77 @@
+{
+  "id": "wbi-rest-aware-action-denominator-v0.1-20261025",
+  "date": "2026-10-25",
+  "family": "Wireless Brain Interface",
+  "stage": "Research / Simulation",
+  "evidence_type": "FICTIONAL EVENT-LEVEL CONTRACT ONLY",
+  "question": "Does the evaluation retain T0 rest as a no-action denominator while imagery T1/T2 remain the classifier labels?",
+  "dataset": {
+    "name": "Hand-authored fictional event scores",
+    "real_eeg_read": false,
+    "real_annotation_data_used": false,
+    "subject_id_source": "frozen eegmmidb_split_contract.py partition algorithm",
+    "source_file": "rest_aware_evaluation_contract.py",
+    "source_checksum_sha256": "TBD",
+    "frozen_eeg_source": "PhysioNet EEGMMIDB v1.0.0; actual EEG not accessed by this experiment"
+  },
+  "policies": [
+    "ungated",
+    "confidence abstention",
+    "confidence plus declared drift"
+  ],
+  "protocol": {
+    "calibration_subjects_disjoint": true,
+    "test_subjects_disjoint": true,
+    "imagery_labels": [
+      "T1",
+      "T2"
+    ],
+    "rest_label": "T0",
+    "rest_action": "always incorrect",
+    "confidence_grid": [
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "drift_grid": [
+      0.3,
+      0.5,
+      0.7,
+      1
+    ],
+    "min_calibration_imagery_coverage": 0.5,
+    "selection_objective": "minimize rest false-action per event; then incorrect-action risk; then maximize imagery coverage",
+    "test_threshold_selection": false
+  },
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "os": "Linux",
+    "dependencies": "Python standard library; local split generator shim matches frozen partition algorithm",
+    "local_test_result": "16/16 passed",
+    "local_demo_sha256": "45e77bd0d95ae939614bf7569a251132f9bf7dd42ea37a1d17767bcc07e45de2",
+    "independent_github_ci": "PASS: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40189776084; tested commit f9ebf266e89b0b498b502735788c34cc392dcac7",
+    "git_commit_sha": "f9ebf266e89b0b498b502735788c34cc392dcac7 (verified executable head; subsequent documentation commits)",
+    "windows_result": "16/16 rest-aware tests passed; canonical demo SHA-256 verified",
+    "ubuntu_result": "16/16 rest-aware tests passed; canonical demo SHA-256 verified"
+  },
+  "results": {
+    "fictional_only": true,
+    "real_eeg_accuracy": "TBD",
+    "real_rest_false_actions_per_minute": "TBD",
+    "matched_coverage_benefit": "TBD",
+    "physical_latency": "TBD"
+  },
+  "known_failure": "Partial T0 omission can evade minimum nonempty rest denominator; source-level canonical EDF+ reconciliation remains mandatory",
+  "decision": "Keep stage unchanged; require complete T0 annotations, leakage-safe preprocessing and matched-coverage held-out EEG test",
+  "no_claims": [
+    "EEG decoding",
+    "clinical safety",
+    "longitudinal drift",
+    "external validation",
+    "novelty",
+    "deployment",
+    "product utility"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "experiment_id": "WBI_EEGMMIDB_S001_R04_TAL_S3_2026_10_25",
+  "status": "PASSED_METADATA_ONLY_REAL_EDF_ANNOTATION_EXTRACTION",
+  "maturity": "Research / Simulation (unchanged)",
+  "question": "Can the predeclared training EDF be acquired via PhysioNet's official S3 distribution and its EDF+ TAL task annotations extracted after exact publisher-checksum and pinned-digest checks?",
+  "source": {
+    "publisher": "PhysioNet",
+    "dataset": "EEG Motor Movement/Imagery Dataset",
+    "version": "1.0.0",
+    "doi": "10.13026/C28G6P",
+    "license": "ODC-By-1.0",
+    "publisher_page": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "distribution": "s3://physionet-open/eegmmidb/1.0.0/",
+    "relative_path": "S001/S001R04.edf",
+    "checksum_index": "SHA256SUMS.txt",
+    "train_subject": "S001",
+    "run": "R04",
+    "held_out_subjects_accessed": false
+  },
+  "implementation": {
+    "branch": "research/wbi-coverage-target-diagnostic-20261023",
+    "workflow": ".github/workflows/wbi-real-edf-smoke.yml",
+    "commit": "3fe750a90053d1931bec0dc60c7b975fd23eb519",
+    "reader": "edf_annotation_contract.py",
+    "structural_verifier": "edf_smoke.py",
+    "runner": "GitHub Actions ubuntu-latest",
+    "python": "3.13.16",
+    "external_python_dependencies": []
+  },
+  "integrity": {
+    "publisher_checksum_match": true,
+    "pinned_edf_sha256": "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d",
+    "metadata_json_sha256": "c9130f2b186471c76a629b1d8f20750f8585b808675fd4ebda82d9afc9d45936",
+    "artifact_zip_sha256": "f016d4f6a79c37a29c7610a9847cc0870fb64ad8848f41ecf4eaaf59b065a08b"
+  },
+  "observed": {
+    "transport": "publisher documented unsigned S3",
+    "structural_tests_passed": 10,
+    "synthetic_tal_contract_tests_passed": 10,
+    "event_counts": {
+      "T0": 15,
+      "T1": 8,
+      "T2": 7
+    },
+    "total_events": 30,
+    "event_mapping_for_R04": {
+      "T0": "rest",
+      "T1": "imagined left fist",
+      "T2": "imagined right fist"
+    },
+    "edf_eeg_channels": 64,
+    "edf_sampling_hz": 160,
+    "edf_data_records": 125,
+    "independent_event_reference_agreement": "TBD",
+    "real_eeg_decoding_accuracy": "TBD",
+    "drift_gate_performance": "TBD",
+    "clinical_validation": false
+  },
+  "evidence": {
+    "workflow_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40163082196",
+    "artifact": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40163082196/artifacts/12587096905",
+    "artifact_id": 12587096905,
+    "artifact_retention_days": 14
+  },
+  "limits": [
+    "Single training subject/run; not a subject-generalization result",
+    "Annotation parser has not been independently compared against publisher .event or another reader",
+    "No EEG signal samples decoded, model trained, test subject accessed, or performance measured",
+    "Checksums establish source-index consistency, not independent publisher attestation",
+    "No raw EDF stored in GitHub or CI artifacts"
+  ],
+  "decision": "Remain Research / Simulation. Next independently compare all T0/T1/T2 onset and duration events against the publisher's companion .event annotation or an independent EDF+ reader before decoder work.",
+  "advancement_gate": "Source-pinned independent event agreement, then frozen subject-disjoint preprocessing and matched-coverage decoder/abstention/gate evaluation.",
+  "reframe_gate": "Stop and repair annotation contract on any irreconcilable event count, onset, duration or task mapping mismatch."
+}

@@ -1,0 +1,47 @@
+{
+  "experiment_id": "WBI-MATCHED-OPPORTUNITY-V03-20261026",
+  "evidence_class": "FICTIONAL_MATCHED_OPPORTUNITY_CONTRACT_ONLY",
+  "project": "Wireless Brain Interface",
+  "public_stage": "Research / Simulation",
+  "base_ref": "research/wbi-coverage-target-diagnostic-20261023",
+  "base_dependency_git_blob": "1a1540f2469814720ad4b3d8e71b44f611fc1712",
+  "dataset": "Hand-constructed fictional 100-Hz 6000-sample recording; no EEG waveform",
+  "real_eeg_decoded": false,
+  "external_review": "TBD",
+  "real_performance": "TBD",
+  "environment": {
+    "python": "3.13.5",
+    "os": "Linux",
+    "dependencies": "Python standard library only"
+  },
+  "local_test_result": {
+    "tests_run": 18,
+    "failures": 0,
+    "errors": 0,
+    "date": "2026-10-26"
+  },
+  "artifact_sha256": {
+    "matched_opportunity_contract_v03.py": "f274212f821fcdf00e25469f21d6a46a2d2b4838310b613675e7cef27120af6a",
+    "test_matched_opportunity_contract_v03.py": "aa0dee0d1f5e743e6678abcff2571e6185335b9f3369ba9c29fbb53b5037a4be",
+    "demo.json": "74196ae82435526dfb21cf2a7a50606de5dd1484fb3eb611d504f1e42d41372b"
+  },
+  "predeclared_coverage_tolerance": 0.05,
+  "demo_negative_control": {
+    "abstention_imagery_coverage": 1,
+    "gate_imagery_coverage": 0.5,
+    "comparable": false,
+    "risk_delta": null
+  },
+  "github_ci": {
+    "run_id": 40227676669,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40227676669",
+    "head_sha": "b02b52f9945b056777ad95766f2b448bb4b9100d",
+    "conclusion": "success",
+    "ubuntu_tests": 18,
+    "windows_tests": 18,
+    "demo_checksum_verified": true
+  },
+  "independent_reproduction": "TBD",
+  "next_experiment": "Subject-disjoint real EEG policy comparison with verified rest exposure and common opportunity timestamps",
+  "limitations": "Fictional decisions, no actual EEG decoding, independent annotation ground truth, or device/clinical safety evidence."
+}

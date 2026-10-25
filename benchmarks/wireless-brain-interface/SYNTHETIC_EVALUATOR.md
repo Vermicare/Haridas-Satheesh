@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Frozen Synthetic Evaluator
 
-**Status:** synthetic protocol specified and evaluator committed; a same-runtime deterministic execution record is published in [EXECUTION_RECORD.md](EXECUTION_RECORD.md). Independent cross-environment reproduction remains TBD.  
+**Status:** synthetic protocol specified and evaluator committed; a same-runtime deterministic execution record is published in [EXECUTION_RECORD.md](EXECUTION_RECORD.md). [Independent cross-platform reproduction](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md) passed on Linux and Windows in draft-branch [CI #40059209875](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40059209875); real EEG validation remains TBD.  
 **Maturity remains:** Research / Simulation.  
 **Purpose:** satisfy the pre-EEG evidence gate in Issue #3 without using real EEG labels.
 
@@ -14,7 +14,7 @@ The fixture is not evidence that WBI works on EEG. Its job is to make the evalua
 
 ## Run
 
-Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **A same-runtime deterministic execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent cross-environment execution remains TBD.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
+Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **A same-runtime deterministic execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent Linux/Windows reproduction is recorded separately in [FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md); no real EEG was decoded.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
 
 ## Frozen contract
 
@@ -36,7 +36,7 @@ A risk–coverage table is emitted for confidence thresholds from 0.50 to 0.95. 
 
 Passing these contract tests only permits the next experiment. It does **not** advance maturity.
 
-Next gate: connect this evaluator logic unchanged to a longitudinal public motor-imagery EEG benchmark, report per-subject/per-session results, and compare the authorization gate with both ungated decoding and simple abstention at comparable coverage.
+Next gate: connect the frozen evaluation definitions to **subject-disjoint public motor-imagery EEG** (the preregistered PhysioNet EEGMMIDB is **single-session**, not longitudinal), report per-subject results, and compare authorization gating with both ungated decoding and simple abstention at matched imagery coverage and common decision opportunities. Any longitudinal drift claim requires a **separate multi-session dataset**. The additive [v0.3 fictional matched-opportunity preflight](MATCHED_OPPORTUNITY_CONTRACT_V03.md) tests comparison integrity but is not EEG validation.
 
 Reframe the claimed contribution if lower incorrect-action risk is mainly purchased by near-total abstention, or if the authorization gate does not improve on simple abstention at comparable coverage.
 

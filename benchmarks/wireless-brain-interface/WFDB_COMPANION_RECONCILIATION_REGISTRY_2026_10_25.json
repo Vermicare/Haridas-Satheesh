@@ -1,0 +1,88 @@
+{
+  "experiment_id": "WBI_EEGMMIDB_S001R04_WFDB_COMPANION_RECONCILIATION_2026_10_25",
+  "status": "RECONCILED_29_OF_30_INITIAL_REST_OMITTED",
+  "maturity": "Research / Simulation (unchanged)",
+  "source": {
+    "publisher": "PhysioNet",
+    "dataset": "EEG Motor Movement/Imagery Dataset",
+    "version": "1.0.0",
+    "doi": "10.13026/C28G6P",
+    "edf": "S001/S001R04.edf",
+    "edf_sha256": "3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d",
+    "companion": "S001/S001R04.edf.event",
+    "companion_sha256": "see metadata-only CI report",
+    "checksum_index": "SHA256SUMS.txt",
+    "partition": "train",
+    "held_out_accessed": false
+  },
+  "method": {
+    "edf_reader": "edf_annotation_contract.py",
+    "companion_reader": "wfdb.rdann",
+    "wfdb_version": "4.3.1",
+    "python": "3.13",
+    "platform": "GitHub Actions ubuntu-latest",
+    "sample_frequency_hz": 160,
+    "onset_tolerance_seconds": 0.006250001,
+    "duration_tolerance_seconds": 0.000001,
+    "synthetic_control_tests": 17,
+    "comparison_scope": "all shared label/onset/duration triples; exactly one observed initial T0 omission permitted only for S001R04"
+  },
+  "results": {
+    "edf_events": 30,
+    "edf_counts": {
+      "T0": 15,
+      "T1": 8,
+      "T2": 7
+    },
+    "companion_events": 29,
+    "companion_counts": {
+      "T0": 14,
+      "T1": 8,
+      "T2": 7
+    },
+    "matched_shared_events": 29,
+    "omitted_event": {
+      "label": "T0",
+      "onset_s": 0,
+      "duration_s": 4.2
+    },
+    "companion_first_event": {
+      "label": "T2",
+      "sample": 672,
+      "onset_s": 4.2,
+      "duration_s": 4.1
+    },
+    "max_onset_delta_seconds": 0,
+    "max_duration_delta_seconds": 0,
+    "real_eeg_decoding_accuracy": "TBD",
+    "human_annotation_ground_truth": "TBD",
+    "clinical_validation": false
+  },
+  "provenance": {
+    "branch": "research/wbi-coverage-target-diagnostic-20261023",
+    "ci_commit": "36dea7de7189c7fc40879f858251b616d24ce9ef",
+    "workflow": ".github/workflows/wbi-wfdb-cross-format.yml",
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40178448547",
+    "artifact_id": 12592144458,
+    "artifact_retention_days": 14,
+    "metadata_report_sha256": "06573ff0040635f3db3776b336f5d1f123fc0dcfda84a1a2669232da7f56782b",
+    "negative_runs": [
+      "40178026220",
+      "40178102249",
+      "40178231594",
+      "40178329171"
+    ],
+    "all_five_final_head_wbi_workflows_passed": true
+  },
+  "decision": "Use 30-event EDF+ TAL as canonical; treat 29-event publisher companion as partial cross-format check only. No stage advance.",
+  "largest_gap": "No EEG waveform decoding, held-out matched-coverage gate evidence, independent human labels or longitudinal drift evidence.",
+  "next_experiment": "Freeze subject-disjoint preprocessing and rest-denominator contract; run train-only EEG smoke, then matched-coverage policies before held-out scoring.",
+  "kill_reframe": "Halt if additional cross-format mismatches occur; reframe drift gate if it does not improve over confidence abstention at comparable held-out coverage.",
+  "limitations": [
+    "Publisher companion omission cause unverified; not generalized beyond S001R04",
+    "The reconciliation exception was added after observing the initial CI failures",
+    "Two representations derive from the same source dataset, not independent human ground truth",
+    "No EEG samples decoded or clinical/device claims",
+    "Dependency lock hashes TBD"
+  ]
+}

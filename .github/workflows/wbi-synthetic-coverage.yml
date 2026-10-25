@@ -1,0 +1,75 @@
+name: WBI synthetic coverage diagnostic
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/wireless-brain-interface/**"
+      - ".github/workflows/wbi-synthetic-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Frozen baseline and synthetic stress tests
+        shell: bash
+        working-directory: benchmarks/wireless-brain-interface
+        run: |
+          python -m unittest -v test_coverage_target_diagnostic.py test_synthetic_regime_stress.py
+          python coverage_target_diagnostic.py --out coverage_target_results.json
+          python -c "from pathlib import Path; p=Path('coverage_target_results.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\n' '24979d49d9ed458f6a7ebea8af5700072d5e81b64f6540653ff4e2b7f1b5ab37' 'coverage_target_results.json' | sha256sum --check
+          python synthetic_regime_stress.py --out synthetic_regime_stress.json
+          python -c "from pathlib import Path; p=Path('synthetic_regime_stress.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          cp synthetic_regime_stress.json synthetic_regime_stress_first.json
+          python synthetic_regime_stress.py --out synthetic_regime_stress.json
+          python -c "from pathlib import Path; p=Path('synthetic_regime_stress.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          cmp -s synthetic_regime_stress_first.json synthetic_regime_stress.json
+          sha256sum synthetic_regime_stress.json
+          # Subject-disjoint public-EEG preregistration only; no EEG downloaded.
+          python -m unittest -v test_eegmmidb_split_contract.py
+          python eegmmidb_split_contract.py --out eegmmidb_subject_splits.json
+          printf '%s  %s\n' 'b626225f4560c30de94f6f7953c1f80c867712cb59e3bd929eeba4c0bdb26b67' 'eegmmidb_subject_splits.json' | sha256sum --check
+          cp eegmmidb_subject_splits.json eegmmidb_subject_splits_first.json
+          python eegmmidb_split_contract.py --out eegmmidb_subject_splits.json
+          cmp -s eegmmidb_subject_splits_first.json eegmmidb_subject_splits.json
+          # Fictional rest-aware action evaluation; preserve T0 as no-action denominator.
+          python -m unittest -v test_rest_aware_evaluation_contract.py
+          python rest_aware_evaluation_contract.py > rest_aware_contract_demo.json
+          python -c "from pathlib import Path; p=Path('rest_aware_contract_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\n' '45e77bd0d95ae939614bf7569a251132f9bf7dd42ea37a1d17767bcc07e45de2' 'rest_aware_contract_demo.json' | sha256sum --check
+          # Additive fictional sample-time exposure accounting; not a real EEG rate.
+          python -m unittest -v test_rest_exposure_rate_v02.py
+          python rest_exposure_rate_v02.py > rest_exposure_v02_demo.json
+          python -c "from pathlib import Path; p=Path('rest_exposure_v02_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\n' '120229c77704bc4c23229f932513176d15f38f1153724319f34f63c1299aaae2' 'rest_exposure_v02_demo.json' | sha256sum --check
+          # Matched-opportunity fictional safety comparison; no real EEG.
+          python -m unittest -v test_matched_opportunity_contract_v03.py
+          python matched_opportunity_contract_v03.py > matched_opportunity_v03_demo.json
+          python -c "from pathlib import Path; p=Path('matched_opportunity_v03_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\n' '74196ae82435526dfb21cf2a7a50606de5dd1484fb3eb611d504f1e42d41372b' 'matched_opportunity_v03_demo.json' | sha256sum --check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-synthetic-results-${{ matrix.os }}
+          path: |
+            benchmarks/wireless-brain-interface/coverage_target_results.json
+            benchmarks/wireless-brain-interface/synthetic_regime_stress.json
+            benchmarks/wireless-brain-interface/eegmmidb_subject_splits.json
+            benchmarks/wireless-brain-interface/rest_aware_contract_demo.json
+            benchmarks/wireless-brain-interface/rest_exposure_v02_demo.json
+            benchmarks/wireless-brain-interface/matched_opportunity_v03_demo.json
+          if-no-files-found: error
