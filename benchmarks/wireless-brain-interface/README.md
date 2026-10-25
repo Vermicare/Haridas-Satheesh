@@ -54,3 +54,7 @@ Unknown values stay TBD. Public-data results are research evidence, not clinical
 ## Sample-normalized rest exposure (fictional preflight)
 
 The [v0.2 timestamp contract](REST_EXPOSURE_RATE_V02.md) computes false actions per minute of **annotated T0 sample exposure**, not per annotation event. It tests complete sample coverage, half-open interval boundaries, gap/overlap rejection and segmentation invariance using fictional timestamps only. [Implementation](rest_exposure_rate_v02.py) · [17 adversarial tests](test_rest_exposure_rate_v02.py) · [registry](REST_EXPOSURE_RATE_V02_REGISTRY.json). Real EEG actions, coverage-matched comparison and safety metrics remain **TBD**.
+
+## Matched-opportunity action safety (fictional preflight v0.3)
+
+The [v0.3 common-opportunity contract](MATCHED_OPPORTUNITY_CONTRACT_V03.md) requires all three policies to explicitly act or abstain at **identical decision timestamps**. It counts wrong-direction imagery actions as well as rest actions, reports correct-action recall and imagery coverage, and **withholds** gate-vs-abstention risk deltas when coverage differs by more than 0.05 or either policy never acts. [Executable contract](matched_opportunity_contract_v03.py) · [18 adversarial tests](test_matched_opportunity_contract_v03.py) · [registry](MATCHED_OPPORTUNITY_CONTRACT_V03_REGISTRY.json). Fictional only; real EEG performance remains **TBD**.
