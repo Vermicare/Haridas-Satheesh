@@ -33,3 +33,7 @@ The four fail-open cases were: conflicting top-level `capture_origin` declaratio
 **Decision:** retain draft, no release or maturity advance. Existing [Issue #8](https://github.com/Vermicare/Haridas-Satheesh/issues/8) is still the highest-value evidence gate: independently inspectable >=600-second real ESP32-S3 BH1750/SCD40 capture, host and device timing, raw hashes, firmware/wiring review and controlled light perturbation. Preserve failed runs and protect credentials.
 
 **Kill/reframe:** if sensor provenance or continuous physical logging cannot be established, present the tooling as a synthetic capture-integrity preflight rather than a hardware benchmark. Sensor accuracy, real-world uptime, physical-origin proof and performance: **TBD**.
+
+## Primary standard and design consequence
+
+[IETF RFC 8259, §4 and §6](https://datatracker.ietf.org/doc/html/rfc8259) says JSON object member names **SHOULD** be unique because duplicate handling differs across implementations; it prohibits `NaN` and `Infinity`, and allows implementations to limit numeric range. Thus the fail-closed policy is a deliberate capture-evidence interoperability rule, not a claim that every duplicate-name JSON text is universally invalid syntax. The exponent `1e400` is syntactically a JSON number, but this Python float conversion overflows and is rejected for a finite-only evidence manifest.
