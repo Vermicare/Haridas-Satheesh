@@ -91,8 +91,21 @@ def validate_submission(case, archive, submission, case_sha, archive_sha):
     objects = submission.get("objects")
     if not isinstance(objects, list):
         return sorted(set(errors + ["submission:objects_not_list"]))
-    source_ids = {u.get("id") for u in case.get("meeting", {}).get("utterances", []) if isinstance(u, dict)}
-    archive_ids = {r.get("decision_id") for r in archive.get("records", []) if isinstance(r, dict)}
+    # validate_packet reports malformed inputs, but submission checking must
+    # still fail closed rather than raise on None, arrays, or unhashable IDs.
+    if not isinstance(case, dict) or not isinstance(archive, dict):
+        return sorted(set(errors + ["submission:invalid_packet"]))
+    meeting = case.get("meeting")
+    utterances = meeting.get("utterances") if isinstance(meeting, dict) else None
+    records = archive.get("records")
+    source_ids = {
+        u["id"] for u in (utterances if isinstance(utterances, list) else [])
+        if isinstance(u, dict) and isinstance(u.get("id"), str)
+    }
+    archive_ids = {
+        r["decision_id"] for r in (records if isinstance(records, list) else [])
+        if isinstance(r, dict) and isinstance(r.get("decision_id"), str)
+    }
     record_ids = set()
     for idx, obj in enumerate(objects):
         tag = "object[%d]" % idx
