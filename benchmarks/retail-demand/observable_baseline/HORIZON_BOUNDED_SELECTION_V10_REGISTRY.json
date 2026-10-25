@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "project": "Retail Demand Intelligence",
+  "experiment": "horizon-bounded cohort eligibility",
+  "date": "2026-10-26",
+  "evidence_class": "FICTIONAL_SOFTWARE_CORRECTNESS_ONLY",
+  "source_repo": "Vermicare/Haridas-Satheesh",
+  "branch": "research/retail-observable-baseline-20261024",
+  "predeclared_origins": [
+    42,
+    56,
+    70
+  ],
+  "horizon_days": 7,
+  "required_days": 77,
+  "pre_fix_commit": "b22a9fa0304b9ba8ab41bec4f1d4239291a40794",
+  "pre_fix_run": 40236967445,
+  "pre_fix_ubuntu": "failure: 2 expected errors",
+  "pre_fix_windows": "cancelled after logging 2 errors",
+  "intermediate_run": 40237039496,
+  "intermediate_failure": "IndexError from unintentional selected-series truncation; corrected",
+  "final_code_commit": "c1e307ae9558e11c83434509d6e3465c072a3036",
+  "final_ci_run": 40237113875,
+  "final_ci": {
+    "ubuntu": {
+      "tests_passed": 71,
+      "tests_total": 71
+    },
+    "windows": {
+      "tests_passed": 71,
+      "tests_total": 71
+    }
+  },
+  "python": "3.13",
+  "dataset": "fictional JSONL fixtures only",
+  "publisher_parquet_sha256": "TBD",
+  "real_data_metrics": "TBD",
+  "maturity": "Research / Architecture",
+  "next": "publisher-pinned Parquet ingestion and leakage-safe chronological benchmark",
+  "status": "draft branch; no merge/release"
+}
