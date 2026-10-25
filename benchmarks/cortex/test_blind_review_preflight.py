@@ -97,4 +97,92 @@ class BlindReviewTests(unittest.TestCase):
         a = copy.deepcopy(ARCHIVE); a["records"] = {"H-11": "bad"}
         self.assertIn("archive:missing_records", validate_submission(CASE, a, fake_submission(), digest(CASE_BYTES), digest(ARCHIVE_BYTES)))
 
+
+# CLI/file-parser integrity controls. All inputs are synthetic negative fixtures;
+# no reviewer submissions or real human timings are created.
+import io
+import tempfile
+from contextlib import redirect_stdout
+from blind_review_preflight import main
+
+
+class BlindReviewFileIntegrityTests(unittest.TestCase):
+    def invoke(self, case_raw=None, archive_raw=None, submission_raw=None, mode="manifest"):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            case_file, archive_file = folder / "case.json", folder / "archive.json"
+            case_file.write_bytes(CASE_BYTES if case_raw is None else case_raw)
+            archive_file.write_bytes(ARCHIVE_BYTES if archive_raw is None else archive_raw)
+            args = [mode, str(case_file), str(archive_file)]
+            if mode == "check":
+                submission_file = folder / "private_test_only.json"
+                submission_file.write_bytes(
+                    json.dumps(fake_submission()).encode("utf-8")
+                    if submission_raw is None else submission_raw
+                )
+                args.append(str(submission_file))
+            output = io.StringIO()
+            with redirect_stdout(output):
+                code = main(args)
+            return code, json.loads(output.getvalue())
+
+    def test_manifest_rejects_null_meeting_without_exception(self):
+        case = copy.deepcopy(CASE)
+        case["meeting"] = None
+        code, report = self.invoke(case_raw=json.dumps(case).encode("utf-8"))
+        self.assertEqual(code, 1)
+        self.assertIn("case:missing_meeting", report["errors"])
+
+    def test_manifest_rejects_null_utterances_without_exception(self):
+        case = copy.deepcopy(CASE)
+        case["meeting"]["utterances"] = None
+        code, report = self.invoke(case_raw=json.dumps(case).encode("utf-8"))
+        self.assertEqual(code, 1)
+        self.assertIn("case:missing_utterances", report["errors"])
+
+    def test_manifest_rejects_null_archive_records_without_exception(self):
+        archive = copy.deepcopy(ARCHIVE)
+        archive["records"] = None
+        code, report = self.invoke(archive_raw=json.dumps(archive).encode("utf-8"))
+        self.assertEqual(code, 1)
+        self.assertIn("archive:missing_records", report["errors"])
+
+    def test_manifest_rejects_nonobject_case_without_exception(self):
+        code, report = self.invoke(case_raw=b'[]')
+        self.assertEqual(code, 1)
+        self.assertIn("case:not_explicitly_fictional", report["errors"])
+
+    def test_duplicate_json_key_cannot_override_fictional_flag(self):
+        raw = CASE_BYTES.replace(b'"synthetic": true', b'"synthetic": false, "synthetic": true', 1)
+        self.assertNotEqual(raw, CASE_BYTES)
+        code, report = self.invoke(case_raw=raw)
+        self.assertEqual(code, 1)
+        self.assertIn("input:invalid_json_or_read", report["errors"])
+
+    def test_duplicate_json_key_cannot_override_review_seconds(self):
+        raw = json.dumps(fake_submission()).replace(
+            '"review_seconds": 1', '"review_seconds": -99, "review_seconds": 1'
+        ).encode("utf-8")
+        code, report = self.invoke(submission_raw=raw, mode="check")
+        self.assertEqual(code, 1)
+        self.assertIn("input:invalid_json_or_read", report["errors"])
+
+    def test_nonfinite_unused_submission_field_is_rejected(self):
+        raw = json.dumps(fake_submission())[:-1] + ', "extra": NaN}'
+        code, report = self.invoke(submission_raw=raw.encode("utf-8"), mode="check")
+        self.assertEqual(code, 1)
+        self.assertIn("input:invalid_json_or_read", report["errors"])
+
+    def test_overflowing_unused_submission_number_is_rejected(self):
+        raw = json.dumps(fake_submission())[:-1] + ', "extra": 1e400}'
+        code, report = self.invoke(submission_raw=raw.encode("utf-8"), mode="check")
+        self.assertEqual(code, 1)
+        self.assertIn("input:invalid_json_or_read", report["errors"])
+
+    def test_malformed_json_reports_error_without_traceback(self):
+        code, report = self.invoke(archive_raw=b'{')
+        self.assertEqual(code, 1)
+        self.assertEqual(report["errors"], ["input:invalid_json_or_read"])
+
+
 if __name__ == "__main__": unittest.main()
