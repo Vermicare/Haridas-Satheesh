@@ -1,0 +1,76 @@
+name: WBI publisher WFDB companion event cross-format review
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/wireless-brain-interface/wfdb_event_crosscheck.py"
+      - "benchmarks/wireless-brain-interface/test_wfdb_event_crosscheck.py"
+      - "benchmarks/wireless-brain-interface/edf_annotation_contract.py"
+      - ".github/workflows/wbi-wfdb-cross-format.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: wbi-wfdb-cross-format-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  one-training-record-cross-format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Synthetic comparator negative controls
+        run: python -m unittest discover -s benchmarks/wireless-brain-interface -p test_wfdb_event_crosscheck.py -v
+      - name: Install pinned WFDB reader and record transitive versions
+        run: |
+          python -m pip install --disable-pip-version-check "wfdb==4.3.1"
+          python -m pip check
+          python -m pip freeze > "$RUNNER_TEMP/wfdb-dependencies.txt"
+      - name: Acquire only publisher-pinned TRAIN EDF, companion event and checksum index
+        shell: bash
+        run: |
+          set -euo pipefail
+          S3="s3://physionet-open/eegmmidb/1.0.0"
+          timeout 180s aws s3 cp --no-sign-request --region us-east-1 --only-show-errors "$S3/S001/S001R04.edf" "$RUNNER_TEMP/S001R04.edf"
+          timeout 60s aws s3 cp --no-sign-request --region us-east-1 --only-show-errors "$S3/S001/S001R04.edf.event" "$RUNNER_TEMP/S001R04.edf.event"
+          timeout 60s aws s3 cp --no-sign-request --region us-east-1 --only-show-errors "$S3/SHA256SUMS.txt" "$RUNNER_TEMP/SHA256SUMS.txt"
+          test "$(stat -c %s "$RUNNER_TEMP/S001R04.edf")" -le 8388608
+          test "$(stat -c %s "$RUNNER_TEMP/S001R04.edf.event")" -le 65536
+          test "$(stat -c %s "$RUNNER_TEMP/SHA256SUMS.txt")" -le 524288
+      - name: Verify publisher checksums and all cross-format labels/onsets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python benchmarks/wireless-brain-interface/wfdb_event_crosscheck.py \
+            --edf "$RUNNER_TEMP/S001R04.edf" \
+            --event "$RUNNER_TEMP/S001R04.edf.event" \
+            --sha256-index "$RUNNER_TEMP/SHA256SUMS.txt" \
+            --out "$RUNNER_TEMP/wbi-wfdb-cross-format-report.json"
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          p = pathlib.Path(os.environ["RUNNER_TEMP"]) / "wbi-wfdb-cross-format-report.json"
+          result = json.loads(p.read_text())
+          assert result["status"] == "PASS_SINGLE_TRAIN_CROSS_FORMAT_ANNOTATION"
+          assert result["agreement"]["counts"] == {"T0": 15, "T1": 8, "T2": 7}
+          assert result["agreement"]["total_events"] == 30
+          assert result["agreement"]["duration_agreement"].startswith("TBD")
+          assert not result["decoder_trained"] and not result["held_out_subjects_accessed"]
+          print("Metadata-only report SHA256:", hashlib.sha256(p.read_bytes()).hexdigest())
+          print("Maximum cross-format onset difference (seconds):", result["agreement"]["max_onset_delta_s"])
+          PY
+      - name: Preserve only metadata and dependency list; no raw EEG or binary event file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wbi-wfdb-cross-format-metadata
+          path: |
+            ${{ runner.temp }}/wbi-wfdb-cross-format-report.json
+            ${{ runner.temp }}/wfdb-dependencies.txt
+          if-no-files-found: warn
+          retention-days: 14
