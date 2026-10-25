@@ -59,7 +59,7 @@ jobs:
           assert result["status"] == "PASS_SINGLE_TRAIN_CROSS_FORMAT_ANNOTATION"
           assert result["agreement"]["counts"] == {"T0": 15, "T1": 8, "T2": 7}
           assert result["agreement"]["total_events"] == 30
-          assert result["agreement"]["duration_agreement"].startswith("TBD")
+          assert result["agreement"]["max_duration_delta_s"] <= 1e-6
           assert not result["decoder_trained"] and not result["held_out_subjects_accessed"]
           print("Metadata-only report SHA256:", hashlib.sha256(p.read_bytes()).hexdigest())
           print("Maximum cross-format onset difference (seconds):", result["agreement"]["max_onset_delta_s"])
