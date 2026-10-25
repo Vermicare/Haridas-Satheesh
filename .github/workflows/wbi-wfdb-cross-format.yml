@@ -56,9 +56,12 @@ jobs:
           import hashlib, json, os, pathlib
           p = pathlib.Path(os.environ["RUNNER_TEMP"]) / "wbi-wfdb-cross-format-report.json"
           result = json.loads(p.read_text())
-          assert result["status"] == "PASS_SINGLE_TRAIN_CROSS_FORMAT_ANNOTATION"
-          assert result["agreement"]["counts"] == {"T0": 15, "T1": 8, "T2": 7}
-          assert result["agreement"]["total_events"] == 30
+          assert result["status"] == "RECONCILED_29_OF_30_INITIAL_REST_OMITTED"
+          assert result["agreement"]["wfdb_counts"] == {"T0": 14, "T1": 8, "T2": 7}
+          assert result["agreement"]["edf_tal_events"] == 30
+          assert result["agreement"]["wfdb_companion_events"] == 29
+          assert result["agreement"]["matched_events"] == 29
+          assert result["agreement"]["omitted_from_wfdb"] == [{"label": "T0", "onset_s": 0.0, "duration_s": 4.2}]
           assert result["agreement"]["max_duration_delta_s"] <= 1e-6
           assert not result["decoder_trained"] and not result["held_out_subjects_accessed"]
           print("Metadata-only report SHA256:", hashlib.sha256(p.read_bytes()).hexdigest())
