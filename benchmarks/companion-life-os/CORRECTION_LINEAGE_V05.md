@@ -1,6 +1,6 @@
 # Companion — fictional durable correction lineage v0.5
 
-**Experiment date:** 2026-10-25 (Asia/Kolkata). **Status:** independent local synthetic experiment; GitHub publication and CI **TBD** until verified. **Maturity:** unchanged (private implementation In Progress; public synthetic contract evidence only).
+**Experiment date:** 2026-10-25 (Asia/Kolkata). **Status:** published synthetic experiment; [GitHub Actions #40148356063](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40148356063) passed **49/49 tests on Ubuntu and Windows** at code head `c36937070f382cd0bf346c43cc91244bce7e1dda`; [original Companion benchmark #40148356065](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40148356065) passed. Later documentation-only commits were not independently rerun. **Maturity:** unchanged (private implementation In Progress; public synthetic contract evidence only).
 
 ## Research question
 
@@ -22,6 +22,10 @@ python demo_correction_ledger_v05.py
 ```
 
 Two independent local invocations passed **18/18** tests each on CPython 3.13.5 Linux; deterministic demo JSON SHA-256 in both runs: `c201dc11f56c440bce2b8f5a3398a0ae69be196ecd441ce2a97c48b12c861310`.
+
+## Recorded cross-platform failure and correction
+
+The first v0.5 CI runs passed the new test assertions on Ubuntu, but Windows reported **18 test cleanup errors** because `with sqlite3.connect(...)` commits without closing the database connection; Windows prevented deletion of still-open temporary SQLite files. The tests and demo were corrected to use `with closing(sqlite3.connect(...)) as db, db:`. The corrected final code passed **49/49 tests** on both operating systems, with both demos and artifact uploads successful. This was a test-harness resource-lifecycle defect, not evidence of failed authorization logic.
 
 ## Limitations / failure learning
 
