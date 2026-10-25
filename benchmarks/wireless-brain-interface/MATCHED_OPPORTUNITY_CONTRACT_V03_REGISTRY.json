@@ -32,7 +32,15 @@
     "comparable": false,
     "risk_delta": null
   },
-  "github_ci": "TBD",
+  "github_ci": {
+    "run_id": 40227676669,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40227676669",
+    "head_sha": "b02b52f9945b056777ad95766f2b448bb4b9100d",
+    "conclusion": "success",
+    "ubuntu_tests": 18,
+    "windows_tests": 18,
+    "demo_checksum_verified": true
+  },
   "independent_reproduction": "TBD",
   "next_experiment": "Subject-disjoint real EEG policy comparison with verified rest exposure and common opportunity timestamps",
   "limitations": "Fictional decisions, no actual EEG decoding, independent annotation ground truth, or device/clinical safety evidence."
