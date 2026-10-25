@@ -57,8 +57,18 @@ def normalized_row(row, line_no):
         raise ExportError("row %d: hours_sale must contain 24 values" % line_no)
     if not isinstance(status, (list, tuple)) or len(status) != 24:
         raise ExportError("row %d: hours_stock_status must contain 24 values" % line_no)
-    if any(type(x) not in (int, float) or not math.isfinite(x) or x < 0 for x in sales):
+    try:
+        invalid_sale = any(type(x) not in (int, float) or x < 0 or not math.isfinite(x)
+                           for x in sales)
+    except OverflowError:
+        invalid_sale = True  # Very large integers are not representable as finite floats.
+    if invalid_sale:
         raise ExportError("row %d: invalid sales value" % line_no)
+    try:
+        if not math.isfinite(sum(sales[6:22])):
+            raise ExportError("row %d: nonfinite business-hour sales aggregate" % line_no)
+    except OverflowError as exc:
+        raise ExportError("row %d: nonfinite business-hour sales aggregate" % line_no) from exc
     if any(type(x) is not int or x not in (0, 1) for x in status):
         raise ExportError("row %d: invalid stock flag" % line_no)
     count = row["stock_hour6_22_cnt"]
