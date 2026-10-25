@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -29,6 +30,19 @@ def _unique_pairs(pairs):
     return d
 
 
+def _reject_nonfinite_json_constant(token):
+    # Python's json.loads otherwise accepts non-standard NaN/Infinity tokens.
+    raise VerificationError("nonfinite JSON constant: " + token)
+
+
+def _finite_json_float(token):
+    # 1e400 is legal JSON syntax but overflows a Python float to infinity.
+    value = float(token)
+    if not math.isfinite(value):
+        raise VerificationError("overflowed/nonfinite JSON number: " + token)
+    return value
+
+
 def _regular_file(path):
     if path.is_symlink() or not path.is_file():
         raise VerificationError("missing, nonregular, or symlink file: " + path.name)
@@ -42,7 +56,9 @@ def verify(directory):
         raise VerificationError("capture directory is absent or a symlink")
     try:
         manifest = json.loads(_regular_file(root / "capture_manifest.json"),
-                              object_pairs_hook=_unique_pairs)
+                              object_pairs_hook=_unique_pairs,
+                              parse_constant=_reject_nonfinite_json_constant,
+                              parse_float=_finite_json_float)
     except (ValueError, UnicodeDecodeError) as exc:
         raise VerificationError("invalid capture manifest: " + str(exc)) from exc
     if not isinstance(manifest, dict):
