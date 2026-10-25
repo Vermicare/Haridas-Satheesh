@@ -203,5 +203,28 @@
     "after_fix_ubuntu": "PASS 63/63 tests and fictional demo, Python 3.13",
     "after_fix_windows": "PASS 63/63 tests and fictional demo, Python 3.13",
     "corrected_code_commit": "53e7830bc221287044161334d1da990bf85ed058"
+  },
+  "finite_score_integrity_v09": {
+    "recorded_utc_date": "2026-10-25",
+    "evidence_kind": "FICTIONAL_TEST_ONLY",
+    "hypothesis": "Finite valid hourly aggregates can still produce nonfinite MAE or training-history medians due to overflowing intermediate sums; default JSON output may silently emit Infinity.",
+    "before_fix_commit": "d1e4267e33af78ec7fee1930c4261f278b74ac86",
+    "before_fix_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40213211784",
+    "before_fix_ubuntu": "2 failed assertions + 2 engine subtest errors; intended negative controls",
+    "before_fix_windows": "cancelled after corrective commit; no complete Windows negative-control result",
+    "corrected_code_commit": "f41d058627e5c0e6e63d4dd5cb3f5625cc2fd635",
+    "corrected_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40213275082",
+    "corrected_ubuntu": "PASS 67/67 Python 3.13; fictional demo PASS",
+    "corrected_windows": "PASS 67/67 Python 3.13; fictional demo PASS",
+    "regression_test_git_blob": "9ba51afdda0e65a9abd444ae761738657dd80339",
+    "corrected_in_memory_source_git_blob": "c6e0c62d5df4360961ba76a2f36291532237ddf8",
+    "corrected_sqlite_source_git_blob": "371d9762c43e563f50707dad7034392f6ba9ee3d",
+    "independent_arithmetic_check": "CPython 3.13.5 Linux isolated reproduction, not full repository suite",
+    "change": "Overflow-safe fallback only for finite MAE and same-weekday median; strict JSON serialization on both CLIs; normal finite-score path retained.",
+    "real_parquet_processed": false,
+    "real_data_forecast_metrics": "TBD",
+    "actual_intervention_value": "TBD",
+    "stage_change": "NONE",
+    "next_experiment": "Acquire pinned publisher train Parquet; locally verify SHA-256; run documented export and frozen chronological baseline; preserve negative results."
   }
 }
