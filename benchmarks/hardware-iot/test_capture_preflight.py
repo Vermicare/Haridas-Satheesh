@@ -144,5 +144,57 @@ class CaptureContract(unittest.TestCase):
             self.assertEqual(a, b)
 
 
+    def test_conflicting_duplicate_capture_origin_rejected(self):
+        # The second value must not silently override the first declaration.
+        with tempfile.TemporaryDirectory() as directory:
+            m, c = fixture(Path(directory))
+            raw = m.read_text(encoding="utf-8")
+            self.assertIn('"capture_origin": "physical"', raw)
+            m.write_text(raw.replace('"capture_origin": "physical"',
+                                     '"capture_origin": "synthetic", "capture_origin": "physical"', 1),
+                         encoding="utf-8")
+            result = check(m, c)
+            self.assertEqual(result["status"], "REJECT_INVALID")
+            self.assertIn("duplicate", " ".join(result["errors"]).lower())
+
+    def test_conflicting_duplicate_nested_sensor_mode_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            m, c = fixture(Path(directory))
+            raw = m.read_text(encoding="utf-8")
+            self.assertIn('"SCD40": "periodic_5s"', raw)
+            m.write_text(raw.replace('"SCD40": "periodic_5s"',
+                                     '"SCD40": "low_power_30s", "SCD40": "periodic_5s"', 1),
+                         encoding="utf-8")
+            result = check(m, c)
+            self.assertEqual(result["status"], "REJECT_INVALID")
+            self.assertIn("duplicate", " ".join(result["errors"]).lower())
+
+    def test_nonstandard_nan_in_manifest_metadata_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            m, c = fixture(Path(directory))
+            raw = m.read_text(encoding="utf-8")
+            m.write_text(raw[:-1] + ', "extra_note_number": NaN}', encoding="utf-8")
+            result = check(m, c)
+            self.assertEqual(result["status"], "REJECT_INVALID")
+            self.assertIn("nonfinite", " ".join(result["errors"]).lower())
+
+    def test_overflowed_json_float_in_manifest_metadata_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            m, c = fixture(Path(directory))
+            raw = m.read_text(encoding="utf-8")
+            m.write_text(raw[:-1] + ', "extra_note_number": 1e400}', encoding="utf-8")
+            result = check(m, c)
+            self.assertEqual(result["status"], "REJECT_INVALID")
+            self.assertIn("nonfinite", " ".join(result["errors"]).lower())
+
+    def test_finite_manifest_number_does_not_block_structural_preflight(self):
+        with tempfile.TemporaryDirectory() as directory:
+            m, c = fixture(Path(directory))
+            raw = m.read_text(encoding="utf-8")
+            m.write_text(raw[:-1] + ', "extra_note_number": 1e3}', encoding="utf-8")
+            result = check(m, c)
+            self.assertEqual(result["status"], "STRUCTURAL_PASS_PROVENANCE_UNVERIFIED")
+
+
 if __name__ == "__main__":
     unittest.main()
