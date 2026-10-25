@@ -27,7 +27,7 @@ python rest_aware_evaluation_contract.py > rest_aware_contract_demo.json
 sha256sum rest_aware_contract_demo.json
 ```
 
-**Local preparation (2026-10-25):** CPython 3.13.5/Linux, **16/16** tests passed using a **minimal local stand-in** that implements the same frozen subject-order algorithm. Local demo SHA-256 `45e77bd0d95ae939614bf7569a251132f9bf7dd42ea37a1d17767bcc07e45de2`. This is not yet independent CI verification against the actual repository module; the workflow is configured to test that separately on Linux and Windows. Actual CI result: **TBD until verified**. Do not conflate the hand-authored fictional fixture's favorable gate output with evidence of performance.
+**Local preparation (2026-10-25):** CPython 3.13.5/Linux, **16/16** tests passed using a **minimal local stand-in** that implements the same frozen subject-order algorithm. Local demo SHA-256 `45e77bd0d95ae939614bf7569a251132f9bf7dd42ea37a1d17767bcc07e45de2`. This is not yet independent CI verification against the actual repository module; the workflow is configured to test that separately on Linux and Windows. **Verified repository CI:** [run #40189776084](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40189776084), commit `f9ebf266e89b0b498b502735788c34cc392dcac7`, **16/16 new tests on both Ubuntu and Windows**; both jobs verified the identical canonical demo SHA-256 above against the actual frozen split generator. Subsequent commits through this documentation update are non-executable; final-head checks must be inspected separately. Do not conflate the hand-authored fictional fixture's favorable gate output with evidence of performance.
 
 ## Next evidence gate and stop rule
 
