@@ -21,7 +21,7 @@ At commits `6dca021b2cbe64c1099f759611606f6115d69fe7` and `53e7830bc221287044161
 - malformed JSON retains the existing `EvidenceError` interface and line context;
 - the forecasting, cohort-selection and metric logic remain unchanged.
 
-**After-fix GitHub CI:** TBD until final-head run finishes and both OS results are inspected.
+**Corrected code-bearing CI:** [GitHub Actions #40203119602](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40203119602) passed **63/63 tests on Ubuntu and Windows** (Python 3.13), including all three rejection methods and the valid control. Both jobs also passed the fictional demo. This CI was attached to corrected code commit `53e7830bc221287044161334d1da990bf85ed058`; documentation-only follow-up commits require separate final-head verification.
 
 ## Reproduce
 From `benchmarks/retail-demand/observable_baseline` on the linked branch:
