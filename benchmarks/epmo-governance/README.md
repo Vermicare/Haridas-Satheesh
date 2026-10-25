@@ -61,3 +61,24 @@ The isolated [v0.5 SQLite gate](FICTIONAL_APPROVAL_CONSUMPTION_V05.md) now creat
 The [v0.6 structural auditor](APPROVAL_LEDGER_INTEGRITY_V06.md) checks the v0.5 fictional approval and consumption-receipt tables against each other, including missing/orphan receipts, mismatched actor/action/scope/nonce, expired/invalid timestamps and partial consumption. Its [22 adversarial tests](test_verify_approval_ledger_v06.py) passed twice locally on Linux/Python 3.13.5; [short demo](demo_approval_ledger_integrity_45s.py) injects a forged scope and shows rejection. [Machine-readable registry](APPROVAL_LEDGER_INTEGRITY_V06_REGISTRY.json) records hashes and unknowns; v0.6 [cross-platform CI #40174154959](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40174154959) passed **101/101 tests on both Ubuntu and Windows**.
 
 **Critical negative control:** coordinated changes to both approval and receipt actor fields remain internally consistent and are **not detected**. This is a read-only consistency diagnostic, not tamper resistance, identity authentication or a complete v0.4–v0.5 integration. No stage change, external action, deployment or release.
+
+## v0.7 — fictional blinded reviewer-burden preflight (2026-10-26)
+
+The [v0.7 packet generator and strict private scorer](blinded_review_preflight_v07.py) create **16 fictional governance decisions** (3 valid, 13 invalid) using the existing `governance_demo.evaluate` policy as a synthetic oracle. Two case-identical packets use reversed seeded order for manual-notes and structured-review arms. A separate private gold key is generated **locally only**; do not commit the key, reviewer responses or participant identifiers.
+
+From `benchmarks/epmo-governance`, generate into a **new private directory outside the repository**:
+
+~~~sh
+python -B blinded_review_preflight_v07.py --out /path/outside/repo/private_epmo_packet
+python -B -m unittest discover -v
+~~~
+
+The private scorer expects a JSON object with `origin="FICTIONAL_SYNTHETIC"`, `version="0.7"`, the exact packet `arm`, and a `decisions` array of 16 unique objects, each with `case_id`, boolean `accept`, and numeric `seconds`. After independent responses are collected privately, run:
+
+~~~sh
+python -B blinded_review_preflight_v07.py --score --packet PRIVATE_PACKET.json --gold PRIVATE_gold.json --response PRIVATE_response.json
+~~~
+
+**Verified contract evidence:** [final-code GitHub CI #40222952196](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40222952196) passed **117/117 tests on Ubuntu and Windows** (Python 3.13), including **16 additive tests**. This verifies packet generation and scorer behavior, **not** independent reviewer performance. [Protocol and limitations](BLINDED_REVIEW_PREFLIGHT_V07.md) · [machine-readable registry](BLINDED_REVIEW_PREFLIGHT_V07_REGISTRY.json).
+
+**Human review results remain TBD.** The deterministic public generator allows reconstruction of the key; this is only procedural blinding. No human recruitment, external action, employer data, measured correction burden, maturity change or release. Next: predeclared independent reviewer comparison and separately the identity/trusted-clock/outbox gate in [Issue #14](https://github.com/Vermicare/Haridas-Satheesh/issues/14).
