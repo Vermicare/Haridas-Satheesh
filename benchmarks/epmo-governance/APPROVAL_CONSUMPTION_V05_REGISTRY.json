@@ -35,10 +35,12 @@
     "external_actions": 0
   },
   "github_ci": {
-    "status": "TBD",
-    "run": "TBD",
-    "linux_tests": "TBD",
-    "windows_tests": "TBD"
+    "status": "PASS",
+    "run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40151625112",
+    "linux_tests": "79/79",
+    "windows_tests": "79/79",
+    "commit": "1365eb8c900230fe53934d0f93666517aa5c4545",
+    "python": "3.13"
   },
   "known_failure": "Initial local test assumed a row index despite ORDER BY approval_id; test corrected to select by identifier.",
   "limitations": [
