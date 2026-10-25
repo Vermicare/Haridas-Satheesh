@@ -6,6 +6,7 @@ not a claim of exactly-once execution for arbitrary external services.
 """
 import hashlib
 import json
+import math
 import sqlite3
 from contextlib import closing
 from pathlib import Path
@@ -23,7 +24,18 @@ def _decode(value):
     def reject(token):
         raise OutboxContractError('non-finite JSON: ' + token)
     try:
-        return json.loads(value, parse_constant=reject)
+        parsed = json.loads(value, parse_constant=reject)
+        def check_finite(item):
+            if isinstance(item, float) and not math.isfinite(item):
+                raise OutboxContractError('non-finite numeric JSON value')
+            if isinstance(item, dict):
+                for nested in item.values():
+                    check_finite(nested)
+            elif isinstance(item, list):
+                for nested in item:
+                    check_finite(nested)
+        check_finite(parsed)
+        return parsed
     except (TypeError, ValueError) as exc:
         raise OutboxContractError('invalid stored JSON') from exc
 
