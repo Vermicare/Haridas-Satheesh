@@ -1,0 +1,54 @@
+{
+  "id": "epmo-fictional-atomic-approval-v0.5",
+  "date": "2026-10-25",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "question": "Can a fictional test-seeded approval be consumed at most once with atomic receipt creation under concurrent workers and crash injection?",
+  "files": {
+    "source": "approval_consumption_v05.py",
+    "tests": "test_approval_consumption_v05.py",
+    "demo": "demo_approval_consumption_45s.py",
+    "demo_tests": "test_demo_approval_consumption_45s.py"
+  },
+  "sha256": {
+    "source": "a294d83068e190ad5dc9ce75d006ddfd17c410c5fad6a9c90b57a179be42d36b",
+    "tests": "bc74fc6399e948054dc78e8375f9d79dfc428a8ab42f188466e4a91b35aaddc3",
+    "demo": "32750ec31d6b178d98a5216cdfc9b62885ed545dd91dac2badeb33a72c48ef80",
+    "demo_tests": "fbdbbb8c3a1598038e79fc7a5d5d3e66050e7ca5f9009ff7bdc5962a9e613ae2",
+    "demo_json": "03df1a111f97be02b7ddca49c8e21cec9fb875a103b2c8d71b5fba6f61fa5c50"
+  },
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "os": "Linux",
+    "sqlite": "Python stdlib sqlite3; SQLite engine version TBD",
+    "dependencies": "Python standard library",
+    "network": "none",
+    "seed": "deterministic fictional constants",
+    "clock": "caller-supplied integer; untrusted"
+  },
+  "local_results": {
+    "tests_passed": 27,
+    "tests_total": 27,
+    "independent_reruns": 2,
+    "concurrent_identical_workers": 16,
+    "concurrent_distinct_workers": 16,
+    "receipts_after_success": 1,
+    "external_actions": 0
+  },
+  "github_ci": {
+    "status": "TBD",
+    "run": "TBD",
+    "linux_tests": "TBD",
+    "windows_tests": "TBD"
+  },
+  "known_failure": "Initial local test assumed a row index despite ORDER BY approval_id; test corrected to select by identifier.",
+  "limitations": [
+    "Fictional approval issuer and actor identifiers are not authenticated",
+    "Time is untrusted caller-supplied integer",
+    "No tamper resistance to privileged SQLite writes",
+    "No integration with v0.4 replay reconciler",
+    "No real action, correction or compensation",
+    "No production security or employer performance claim"
+  ],
+  "maturity": "Research / Simulation (unchanged)",
+  "next_experiment": "Integrate fictional approval consumption with v0.4 replay and sandbox identity/time/outbox, then test fake action and compensation."
+}
