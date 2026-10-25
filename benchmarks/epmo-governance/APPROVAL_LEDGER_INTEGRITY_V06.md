@@ -22,10 +22,10 @@ The short demonstration creates a temporary *fictional* database, consumes one f
 - **Important negative result:** after both the approval and receipt actor fields are changed to the same forged value, the structural checker **accepts** their mutual consistency. This is an intentional documented blind spot, not a tamper-resistance claim.
 - Initial local test falsely expected SQLite to preserve the string `'100'` in an INTEGER-affinity column; SQLite converted it to integer 100. The test was corrected to use `'not-a-time'`, which remains invalid. This was a **test design correction**, not a production defect.
 - Source SHA-256: `05c07a53261c3ec7f040d6303b3825b7b46f8f2b62276313783f8831e029f6e5`.
-- Test SHA-256: `ffb760e858727f594e72262f7cc7b80f2c142c44d9307f6c77eb851eaac73813`.
-- Demo SHA-256: `cd8bad8aa0af0f7abe5096e9465ecc2560b62cc8214df47f409b02818cbd4e23`.
+- Test SHA-256: `077724cbaa08358a1a0f4b3b9407e7a9bebab1e37213d9f86260a43da9181100`.
+- Demo SHA-256: `34610caf1e4fc4f4cb82f8bd68efeaa4074874691532062b1e033097621b17cc`.
 - Local demo JSON SHA-256: `09cffbf0490577907399a3b6b105344ff86f9bb0adad338583b6304e70960cd0`.
-- Cross-platform CI for v0.6: **TBD until a final-head run is verified**. This local result must not be represented as independent GitHub CI.
+- **Before-fix CI negative result:** [run #40174083703](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40174083703) passed Ubuntu but failed Windows because the *test harness* used `with sqlite3.connect(...)`, which commits/rolls back without closing the connection; 19 Windows temporary-directory cleanup errors occurred. Tests and demo now use `contextlib.closing` explicitly. This is a portability correction, not a policy-bypass finding.\n- Cross-platform CI for the corrected v0.6 head: **TBD until a final-head run is verified**. This local result must not be represented as independent GitHub CI.
 - The prior v0.5 verified cross-platform result is preserved in [v0.5 evidence](FICTIONAL_APPROVAL_CONSUMPTION_V05.md).
 
 ## Decision and maturity
