@@ -11,8 +11,8 @@
   },
   "sha256": {
     "source": "05c07a53261c3ec7f040d6303b3825b7b46f8f2b62276313783f8831e029f6e5",
-    "tests": "ffb760e858727f594e72262f7cc7b80f2c142c44d9307f6c77eb851eaac73813",
-    "demo": "cd8bad8aa0af0f7abe5096e9465ecc2560b62cc8214df47f409b02818cbd4e23",
+    "tests": "077724cbaa08358a1a0f4b3b9407e7a9bebab1e37213d9f86260a43da9181100",
+    "demo": "34610caf1e4fc4f4cb82f8bd68efeaa4074874691532062b1e033097621b17cc",
     "demo_json_local": "09cffbf0490577907399a3b6b105344ff86f9bb0adad338583b6304e70960cd0"
   },
   "run_conditions": {
@@ -40,7 +40,7 @@
     "linux_tests": "TBD",
     "windows_tests": "TBD"
   },
-  "known_failure": "Initial test used '100' string in INTEGER affinity field; SQLite coerced to 100. Test changed to 'not-a-time'.",
+  "known_failure": "Initial test used '100' string in INTEGER affinity field; SQLite coerced to 100. Test changed to 'not-a-time'. Initial v0.6 Windows CI failed with 19 temporary-file cleanup errors because test sqlite3 context managers did not close connections; fixed with contextlib.closing. Before-fix CI: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40174083703",
   "limitations": [
     "Only structural internal consistency, not authenticity",
     "Coordinated forgery of approval and receipt actor remains accepted",
