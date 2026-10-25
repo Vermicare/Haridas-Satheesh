@@ -24,7 +24,7 @@ python -m unittest -v test_actual_receipt_integration_v06
 python demo_actual_receipt_integration_v06.py
 ```
 
-CI runs the new tests alongside the unchanged v0.2/v0.3/v0.5 tests, on Ubuntu and Windows, and uploads the machine-readable demo output. Final cross-platform result and reproducible output digest must be read from a **completed run**, not inferred from source alone.
+CI runs the new tests alongside the unchanged v0.2/v0.3/v0.5 tests, on Ubuntu and Windows, and uploads the machine-readable demo output. **Verified executable-head CI:** [run #40181623928](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40181623928), at commit `923c8df1c5a0b641fd45a59e876d82a1ae93ae80`, passed **57/57 tests on Ubuntu and 57/57 on Windows**, including all **8 new integration tests per OS**. The demo and artifact-upload steps passed on both OSes. The demo's byte-identical cross-platform SHA-256 has **not** been independently checked and remains **TBD**. Later evidence-document commits are not asserted to have been separately rerun. See [machine-readable registry](ACTUAL_RECEIPT_INTEGRATION_V06_REGISTRY.json).
 
 ## Failure/learning and limitations
 
