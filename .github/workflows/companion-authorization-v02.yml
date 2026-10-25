@@ -27,17 +27,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Reproduce v0.2 contract and v0.3 SQLite crash/replay tests
+      - name: Reproduce v0.2 guard, v0.3 store, and v0.5 correction ledger tests
         working-directory: benchmarks/companion-life-os
-        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03
+        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05
       - name: Generate fictional machine-readable demos
         working-directory: benchmarks/companion-life-os
         run: |
           python demo_authorization_guard_v02.py > demo-v02.json
           python demo_authorization_store_v03.py > demo-v03.json
+          python demo_correction_ledger_v05.py > demo-v05.json
       - uses: actions/upload-artifact@v4
         with:
           name: companion-authorization-${{ matrix.os }}
           path: |
             benchmarks/companion-life-os/demo-v02.json
             benchmarks/companion-life-os/demo-v03.json
+            benchmarks/companion-life-os/demo-v05.json
