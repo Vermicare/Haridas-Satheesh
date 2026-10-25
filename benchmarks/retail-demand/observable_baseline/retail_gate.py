@@ -50,13 +50,24 @@ def parse_row(obj, line):
         count = obj['stock_hour6_22_cnt']
         if len(sale) != 24 or len(status) != 24:
             raise EvidenceError('hourly arrays must have 24 elements')
-        if any(type(x) not in (int, float) or not math.isfinite(x) or x < 0 for x in sale):
+        try:
+            invalid_sale = any(type(x) not in (int, float) or x < 0 or not math.isfinite(x)
+                               for x in sale)
+        except OverflowError:
+            invalid_sale = True  # Extremely large Python integers cannot become finite floats.
+        if invalid_sale:
             raise EvidenceError('invalid hourly sale value')
+        try:
+            observed_sales = sum(sale[h] for h in BUSINESS_HOURS)
+            if not math.isfinite(observed_sales):
+                raise EvidenceError('nonfinite business-hour sales aggregate')
+        except OverflowError as exc:
+            raise EvidenceError('nonfinite business-hour sales aggregate') from exc
         if any(type(x) is not int or x not in (0, 1) for x in status):
             raise EvidenceError('stock status must be integer 0 or 1')
         if type(count) is not int or count != sum(status[h] for h in BUSINESS_HOURS):
             raise EvidenceError('stock_hour6_22_cnt does not equal status[6:22]')
-        return {'key': key, 'day': day, 'y': sum(sale[h] for h in BUSINESS_HOURS),
+        return {'key': key, 'day': day, 'y': observed_sales,
                 'censored': count > 0, 'stockout_hours': count}
     except (KeyError, TypeError, IndexError, ValueError) as e:
         raise EvidenceError(f'line {line}: {e}') from e
