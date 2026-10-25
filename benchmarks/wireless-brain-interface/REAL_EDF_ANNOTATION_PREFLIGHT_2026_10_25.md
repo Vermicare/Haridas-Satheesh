@@ -1,6 +1,6 @@
 # WBI — EDF+ task-annotation preflight (2026-10-25)
 
-**Maturity: Research / Simulation (unchanged).** This is a bounded **single training-subject** annotation-integrity experiment, not a decoder benchmark, drift study, clinical result, or device validation. Real event counts and per-file label distributions remain **TBD until a passing source-pinned CI report**.
+**Maturity: Research / Simulation (unchanged).** This is a bounded **single training-subject** annotation-integrity experiment, not a decoder benchmark, drift study, clinical result, or device validation. A passing source-pinned GitHub Actions run now establishes **real training-file annotation extraction only**; independent annotation-reader agreement, EEG decoding and performance remain **TBD**.
 
 ## Decision-changing protocol finding
 
@@ -35,11 +35,12 @@ The last command requires public dataset access; local offline input requires bo
 - Prior independent **real-byte structural** verification: [successful CI #40122474197](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40122474197), one training EDF, no events decoded.
 - Later [PR-head structural CI #40122933217](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40122933217) **failed** due to `TimeoutError` while reading the remote EDF; its offline 10/10 header tests passed. This failure was not an EEG parsing or model result.
 - **Local development:** 10/10 *fictional* TAL contract tests passed on Linux/Python; these do not establish actual event counts or correct parsing of the public EDF.
-- **New source-pinned live annotation CI:** **TBD** pending completed final-head run. Do not infer success from an earlier revision or from green synthetic jobs.
+- **Earlier annotation CI:** bounded HTTPS acquisitions timed out; synthetic tests passed but real task-annotation counts were **TBD**. These operational failures are preserved and are not EEG performance results.
+- **Recovery and real-data result:** [CI #40163082196](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40163082196) **PASSED** on Ubuntu / CPython 3.13.16 at 2026-10-25 04:46 UTC. The [publisher-documented unsigned S3 route](https://physionet.org/content/eegmmidb/1.0.0/) completed in the first transport attempt; the HTTPS fallback was not used. The same source-pinned training EDF `S001R04.edf` matched publisher SHA-256 index and previously pinned digest `3d161f88e1c00632585287d2ce584c2bc0f08862438eb255ea8723e00fac693d`. **10/10 fictional structural tests and 10/10 fictional TAL contract tests passed**, followed by real TAL extraction of **T0=15, T1=8, T2=7 (30 task annotations)**. No EEG samples were decoded, and no held-out subject was accessed. The metadata-only JSON SHA-256 is `c9130f2b186471c76a629b1d8f20750f8585b808675fd4ebda82d9afc9d45936`; [artifact #12587096905](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40163082196/artifacts/12587096905) retains only metadata (14-day retention), not raw EDF. The [machine-readable registry](REAL_EDF_ANNOTATION_S3_REGISTRY_2026_10_25.json) records provenance, exact CI commit, limitations and next gate.
 
 ## Gate / limitations
 
-If real TAL parsing succeeds, preserve exact report hash, event counts, CI run ID, Python version and any exclusions. Next, cross-check the annotations against an independent EDF reader or the companion PhysioNet `.event` file **before** freezing preprocessing. Then perform subject-disjoint train/calibration baseline experiments without accessing held-out labels.
+Real TAL parsing has now passed the pinned single-file gate. **Next, independently compare all task events against the publisher's companion `.event` file or another EDF+ reader** (counts, event onsets, durations and run-specific labels) **before** freezing preprocessing. No independent comparison has yet been executed. Then perform subject-disjoint train/calibration baseline experiments without accessing held-out labels.
 
 If annotation timing or label mapping cannot be independently reconciled, stop decoder work and repair the data contract; do not silently relabel. The existing [frozen synthetic evaluator](SYNTHETIC_EVALUATOR.md), its [cross-platform reproduction](FROZEN_CROSS_PLATFORM_REPRO_2026_10_24.md), and prior stronger results remain unchanged.
 
