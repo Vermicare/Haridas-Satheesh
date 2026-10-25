@@ -27,9 +27,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Reproduce fictional v0.2-v0.6 authorization, correction, and integration tests
+      - name: Reproduce fictional v0.2-v0.7 authorization, correction, and outbox tests
         working-directory: benchmarks/companion-life-os
-        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06
+        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06 test_fictional_outbox_v07
       - name: Generate fictional machine-readable demos
         working-directory: benchmarks/companion-life-os
         run: |
