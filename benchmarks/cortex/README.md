@@ -83,3 +83,7 @@ The frozen fixture's `D2` refers to missing historical decision `D0`. The origin
 ## Unseen fictional reviewer packet (2026-10-24; pre-review only)
 
 [Blinded review protocol](BLINDED_REVIEW_PROTOCOL_V01.md) links a new **label-free**, entirely fictional meeting, a separately versioned fictional archive, an SHA-256-bound reviewer intake checker and 18 adversarial tests. It is deliberately **not** a scored dataset: independent annotations, gold-label adjudication, reviewer time, real-world extraction quality and external validation are all **TBD**. [Issue #12](https://github.com/Vermicare/Haridas-Satheesh/issues/12) remains open; no stage advancement follows from packet or CI readiness. Raw completed reviewer submissions and outreach records must never be committed publicly.
+
+## Strict JSON and manifest intake regression (2026-10-25)
+
+[Fail-closed v0.3 evidence](CORTEX_JSON_INTAKE_INTEGRITY_V03.md) and its [machine-readable registry](CORTEX_JSON_INTAKE_INTEGRITY_V03_REGISTRY.json) preserve nine test-only negative controls. Earlier CLI manifest parsing could raise on malformed structures and the JSON reader accepted duplicate keys and non-finite values. Before-fix CI reproduced 4 failed assertions plus 5 errors per OS; corrected [CI #40199139641](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40199139641) passed 69/69 tests on both Ubuntu and Windows. This is **input integrity only**, not a human-review study or general extraction result. Issue #12 remains the evidence gate; no maturity advancement.
