@@ -46,3 +46,12 @@ Expected for the corrected code-bearing commit: 67 tests and a fictional demonst
 **Unknown = TBD:** pinned publisher Parquet bytes locally acquired; independently verified source hash; real-data MAE; forecast calibration; stockout-demand recovery; opportunity-ranking lift; intervention outcomes; deployment; commercial value.
 
 **Next evidence-producing experiment:** obtain the exact publisher-pinned train Parquet, verify its SHA-256 locally, execute the documented exporter, run the frozen chronological baselines, and preserve negative results. If source schema cannot map cleanly, document and reframe rather than silently coerce.
+
+## Four-lens review and next-gate acceptance
+
+- **Hiring manager:** executable, public cross-platform regression evidence; no exaggerated real-world results.
+- **Technical reviewer:** original finite-input failure, fail-closed output and normal-path compatibility are inspectable; both engines share forecast logic, so cross-engine agreement is not an independent model replication.
+- **Innovation leader:** a falsifiable numerical integrity gap was closed, but the stockout-aware hypothesis is still untested on publisher data.
+- **Founder:** no verified forecasting lift, realized revenue, customer use, or readiness to deploy; prioritize a real-data experiment over further fictional polishing.
+
+**Next-gate acceptance:** immutable publisher revision and file hash verified locally; exact Python/`pyarrow`/OS versions recorded; converter schema mapped without silent coercion; frozen 42/56/70 chronological folds executed on a predeclared cohort; real-data MAE and baseline deltas retained whether positive or negative. If the pinned file cannot be acquired or its schema differs, document the blocker and reframe rather than claiming benchmark success.
