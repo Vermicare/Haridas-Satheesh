@@ -124,7 +124,16 @@
     "source_git_blob_sha": "57f2ce45129f7521933ba69469af5160f218778b",
     "test_git_blob_sha": "b43dcd8d6992a584a065da5e48f2585d3095a5d2",
     "new_fictional_tests": 3,
-    "hosted_ci": "TBD — verify current branch head workflow runs",
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "run_id": 40231888178,
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40231888178",
+      "head_sha": "4980c53ffd71f276d863cf4191ad3bf6bfa7d105",
+      "ubuntu": "40/40 passed",
+      "windows": "40/40 passed",
+      "scope": "11 origin gate + 29 dry-run synthetic-only tests; no physical devices",
+      "verified_from": "GitHub Actions job status and raw job logs"
+    },
     "caveat": "Meter quantization/update latency can cause false positives; inspect cadence and uncertainty, do not infer physical tampering",
     "real_capture": "TBD",
     "performance_claim_permitted": false,
