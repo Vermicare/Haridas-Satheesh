@@ -83,6 +83,14 @@ class OutboxTests(unittest.TestCase):
         with self.assertRaises(OutboxContractError):
             self.outbox.stage('n1')
 
+    def test_overflowed_numeric_json_rejected(self):
+        with sqlite3.connect(self.db) as db:
+            db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?',
+                       ('{"nonce":"n1","decision":"D1","action":"A1","synthetic":true,"external_actions":0,"extra":1e400}', 'n1'))
+        with self.assertRaisesRegex(OutboxContractError, 'non-finite'):
+            self.outbox.stage('n1')
+        self.assertIsNone(self.outbox.status('n1'))
+
     def test_invalid_source_is_not_staged(self):
         with sqlite3.connect(self.db) as db:
             db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?', (json.dumps({
