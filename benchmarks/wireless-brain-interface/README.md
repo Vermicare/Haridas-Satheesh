@@ -13,6 +13,8 @@ Use an established public EEG benchmark and record the dataset/version, source t
 
 Freeze the split and metric definitions before reporting results. Start with a simple baseline classifier. Evaluate the identical classifier with and without the uncertainty gate. Any simulated signal shift must be declared before its results are inspected.
 
+**Rest-state evidence gate:** T0 is not a left/right imagery training label, but it must remain in action-safety evaluation. The [fictional rest-aware denominator contract](REST_AWARE_ACTION_DENOMINATOR_V01.md) makes this distinction executable; no real EEG decoding or safety performance has been established. The publisher companion's missing initial T0 requires canonical EDF+ completeness checks before scoring.
+
 ## Metrics
 
 | Metric | Result |
