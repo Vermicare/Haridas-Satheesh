@@ -47,6 +47,11 @@ jobs:
           cp eegmmidb_subject_splits.json eegmmidb_subject_splits_first.json
           python eegmmidb_split_contract.py --out eegmmidb_subject_splits.json
           cmp -s eegmmidb_subject_splits_first.json eegmmidb_subject_splits.json
+          # Fictional rest-aware action evaluation; preserve T0 as no-action denominator.
+          python -m unittest -v test_rest_aware_evaluation_contract.py
+          python rest_aware_evaluation_contract.py > rest_aware_contract_demo.json
+          python -c "from pathlib import Path; p=Path('rest_aware_contract_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\\n' '45e77bd0d95ae939614bf7569a251132f9bf7dd42ea37a1d17767bcc07e45de2' 'rest_aware_contract_demo.json' | sha256sum --check
       - uses: actions/upload-artifact@v4
         with:
           name: wbi-synthetic-results-${{ matrix.os }}
@@ -54,4 +59,5 @@ jobs:
             benchmarks/wireless-brain-interface/coverage_target_results.json
             benchmarks/wireless-brain-interface/synthetic_regime_stress.json
             benchmarks/wireless-brain-interface/eegmmidb_subject_splits.json
+            benchmarks/wireless-brain-interface/rest_aware_contract_demo.json
           if-no-files-found: error
