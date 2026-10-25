@@ -73,6 +73,33 @@ def parse_row(obj, line):
         raise EvidenceError(f'line {line}: {e}') from e
 
 
+
+def parse_json_evidence(line, line_no):
+    """Reject ambiguous JSON objects and non-standard nonfinite constants.
+
+    json.loads normally keeps the last duplicate key and accepts NaN/Infinity.
+    Both behaviors can conceal conflicting evidence at the JSONL boundary.
+    """
+    def unique_pairs(pairs):
+        obj = {}
+        for key, value in pairs:
+            if key in obj:
+                raise EvidenceError(f"duplicate JSON key: {key}")
+            obj[key] = value
+        return obj
+
+    def reject_constant(value):
+        raise EvidenceError(f"nonfinite JSON constant: {value}")
+
+    try:
+        return json.loads(line, object_pairs_hook=unique_pairs,
+                          parse_constant=reject_constant)
+    except json.JSONDecodeError as exc:
+        raise EvidenceError(f"line {line_no}: malformed JSON") from exc
+    except EvidenceError as exc:
+        raise EvidenceError(f"line {line_no}: {exc}") from exc
+
+
 def read_jsonl(path):
     groups = defaultdict(list)
     seen = set()
@@ -80,10 +107,7 @@ def read_jsonl(path):
         for line_no, line in enumerate(f, 1):
             if not line.strip():
                 continue
-            try:
-                obj = json.loads(line)
-            except json.JSONDecodeError as e:
-                raise EvidenceError(f'line {line_no}: malformed JSON') from e
+            obj = parse_json_evidence(line, line_no)
             row = parse_row(obj, line_no)
             ident = (*row['key'], row['day'])
             if ident in seen:
