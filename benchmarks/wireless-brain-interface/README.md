@@ -50,3 +50,7 @@ Do not advance maturity merely because code exists. A later gate requires a repr
 Reframe if the apparent benefit disappears after accounting for suppressed correct actions, adds no material value over a simpler abstention baseline, or is unstable across subjects, sessions or seeds.
 
 Unknown values stay TBD. Public-data results are research evidence, not clinical validation.
+
+## Sample-normalized rest exposure (fictional preflight)
+
+The [v0.2 timestamp contract](REST_EXPOSURE_RATE_V02.md) computes false actions per minute of **annotated T0 sample exposure**, not per annotation event. It tests complete sample coverage, half-open interval boundaries, gap/overlap rejection and segmentation invariance using fictional timestamps only. [Implementation](rest_exposure_rate_v02.py) · [17 adversarial tests](test_rest_exposure_rate_v02.py) · [registry](REST_EXPOSURE_RATE_V02_REGISTRY.json). Real EEG actions, coverage-matched comparison and safety metrics remain **TBD**.
