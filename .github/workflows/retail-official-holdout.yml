@@ -1,0 +1,85 @@
+name: Retail official 90+7 held-out (512 train-selected series)
+on:
+  push:
+    branches:
+      - research/retail-observable-baseline-20261024
+    paths:
+      - '.github/workflows/retail-official-holdout.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  publisher-heldout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test frozen fictional controls before public-data execution
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_official_holdout_v12
+      - name: Install pinned Parquet reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Declare run provenance (not evidence of successful execution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python - <<'PY'
+          import json, os, platform, sys
+          from pathlib import Path
+          import pyarrow
+          provenance = {
+              'experiment_id': 'retail-official-90-7-holdout-v12',
+              'github_sha': os.environ.get('GITHUB_SHA', 'TBD'),
+              'python': sys.version,
+              'pyarrow': pyarrow.__version__,
+              'os': platform.platform(),
+              'dataset_revision': '08c1fab7f9257bc73679d415d65d644165d351d4',
+              'train_publisher_sha256': '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d',
+              'eval_publisher_sha256': '1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e',
+              'source_origin_independently_attested': False,
+              'real_measurements': 'TBD until job completes',
+          }
+          Path('artifacts/run_provenance.json').write_text(json.dumps(provenance, indent=2, sort_keys=True)+'\n')
+          PY
+      - name: Download both pinned publisher splits and verify exact bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/08c1fab7f9257bc73679d415d65d644165d351d4/data'
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 900 "$root/train.parquet" --output "$RUNNER_TEMP/train.parquet"
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 300 "$root/eval.parquet" --output "$RUNNER_TEMP/eval.parquet"
+          printf '%s  %s\n' '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d' "$RUNNER_TEMP/train.parquet" | sha256sum --check
+          printf '%s  %s\n' '1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e' "$RUNNER_TEMP/eval.parquet" | sha256sum --check
+      - name: Run frozen train-selected official held-out comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B benchmarks/retail-demand/observable_baseline/official_holdout_v12.py \
+            --train "$RUNNER_TEMP/train.parquet" --eval "$RUNNER_TEMP/eval.parquet" \
+            --output artifacts/official_holdout_v12_result.json
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          result=json.loads(Path('artifacts/official_holdout_v12_result.json').read_text())
+          m=result['metrics']
+          assert m['frozen_train_selected_series']==512
+          assert m['uncensored_eval_days_scored']+m['censored_eval_days_excluded']==512*7
+          assert all(math.isfinite(x) for x in m['day_weighted_mae'].values())
+          assert result['latent_demand_ground_truth']=='UNAVAILABLE'
+          assert result['inventory_or_revenue_uplift']=='TBD'
+          print('Validated aggregated score schema; not latent-demand truth or deployment evidence')
+          PY
+      - name: Upload only aggregate results and run conditions (no publisher rows)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-official-holdout-v12-aggregate-evidence
+          path: artifacts/*.json
+          if-no-files-found: warn
+          retention-days: 14
