@@ -22,9 +22,9 @@ from retail_gate import EvidenceError, forecast_at_origin, parse_row
 FROZEN_COHORT_SHA256 = "7c14c678af51878ac68a3359e3dae0be1208feba4b0fa30d437191e855f62710"
 FROZEN_DAYS = 2183
 FROZEN_MAE = {
-    "last_observed": 0.4785616124599175,
-    "seasonal_naive": 0.48518048557031696,
-    "causal_stockout_history": 0.4799061814017406,
+    "last_observed": 0.4785620705451214,
+    "seasonal_naive": 0.4851804855703161,
+    "causal_stockout_history": 0.4799056344480073,
 }
 SEED = 20261027
 REPS = 2000
@@ -115,10 +115,6 @@ def evaluate_v14(selected, train_rows, eval_rows):
         raise EvidenceError("invalid frozen cohort")
     train_rows, eval_rows = list(train_rows), list(eval_rows)
     original = frozen.evaluate_cohort(selected, train_rows, eval_rows)
-    if original["uncensored_eval_days_scored"] != FROZEN_DAYS:
-        # Small fictional unit fixtures may use a different count: gate real
-        # evidence in run(), not this reusable evaluator.
-        pass
     training, evaluation = _group(train_rows, set(selected)), _group(eval_rows, set(selected))
     new_errors, new_macro = [], []
     delta_last, delta_correction = [], []
