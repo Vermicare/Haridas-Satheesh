@@ -13,6 +13,7 @@ from datetime import datetime
 from pathlib import Path
 
 from capture_preflight import FIELDS, MODES, SCHEMA, check
+from serial_acquire import CaptureError, outside_git_tree
 
 MAX_RAW_BYTES = 10_000_000
 MARKER = "IOTCSV,"
@@ -112,6 +113,12 @@ def build(raw_path, firmware_path, output_dir, *, device_id, recorded_start_utc,
     if not firmware:
         raise BundleError("firmware binary must be nonempty")
     csv_bytes, boot, count = extract(raw)
+    # Raw serial may contain credentials or private identifiers. Never place
+    # an evidence bundle under a Git checkout, including linked worktrees.
+    try:
+        outside_git_tree(output_dir)
+    except CaptureError as exc:
+        raise BundleError(str(exc)) from exc
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=False)  # refuse to overwrite any prior session
     (out / "raw_serial.log").write_bytes(raw)
