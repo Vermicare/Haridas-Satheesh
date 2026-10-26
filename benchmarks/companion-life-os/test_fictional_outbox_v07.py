@@ -149,5 +149,46 @@ class OutboxTests(unittest.TestCase):
         self.assertEqual(self.sink.count(), 1)
 
 
+    def test_duplicate_source_receipt_decision_rejected(self):
+        """Two conflicting JSON keys must not silently choose the last value."""
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?', (
+                '{"nonce":"n1","decision":"D0","decision":"D1","action":"A1","synthetic":true,"external_actions":0}', 'n1'))
+        with self.assertRaisesRegex(OutboxContractError, 'duplicate JSON key'):
+            self.outbox.stage('n1')
+        self.assertIsNone(self.outbox.status('n1'))
+
+    def test_nested_duplicate_source_receipt_key_rejected(self):
+        """Ambiguous nested evidence must fail closed even if ignored by the adapter."""
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE receipts SET receipt_json=? WHERE nonce=?', (
+                '{"nonce":"n1","decision":"D1","action":"A1","synthetic":true,"external_actions":0,'
+                '"audit":{"source":"first","source":"second"}}', 'n1'))
+        with self.assertRaisesRegex(OutboxContractError, 'duplicate JSON key'):
+            self.outbox.stage('n1')
+        self.assertIsNone(self.outbox.status('n1'))
+
+    def test_acked_row_with_wrong_digest_rejected(self):
+        """A corrupted stored ack must not be reported as an authentic success."""
+        self.outbox.stage('n1')
+        self.outbox.dispatch('n1', self.sink)
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE fictional_outbox SET ack_json=? WHERE nonce=?', (
+                '{"nonce":"n1","digest":"wrong","synthetic":true,'
+                '"simulated_actions":1,"external_actions":0}', 'n1'))
+        with self.assertRaisesRegex(OutboxContractError, 'stored acknowledgment mismatch'):
+            self.outbox.dispatch('n1', self.sink)
+        self.assertEqual(self.sink.count(), 1)
+
+    def test_acked_row_with_invalid_schema_rejected(self):
+        self.outbox.stage('n1')
+        self.outbox.dispatch('n1', self.sink)
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE fictional_outbox SET ack_json=? WHERE nonce=?', ('[]', 'n1'))
+        with self.assertRaisesRegex(OutboxContractError, 'stored acknowledgment mismatch'):
+            self.outbox.dispatch('n1', self.sink)
+        self.assertEqual(self.sink.count(), 1)
+
+
 if __name__ == '__main__':
     unittest.main()
