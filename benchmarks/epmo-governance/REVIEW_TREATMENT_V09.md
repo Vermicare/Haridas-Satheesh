@@ -39,7 +39,7 @@ The generator rejects an existing output directory or any destination under a Gi
 ## Provenance and gates
 
 - Source: `review_treatment_v09.py`; tests: `test_review_treatment_v09.py`; original oracle: `governance_demo.py` and `blinded_review_preflight_v08.py`.
-- Python standard library only; exact hosted Python/OS/commit and CI test counts: **TBD until inspected**.
+- Python standard library only; **[GitHub Actions #40352437149](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40352437149)** passed **156/156 tests on Ubuntu and 156/156 on Windows**, CPython 3.13.16; both job logs inspected at executable head `e9afe4b05052e3c3246298b148527c40b9dd73bf`. The public demo matched across both OSes. [Machine-readable registry](REVIEW_TREATMENT_V09_REGISTRY.json) pins source/test/workflow blobs and demo hashes.
 - Expected deterministic fixture: 16 cases, 3 accepted / 13 rejected by the fictional oracle, identical raw event cases and order across arms, 0 real actions.
 - Negative controls: changed raw evidence, changed worksheet, modified instructions, swapped arm, changed gold and duplicate response IDs must fail closed.
 - Source authenticity, independent reviewer performance, trusted actor identity, external action receipts and employer ROI: **TBD / not established**.
