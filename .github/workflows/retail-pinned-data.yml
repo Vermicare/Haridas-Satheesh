@@ -1,0 +1,106 @@
+name: Retail pinned public-data rolling-origin smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/retail-pinned-data.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  publisher-train-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned Parquet reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Download publisher-pinned TRAIN bytes and verify checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 900 \
+            'https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/08c1fab7f9257bc73679d415d65d644165d351d4/data/train.parquet' \
+            --output "$RUNNER_TEMP/train.parquet"
+          printf '%s  %s\n' '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d' "$RUNNER_TEMP/train.parquet" | sha256sum --check --status
+          echo 'Publisher-reported train SHA-256 matched downloaded bytes; publisher identity is not independently attested.'
+      - name: Export frozen schema and run train-only rolling-origin benchmark
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          cd benchmarks/retail-demand/observable_baseline
+          python parquet_export.py \
+            --parquet "$RUNNER_TEMP/train.parquet" \
+            --expected-sha256 6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d \
+            --revision 08c1fab7f9257bc73679d415d65d644165d351d4 \
+            --output "$RUNNER_TEMP/train.jsonl" \
+            --manifest "$GITHUB_WORKSPACE/artifacts/export_manifest.json"
+          export EXPORT_SHA256
+          EXPORT_SHA256="$(python -c 'import json,os; print(json.load(open(os.environ["GITHUB_WORKSPACE"]+"/artifacts/export_manifest.json"))["export_sha256"])')"
+          python retail_sqlite.py \
+            --input "$RUNNER_TEMP/train.jsonl" \
+            --source-sha256 "$EXPORT_SHA256" \
+            --source-uri 'https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/tree/08c1fab7f9257bc73679d415d65d644165d351d4' \
+            --output "$GITHUB_WORKSPACE/artifacts/rolling_origin_result.json"
+      - name: Check evidence and preserve run conditions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, math, os, platform, sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import pyarrow
+          folder = Path('artifacts')
+          manifest = json.loads((folder / 'export_manifest.json').read_text())
+          result = json.loads((folder / 'rolling_origin_result.json').read_text())
+          assert manifest['export_rows'] == 4_500_000, 'publisher train row count mismatch'
+          assert manifest['data_kind'] == 'EXTERNAL_SNAPSHOT_ORIGIN_NOT_INDEPENDENTLY_ATTESTED'
+          assert result['input_sha256'] == manifest['export_sha256']
+          assert result['data_kind'] == 'EXTERNAL_SNAPSHOT_ORIGIN_NOT_INDEPENDENTLY_ATTESTED'
+          assert len(result['folds']) == 3, 'expected three frozen rolling origins'
+          observed = 0
+          for fold in result['folds']:
+              assert fold['horizon_days'] == 7
+              observed += fold['uncensored_test_days']
+              for metrics in fold['models'].values():
+                  value = metrics['mae_uncensored_only']
+                  assert value is None or (isinstance(value, (int, float)) and math.isfinite(value))
+          assert observed > 0, 'no uncensored held-out days in selected series'
+          evidence = {
+              'evidence_class': 'PUBLIC_PUBLISHER_TRAIN_ONLY_ROLLING_ORIGIN_NOT_OFFICIAL_90_7_EVAL',
+              'dataset': 'Dingdong-Inc/FreshRetailNet-50K',
+              'publisher_reported_revision': '08c1fab7f9257bc73679d415d65d644165d351d4',
+              'downloaded_train_sha256_verified': manifest['local_source_sha256'],
+              'export_sha256_verified': manifest['export_sha256'],
+              'export_rows': manifest['export_rows'],
+              'run_utc': datetime.now(timezone.utc).isoformat(),
+              'git_sha': os.environ.get('GITHUB_SHA', 'TBD'),
+              'python': sys.version,
+              'pyarrow': pyarrow.__version__,
+              'os': platform.platform(),
+              'uncensored_test_days_across_folds': observed,
+              'official_eval_split_used': False,
+              'real_latent_demand_ground_truth': 'UNAVAILABLE',
+              'real_intervention_value': 'TBD',
+              'source_origin_independently_attested': False,
+              'maturity_change': 'NONE',
+          }
+          (folder / 'run_evidence.json').write_text(json.dumps(evidence, indent=2, sort_keys=True) + '\n')
+          print(json.dumps({'evidence_class': evidence['evidence_class'],
+                            'export_rows': evidence['export_rows'],
+                            'uncensored_test_days_across_folds': observed,
+                            'result_sha256': hashlib.sha256((folder / 'rolling_origin_result.json').read_bytes()).hexdigest()},
+                           sort_keys=True))
+          PY
+      - name: Upload ONLY provenance and score JSON (no publisher rows)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-pinned-train-only-evidence
+          path: artifacts/*.json
+          if-no-files-found: warn
+          retention-days: 14
