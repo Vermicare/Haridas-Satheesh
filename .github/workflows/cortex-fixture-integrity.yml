@@ -4,6 +4,12 @@ on:
     paths:
       - 'benchmarks/cortex/**'
       - '.github/workflows/cortex-fixture-integrity.yml'
+  push:
+    branches:
+      - research/cortex-fixture-integrity-v04-20261023
+    paths:
+      - 'benchmarks/cortex/**'
+      - '.github/workflows/cortex-fixture-integrity.yml'
   workflow_dispatch:
 permissions:
   contents: read
