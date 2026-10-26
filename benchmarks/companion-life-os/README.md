@@ -75,3 +75,8 @@ The original fictional validator and all stronger existing tests remain unchange
 ## v0.8 — fictional outbox JSON and acknowledgment integrity
 
 The [red/green execution record](JSON_ACK_INTEGRITY_V08.md) and [machine-readable registry](JSON_ACK_INTEGRITY_V08_REGISTRY.json) preserve four before-fix negative controls: duplicate top-level/nested JSON keys, forged persisted acknowledgment digest, and malformed persisted acknowledgment shape. [CI #40260698802](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40260698802) passed **75/75** tests on Ubuntu and **75/75** on Windows at the corrected code commit `43218f4c9e3c3275d1882ed6f24b83ddb2c51830`. This is fictional software integrity, **not** authenticated consent, cryptographic tamper resistance or exactly-once external action. No maturity change.
+
+
+## v0.9 — independent fictional sink validation
+
+[Red/green evidence](FICTIONAL_SINK_INTEGRITY_V09.md) · [machine-readable registry](FICTIONAL_SINK_INTEGRITY_V09_REGISTRY.json) · [tests](test_fictional_sink_integrity_v09.py). Three before-fix direct-sink negative controls reproduced acceptance of a missing action, blank decision and corrupted persisted acknowledgment. [CI #40334808905](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40334808905) failed exactly these three cases on each OS; [corrected CI #40334887066](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40334887066) passed **79/79 on Ubuntu and 79/79 on Windows**. The fake sink now validates its own payload and replay acknowledgment. Fictional SQLite software integrity only: no authenticated consent, real connector, exactly-once guarantee or maturity upgrade.
