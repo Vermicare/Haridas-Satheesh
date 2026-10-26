@@ -93,8 +93,15 @@ class FictionalIdempotentSink:
         return sqlite3.connect(self.path, timeout=15.0, isolation_level=None)
 
     def apply(self, payload):
-        nonce = payload.get('nonce') if isinstance(payload, dict) else None
-        if not isinstance(nonce, str) or not nonce or payload.get('synthetic') is not True:
+        # The fake sink is a separate trust boundary: validate its own input
+        # even when the caller is not FictionalOutbox.dispatch.
+        if not isinstance(payload, dict) or set(payload) != {
+            'nonce', 'decision', 'action', 'synthetic'
+        } or payload.get('synthetic') is not True:
+            raise OutboxContractError('invalid fictional sink payload')
+        nonce = payload['nonce']
+        if any(not isinstance(payload[key], str) or not payload[key].strip()
+               for key in ('nonce', 'decision', 'action')):
             raise OutboxContractError('invalid fictional sink payload')
         digest = _digest(payload)
         with closing(self._connect()) as db:
@@ -105,8 +112,11 @@ class FictionalIdempotentSink:
                 if existing:
                     if existing[0] != digest:
                         raise OutboxContractError('sink nonce bound to different payload')
+                    # A persisted acknowledgment is not trustworthy merely
+                    # because the payload digest column still matches.
+                    ack = _validated_ack(_decode(existing[1]), nonce, digest, stored=True)
                     db.commit()
-                    return {**_decode(existing[1]), 'sink_replay': True}
+                    return {**ack, 'sink_replay': True}
                 ack = {'nonce': nonce, 'digest': digest, 'synthetic': True,
                        'simulated_actions': 1, 'external_actions': 0}
                 db.execute('INSERT INTO simulated_deliveries VALUES(?,?,?)',
