@@ -1,6 +1,6 @@
 # ESP32-S3 BH1750 + SCD40 raw-capture firmware candidate (unflashed)
 
-**Evidence status (2026-10-27):** source candidate plus **host-only** CRC/CSV framing checks. **ESP-IDF build: TBD; flashed device: none; physical samples: zero.** This is not hardware validation or sensor calibration. It is an executable starting point for [physical capture issue #8](https://github.com/Vermicare/Haridas-Satheesh/issues/8) and the [PR #7 host-to-bundle verifier](../../host_bundle_chain.py).
+**Evidence status (2026-10-27):** source candidate, host CRC/CSV framing checks, and a **verified ESP-IDF v6.1 compile-only build**. **Flashed device: none; physical samples: zero.** This is not hardware validation or sensor calibration. It is an executable starting point for [physical capture issue #8](https://github.com/Vermicare/Haridas-Satheesh/issues/8) and the [PR #7 host-to-bundle verifier](../../host_bundle_chain.py).
 
 ## Fixed experimental contract
 
@@ -21,6 +21,12 @@ python -m unittest -v test_firmware_wire_contract.py
 The Python wrapper compiles a portable C test with a detected host compiler; if no compiler exists it **skips**, which is not a pass. It checks CRC and exact framing including truncation refusal. Local GNU C 14.2.0 on Linux compiled with `-std=c11 -Wall -Wextra -Werror -pedantic` and the executable exited 0. This does **not** compile the ESP-IDF application, exercise I2C, verify hardware or establish serial timing.
 
 **Source-document discrepancy to verify on real hardware:** the official SCD4x datasheet's example shows CO₂ word `0x01F4` followed by `0x7B`, while its documented CRC-8 polynomial `0x31` with initialization `0xFF` computes `0x33` for those two bytes. Other sample vectors (`0x6667 → 0xA2`, status `0x8000 → 0xA2`) match the polynomial. The implementation follows the polynomial; this discrepancy is **not** an empirical sensor result. Source: [Sensirion SCD4x datasheet](https://sensirion.com/en/media/documents/E0F04247/631EF271/CD_DS_SCD40_SCD41_Datasheet_D1.pdf).
+
+## ESP-IDF v6.1 compile-only execution (2026-10-27; no board)
+
+The actual ESP32-S3 application compiled in the official Espressif v6.1 Docker toolchain on a GitHub-hosted Ubuntu runner: [Actions #40421852576](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40421852576), source commit `79426a5ba1245264c386565dd5911d3a578180f8`. The log reports `ESP-IDF v6.1`, `Project build complete`, binary size **196080 bytes** and SHA-256 `28637965c44fcbe86fb441fafc553b6f4f7c4a8d68505a528faeefa49e877a55`. The runner pulled official `espressif/idf:v6.1` image digest `sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c`. The binary hash is **run-specific provenance**, not a claim of deterministic/reproducible binary bytes or proof of a flashed image. No binary artifact was retained for download.
+
+The same source head also passed [host-only CI #40421852619](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40421852619): **83/83 synthetic/host tests on Ubuntu and 83/83 on Windows**. The compile is **not** an I²C transaction, sensor measurement, electrical review, flash verification, 600-second capture, or calibration. See [execution record](ESP_IDF_COMPILE_V11_EXECUTION_2026_10_27.md) and [registry](EVIDENCE_REGISTRY.json).
 
 ## Physical experiment (operator action; NOT performed)
 

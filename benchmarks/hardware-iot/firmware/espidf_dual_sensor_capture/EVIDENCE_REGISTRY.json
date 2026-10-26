@@ -13,14 +13,16 @@
     "host_os": "Linux",
     "host_compiler": "GCC 14.2.0",
     "host_flags": "-std=c11 -Wall -Wextra -Werror -pedantic",
-    "esp_idf_version": "TBD (6.1 intended)",
+    "esp_idf_version": "v6.1, official espressif/idf:v6.1 Docker image (GitHub Ubuntu runner)",
     "target": "ESP32-S3 (not built/flashed)",
-    "device_port": "TBD"
+    "device_port": "TBD",
+    "esp_idf_container_digest": "sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c",
+    "esp_idf_build_source_commit": "79426a5ba1245264c386565dd5911d3a578180f8"
   },
   "checks": {
     "host_crc_framing": "PASS (local C executable exit 0)",
-    "github_ci": "PASS: GitHub Actions #40406840604, 83/83 Ubuntu and 83/83 Windows, Python 3.13; host C CRC/framing test executed (not skipped) on both",
-    "esp_idf_build": "TBD: no ESP-IDF toolchain build run",
+    "github_ci": "PASS: Actions #40421852619, 83/83 host/synthetic tests on Ubuntu and 83/83 on Windows; portable C test executed",
+    "esp_idf_build": "PASS: Actions #40421852576, idf.py --version = ESP-IDF v6.1; Project build complete; ESP32-S3 target; no device",
     "flash": "NOT_PERFORMED",
     "physical_sensor_capture": "NOT_PERFORMED",
     "hardware_accuracy": "TBD"
@@ -31,13 +33,21 @@
   ],
   "limitations": [
     "No real I2C transaction executed.",
-    "Host C framing test is not ESP-IDF build validation.",
+    "The portable host C test alone does not prove device behavior; a separate real ESP-IDF compilation now passes.",
     "CRC does not authenticate sensor identity, calibration or flashed binary.",
     "Firmware has not been physically tested; timestamps and cadence unverified."
   ],
-  "next_experiment": "Compile in ESP-IDF 6.1, review flash and wiring, acquire >=600 s genuine raw dual-sensor telemetry, verify host-to-bundle chain and independent setup under issue #8.",
+  "next_experiment": "Operator independently reviews wiring and port, flashes the verified build or a separately hashed local ESP-IDF 6.1 build, acquires >=600 s genuine raw dual-sensor telemetry, checks host-to-bundle chain and obtains independent setup review under issue #8.",
   "advance": "Genuine reproducible independent physical capture and setup review; then controlled repeated trials.",
   "reframe": "If firmware cannot produce continuous provenance-reviewed captures, retain as software instrumentation candidate.",
-  "ci_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40406840604",
-  "source_blob_sha256_status": "Exact Git blobs available in draft PR; no device binary exists"
+  "ci_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40421852619",
+  "source_blob_sha256_status": "Exact Git blobs in draft PR; compiled binary SHA-256 preserved in CI log but binary itself was not retained for download",
+  "esp_idf_binary": {
+    "filename": "iot_dual_sensor_capture.bin",
+    "size_bytes": 196080,
+    "sha256": "28637965c44fcbe86fb441fafc553b6f4f7c4a8d68505a528faeefa49e877a55",
+    "preserved_as_downloadable_artifact": false,
+    "flashed": false
+  },
+  "esp_idf_ci_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40421852576"
 }
