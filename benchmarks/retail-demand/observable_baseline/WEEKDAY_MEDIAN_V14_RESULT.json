@@ -1,0 +1,57 @@
+{
+  "analysis_type": "POST_HOC_BASELINE_ADDED_AFTER_V12_HOLDOUT_RESULTS_KNOWN",
+  "cohort_sha256": "7c14c678af51878ac68a3359e3dae0be1208feba4b0fa30d437191e855f62710",
+  "dataset": "Dingdong-Inc/FreshRetailNet-50K",
+  "experiment_id": "retail-exploratory-weekday-median-v14",
+  "independent_external_validation": "TBD",
+  "inventory_or_revenue_impact": "TBD",
+  "latent_demand_ground_truth": "UNAVAILABLE",
+  "maturity": "Research / Architecture \u2014 unchanged",
+  "method": "last four uncensored training observations on matching weekday; fallback last14 uncensored then zero",
+  "metrics": {
+    "original_v12_metrics": {
+      "bootstrap_unit": "store-product series, paired resampling, not causal inference",
+      "causal_minus_seasonal_macro_mae_delta": -0.014454543340773807,
+      "censored_eval_days_excluded": 1401,
+      "day_weighted_mae": {
+        "causal_stockout_history": 0.4799056344480073,
+        "last_observed": 0.4785620705451214,
+        "seasonal_naive": 0.4851804855703161
+      },
+      "frozen_train_selected_series": 512,
+      "paired_series_bootstrap_95pct_ci_for_macro_delta": [
+        -0.04284015299479166,
+        0.012163971237909217
+      ],
+      "series_macro_mae": {
+        "causal_stockout_history": 0.46931445312500003,
+        "last_observed": 0.4742828078497024,
+        "seasonal_naive": 0.4837689964657738
+      },
+      "series_with_at_least_one_uncensored_eval_day": 512,
+      "series_with_no_uncensored_eval_day": 0,
+      "uncensored_eval_days_scored": 2183
+    },
+    "scored_days": 2183,
+    "scored_series": 512,
+    "training_only_fallback_counts_all_7day_predictions": {
+      "recent14": 9,
+      "weekday": 3572,
+      "zero": 3
+    },
+    "weekday_median_last4_day_weighted_mae": 0.46396197892808066,
+    "weekday_median_last4_series_macro_mae": 0.4584189918154762,
+    "weekday_median_minus_correction_series_macro_delta": -0.010895461309523805,
+    "weekday_median_minus_correction_store_cluster_ci95": [
+      -0.026015763218458214,
+      0.00425407832673297
+    ],
+    "weekday_median_minus_last_observed_series_macro_delta": -0.01586381603422619,
+    "weekday_median_minus_last_observed_store_cluster_ci95": [
+      -0.05562907705375021,
+      0.023004640404851073
+    ]
+  },
+  "publisher_eval_sha256_verified": "1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e",
+  "publisher_train_sha256_verified": "6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d"
+}

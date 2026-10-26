@@ -1,0 +1,14 @@
+{
+  "commit": "2baa7951378eba99729f7c3c2163389088e75bc6",
+  "experiment_id": "retail-exploratory-weekday-median-v14",
+  "external_review": "TBD",
+  "latent_demand_ground_truth": "UNAVAILABLE",
+  "new_source_blob": "6e2e59a847ed5f9d568ca093b5f3aa88a875ada1",
+  "original_v12_source_blob": "ddd12a4e0695c474f752d98c99fd781931373bce",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "post_hoc_not_preregistered": true,
+  "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+  "result_present": true,
+  "result_sha256": "c9aca32510f7ba9ada738e9dd5c0a79e7c55fdaf1b8bbdb253406084f56ca039",
+  "run_id": "40397695520"
+}

@@ -1,0 +1,85 @@
+name: Retail v1.4 exploratory weekday comparator
+on:
+  push:
+    branches:
+      - research/retail-weekday-baseline-v14-20261027
+    paths:
+      - '.github/workflows/retail-weekday-v14.yml'
+      - 'benchmarks/retail-demand/observable_baseline/weekday_median_v14.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_weekday_median_v14.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  weekday-comparator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Execute fictional and adversarial contract tests
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_official_holdout_v12 test_weekday_median_v14
+      - name: Install pinned Parquet reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Check frozen v1.2 evaluator and original result blob
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/official_holdout_v12.py)" = ddd12a4e0695c474f752d98c99fd781931373bce
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/OFFICIAL_HOLDOUT_V12_RESULT.json)" = 3a914fc3834759fabde9bb0fd2f524e7cfd162ab
+          mkdir -p artifacts
+      - name: Fetch publisher train and evaluation; verify both original pinned hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/08c1fab7f9257bc73679d415d644165d351d4/data'
+          for split in train eval; do
+            if curl --fail --location --retry 1 --connect-timeout 20 --max-time 900 "$root/$split.parquet" --output "$RUNNER_TEMP/$split.parquet"; then
+              echo "$split immutable revision fetched"
+            else
+              echo "::warning::$split pinned URL unavailable; fallback accepted ONLY if original SHA-256 matches"
+              curl --fail --location --retry 2 --connect-timeout 20 --max-time 900 "https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/main/data/$split.parquet" --output "$RUNNER_TEMP/$split.parquet"
+            fi
+          done
+          printf '%s  %s\n' '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d' "$RUNNER_TEMP/train.parquet" | sha256sum --check
+          printf '%s  %s\n' '1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e' "$RUNNER_TEMP/eval.parquet" | sha256sum --check
+      - name: Evaluate fixed weekday comparator on unchanged 512-series cohort
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B benchmarks/retail-demand/observable_baseline/weekday_median_v14.py --train "$RUNNER_TEMP/train.parquet" --eval "$RUNNER_TEMP/eval.parquet" --output artifacts/weekday_v14_result.json
+      - name: Write aggregate-only run provenance
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, platform, subprocess, sys
+          from pathlib import Path
+          root=Path('artifacts'); root.mkdir(exist_ok=True)
+          result=root/'weekday_v14_result.json'
+          def blob(path):
+              return subprocess.check_output(['git','rev-parse','HEAD:'+path],text=True).strip()
+          data={'experiment_id':'retail-exploratory-weekday-median-v14',
+                'post_hoc_not_preregistered':True,
+                'run_id':os.environ.get('GITHUB_RUN_ID','TBD'),
+                'commit':os.environ.get('GITHUB_SHA','TBD'),
+                'python':sys.version,'platform':platform.platform(),
+                'new_source_blob':blob('benchmarks/retail-demand/observable_baseline/weekday_median_v14.py'),
+                'original_v12_source_blob':blob('benchmarks/retail-demand/observable_baseline/official_holdout_v12.py'),
+                'result_present':result.exists(),
+                'result_sha256':hashlib.sha256(result.read_bytes()).hexdigest() if result.exists() else 'TBD',
+                'latent_demand_ground_truth':'UNAVAILABLE','external_review':'TBD'}
+          (root/'weekday_v14_provenance.json').write_text(json.dumps(data,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: retail-weekday-v14-aggregate
+          path: artifacts/*.json
+          retention-days: 14
+          if-no-files-found: error
