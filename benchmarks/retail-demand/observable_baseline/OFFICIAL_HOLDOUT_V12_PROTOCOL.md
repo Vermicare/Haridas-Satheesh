@@ -34,3 +34,7 @@ python official_holdout_v12.py --train /private/train.parquet --eval /private/ev
 **Result and external review:** TBD until the hosted run completes and both its log and aggregate artifact are inspected. The earlier single-series train-only negative result remains valid. No held-out score, improved forecasting, product candidate, employer result, release or maturity advancement is claimed here.
 
 **Four lenses:** Hiring manager—inspect exact reproducibility and failure discipline; technical reviewer—challenge cohort sampling, censoring, aggregation and shared-store dependence; innovation leader—test whether extra correction complexity beats seasonal naive; founder—no evidence yet of demand recovery, revenue effect, customers or ROI.
+
+## Post-execution addendum (not part of the frozen preregistration)
+
+The hosted execution **completed successfully** on [GitHub Actions #40342565683](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40342565683), with 10/10 contract tests and both publisher byte checks passing. Its full aggregate result and limitations are preserved separately in [the execution record](OFFICIAL_HOLDOUT_V12_EXECUTION_2026_10_26.md) and [machine-readable summary](OFFICIAL_HOLDOUT_V12_RESULT.json). The earlier pre-run "TBD until inspected" paragraph above is historical preregistration text, not the current status. No stage advancement or causal/performance superiority claim is authorized.
