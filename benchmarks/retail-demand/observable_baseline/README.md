@@ -1,6 +1,10 @@
 # Retail Demand Intelligence — observable-sales prebenchmark v0.1
 
-**Stage:** Research / Architecture (unchanged). **Real FreshRetailNet measurements: TBD.** This directory contains a tested, dependency-free evaluation harness and an entirely fictional demo. It is **not** a completed public-data benchmark or proof of latent-demand recovery.
+**Stage:** Research / Architecture (unchanged). **First limited FreshRetailNet TRAIN-only real-data smoke completed 2026-10-26; official held-out, latent demand and intervention evidence: TBD.** This directory contains a tested, dependency-free evaluation harness and a separate fictional demo. The one-series public TRAIN-only smoke is **not** the publisher's official held-out benchmark or proof of latent-demand recovery.
+
+## Latest verified public-data result — 2026-10-26
+
+[GitHub Actions #40316866555](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40316866555) **succeeded** on pinned publisher TRAIN Parquet (4,500,000 rows, local SHA-256 verified against publisher-reported value). The frozen three-origin evaluation of one training-selected series scored only **10 in-stock days**: day-weighted seasonal-naive MAE **0.56**, causal stockout-history MAE **0.67** (**19.6% worse**). Eleven censored days were excluded. [Preserved evidence and limitations](PINNED_TRAIN_EXECUTION_2026_10_26.md) · [machine-readable record](PINNED_TRAIN_EXECUTION_2026_10_26.json). **No official 90+7 held-out evaluation, independent second execution, latent-demand ground truth, or commercial benefit is established.** Earlier dated acquisition-pending descriptions below are retained as historical research notes and superseded by this result.
 
 ## Why this experiment
 
