@@ -62,6 +62,11 @@ jobs:
           python matched_opportunity_contract_v03.py > matched_opportunity_v03_demo.json
           python -c "from pathlib import Path; p=Path('matched_opportunity_v03_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
           printf '%s  %s\n' '74196ae82435526dfb21cf2a7a50606de5dd1484fb3eb611d504f1e42d41372b' 'matched_opportunity_v03_demo.json' | sha256sum --check
+          # Fictional subject-level guard: do not pool away unmatched subjects.
+          python -m unittest -v test_subject_level_v04.py
+          python subject_level_v04.py > subject_level_v04_demo.json
+          python -c "from pathlib import Path; p=Path('subject_level_v04_demo.json'); p.write_bytes(p.read_bytes().replace(bytes([13,10]),bytes([10])))"
+          printf '%s  %s\n' 'b283d2b543e09b5fe99bf99a7bc3dc427f5153595559053a888e63b175e7ff42' 'subject_level_v04_demo.json' | sha256sum --check
       - uses: actions/upload-artifact@v4
         with:
           name: wbi-synthetic-results-${{ matrix.os }}
@@ -72,4 +77,5 @@ jobs:
             benchmarks/wireless-brain-interface/rest_aware_contract_demo.json
             benchmarks/wireless-brain-interface/rest_exposure_v02_demo.json
             benchmarks/wireless-brain-interface/matched_opportunity_v03_demo.json
+            benchmarks/wireless-brain-interface/subject_level_v04_demo.json
           if-no-files-found: error
