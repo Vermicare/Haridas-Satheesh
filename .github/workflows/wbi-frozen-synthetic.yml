@@ -7,11 +7,15 @@ on:
       - '.github/workflows/wbi-frozen-synthetic.yml'
       - 'benchmarks/wireless-brain-interface/verify_frozen_synthetic.py'
       - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+      - 'benchmarks/wireless-brain-interface/bnci2a_split_preflight.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py'
   pull_request:
     paths:
       - '.github/workflows/wbi-frozen-synthetic.yml'
       - 'benchmarks/wireless-brain-interface/verify_frozen_synthetic.py'
       - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+      - 'benchmarks/wireless-brain-interface/bnci2a_split_preflight.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -37,3 +41,6 @@ jobs:
       - name: Verify original source identity and twice-reproduced synthetic CSV
         shell: bash
         run: python -B benchmarks/wireless-brain-interface/verify_frozen_synthetic.py
+      - name: Run fictional BNCI2a split integrity regressions (NO EEG)
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_split_preflight.py' -v
