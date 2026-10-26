@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Benchmark Contract
 
-**Status:** protocol only; results are TBD.  
+**Status:** frozen synthetic evaluator executed and reproduced in a separate Linux container; **real EEG results remain TBD**. See [original execution record](EXECUTION_RECORD.md) and [2026-10-26 reproduction](SEPARATE_CONTAINER_REPRO_2026_10_26.md).  
 **Maturity remains:** Research / Simulation.
 
 ## Question
@@ -27,6 +27,10 @@ Freeze the split and metric definitions before reporting results. Start with a s
 | Peak memory / compute | TBD |
 
 If the selected dataset cannot support a metric, mark it N/A rather than synthesizing evidence.
+
+## Synthetic reproducibility check
+
+Run `python benchmarks/wireless-brain-interface/verify_frozen_synthetic.py` from the repository root. This fail-closed standard-library check pins the original evaluator's Git blob and synthetic risk–coverage CSV SHA-256, runs the frozen evaluator twice in clean temporary directories, and checks matching outputs. It is **not** a public EEG benchmark, external independent validation, or proof that the drift-aware gate beats simple confidence abstention.
 
 ## Required artifacts
 
