@@ -10,7 +10,8 @@ static inline uint8_t scd_crc8(const uint8_t *bytes, size_t len) {
     for (size_t i = 0; i < len; ++i) {
         crc ^= bytes[i];
         for (unsigned bit = 0; bit < 8; ++bit) {
-            crc = (uint8_t)((crc & 0x80u) ? (crc << 1) ^ 0x31u : crc << 1);
+            if (crc & 0x80u) crc = (uint8_t)((crc << 1) ^ 0x31u);
+            else crc = (uint8_t)(crc << 1);
         }
     }
     return crc;
