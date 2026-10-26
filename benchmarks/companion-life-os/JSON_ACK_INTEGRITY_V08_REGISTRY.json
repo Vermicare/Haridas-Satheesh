@@ -1,0 +1,38 @@
+{
+  "experiment_id": "companion-fictional-outbox-json-ack-integrity-v0.8-20261026",
+  "date": "2026-10-26",
+  "branch": "research/companion-auth-negative-controls-20261024",
+  "pr": 10,
+  "maturity": "Simulation / fictional contract",
+  "maturity_change": false,
+  "fixture": "invented SQLite receipt and corrupted JSON",
+  "baseline_commit": "fae5cf5e8713af7d7bd9af4148814662a5327c6e",
+  "baseline_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40260628098",
+  "baseline_ubuntu": {
+    "tests": 75,
+    "failures": 3,
+    "errors": 1
+  },
+  "fix_commit": "43218f4c9e3c3275d1882ed6f24b83ddb2c51830",
+  "source_blob_sha": "8df81032b7473365836dcda5ffcd44c33648c9c0",
+  "test_blob_sha": "b80b560258271aba77490813adf20f3ca7d02e1d",
+  "verified_ci_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40260698802",
+  "after_fix": {
+    "ubuntu": {
+      "passed": 75,
+      "total": 75
+    },
+    "windows": {
+      "passed": 75,
+      "total": 75
+    }
+  },
+  "reproduction_command": "python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06 test_fictional_outbox_v07",
+  "python": "3.13 (GitHub-hosted; exact patch TBD)",
+  "sqlite_version": "TBD",
+  "real_actions": 0,
+  "real_identity": "TBD",
+  "power_loss": "TBD",
+  "independent_review": "TBD",
+  "decision": "retain synthetic-only guard, do not advance or merge"
+}
