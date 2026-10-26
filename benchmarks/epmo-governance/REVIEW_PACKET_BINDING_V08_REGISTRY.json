@@ -1,0 +1,53 @@
+{
+  "experiment_id": "EPMO-REVIEW-PACKET-BINDING-V08-2026-10-26",
+  "recorded_utc": "2026-10-26",
+  "evidence_class": "fictional synthetic software regression",
+  "hypothesis": "v0.7 scorer can silently score altered packet content against original private gold when case IDs remain the same",
+  "before_fix": {
+    "commit": "e897f67cb69116f4f9ab37d2a2d450d830113de9",
+    "ci_run_id": 40265362490,
+    "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40265362490",
+    "ubuntu": {
+      "tests_run": 120,
+      "expected_negative_control_failures": 3,
+      "reason": "ValueError not raised for candidate/context/instruction edits"
+    },
+    "windows": "cancelled during superseding push"
+  },
+  "implementation": {
+    "version": "0.8",
+    "source": "blinded_review_preflight_v08.py",
+    "source_git_blob_sha": "ea56edcab7ebbc92476607714729d37a01152ec6",
+    "tests": "test_blinded_review_preflight_v08.py",
+    "tests_git_blob_sha": "37511fd3ef29a618d2671f3a9be3bcaf0297f841",
+    "preserved_v07_test_git_blob_sha": "49b12c93648aa353c12b921a265e6cd93e778a39",
+    "method": "SHA-256 canonical JSON binding of each complete packet to private gold; fail closed on changed/missing/swapped bindings and invalid label schema"
+  },
+  "after_fix": {
+    "ci_run_id": 40265457537,
+    "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40265457537",
+    "ubuntu": {
+      "tests_run": 139,
+      "failures": 0,
+      "status": "passed"
+    },
+    "windows": {
+      "tests_run": 139,
+      "failures": 0,
+      "status": "passed"
+    },
+    "test_framework": "Python 3.13 standard-library unittest",
+    "real_human_reviewers": 0,
+    "external_actions": 0
+  },
+  "limitations": [
+    "not a signed or tamper-proof oracle",
+    "a coherent packet+gold forgery is not detected",
+    "v0.8 arms differ primarily in order and label, not distinct review aids",
+    "no independently collected human data",
+    "no real actor authentication, trusted time, external action or employer performance"
+  ],
+  "stage": "Research / Simulation",
+  "decision": "retain draft; no maturity advancement",
+  "next_gate": "distinct preregistered manual/structured treatments with independent assignment and protected consented reviewer observations"
+}
