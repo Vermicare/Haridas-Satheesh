@@ -1,0 +1,57 @@
+{
+  "schema_version": "portfolio-experiment-registry-v1",
+  "experiment_id": "cooling-capture-alignment-v1-2026-10-27",
+  "project": "Adaptive Personal Cooling",
+  "question": "Can a fully rehashed capture bundle pass isolated hash and CSV gates while run ID, condition or timestamp declarations disagree across files?",
+  "evidence_class": "fictional-only software negative controls",
+  "maturity_before": "Prototype / Documented R&D",
+  "maturity_after": "Prototype / Documented R&D",
+  "source": {
+    "repository": "Vermicare/Haridas-Satheesh",
+    "branch": "research/cooling-explicit-fixture-gate-20261023",
+    "source_path": "benchmarks/adaptive-cooling/capture_alignment.py",
+    "tests_path": "benchmarks/adaptive-cooling/test_capture_alignment.py",
+    "dependencies": [
+      "capture_chain.py",
+      "dry_run_integrity.py"
+    ],
+    "test_workflow": ".github/workflows/cooling-origin-gate.yml",
+    "workflow_head_commit": "1971e820420cad0d7f3b6d7051afd7edb83ad57e"
+  },
+  "execution": {
+    "github_actions_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40388474144",
+    "status": "completed_success",
+    "runner_os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python": "3.13 (GitHub setup-python)",
+    "command": "python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py test_capture_chain.py test_capture_alignment.py",
+    "test_count_per_os": 75,
+    "new_alignment_tests": 13,
+    "data": "ephemeral deterministic fictional CSV/manifest/plan generated in Python tempfile; no sensor connection",
+    "run_duration_seconds": "TBD",
+    "random_seed": "not applicable (deterministic fixtures)"
+  },
+  "results": {
+    "ubuntu": "75/75 pass",
+    "windows": "75/75 pass",
+    "cross_artifact_negative_controls": "pass",
+    "physical_measurements": "TBD",
+    "logger_to_csv_semantic_replay": "TBD",
+    "instrument_calibration": "TBD",
+    "thermal_benefit": "TBD",
+    "energy_savings": "TBD"
+  },
+  "limitations": [
+    "Passing a byte/metadata check is not physical provenance or source attestation.",
+    "Original logger bytes are hashed but not parsed/replayed into CSV.",
+    "An attacker who controls all files can forge an internally consistent bundle.",
+    "No physical instruments, calibration, safety, comfort, or energy measurements were used."
+  ],
+  "decision": "Retain prototype/documented R&D stage. Require real instrumented >=10 minute capture and original logger-to-CSV replay before any physical or performance claim.",
+  "next_experiment": "Issue #15: collect a real private logger capture with instrument manifest, freeze converter/version and energy boundaries, then run four gates and repeat ambient/fan/prototype controlled trials.",
+  "provenance_checked": "GitHub Actions run 40388474144 jobs and test logs inspected for both operating systems",
+  "collaborator_outreach": "none",
+  "release": "none"
+}
