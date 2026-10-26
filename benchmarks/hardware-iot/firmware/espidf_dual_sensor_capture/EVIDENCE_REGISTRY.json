@@ -1,0 +1,41 @@
+{
+  "schema": "iot-firmware-candidate-v1",
+  "date_utc": "2026-10-27",
+  "branch": "research/iot-capture-preflight-20261023",
+  "pr": 7,
+  "question": "Can a minimal ESP-IDF candidate emit the exact BH1750/SCD40 raw telemetry contract needed for genuine 10-minute acquisition?",
+  "stage": "Prototype / Hardware Architecture (unchanged)",
+  "source_paths": [
+    "benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/main/main.c",
+    "benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/main/telemetry_wire.h"
+  ],
+  "environment": {
+    "host_os": "Linux",
+    "host_compiler": "GCC 14.2.0",
+    "host_flags": "-std=c11 -Wall -Wextra -Werror -pedantic",
+    "esp_idf_version": "TBD (6.1 intended)",
+    "target": "ESP32-S3 (not built/flashed)",
+    "device_port": "TBD"
+  },
+  "checks": {
+    "host_crc_framing": "PASS (local C executable exit 0)",
+    "github_ci": "TBD until run inspected",
+    "esp_idf_build": "TBD",
+    "flash": "NOT_PERFORMED",
+    "physical_sensor_capture": "NOT_PERFORMED",
+    "hardware_accuracy": "TBD"
+  },
+  "failure_learning": [
+    "Initial C host build rejected CRC ternary signedness under -Werror; changed to explicit branches.",
+    "Initial host test expected SCD40 datasheet's 0x7B for 0x01F4, but documented CRC-8 polynomial yields 0x33; test corrected and discrepancy documented."
+  ],
+  "limitations": [
+    "No real I2C transaction executed.",
+    "Host C framing test is not ESP-IDF build validation.",
+    "CRC does not authenticate sensor identity, calibration or flashed binary.",
+    "Firmware has not been physically tested; timestamps and cadence unverified."
+  ],
+  "next_experiment": "Compile in ESP-IDF 6.1, review flash and wiring, acquire >=600 s genuine raw dual-sensor telemetry, verify host-to-bundle chain and independent setup under issue #8.",
+  "advance": "Genuine reproducible independent physical capture and setup review; then controlled repeated trials.",
+  "reframe": "If firmware cannot produce continuous provenance-reviewed captures, retain as software instrumentation candidate."
+}
