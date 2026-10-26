@@ -38,10 +38,12 @@ Use one frozen decoder's test probabilities for ungated, confidence-only abstent
 | Dataset release/hash | TBD / TBD |
 | Loader and dependencies | TBD |
 | Source acquisition/execution | Not performed |
-| Metadata split preflight | Fictional metadata only; local 9/9 tests passed 2026-10-27 (CI TBD) |
+| Metadata split preflight | Fictional metadata only; 9/9 tests passed on Ubuntu and 9/9 on Windows in GitHub Actions #40415140397 (2026-10-27 IST); both job logs inspected |
 | EEG measurements, risk, uncertainty | TBD |
 | Frozen synthetic baseline | [September execution](EXECUTION_RECORD.md), [cross-OS draft reproduction](SEPARATE_CONTAINER_REPRO_2026_10_26.md) |
 | Maturity | Research / Simulation, unchanged |
 | Next experiment | Acquire and hash actual BNCI2a session files, extract trial-only metadata, run preflight, freeze preprocessing/model and then evaluate held-out session E |
 
 **Security/IP/privacy:** do not publish raw EEG, private identities, credentialed URLs, personal contact details, or employer data. Dataset subject numbers are public pseudonymous IDs, not participant names. Preserve source licensing and attribution.
+
+**Hosted verification:** [Actions #40415140397](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40415140397) passed on Ubuntu and Windows, preserving the frozen synthetic evaluator Git blob `2becec81a8002cc5ff2f445889b7617baf9937b9` and CSV SHA-256 `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a`. Both logs show all nine fictional metadata regressions passing. This is software-contract evidence, not EEG validation.
