@@ -11,12 +11,12 @@
   "environment": {
     "python": "3.13.5",
     "os": "Linux",
-    "dependencies": "Python standard library; local API-compatible v0.3 stand-in used for local smoke test"
+    "dependencies": "Python standard library; exact committed v0.3 and v0.2 source blobs"
   },
   "local_smoke": {
     "tests": 11,
     "passed": 11,
-    "actual_committed_v03_integration": "NOT VERIFIED LOCALLY"
+    "actual_committed_v03_integration": "VERIFIED via exact Git blob identities and 11/11 local tests"
   },
   "demo_sha256": "b283d2b543e09b5fe99bf99a7bc3dc427f5153595559053a888e63b175e7ff42",
   "demo": {
@@ -33,5 +33,7 @@
   "real_eeg": "NOT PERFORMED",
   "independent_review": "TBD",
   "next_experiment": "Frozen subject-disjoint real EEG decisions and matched-coverage per-subject evaluation with complete rest exposure and uncertainty",
-  "limitations": "Fictional repeated subjects, not independent participants; no decoder, real EEG, calibration leakage proof, clinical safety or performance benefit"
+  "limitations": "Fictional repeated subjects, not independent participants; no decoder, real EEG, calibration leakage proof, clinical safety or performance benefit",
+  "parent_git_blob": "4a0d3ee3d8b18523c8d14273e4fc8c2af0f1ffd4",
+  "parent_v02_git_blob": "1a1540f2469814720ad4b3d8e71b44f611fc1712"
 }
