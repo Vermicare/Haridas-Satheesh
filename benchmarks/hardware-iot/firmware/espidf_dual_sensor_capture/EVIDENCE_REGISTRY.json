@@ -19,8 +19,8 @@
   },
   "checks": {
     "host_crc_framing": "PASS (local C executable exit 0)",
-    "github_ci": "TBD until run inspected",
-    "esp_idf_build": "TBD",
+    "github_ci": "PASS: GitHub Actions #40406840604, 83/83 Ubuntu and 83/83 Windows, Python 3.13; host C CRC/framing test executed (not skipped) on both",
+    "esp_idf_build": "TBD: no ESP-IDF toolchain build run",
     "flash": "NOT_PERFORMED",
     "physical_sensor_capture": "NOT_PERFORMED",
     "hardware_accuracy": "TBD"
@@ -37,5 +37,7 @@
   ],
   "next_experiment": "Compile in ESP-IDF 6.1, review flash and wiring, acquire >=600 s genuine raw dual-sensor telemetry, verify host-to-bundle chain and independent setup under issue #8.",
   "advance": "Genuine reproducible independent physical capture and setup review; then controlled repeated trials.",
-  "reframe": "If firmware cannot produce continuous provenance-reviewed captures, retain as software instrumentation candidate."
+  "reframe": "If firmware cannot produce continuous provenance-reviewed captures, retain as software instrumentation candidate.",
+  "ci_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40406840604",
+  "source_blob_sha256_status": "Exact Git blobs available in draft PR; no device binary exists"
 }
