@@ -70,6 +70,8 @@ This is **byte integrity**, not physical authenticity or semantic conversion int
 
 ### Energy accounting decision before a physical trial
 
+**Primary-source decision:** The [U.S. Department of Energy's thermal-energy-storage overview](https://www.energy.gov/cmei/buildings/thermal-energy-storage) describes thermal storage as charging a hot/cold reservoir for later discharge. Its [July 2023 thermal-storage technology assessment](https://www.energy.gov/sites/default/files/2023-09/9_Technology%20Strategy%20Assessment%20-%20%239%20Thermal%20Energy%20Storage_508.pdf) is background for evaluating storage-system boundaries, **not** a claim that this prototype meets any standard. This changes the experiment: report recharge/preconditioning energy separately and do not use a discharge-only Wh figure to claim overall efficiency.
+
 A PCM/thermal-storage or prechilled-fluid prototype can appear low-power during a ten-minute trial while consuming energy to charge/refrigerate the storage before the trial. The predeclared `energy_boundary`, `thermal_storage_preconditioning`, `recharge_energy_accounting`, and `heat_rejection_path` fields prevent a **silent omission** of those boundaries; the script checks that the fields are declared, **not** that their contents or values are correct. Report both in-run electrical Wh and any recharge/preconditioning energy separately; do not claim system efficiency until the full comparable boundary is measured. Keep fan-only and ambient controls, condensation, humidity, uncertainty and negative results in the subsequent controlled experiment.
 
 ## Next physical evidence gate
