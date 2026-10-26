@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Benchmark Contract
 
-**Status:** protocol only; results are TBD.  
+**Status:** frozen synthetic evaluator executed and reproduced in a separate Linux container; **real EEG results remain TBD**. See [original execution record](EXECUTION_RECORD.md) and [2026-10-26 reproduction](SEPARATE_CONTAINER_REPRO_2026_10_26.md).  
 **Maturity remains:** Research / Simulation.
 
 ## Question
@@ -28,6 +28,10 @@ Freeze the split and metric definitions before reporting results. Start with a s
 
 If the selected dataset cannot support a metric, mark it N/A rather than synthesizing evidence.
 
+## Synthetic reproducibility check
+
+Run `python benchmarks/wireless-brain-interface/verify_frozen_synthetic.py` from the repository root. This fail-closed standard-library check pins the original evaluator's Git blob and synthetic risk–coverage CSV SHA-256, runs the frozen evaluator twice in clean temporary directories, and checks matching outputs. It is **not** a public EEG benchmark, external independent validation, or proof that the drift-aware gate beats simple confidence abstention.
+
 ## Required artifacts
 
 - environment/dependency specification
@@ -48,3 +52,9 @@ Do not advance maturity merely because code exists. A later gate requires a repr
 Reframe if the apparent benefit disappears after accounting for suppressed correct actions, adds no material value over a simpler abstention baseline, or is unstable across subjects, sessions or seeds.
 
 Unknown values stay TBD. Public-data results are research evidence, not clinical validation.
+
+## Prospective cross-session EEG preflight (draft, 2026-10-27)
+
+[BNCI2a dataset decision and preregistered split protocol](BNCI2A_EEG_PREREG_2026_10_27.md) distinguishes the single-session PhysioNetMI dataset from the two-day BCI Competition IV 2a dataset. The [metadata-only validator](bnci2a_split_preflight.py) and [fictional negative controls](test_bnci2a_split_preflight.py) check split integrity without loading EEG or labels. [Hosted cross-OS CI #40415140397](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40415140397) passed 9/9 fictional metadata tests on Ubuntu and 9/9 on Windows; both logs inspected. **No public EEG performance result exists.**
+
+Run the fictional regression tests: `python -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_split_preflight.py' -v`. After acquiring licensed source files, supply a real, hashed trial metadata manifest to `python benchmarks/wireless-brain-interface/bnci2a_split_preflight.py --input <manifest.json> --out <split_report.json>`. Unknown source checksums and versions remain TBD.

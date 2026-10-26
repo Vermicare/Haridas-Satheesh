@@ -1,0 +1,46 @@
+name: WBI frozen synthetic cross-OS reproducibility
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - '.github/workflows/wbi-frozen-synthetic.yml'
+      - 'benchmarks/wireless-brain-interface/verify_frozen_synthetic.py'
+      - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+      - 'benchmarks/wireless-brain-interface/bnci2a_split_preflight.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py'
+  pull_request:
+    paths:
+      - '.github/workflows/wbi-frozen-synthetic.yml'
+      - 'benchmarks/wireless-brain-interface/verify_frozen_synthetic.py'
+      - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+      - 'benchmarks/wireless-brain-interface/bnci2a_split_preflight.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frozen-synthetic-reproduction:
+    name: Frozen synthetic / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Preserve Git blob line endings on every runner
+        shell: bash
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify original source identity and twice-reproduced synthetic CSV
+        shell: bash
+        run: python -B benchmarks/wireless-brain-interface/verify_frozen_synthetic.py
+      - name: Run fictional BNCI2a split integrity regressions (NO EEG)
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_split_preflight.py' -v

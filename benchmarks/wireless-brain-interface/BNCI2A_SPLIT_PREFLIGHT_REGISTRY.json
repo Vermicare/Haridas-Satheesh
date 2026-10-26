@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "experiment": "BNCI2014_001 metadata-only EEG split preflight",
+  "date_local": "2026-10-27",
+  "scope": "Fictional metadata contract test; no EEG loaded, no classifier trained, no performance measured",
+  "dataset": {
+    "name": "BNCI2014_001",
+    "primary_source": "https://www.bbci.de/competition/iv/",
+    "dataset_description": "https://moabb.neurotechx.com/docs/generated/moabb.datasets.BNCI2014_001.html",
+    "release": "TBD",
+    "source_file_sha256": "TBD",
+    "actual_manifest_sha256": "TBD",
+    "loader_version": "TBD",
+    "license_review": "TBD"
+  },
+  "software": {
+    "source_path": "benchmarks/wireless-brain-interface/bnci2a_split_preflight.py",
+    "source_git_blob": "cc8c28996ed063aed0ecc2f49afb26e0c1d75957",
+    "source_sha256": "e2f69d1e4ccd968a4dc19ab743f6384db54c538260c1d391480ef053de94a88e",
+    "tests_path": "benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py",
+    "tests_git_blob": "b2d28c88a300f9aca4aea75e4dc6f7060d8e35cf",
+    "tests_sha256": "b2c2b7305f1bca86627457fcf049a51261c7c3b3c1f7b911c8832a966c1d4c20"
+  },
+  "run_conditions": {
+    "workflow": ".github/workflows/wbi-frozen-synthetic.yml",
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40415259499",
+    "tested_head_commit": "0147d849d46ceafcee5f7e82608542c41034a52a",
+    "python": "3.13.x; exact patch TBD",
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "runner_image_versions": "TBD",
+    "dependencies": "Python standard library",
+    "command": "python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_split_preflight.py' -v"
+  },
+  "results": {
+    "ubuntu": {
+      "tests_passed": 9,
+      "tests_failed": 0,
+      "logs_inspected": true
+    },
+    "windows": {
+      "tests_passed": 9,
+      "tests_failed": 0,
+      "logs_inspected": true
+    },
+    "fictional_manifest_trials": 5184,
+    "folds": 18,
+    "real_eeg_trials_examined": 0,
+    "real_eeg_results": "TBD"
+  },
+  "original_synthetic_evidence": {
+    "evaluator_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+    "csv_sha256": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a",
+    "same_results_on_both_ci_os": true
+  },
+  "decision": "Maintain Research / Simulation. Acquire genuine source data, pin hashes, validate real metadata, freeze decoder and policy, then perform held-out session evaluation.",
+  "limitations": [
+    "All metadata are fictional in this test",
+    "Manifest schema and expected counts derive from published dataset documentation and are not yet validated against downloaded source files",
+    "No real EEG, device or clinical evidence",
+    "Subject-disjoint and cross-session protocols answer different questions",
+    "No superiority or safety claim"
+  ]
+}
