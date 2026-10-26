@@ -1,6 +1,6 @@
 # Retail v1.4 — post-hoc weekday-median comparator (2026-10-27)
 
-**Status:** implementation and negative-control tests submitted; publisher-data execution and all v1.4 results **TBD until a completed, inspected hosted run**. **Maturity: Research / Architecture, unchanged.** This is a stacked research branch based on the existing v1.2/v1.3 draft; no main-branch merge or release.
+**Status:** code-bearing [hosted CI #40397695520](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40397695520) **PASSED**; exact aggregate JSON and provenance verified against the hosted artifact and permanently preserved. **Maturity: Research / Architecture, unchanged.** This is a stacked research branch based on the existing v1.2/v1.3 draft; no main-branch merge or release.
 
 ## Question and evidence boundary
 
@@ -34,14 +34,22 @@ The executable [CI workflow](../../../.github/workflows/retail-weekday-v14.yml) 
 
 | Item | Result |
 |---|---|
-| v1.4 tests, final-head CI | TBD |
-| Publisher hash checks on v1.4 runner | TBD |
-| Weekday-median held-out MAE | TBD |
-| Paired store-cluster interval vs last-observed | TBD |
-| Paired store-cluster interval vs correction | TBD |
-| Independent new holdout | TBD |
+| v1.4 + original v1.2 contract tests, code-bearing CI | **22/22 passed** (Ubuntu / Python 3.13.16); later documentation commits do not alter tested source |
+| Publisher hash checks on v1.4 runner | **Both matched** original pinned train/eval SHA-256 after immutable URL 404 and hash-gated fallback |
+| Weekday-median in-stock-day MAE | **0.463961979** vs last-observed **0.478562071** and correction **0.479905634** on unchanged 2,183 days / 512 series |
+| Weekday-minus-last-observed series-macro delta; store-cluster 95% CI | **−0.015864; [−0.055629, +0.023005]** (crosses zero) |
+| Weekday-minus-correction series-macro delta; store-cluster 95% CI | **−0.010895; [−0.026016, +0.004254]** (crosses zero) |
+| Training-only forecast fallbacks | **3,572 same-weekday; 9 recent-14; 3 zero** across 3,584 forecasts |\n| Independent new holdout | TBD; this is post-hoc reuse of the original observed holdout |
 | Latent demand / inventory / revenue uplift | **UNAVAILABLE / TBD** |
 
 **Advance only if:** an independently reproduced, genuinely unseen evaluation shows stable improvement over strong simple baselines, with uncertainty and an actionable decision metric. **Reframe if:** the weekday-median or last-observed comparator remains as good or better; do not claim stockout correction is useful merely because it beats a weak baseline.
 
 **Four lenses:** hiring manager—repeatable baseline comparison; technical reviewer—post-hoc holdout reuse and store dependence explicitly disclosed; innovation leader—negative evidence allowed to change the method; founder—no validated commercial uplift, users, product, patentability or deployment claim. No employer/private data or collaborator tracking.
+
+## Hosted artifact verification and research decision
+
+[GitHub Actions run #40397695520](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40397695520) passed at code-bearing commit `2baa7951378eba99729f7c3c2163389088e75bc6`. The log confirms 22 tests, both publisher checksum matches, frozen original MAEs, and completion of the v1.4 evaluator. The publisher's immutable revision URL returned HTTP 404 for both files; fallback to `main` was allowed **only after both original SHA-256 checks passed**. This is not a new independent data version.
+
+The [hosted artifact ZIP](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40397695520/artifacts/12686718202) was independently downloaded and verified: ZIP SHA-256 `c7ffab79ec51f509ccb31a68dcf4824615377460a6b5a4d7659dfc2cef9c5375`; contained [result](WEEKDAY_MEDIAN_V14_RESULT.json) SHA-256 `c9aca32510f7ba9ada738e9dd5c0a79e7c55fdaf1b8bbdb253406084f56ca039` and [provenance](WEEKDAY_MEDIAN_V14_PROVENANCE.json) SHA-256 `3bb8ee14004928e8b7fd65c20dc1466a1792c0caf034ae0692e27919873ffafd`. Both committed JSON Git blobs were checked against the exact hosted artifact bytes. Hosted artifact retention is 14 days; committed aggregate records persist.
+
+**Decision:** the transparent weekday-median baseline has a **3.05% lower point-estimate day-weighted MAE** than last-observed, but both paired store-cluster confidence intervals cross zero. Because this comparator was chosen after viewing the holdout, this is **exploratory evidence, not a confirmed improvement**. The complex stockout correction does not earn a superiority claim. **Next experiment:** preregister the unchanged weekday-median and original baselines on a genuinely unseen temporal or external evaluation split, with store/product dependence and decision metrics; do not tune against these observed seven days. No stage advancement, deployment, merge or release.
