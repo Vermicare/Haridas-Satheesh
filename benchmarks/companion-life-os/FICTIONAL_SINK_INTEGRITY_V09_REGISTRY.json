@@ -1,0 +1,65 @@
+{
+  "id": "companion-fictional-sink-integrity-v0.9",
+  "date": "2026-10-26",
+  "maturity": "Simulation / fictional software-contract evidence",
+  "scope": "local synthetic SQLite fake sink; zero real external actions",
+  "question": "Does the independent fake sink reject incomplete payloads and corrupted persisted acknowledgments on direct invocation?",
+  "input_provenance": "author-created fictional payloads and deliberately modified local SQLite ack rows",
+  "source": {
+    "path": "benchmarks/companion-life-os/fictional_outbox_v07.py",
+    "git_blob_sha": "fb5e3bdbace00236a562fa1af705189606f35624"
+  },
+  "tests": {
+    "path": "benchmarks/companion-life-os/test_fictional_sink_integrity_v09.py",
+    "git_blob_sha": "4a650cf622f8edbeacba230ff7f516dc1feec659",
+    "positive_controls": 1,
+    "negative_controls": 3
+  },
+  "baseline": {
+    "commit": "86503326ec3d3a08bfc92dfacaece348ac9c2c64",
+    "github_actions_run": 40334808905,
+    "ubuntu": {
+      "tests": 79,
+      "failures": 3
+    },
+    "windows": {
+      "tests": 79,
+      "failures": 3
+    }
+  },
+  "corrected": {
+    "commit": "450d395f08363cd7fafec8193fef817cebfc4425",
+    "github_actions_run": 40334887066,
+    "ubuntu": {
+      "tests": 79,
+      "passed": 79
+    },
+    "windows": {
+      "tests": 79,
+      "passed": 79
+    },
+    "demo_artifacts_uploaded": true
+  },
+  "environment": {
+    "os": [
+      "GitHub-hosted Ubuntu",
+      "GitHub-hosted Windows"
+    ],
+    "python": "3.13 via actions/setup-python@v5",
+    "python_patch": "TBD",
+    "sqlite_version": "TBD",
+    "runner_image": "TBD",
+    "dependencies": "Python standard library only",
+    "random_seed": "N/A"
+  },
+  "outcome": "three reproduced false acceptances now rejected; valid direct sink idempotent replay retained",
+  "limitations": [
+    "No authenticated actor or trusted clock",
+    "No real connector or external side effect",
+    "No tamper-resistant SQLite or exactly-once guarantee",
+    "No independent reviewer or real-world performance data"
+  ],
+  "next_gate": "sandbox identity issuance, replay/expiry/tamper and measured reviewer burden",
+  "decision": "retain correction; no maturity upgrade, merge or release",
+  "pr": "https://github.com/Vermicare/Haridas-Satheesh/pull/10"
+}
