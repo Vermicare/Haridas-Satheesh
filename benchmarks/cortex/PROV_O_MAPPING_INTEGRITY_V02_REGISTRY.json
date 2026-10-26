@@ -1,0 +1,39 @@
+{
+  "experiment_id": "cortex-prov-o-mapping-integrity-v0.2-2026-10-26",
+  "maturity": "Architecture / R&D (unchanged)",
+  "evidence_type": "synthetic software integrity regression; not semantic or real-workflow validation",
+  "baseline": {
+    "source_git_blob": "05a253e64ac26fb0cb8e3fb66c26207a62201f72",
+    "negative_controls": 6,
+    "local_outcome": "5 assertion failures, 1 error; no hosted before-fix CI"
+  },
+  "corrected": {
+    "source": "benchmarks/cortex/prov_o_mapping_v01.py",
+    "source_git_blob": "7698114b452384975617cdd7f0e4ba1187f11661",
+    "tests": "benchmarks/cortex/test_prov_o_mapping_v01.py",
+    "test_git_blob": "fb7833a538563bf00d4ae46b64a2303b5fd70e83",
+    "fixture": "benchmarks/cortex/independent_scenario_v03.json",
+    "fixture_git_blob": "4622df5782c1f67ff1c80a78723d85f753c9f269"
+  },
+  "execution": {
+    "python": "CPython 3.13.5",
+    "os": "Linux",
+    "dependencies": "standard library",
+    "separate_clean_directories": 2,
+    "tests_per_run": 19,
+    "passed_per_run": 19,
+    "graph_stdout_bytes": 2129,
+    "graph_stdout_sha256": "e5332353950dadc47ebf66c366bb5e5d929b9d1bb29296003cc4b92f4f89dea5",
+    "github_actions_latest_head": "TBD",
+    "windows_verification": "TBD"
+  },
+  "limits": {
+    "real_data": "none",
+    "independent_review": "TBD",
+    "semantic_accuracy": "TBD",
+    "rdf_owl_conformance": "TBD",
+    "business_value": "TBD"
+  },
+  "decision": "retain stage; no merge or release pending cross-platform CI and independent review",
+  "next_experiment": "Issue #12: blinded fictional lineage annotation and measured correction burden against manual notes"
+}
