@@ -1,0 +1,72 @@
+{
+  "experiment_id": "epmo-fictional-review-treatment-v09",
+  "date_utc": "2026-10-26",
+  "project": "EPMO fictional governance",
+  "maturity": "Research / Simulation",
+  "origin": "FICTIONAL_SYNTHETIC",
+  "hypothesis": "Adding a deterministic field-comparison worksheet to otherwise identical fictional review cases may change reviewer errors/time; no human evidence yet.",
+  "intervention": {
+    "control": "manual_notes: raw fictional events",
+    "treatment": "structured_packet: same raw fictional events and order plus derived comparison worksheet, no verdict",
+    "case_count": 16,
+    "oracle_positive": 3,
+    "oracle_negative": 13,
+    "randomized_human_assignment": "TBD; not conducted"
+  },
+  "provenance": {
+    "branch": "research/epmo-fictional-governance-20261024",
+    "executable_head_sha": "e9afe4b05052e3c3246298b148527c40b9dd73bf",
+    "source_git_blob": "f23f3096c22ae64914bcacf2eea7c204210a7ee4",
+    "tests_git_blob": "719daf8da7ec5d69e386731c6de3b710d6dd5aa9",
+    "frozen_v08_git_blob": "ea56edcab7ebbc92476607714729d37a01152ec6",
+    "frozen_policy_git_blob": "0e1aab3fe657847d3be871fafaddce095c85fc69",
+    "workflow_git_blob": "ddb39289578ae0bf1cfb8eda53fe05c90b2ead9c",
+    "workflow_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40352437149",
+    "python": "CPython 3.13.16",
+    "platforms": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "dependencies": "Python standard library"
+  },
+  "verified_execution": {
+    "tests_ubuntu": "156/156 PASS",
+    "tests_windows": "156/156 PASS",
+    "new_v09_tests": 17,
+    "public_demo_ubuntu": "PASS",
+    "public_demo_windows": "PASS",
+    "raw_case_order_equal": true,
+    "manual_aid_count": 0,
+    "structured_aid_count": 16,
+    "manual_packet_sha256": "0a3be9ff7ba54dffc2ea1fc39420372b14e22ca8b5fac020697da5c413a68da7",
+    "structured_packet_sha256": "8e747a434a33cff58346508d2f838c133ea08f501e77ead6f54df8b455225a2c",
+    "external_actions": 0
+  },
+  "human_results": {
+    "participant_count": 0,
+    "false_approval_rate": "TBD",
+    "true_approval_recall": "TBD",
+    "median_review_seconds": "TBD",
+    "intervention_effect": "TBD"
+  },
+  "negative_controls": [
+    "changed raw candidate rejected",
+    "changed derived worksheet rejected",
+    "changed instructions rejected",
+    "swapped arm rejected",
+    "changed private gold rejected",
+    "duplicate decision rejected",
+    "private packet output inside Git checkout rejected",
+    "public demo excludes private gold"
+  ],
+  "limitations": [
+    "Fictional oracle is not independent ground truth",
+    "Public source permits label reconstruction",
+    "No real reviewers or treatment-effect measurements",
+    "Private key binding is not externally authenticated",
+    "No real actor identity, action, correction or employer data",
+    "No sample-size or randomized allocation finalized"
+  ],
+  "decision": "Retain Research / Simulation; no stage advancement or release",
+  "next_experiment": "Pre-register independent between-subject reviewer assignment and sample size, collect consented private responses, estimate reviewer-level uncertainty; separately pursue Issue #14 sandbox safety."
+}
