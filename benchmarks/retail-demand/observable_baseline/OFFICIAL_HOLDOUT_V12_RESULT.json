@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "retail-official-90-7-holdout-v12",
+  "evidence_class": "PINNED_PUBLISHER_90_7_OBSERVATIONAL_IN_STOCK_SALES_ONLY",
+  "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40342565683",
+  "run_id": 40342565683,
+  "source_commit": "aee03661442111a727e0fda44a534ad492e2e251",
+  "source_git_blob": "ddd12a4e0695c474f752d98c99fd781931373bce",
+  "tests_git_blob": "6153f7631f143d62e915ef0f70482fa90d42ddee",
+  "workflow_git_blob": "0c7a709d150950f944a389aeb97cd6f780b850de",
+  "artifact_id": 12659682091,
+  "artifact_zip_sha256": "9cbc63175fb06983cf60d11a41fa53920fcf1f560d7b8784af2bb63f12eb3b5a",
+  "artifact_result_json_sha256": "e07b1b9384e240cc95f5b3c392987180a42fe1aa7377c8a6460d273bc85095e8",
+  "artifact_provenance_json_sha256": "e89de5ef568bc6bba934a408343478180b06346373931d03d2ae8d780021a9cd",
+  "artifact_retention_expires_utc": "2026-11-09T14:45:42Z",
+  "runner": "GitHub Actions Ubuntu Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "pyarrow": "20.0.0",
+  "source_revision": "08c1fab7f9257bc73679d415d65d644165d351d4",
+  "publisher_train_sha256_verified": "6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d",
+  "publisher_eval_sha256_verified": "1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e",
+  "cohort_sha256": "7c14c678af51878ac68a3359e3dae0be1208feba4b0fa30d437191e855f62710",
+  "train_selected_series": 512,
+  "series_with_uncensored_eval": 512,
+  "uncensored_eval_days": 2183,
+  "censored_eval_days_excluded": 1401,
+  "day_weighted_mae": {
+    "last_observed": 0.4785620705451214,
+    "seasonal_naive": 0.4851804855703161,
+    "causal_stockout_history": 0.4799056344480073
+  },
+  "series_macro_mae": {
+    "last_observed": 0.4742828078497024,
+    "seasonal_naive": 0.4837689964657738,
+    "causal_stockout_history": 0.46931445312500003
+  },
+  "causal_minus_seasonal_macro_delta": -0.014454543340773807,
+  "paired_series_bootstrap_95pct_ci": [
+    -0.04284015299479166,
+    0.012163971237909217
+  ],
+  "bootstrap_replicates": 2000,
+  "bootstrap_seed": 20261026,
+  "causal_vs_seasonal_day_weighted_mae_relative_change_pct": -1.0871935865492066,
+  "causal_vs_last_observed_day_weighted_mae_relative_change_pct": 0.280750185938361,
+  "source_origin_independently_attested": false,
+  "official_heldout_split_used": true,
+  "latent_demand_ground_truth": "UNAVAILABLE",
+  "real_inventory_or_revenue_uplift": "TBD",
+  "independent_external_replication": "TBD",
+  "maturity": "Research / Architecture — unchanged",
+  "decision": "MIXED_NOT_ROBUST: correction improves seasonal naive slightly on day-weighted MAE, trails last-observed; paired series macro CI crosses zero; no superiority claim",
+  "limits": [
+    "512 deterministic train-selected series out of 50,000; observational in-stock-day labels only",
+    "Bootstrap resamples series; shared stores/products may violate independent-series assumption",
+    "No lost-demand labels, randomized intervention, revenue outcome, external review or deployment",
+    "Publisher-reported hash matched local bytes, origin not independently attested"
+  ]
+}
