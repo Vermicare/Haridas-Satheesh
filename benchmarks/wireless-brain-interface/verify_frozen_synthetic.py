@@ -30,6 +30,10 @@ def run_once() -> tuple[str, str]:
         shutil.copyfile(EVALUATOR, copied)
         env = os.environ.copy()
         env["PYTHONHASHSEED"] = "0"
+        # Windows defaults to a legacy console code page; the frozen evaluator prints an em dash.
+        # Force UTF-8 in the child without modifying the pinned evaluator source.
+        env["PYTHONIOENCODING"] = "utf-8"
+        env["PYTHONUTF8"] = "1"
         result = subprocess.run(
             [sys.executable, str(copied)], cwd=directory, env=env,
             capture_output=True, check=True, text=True, encoding="utf-8"
