@@ -23,8 +23,15 @@ def _canonical(value):
 def _decode(value):
     def reject(token):
         raise OutboxContractError('non-finite JSON: ' + token)
+    def unique_object(pairs):
+        result = {}
+        for key, item in pairs:
+            if key in result:
+                raise OutboxContractError('duplicate JSON key: ' + key)
+            result[key] = item
+        return result
     try:
-        parsed = json.loads(value, parse_constant=reject)
+        parsed = json.loads(value, parse_constant=reject, object_pairs_hook=unique_object)
         def check_finite(item):
             if isinstance(item, float) and not math.isfinite(item):
                 raise OutboxContractError('non-finite numeric JSON value')
@@ -57,6 +64,18 @@ def _payload(nonce, receipt_json):
 
 def _digest(payload):
     return hashlib.sha256(_canonical(payload).encode('utf-8')).hexdigest()
+
+
+def _validated_ack(ack, nonce, digest, *, stored=False):
+    """Validate both new and persisted fictional adapter acknowledgments."""
+    if not isinstance(ack, dict) or ack.get('nonce') != nonce or (
+        ack.get('digest') != digest or ack.get('synthetic') is not True or
+        type(ack.get('external_actions')) is not int or ack['external_actions'] != 0 or
+        type(ack.get('simulated_actions')) is not int or ack['simulated_actions'] != 1
+    ):
+        raise OutboxContractError('stored acknowledgment mismatch' if stored else
+                                  'untrusted fictional adapter acknowledgment')
+    return ack
 
 
 class FictionalIdempotentSink:
@@ -164,13 +183,10 @@ class FictionalOutbox:
             if receipt is None or _payload(nonce, receipt[0]) != payload:
                 raise OutboxContractError('source receipt changed or missing')
             if row[2] == 'acked':
-                return {**_decode(row[3]), 'outbox_replay': True}
+                stored_ack = _validated_ack(_decode(row[3]), nonce, digest, stored=True)
+                return {**stored_ack, 'outbox_replay': True}
         ack = sink.apply(payload)
-        if not isinstance(ack, dict) or ack.get('nonce') != nonce or (
-            ack.get('digest') != digest or ack.get('synthetic') is not True or
-            type(ack.get('external_actions')) is not int or ack['external_actions'] != 0
-        ):
-            raise OutboxContractError('untrusted fictional adapter acknowledgment')
+        _validated_ack(ack, nonce, digest)
         if failure_point == 'after_sink_before_ack':
             raise RuntimeError('injected crash after sink before outbox ack')
         stored_ack = {k: v for k, v in ack.items() if k != 'sink_replay'}
