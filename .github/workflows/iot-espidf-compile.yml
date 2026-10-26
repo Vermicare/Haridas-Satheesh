@@ -1,0 +1,24 @@
+name: ESP32-S3 dual-sensor firmware compile (no hardware)
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/**'
+      - '.github/workflows/iot-espidf-compile.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  espidf-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Compile with official ESP-IDF v6.1 container
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v6.1
+          target: esp32s3
+          path: benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture
+          command: 'idf.py --version && idf.py build && sha256sum build/iot_dual_sensor_capture.bin'
+# A successful compile does not verify flashed firmware, I2C, sensor origin, calibration, or 600-second capture.
