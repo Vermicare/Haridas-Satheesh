@@ -75,3 +75,10 @@ After that: **Retail public-data benchmark → CORTEX synthetic governance pilot
 | Companion | [Authorization gate](benchmarks/companion-life-os/OCTOBER_2026_AUTHORIZATION_GATE.md) | Fictional consent and reversal flow only | Independent identity-bound replay/expiry adversarial tests |
 
 **Release rule:** publish executable source, fixtures, licenses, manifests and reproducible CI only after package-level review for correctness, dependency and confidentiality risks. Do not infer that this documentation imports the research ZIPs or that local test claims were independently verified on GitHub.
+
+
+### EPMO v0.8 reviewer packet integrity — 2026-10-26 (draft PR #13)
+
+The v0.7 fictional private scorer could score modified candidate/context/instructions against unchanged gold labels. A before-fix negative-control run [#40265362490](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40265362490) reproduced three failures on Ubuntu. The separate v0.8 implementation binds each full packet to its private gold key and rejects mismatches; [CI #40265457537](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40265457537) passed **139/139 tests on Ubuntu and Windows**. [Evidence record](benchmarks/epmo-governance/REVIEW_PACKET_BINDING_V08.md) · [registry](benchmarks/epmo-governance/REVIEW_PACKET_BINDING_V08_REGISTRY.json).
+
+**New highest-value design gate:** the manual and structured review packets still differ mainly in order and arm label; no experimental treatment contrast exists yet. Define genuinely different review aids and independently assigned, consented reviewers before attempting any reviewer-burden or ROI claim. Packet hashing is not authenticated provenance. Human results, trusted actors, real actions and employer outcomes remain **TBD**. Preserve Research / Simulation evidence classification for the fictional demo; no portfolio maturity change or merge.
