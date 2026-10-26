@@ -12,6 +12,8 @@ from pathlib import Path
 PROV = "http://www.w3.org/ns/prov#"
 CORTEX = "https://example.org/cortex#"
 KINDS = ("decisions", "actions", "risks", "dependencies", "conditional_followups")
+SINGULAR = {"decisions": "decision", "actions": "action", "risks": "risk",
+            "dependencies": "dependency", "conditional_followups": "conditional_followup"}
 ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$")
 
 
@@ -88,7 +90,7 @@ def map_fixture(fixture):
             if any(uid in negatives for uid in sources):
                 raise ValueError("negative utterance promoted to governance fact")
             node = {
-                "@id": _ref(kind[:-1] if kind.endswith("s") else kind, obj_id)["@id"],
+                "@id": _ref(SINGULAR[kind], obj_id)["@id"],
                 "@type": "prov:Entity",
                 "prov:wasDerivedFrom": [_ref("utterance", uid) for uid in sorted(sources)]
             }
