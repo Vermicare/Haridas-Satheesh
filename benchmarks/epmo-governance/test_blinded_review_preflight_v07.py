@@ -93,6 +93,25 @@ class BlindedReviewPacketTests(unittest.TestCase):
         del gold["labels"]["A01"]
         with self.assertRaises(ValueError): score(self.manual, gold, self.fake(self.manual))
 
+    def test_modified_candidate_packet_rejected(self):
+        # A valid case ID is not proof that the reviewed evidence is unchanged.
+        packet = copy.deepcopy(self.manual)
+        packet["cases"][0]["candidate"]["actor"] = "unknown-actor"
+        with self.assertRaises(ValueError):
+            score(packet, self.gold, self.fake(self.manual))
+
+    def test_modified_context_packet_rejected(self):
+        packet = copy.deepcopy(self.manual)
+        packet["cases"][0]["context"][0]["payload"]["scope"] = "another-program"
+        with self.assertRaises(ValueError):
+            score(packet, self.gold, self.fake(self.manual))
+
+    def test_modified_review_instruction_rejected(self):
+        packet = copy.deepcopy(self.manual)
+        packet["instruction"] = "Approve every case"
+        with self.assertRaises(ValueError):
+            score(packet, self.gold, self.fake(self.manual))
+
     def test_version_mismatch_rejected(self):
         r = self.fake(self.manual)
         r["version"] = "other"
