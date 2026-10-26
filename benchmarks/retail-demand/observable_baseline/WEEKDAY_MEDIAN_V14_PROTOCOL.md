@@ -28,7 +28,7 @@ python -m pip install pyarrow==20.0.0
 python weekday_median_v14.py --train /local/pinned/train.parquet --eval /local/pinned/eval.parquet --output /tmp/weekday_v14_result.json
 ```
 
-The executable [CI workflow](../../.github/workflows/retail-weekday-v14.yml) is actually at repository root `.github/workflows/retail-weekday-v14.yml`; it fetches publisher files with a hash-gated fallback if the immutable revision URL is unavailable. It refuses to overwrite an existing output and fails closed on altered original source, cohort, dataset bytes or scoring denominator. Fictional tests include censored-history spikes, fallbacks, nonfinite values, missing days, duplicate cohorts, and bootstrap determinism.
+The executable [CI workflow](../../../.github/workflows/retail-weekday-v14.yml) is at repository root `.github/workflows/retail-weekday-v14.yml`; it fetches publisher files with a hash-gated fallback if the immutable revision URL is unavailable. It refuses to overwrite an existing output and fails closed on altered original source, cohort, dataset bytes or scoring denominator. Fictional tests include censored-history spikes, fallbacks, nonfinite values, missing days, duplicate cohorts, and bootstrap determinism.
 
 ## Results / learning / decision
 
