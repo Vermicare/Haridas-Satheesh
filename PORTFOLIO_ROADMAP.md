@@ -67,3 +67,9 @@ After that: **Retail public-data benchmark → CORTEX synthetic governance pilot
 | Companion | [Authorization gate](benchmarks/companion-life-os/OCTOBER_2026_AUTHORIZATION_GATE.md) | Fictional consent and reversal flow only | Independent identity-bound replay/expiry adversarial tests |
 
 **Release rule:** publish executable source, fixtures, licenses, manifests and reproducible CI only after package-level review for correctness, dependency and confidentiality risks. Do not infer that this documentation imports the research ZIPs or that local test claims were independently verified on GitHub.
+
+## October 26, 2026 — frozen WBI evaluator, separate-container reproduction (draft)
+
+The unchanged mainline WBI synthetic evaluator was authenticated by Git blob and executed in a **separate Linux container** with Python 3.13.5. Two clean-directory runs matched the original September CSV SHA-256 `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a` and matched stdout hashes; a deliberately mutated source was rejected by the new verifier. See [reproduction record](benchmarks/wireless-brain-interface/SEPARATE_CONTAINER_REPRO_2026_10_26.md) and [executable verifier](benchmarks/wireless-brain-interface/verify_frozen_synthetic.py).
+
+**Evidence boundary:** this is a second *execution environment*, not a new Python version, independent external reviewer, Windows CI or public EEG benchmark. No stage change. **Next:** Windows/Linux CI for the frozen checker and subject-disjoint real EEG with matched coverage; **reframe** if drift gating does not beat confidence abstention fairly.
