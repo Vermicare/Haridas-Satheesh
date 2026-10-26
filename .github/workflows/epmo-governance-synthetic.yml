@@ -28,3 +28,5 @@ jobs:
         run: python benchmarks/epmo-governance/governance_demo.py benchmarks/epmo-governance/synthetic_scenario.json --output demo_result.json
       - name: Verify receipt structure
         run: python -c "import json; x=json.load(open('demo_result.json')); assert (x['accepted'],x['rejected'],x['external_actions']) == (4,2,0)"
+      - name: Demonstrate distinct fictional review aids without private gold
+        run: python -B benchmarks/epmo-governance/review_treatment_v09.py --demo
