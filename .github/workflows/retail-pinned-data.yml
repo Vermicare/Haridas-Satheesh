@@ -1,6 +1,10 @@
 name: Retail pinned public-data rolling-origin smoke
 on:
-  pull_request:
+  # Run only when this experimental workflow itself changes on the existing draft branch.
+  # Do not redownload 4.5M publisher rows for unrelated portfolio commits.
+  push:
+    branches:
+      - 'research/retail-observable-baseline-20261024'
     paths:
       - '.github/workflows/retail-pinned-data.yml'
   workflow_dispatch:
