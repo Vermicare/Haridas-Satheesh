@@ -88,6 +88,37 @@ class TreatmentTests(unittest.TestCase):
         r["decisions"][1]["case_id"] = r["decisions"][0]["case_id"]
         with self.assertRaises(ValueError): score(self.manual, self.gold, r)
 
+    def test_private_output_rejects_git_checkout(self):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / ".git").mkdir()
+            target = root / "forbidden_private"
+            script = Path(__file__).with_name("review_treatment_v09.py")
+            result = subprocess.run([sys.executable, str(script), "--out", str(target)],
+                                    capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse(target.exists())
+
+    def test_public_demo_excludes_gold_and_participant_data(self):
+        import json
+        import subprocess
+        import sys
+        from pathlib import Path
+        script = Path(__file__).with_name("review_treatment_v09.py")
+        result = subprocess.run([sys.executable, str(script), "--demo"],
+                                capture_output=True, text=True, check=True)
+        data = json.loads(result.stdout)
+        self.assertEqual(data["cases"], 16)
+        self.assertEqual(data["structured_aid_count"], 16)
+        self.assertEqual(data["manual_aid_count"], 0)
+        self.assertEqual(data["human_results"], "TBD")
+        self.assertEqual(data["external_actions"], 0)
+        self.assertNotIn("labels", data)
+
 
 if __name__ == "__main__":
     unittest.main()
