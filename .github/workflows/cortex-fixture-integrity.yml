@@ -26,7 +26,7 @@ jobs:
         shell: bash
         working-directory: benchmarks/cortex
         run: |
-          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py test_archive_citation_gate_v04.py
+          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py test_archive_citation_gate_v04.py test_prov_o_mapping_v01.py
           python -B blind_review_preflight.py manifest blind_case_20261024.json blind_archive_20261024.json
           python -B archive_citation_gate_v04.py demo
           python -c "import hashlib;from archive_citation_gate_v04 import demo;assert hashlib.sha256(demo().encode('utf-8')).hexdigest() == '76e54d346299c9a8bb0d2b3485eae6f5b0a834c27128135cf6302d458f44420a'"
