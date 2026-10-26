@@ -1,0 +1,36 @@
+name: WBI frozen synthetic cross-OS reproducibility
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - '.github/workflows/wbi-frozen-synthetic.yml'
+      - 'benchmarks/wireless-brain-interface/verify_frozen_synthetic.py'
+      - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+  pull_request:
+    paths:
+      - '.github/workflows/wbi-frozen-synthetic.yml'
+      - 'benchmarks/wireless-brain-interface/verify_frozen_synthetic.py'
+      - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frozen-synthetic-reproduction:
+    name: Frozen synthetic / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify original source identity and twice-reproduced synthetic CSV
+        shell: bash
+        run: python -B benchmarks/wireless-brain-interface/verify_frozen_synthetic.py
