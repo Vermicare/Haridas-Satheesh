@@ -8,7 +8,7 @@
   },
   "tests": {
     "file": "benchmarks/cortex/test_prov_o_mapping_v01.py",
-    "git_blob_sha": "c2382aa4ece6263b3d3ee32a110578ba850c52ef",
+    "git_blob_sha": "fe9ff1e121c8f6972b9de1227f8afcf64d9e503a",
     "defined_test_cases": 13,
     "observed_test_result": "TBD — GitHub Actions pending"
   },
