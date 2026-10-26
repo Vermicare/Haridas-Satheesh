@@ -1,0 +1,39 @@
+{
+  "experiment_id": "cortex-prov-o-mapping-v0.1-2026-10-26",
+  "stage": "Architecture / R&D",
+  "evidence_type": "synthetic author-created ground-truth representation",
+  "source": {
+    "file": "benchmarks/cortex/prov_o_mapping_v01.py",
+    "git_blob_sha": "05a253e64ac26fb0cb8e3fb66c26207a62201f72"
+  },
+  "tests": {
+    "file": "benchmarks/cortex/test_prov_o_mapping_v01.py",
+    "git_blob_sha": "c2382aa4ece6263b3d3ee32a110578ba850c52ef",
+    "defined_test_cases": 13,
+    "observed_test_result": "TBD — GitHub Actions pending"
+  },
+  "input": {
+    "file": "benchmarks/cortex/independent_scenario_v03.json",
+    "git_blob_sha": "4622df5782c1f67ff1c80a78723d85f753c9f269",
+    "fictional": true
+  },
+  "environment": {
+    "python": "3.13 targeted; exact executed runtime TBD",
+    "os": "Ubuntu and Windows workflow configured; verification TBD",
+    "dependencies": "Python standard library"
+  },
+  "mapping": {
+    "standard": "W3C PROV-O 2013-04-30",
+    "reference": "https://www.w3.org/TR/prov-o/",
+    "domain_relation": "cortex:supersedes; not prov:wasRevisionOf",
+    "semantic_validation": "TBD; not performed"
+  },
+  "results": {
+    "human_review": "TBD",
+    "semantic_extraction_accuracy": "TBD",
+    "real_world_impact": "TBD",
+    "gitHub_CI": "TBD"
+  },
+  "decision": "No maturity change; draft-only until test evidence and independent reviewer study",
+  "next_experiment": "Issue #12 independent fictional annotations and measured correction burden"
+}
