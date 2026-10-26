@@ -114,5 +114,37 @@ class BundleContract(unittest.TestCase):
         self.assertEqual(csv_bytes.count(b"\n"), 243)
 
 
+    def test_reject_bundle_output_inside_git_directory(self):
+        """Fictional raw serial must not be written into a publishable Git tree."""
+        with tempfile.TemporaryDirectory() as root:
+            base = Path(root)
+            (base / ".git").mkdir()
+            (base / "raw.log").write_bytes(fabricated_stream())
+            (base / "firmware.bin").write_bytes(b"fictional firmware")
+            destination = base / "nested" / "bundle"
+            with self.assertRaisesRegex(BundleError, "Git worktree"):
+                build(base / "raw.log", base / "firmware.bin", destination,
+                      device_id="FICTIONAL-ESP32",
+                      recorded_start_utc="2026-10-24T00:00:00Z",
+                      capture_origin="physical")
+            self.assertFalse(destination.exists())
+
+    def test_reject_bundle_output_inside_linked_git_worktree(self):
+        """Git worktrees can have a .git FILE, not just a directory."""
+        with tempfile.TemporaryDirectory() as root:
+            base = Path(root)
+            (base / ".git").write_text("gitdir: /fictional/elsewhere\n")
+            (base / "raw.log").write_bytes(fabricated_stream())
+            (base / "firmware.bin").write_bytes(b"fictional firmware")
+            destination = base / "bundle"
+            with self.assertRaisesRegex(BundleError, "Git worktree"):
+                build(base / "raw.log", base / "firmware.bin", destination,
+                      device_id="FICTIONAL-ESP32",
+                      recorded_start_utc="2026-10-24T00:00:00Z",
+                      capture_origin="physical")
+            self.assertFalse(destination.exists())
+
+
+
 if __name__ == "__main__":
     unittest.main()
