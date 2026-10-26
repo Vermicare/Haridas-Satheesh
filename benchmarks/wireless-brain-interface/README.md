@@ -52,3 +52,9 @@ Do not advance maturity merely because code exists. A later gate requires a repr
 Reframe if the apparent benefit disappears after accounting for suppressed correct actions, adds no material value over a simpler abstention baseline, or is unstable across subjects, sessions or seeds.
 
 Unknown values stay TBD. Public-data results are research evidence, not clinical validation.
+
+## Prospective cross-session EEG preflight (draft, 2026-10-27)
+
+[BNCI2a dataset decision and preregistered split protocol](BNCI2A_EEG_PREREG_2026_10_27.md) distinguishes the single-session PhysioNetMI dataset from the two-day BCI Competition IV 2a dataset. The [metadata-only validator](bnci2a_split_preflight.py) and [fictional negative controls](test_bnci2a_split_preflight.py) check split integrity without loading EEG or labels. Local 9/9 tests passed; hosted cross-OS CI is pending verification. **No public EEG performance result exists.**
+
+Run the fictional regression tests: `python -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_split_preflight.py' -v`. After acquiring licensed source files, supply a real, hashed trial metadata manifest to `python benchmarks/wireless-brain-interface/bnci2a_split_preflight.py --input <manifest.json> --out <split_report.json>`. Unknown source checksums and versions remain TBD.
