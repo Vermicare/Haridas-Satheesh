@@ -1,0 +1,37 @@
+{
+  "experiment_id": "WBI-SUBJECT-LEVEL-GUARD-V04-20261026",
+  "evidence_class": "FICTIONAL_SUBJECT_LEVEL_CONTRACT_ONLY",
+  "project": "Wireless Brain Interface",
+  "public_stage": "Research / Simulation",
+  "branch": "research/wbi-coverage-target-diagnostic-20261023",
+  "source_git_blob": "882a25f3901298407de43959db86bfda9a2da4ec",
+  "test_git_blob": "6c135d0d8b46a1ee50af34d091cd6e6cba077477",
+  "parent": "matched_opportunity_contract_v03.py",
+  "dataset": "F001-F003 hand-constructed fictional repetitions; no EEG",
+  "environment": {
+    "python": "3.13.5",
+    "os": "Linux",
+    "dependencies": "Python standard library; local API-compatible v0.3 stand-in used for local smoke test"
+  },
+  "local_smoke": {
+    "tests": 11,
+    "passed": 11,
+    "actual_committed_v03_integration": "NOT VERIFIED LOCALLY"
+  },
+  "demo_sha256": "b283d2b543e09b5fe99bf99a7bc3dc427f5153595559053a888e63b175e7ff42",
+  "demo": {
+    "subject_count": 3,
+    "incomparable_subjects": 1,
+    "unweighted_subject_mean_risk_delta": null,
+    "decision": "WITHHELD_UNMATCHED_SUBJECT"
+  },
+  "github_ci": {
+    "status": "TBD until actual workflow logs checked",
+    "ubuntu": "TBD",
+    "windows": "TBD"
+  },
+  "real_eeg": "NOT PERFORMED",
+  "independent_review": "TBD",
+  "next_experiment": "Frozen subject-disjoint real EEG decisions and matched-coverage per-subject evaluation with complete rest exposure and uncertainty",
+  "limitations": "Fictional repeated subjects, not independent participants; no decoder, real EEG, calibration leakage proof, clinical safety or performance benefit"
+}
