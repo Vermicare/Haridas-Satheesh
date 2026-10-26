@@ -22,7 +22,8 @@ class ProvenanceMappingTests(unittest.TestCase):
         old = by_id["urn:cortex:synthetic:decision:H0"]
         self.assertEqual(old["prov:wasDerivedFrom"], [{"@id": "urn:cortex:synthetic:archive:SYN-ARCHIVE-001"}])
         self.assertIn("urn:cortex:synthetic:dependency:D-05", by_id)
-        self.assertNotIn("urn:cortex:synthetic:utterance:n06", new["prov:wasDerivedFrom"])
+        self.assertTrue(all({"@id": "urn:cortex:synthetic:utterance:n06"} not in
+                            node.get("prov:wasDerivedFrom", []) for node in graph))
         self.assertTrue(all("prov:wasRevisionOf" not in node for node in graph))
 
     def test_deterministic_serialization(self):
