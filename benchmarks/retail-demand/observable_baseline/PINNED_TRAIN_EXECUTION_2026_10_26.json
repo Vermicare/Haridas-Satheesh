@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "retail-publisher-train-rolling-origin-2026-10-26",
+  "evidence_class": "PUBLIC_PUBLISHER_TRAIN_ONLY_ROLLING_ORIGIN_NOT_OFFICIAL_90_7_EVAL",
+  "source_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40316866555",
+  "artifact_id": 12647720891,
+  "artifact_name": "retail-pinned-train-only-evidence",
+  "artifact_retention_expires_utc": "2026-11-09T11:44:25Z",
+  "artifact_zip_sha256": "e607bf9971988f03e64f039bfc28d6aa470b2aea326846a5feb9afa607ec0f84",
+  "source_commit": "7edb99902763a35dca2a23c6b0a094f233d51eb5",
+  "run_utc": "2026-10-26T11:44:25.352443+00:00",
+  "runner": "GitHub Actions ubuntu-24.04 / Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "pyarrow": "20.0.0",
+  "publisher": "Dingdong-Inc/FreshRetailNet-50K",
+  "publisher_reported_revision": "08c1fab7f9257bc73679d415d65d644165d351d4",
+  "publisher_train_parquet_sha256_locally_verified": "6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d",
+  "source_origin_independently_attested": false,
+  "export_rows": 4500000,
+  "export_sha256": "7974c0b2ad08a11b80c3d08ebf47d9e3189cf1f11b6ba20c994b1d42a5e074ce",
+  "source_result_json_sha256": "a14e030b1292224627f7c99b0f3506ea7201dcab529f7f26c43dae27506b5fc6",
+  "source_manifest_json_sha256": "38d4d98114ae400051eda9cf7806f656f4f37d0219db2e96ede7a57ce7d78ffa",
+  "source_run_evidence_json_sha256": "9476bd92de351e7a31e4548b6ce08f49eca0f41131c9d98544afd085e02733ba",
+  "selected_series": {
+    "store_id": "0",
+    "product_id": "104",
+    "selection": "lexicographically first eligible series based on first 42 training days; no future cohort cherry-picking"
+  },
+  "evaluation": "three 7-day train-only rolling origins at 42, 56, 70 days; in-stock-day observed 06:00-21:59 MAE",
+  "folds": [
+    {
+      "origin": "2024-05-09",
+      "evaluated_days": 2,
+      "censored_excluded": 5,
+      "last_observed_mae": 1.55,
+      "seasonal_naive_mae": 0.8,
+      "causal_stockout_history_mae": 0.75
+    },
+    {
+      "origin": "2024-05-23",
+      "evaluated_days": 6,
+      "censored_excluded": 1,
+      "last_observed_mae": 0.5833333333333334,
+      "seasonal_naive_mae": 0.48333333333333334,
+      "causal_stockout_history_mae": 0.4583333333333333
+    },
+    {
+      "origin": "2024-06-06",
+      "evaluated_days": 2,
+      "censored_excluded": 5,
+      "last_observed_mae": 0.85,
+      "seasonal_naive_mae": 0.55,
+      "causal_stockout_history_mae": 1.225
+    }
+  ],
+  "evaluated_days_total": 10,
+  "censored_days_excluded_total": 11,
+  "weighted_mae_by_evaluated_days": {
+    "last_observed": 0.83,
+    "seasonal_naive": 0.56,
+    "causal_stockout_history": 0.67
+  },
+  "causal_vs_seasonal_relative_mae_change_pct": 19.64285714285714,
+  "decision": "RETAIN_NEGATIVE_RESULT_REFRAME_OR_TEST_BROADER_COHORT",
+  "official_held_out_eval_used": false,
+  "latent_demand_truth": "UNAVAILABLE",
+  "decision_or_revenue_uplift": "TBD",
+  "statistical_uncertainty": "TBD",
+  "independent_rerun": "TBD",
+  "maturity": "Research / Architecture — unchanged",
+  "limits": [
+    "One selected store-product series, 10 uncensored evaluated days, 11 censored excluded days; not representative.",
+    "Observational in-stock MAE cannot measure lost demand or decision uplift.",
+    "No statistical confidence interval or official 90+7 publisher eval.",
+    "Dataset origin not independently attested; pinned bytes verified locally against publisher-reported hash."
+  ]
+}
