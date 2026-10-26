@@ -1,0 +1,108 @@
+name: Retail v1.2 pinned held-out independent-runner reproduction
+on:
+  push:
+    branches:
+      - research/retail-observable-baseline-20261024
+    paths:
+      - '.github/workflows/retail-official-holdout-reproduction.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce-frozen-v12:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test original frozen contract before measuring
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_official_holdout_v12
+      - name: Install pinned reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Verify frozen v1.2 source and committed result identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/official_holdout_v12.py)" = ddd12a4e0695c474f752d98c99fd781931373bce
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/test_official_holdout_v12.py)" = 6153f7631f143d62e915ef0f70482fa90d42ddee
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/OFFICIAL_HOLDOUT_V12_RESULT.json)" = 3a914fc3834759fabde9bb0fd2f524e7cfd162ab
+          mkdir -p artifacts
+      - name: Acquire and hash-check exact pinned publisher splits
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/08c1fab7f9257bc73679d415d644165d351d4/data'
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 900 "$root/train.parquet" --output "$RUNNER_TEMP/train.parquet"
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 300 "$root/eval.parquet" --output "$RUNNER_TEMP/eval.parquet"
+          printf '%s  %s\n' '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d' "$RUNNER_TEMP/train.parquet" | sha256sum --check
+          printf '%s  %s\n' '1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e' "$RUNNER_TEMP/eval.parquet" | sha256sum --check
+      - name: Rerun original unmodified 90+7 evaluator on fresh runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B benchmarks/retail-demand/observable_baseline/official_holdout_v12.py \
+            --train "$RUNNER_TEMP/train.parquet" --eval "$RUNNER_TEMP/eval.parquet" \
+            --output artifacts/replicated_v12_result.json
+      - name: Compare fresh results with published run and preserve mismatch evidence
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, math, os, platform, sys
+          from pathlib import Path
+          import pyarrow
+          baseline_path=Path('benchmarks/retail-demand/observable_baseline/OFFICIAL_HOLDOUT_V12_RESULT.json')
+          actual_path=Path('artifacts/replicated_v12_result.json')
+          status={'experiment':'retail-official-90-7-holdout-v12',
+                  'purpose':'fresh-runner reproduction of same frozen code; NOT independent implementation or publisher-origin attestation',
+                  'github_sha':os.environ.get('GITHUB_SHA','TBD'),
+                  'python':sys.version,'pyarrow':pyarrow.__version__,
+                  'os':platform.platform(),'original_run_id':40342565683,
+                  'result_present':actual_path.exists(),
+                  'match':False,'reason':'TBD'}
+          if actual_path.exists():
+              try:
+                  original=json.loads(baseline_path.read_text(encoding='utf-8'))
+                  current=json.loads(actual_path.read_text(encoding='utf-8'))
+                  m=current['metrics']
+                  checks={
+                    'experiment_id':current['experiment_id']==original['experiment_id'],
+                    'evidence_class':current['evidence_class']==original['evidence_class'],
+                    'publisher_train_sha256':current['publisher_train_sha256_locally_verified']==original['publisher_train_sha256_verified'],
+                    'publisher_eval_sha256':current['publisher_eval_sha256_locally_verified']==original['publisher_eval_sha256_verified'],
+                    'cohort_sha256':current['cohort_sha256']==original['cohort_sha256'],
+                    'series_count':m['frozen_train_selected_series']==original['train_selected_series'],
+                    'scored_days':m['uncensored_eval_days_scored']==original['uncensored_eval_days'],
+                    'censored_days':m['censored_eval_days_excluded']==original['censored_eval_days_excluded'],
+                    'day_weighted_mae':all(math.isclose(m['day_weighted_mae'][k],v,rel_tol=0,abs_tol=1e-12) for k,v in original['day_weighted_mae'].items()),
+                    'series_macro_mae':all(math.isclose(m['series_macro_mae'][k],v,rel_tol=0,abs_tol=1e-12) for k,v in original['series_macro_mae'].items()),
+                    'paired_ci':all(math.isclose(a,b,rel_tol=0,abs_tol=1e-12) for a,b in zip(m['paired_series_bootstrap_95pct_ci_for_macro_delta'],original['paired_series_bootstrap_95pct_ci'])),
+                    'no_latent_truth':current['latent_demand_ground_truth']=='UNAVAILABLE',
+                    'no_revenue_claim':current['inventory_or_revenue_uplift']=='TBD',
+                  }
+                  status['checks']=checks
+                  status['match']=all(checks.values())
+                  status['reason']='all aggregate and cohort checks match' if status['match'] else 'one or more checks differ'
+                  status['fresh_result_sha256']=hashlib.sha256(actual_path.read_bytes()).hexdigest()
+              except (KeyError, ValueError, TypeError, OSError) as exc:
+                  status['reason']='result parsing or comparison failed: '+type(exc).__name__
+          else:
+              status['reason']='original evaluator did not produce a result'
+          Path('artifacts/reproduction_comparison.json').write_text(json.dumps(status,indent=2,sort_keys=True,allow_nan=False)+'\n',encoding='utf-8')
+          print(json.dumps({'match':status['match'],'reason':status['reason'],'checks':status.get('checks',{})},sort_keys=True))
+          if not status['match']:
+              sys.exit(1)
+          PY
+      - name: Upload aggregate reproduction and diagnostic evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-v12-fresh-runner-reproduction
+          path: artifacts/*.json
+          if-no-files-found: warn
+          retention-days: 14
