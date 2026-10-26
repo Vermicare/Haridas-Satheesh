@@ -4,7 +4,7 @@
   "experiment_id": "retail-store-cluster-sensitivity-v13",
   "external_independent_validation": "TBD",
   "latent_demand_ground_truth": "UNAVAILABLE",
-  "maturity": "Research / Architecture — unchanged",
+  "maturity": "Research / Architecture \u2014 unchanged",
   "method": "store-clustered paired bootstrap; original v1.2 forecast code unchanged",
   "metrics": {
     "bootstrap_replicates": 2000,
