@@ -37,8 +37,20 @@ jobs:
         run: |
           set -euo pipefail
           root='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/08c1fab7f9257bc73679d415d644165d351d4/data'
-          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 900 "$root/train.parquet" --output "$RUNNER_TEMP/train.parquet"
-          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 300 "$root/eval.parquet" --output "$RUNNER_TEMP/eval.parquet"
+          # A pinned resolve URL returned HTTP 404 on first reproduction run.
+          # A fallback to current main is allowed ONLY with the identical pinned
+          # SHA-256 checks below; never accept changed publisher bytes.
+          for split in train eval; do
+            if curl --fail --location --retry 2 --connect-timeout 20 --max-time 900 "$root/$split.parquet" --output "$RUNNER_TEMP/$split.parquet"; then
+              echo "$split source: immutable revision 08c1fab7f9257bc73679d415d644165d351d4"
+            else
+              echo "::warning::$split immutable-revision URL unavailable; attempting main, still requiring original pinned byte hash"
+              curl --fail --location --retry 2 --connect-timeout 20 --max-time 900 \
+                "https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/main/data/$split.parquet" \
+                --output "$RUNNER_TEMP/$split.parquet"
+              echo "$split source: main fallback, exact original pinned SHA-256 required"
+            fi
+          done
           printf '%s  %s\n' '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d' "$RUNNER_TEMP/train.parquet" | sha256sum --check
           printf '%s  %s\n' '1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e' "$RUNNER_TEMP/eval.parquet" | sha256sum --check
       - name: Rerun original unmodified 90+7 evaluator on fresh runner
