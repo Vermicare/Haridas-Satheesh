@@ -12,7 +12,15 @@
   "results": "22/22 fictional-only regression tests passed in each of two separate clean CPython 3.13.5/Linux directories; normalized test-name/status outputs identical; elapsed times differed",
   "source_git_blob_sha": "4846d16d0ac648d368ddc76becc56a28913c9476",
   "test_git_blob_sha": "9f3d91304395936bab8e2afd302890614b2267c5",
-  "ci": "TBD",
+  "ci": {
+    "status": "VERIFIED",
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40295332717",
+    "head_sha": "a7aff02b1505a4facbcce230e7c8584661b848e4",
+    "ubuntu": "62/62 passed",
+    "windows": "62/62 passed",
+    "scope": "14 origin + 26 dry-run + 22 capture-chain fictional-only tests; no physical instruments",
+    "verified_from": "GitHub Actions completed jobs and inspected raw job logs"
+  },
   "negative_controls": [
     "original logger mutation",
     "measurement CSV substitution",
