@@ -67,8 +67,22 @@ def map_fixture(fixture):
             "@id": _ref("decision", old)["@id"], "@type": "prov:Entity",
             "prov:wasDerivedFrom": [_ref("archive", ref)]
         })
-    negatives = {uid for row in gold.get("negative_examples", [])
-                 for uid in row.get("source", [])}
+    negative_rows = gold.get("negative_examples", [])
+    if not isinstance(negative_rows, list):
+        raise ValueError("invalid negative-example collection")
+    negatives = set()
+    for row in negative_rows:
+        if not isinstance(row, dict):
+            raise ValueError("invalid negative example")
+        sources = row.get("source")
+        if not isinstance(sources, list) or not sources:
+            raise ValueError("negative example without source list")
+        validated = [_id(uid) for uid in sources]
+        if len(set(validated)) != len(validated) or any(
+            uid not in utterance_ids for uid in validated
+        ):
+            raise ValueError("duplicate or unknown negative source")
+        negatives.update(validated)
     seen = set()
     for kind in KINDS:
         rows = gold.get(kind, [])
@@ -76,6 +90,8 @@ def map_fixture(fixture):
             raise ValueError("invalid ground-truth category")
         for row in rows:
             obj_id = _id(row["id"])
+            if kind == "decisions" and obj_id in history_ids:
+                raise ValueError("current decision collides with historical decision")
             key = (kind, obj_id)
             if key in seen:
                 raise ValueError("duplicate object identifier")
