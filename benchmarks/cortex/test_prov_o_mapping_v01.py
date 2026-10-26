@@ -87,5 +87,37 @@ class ProvenanceMappingTests(unittest.TestCase):
             map_fixture(self.fixture)
 
 
+    def test_historical_and_current_decision_id_collision_rejected(self):
+        # The old mapper emitted two nodes with the same JSON-LD @id.
+        self.fixture["ground_truth"]["decisions"][0]["id"] = "H0"
+        self.fixture["ground_truth"]["decisions"][0]["supersedes"] = None
+        with self.assertRaises(ValueError):
+            map_fixture(self.fixture)
+
+    def test_unknown_negative_source_rejected(self):
+        self.fixture["ground_truth"]["negative_examples"][0]["source"] = ["ghost"]
+        with self.assertRaises(ValueError):
+            map_fixture(self.fixture)
+
+    def test_empty_negative_source_rejected(self):
+        self.fixture["ground_truth"]["negative_examples"][0]["source"] = []
+        with self.assertRaises(ValueError):
+            map_fixture(self.fixture)
+
+    def test_duplicate_negative_source_rejected(self):
+        self.fixture["ground_truth"]["negative_examples"][0]["source"] = ["n06", "n06"]
+        with self.assertRaises(ValueError):
+            map_fixture(self.fixture)
+
+    def test_malformed_negative_source_type_rejected(self):
+        self.fixture["ground_truth"]["negative_examples"][0]["source"] = "n06"
+        with self.assertRaises(ValueError):
+            map_fixture(self.fixture)
+
+    def test_malformed_negative_examples_collection_rejected(self):
+        self.fixture["ground_truth"]["negative_examples"] = {"source": ["n06"]}
+        with self.assertRaises(ValueError):
+            map_fixture(self.fixture)
+
 if __name__ == "__main__":
     unittest.main()
