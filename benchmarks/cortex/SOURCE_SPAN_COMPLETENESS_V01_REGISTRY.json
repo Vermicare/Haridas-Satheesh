@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "cortex-source-span-completeness-v01",
+  "date": "2026-10-27",
+  "project": "CORTEX",
+  "maturity": "Architecture / R&D",
+  "source_kind": "AUTHOR_CREATED_FICTIONAL",
+  "hypothesis": "The frozen nonempty-subset source traceability metric credits a candidate that omits a gold-required source.",
+  "repo": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cortex-fixture-integrity-v04-20261023",
+  "provenance": {
+    "fixture_git_blob_sha": "6540101a695ddeae1eb9832e627dbbff67394e00",
+    "baseline_git_blob_sha": "080fd86a451e2175c88c46339e8390072e3dcab6",
+    "frozen_evaluator_git_blob_sha": "8119649def3e893da5371a55e3baae519477b908",
+    "auditor_git_blob_sha": "f83fabe83fd6f031f402cf970abbf7bf6ccf03fa",
+    "test_git_blob_sha": "e328cf7be6acca23de0bc61634e87b0444241a72",
+    "negative_control": "Remove one of two gold-required source IDs from the deep-copied fictional D2 decision only.",
+    "original_files_mutated": false
+  },
+  "run_conditions": {
+    "python": "3.13 (GitHub Actions setup-python)",
+    "os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "dependencies": "Python standard library",
+    "seed": "not applicable; deterministic",
+    "hardware": "GitHub-hosted runner model TBD",
+    "network": "not required for benchmark execution"
+  },
+  "results": {
+    "matched_objects": 7,
+    "baseline_frozen_traceability": 1,
+    "negative_control_frozen_traceability": 1,
+    "baseline_strict_source_completeness": 1,
+    "negative_control_strict_source_completeness": 0.857143,
+    "negative_control_partial_source_count": 1,
+    "category_exact_field_f1_unchanged": true,
+    "ubuntu_tests": "135/135 passed",
+    "windows_tests": "135/135 passed",
+    "new_tests": 12
+  },
+  "hosted_verification": {
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40439644368",
+    "commit_sha": "85e6c406f010f91d776cd10f026c5e42e1d47a33",
+    "ubuntu_job_id": 121976632882,
+    "windows_job_id": 121976633105,
+    "logs_inspected": true
+  },
+  "unknowns": {
+    "semantic_support": "TBD",
+    "human_review": "TBD",
+    "real_workflow_performance": "TBD",
+    "reviewer_correction_time": "TBD",
+    "external_validation": "TBD",
+    "business_value": "TBD"
+  },
+  "decision": "Maintain stage. Treat frozen traceability as nonempty-subset validity, not completeness. Use the new exact-source diagnostic only alongside adjudicated semantic span evidence.",
+  "next_experiment": "Issue #12: independent blinded source-span adjudication and fair timed manual-notes comparator.",
+  "kill_reframe": "Narrow to provenance-assisted review if unsupported records or correction burden exceed manual notes.",
+  "privacy": "No real meetings, reviewers, private outreach, or employer information."
+}
