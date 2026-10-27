@@ -67,3 +67,10 @@ After that: **Retail public-data benchmark → CORTEX synthetic governance pilot
 | Companion | [Authorization gate](benchmarks/companion-life-os/OCTOBER_2026_AUTHORIZATION_GATE.md) | Fictional consent and reversal flow only | Independent identity-bound replay/expiry adversarial tests |
 
 **Release rule:** publish executable source, fixtures, licenses, manifests and reproducible CI only after package-level review for correctness, dependency and confidentiality risks. Do not infer that this documentation imports the research ZIPs or that local test claims were independently verified on GitHub.
+
+
+## October 27, 2026 — Cooling trial-order confounding negative control (draft branch)
+
+**Decision-changing finding:** a fixed ambient → fan-only → prototype trial sequence can mistake environmental time drift for a prototype benefit. The [fictional-only executable counterexample](benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1.md) assumes **zero** true cooling effect and a hypothetical −0.02 °C/min ambient drift: fixed order produces a false −0.400 °C prototype-minus-ambient difference; six position-balanced orders give 0.000 °C under the same simplified linear model. Seven new local tests passed; cross-platform CI **TBD** until checked. This is **not** a physical cooling result.
+
+**Research decision:** retain **Prototype / Documented R&D**, preserve the stronger previously verified capture-integrity evidence, and add a predeclared order-balanced or otherwise justified blocked comparison with thermal washout/carryover checks to [physical Issue #15](https://github.com/Vermicare/Haridas-Satheesh/issues/15). First obtain actual instruments, uncertainty, geometry, and an independently reviewable ≥600-second logger dry run. Real cooling benefit, electrical energy, condensation and safety remain **TBD**. Reframe if fan-only explains the effect or if energy/heat rejection/condensation defeat the claimed advantage. Methodological references: [NIST drift](https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd443.htm), [NIST blocking](https://www.itl.nist.gov/div898/handbook/pri/section3/pri332.htm).
