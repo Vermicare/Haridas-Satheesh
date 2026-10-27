@@ -1,0 +1,41 @@
+name: WBI pinned A01T MAT training metadata (no EEG artifact)
+on:
+  push:
+    branches: [research/wbi-independent-repro-20261026]
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci_mat_run_metadata_v02.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_mat_run_metadata_v02.py'
+      - '.github/workflows/wbi-mat-run-metadata.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci_mat_run_metadata_v02.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_mat_run_metadata_v02.py'
+      - '.github/workflows/wbi-mat-run-metadata.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned MAT parser
+        run: python -m pip install --disable-pip-version-check numpy==2.3.3 scipy==1.16.2
+      - name: Run seven fictional structural regressions
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci_mat_run_metadata_v02
+      - name: Inspect only pinned real A01T training metadata
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci_mat_run_metadata_v02.py
+          --output "$RUNNER_TEMP/bnci_A01T_run_metadata_only.json"
+      - name: Upload only derived metadata JSON
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bnci-A01T-run-metadata-only
+          path: ${{ runner.temp }}/bnci_A01T_run_metadata_only.json
+          retention-days: 14
