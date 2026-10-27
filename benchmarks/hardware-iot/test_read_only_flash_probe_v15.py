@@ -1,6 +1,8 @@
 """Fictional transcripts only: no physical device or esptool execution."""
 import unittest
-from read_only_flash_probe_v15 import inspect_transcript, ProbeError
+from contextlib import redirect_stdout
+from io import StringIO
+from read_only_flash_probe_v15 import inspect_transcript, ProbeError, main
 
 V4 = """esptool.py v4.10.0
 Serial port COM7
@@ -72,6 +74,14 @@ class FlashProbeTests(unittest.TestCase):
     def test_noisy_ambiguous_size(self):
         with self.assertRaises(ProbeError):
             inspect_transcript(V4.replace("8MB", "8MB extra"))
+
+    def test_missing_private_path_not_echoed(self):
+        sink = StringIO()
+        with redirect_stdout(sink):
+            status = main(["/private/secret-home/esp32-flash-id.txt"])
+        self.assertEqual(status, 2)
+        self.assertNotIn("secret-home", sink.getvalue())
+        self.assertIn("HOLD_PROBE_REJECTED", sink.getvalue())
 
     def test_oversized(self):
         with self.assertRaises(ProbeError):
