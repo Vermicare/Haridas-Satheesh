@@ -21,4 +21,47 @@ jobs:
           target: esp32s3
           path: benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture
           command: 'idf.py --version && idf.py build && sha256sum build/iot_dual_sensor_capture.bin'
-# A successful compile does not verify flashed firmware, I2C, sensor origin, calibration, or 600-second capture.
+      - name: Verify and record unflashed build bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build
+          test -s "$root/iot_dual_sensor_capture.bin"
+          test -s "$root/bootloader/bootloader.bin"
+          test -s "$root/partition_table/partition-table.bin"
+          test -s "$root/flasher_args.json"
+          (
+            cd "$root"
+            sha256sum iot_dual_sensor_capture.bin bootloader/bootloader.bin partition_table/partition-table.bin flasher_args.json > SHA256SUMS.txt
+            sha256sum --check SHA256SUMS.txt
+          )
+          {
+            printf 'repository=%s\n' "$GITHUB_REPOSITORY"
+            printf 'checked_out_sha=%s\n' "$(git rev-parse HEAD)"
+            printf 'event=%s\n' "$GITHUB_EVENT_NAME"
+            printf 'pr_head_sha=%s\n' "${{ github.event.pull_request.head.sha }}"
+            printf 'run_id=%s\n' "$GITHUB_RUN_ID"
+            printf 'run_attempt=%s\n' "$GITHUB_RUN_ATTEMPT"
+            printf 'esp_idf_requested=v6.1\n'
+            printf 'target=esp32s3\n'
+            printf 'evidence=UNFLASHED_CI_BUILD_ONLY\n'
+            printf 'device_identity=TBD\n'
+            printf 'physical_sensor_capture=NOT_PERFORMED\n'
+            printf 'calibration=TBD\n'
+          } > "$root/BUILD_PROVENANCE.txt"
+          test -s "$root/BUILD_PROVENANCE.txt"
+      - name: Preserve downloadable unflashed firmware and hashes
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32s3-unflashed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/iot_dual_sensor_capture.bin
+            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/bootloader/bootloader.bin
+            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/partition_table/partition-table.bin
+            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/flasher_args.json
+            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/SHA256SUMS.txt
+            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/BUILD_PROVENANCE.txt
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+# Uploading a build is not flash attestation, sensor-origin proof, calibration, or physical validation.
