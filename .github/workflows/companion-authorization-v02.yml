@@ -29,7 +29,7 @@ jobs:
           python-version: "3.13"
       - name: Reproduce fictional authorization, correction, outbox and sink-integrity tests
         working-directory: benchmarks/companion-life-os
-        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06 test_fictional_outbox_v07 test_fictional_sink_integrity_v09 test_sandbox_issuer_v10
+        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06 test_fictional_outbox_v07 test_fictional_sink_integrity_v09 test_sandbox_issuer_v10 test_revocable_signed_boundary_v11
       - name: Generate fictional machine-readable demos
         working-directory: benchmarks/companion-life-os
         run: |
@@ -39,6 +39,7 @@ jobs:
           python demo_actual_receipt_integration_v06.py > demo-v06.json
           python demo_fictional_outbox_v07.py > demo-v07.json
           python demo_sandbox_issuer_v10.py > demo-v10.json
+          python demo_revocable_signed_boundary_v11.py > demo-v11.json
       - uses: actions/upload-artifact@v4
         with:
           name: companion-authorization-${{ matrix.os }}
@@ -49,3 +50,4 @@ jobs:
             benchmarks/companion-life-os/demo-v06.json
             benchmarks/companion-life-os/demo-v07.json
             benchmarks/companion-life-os/demo-v10.json
+            benchmarks/companion-life-os/demo-v11.json
