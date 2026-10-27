@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "experiment": "WBI BNCI2014_001 upstream A01T.mat source-byte fingerprint",
+  "date_utc": "2026-10-27",
+  "data_route": "BNCI Horizon 2020 MAT individual files (NOT BCI IV GDF ZIP)",
+  "publisher_catalog": "https://bnci-horizon-2020.eu/database/data-sets",
+  "catalog_license": "CC BY-ND 4.0; review terms before redistribution",
+  "source_url": "https://bnci-horizon-2020.eu/database/data-sets/001-2014/A01T.mat",
+  "resolved_url": "https://lampx.tugraz.at/~bci/database/001-2014/A01T.mat",
+  "file": "A01T.mat",
+  "file_bytes": 42806453,
+  "file_format_signature": "MATLAB_5",
+  "sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325",
+  "execution": {
+    "run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40490939415",
+    "tested_commit": "2f15f8a3d5dfd9f8d323aa920ec82e2e639f0571",
+    "python": "3.13.16",
+    "os": "GitHub-hosted ubuntu-latest (exact image version TBD)",
+    "unit_tests": "10/10 passed",
+    "source_fetches": [
+      {
+        "attempt": 1,
+        "utc": "2026-10-27T10:45:46.694494+00:00",
+        "job_id": 122144467017,
+        "artifact_id": 12728717253,
+        "bytes": 42806453,
+        "sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325"
+      },
+      {
+        "attempt": 2,
+        "utc": "2026-10-27T10:46:24.548072+00:00",
+        "job_id": 122144736541,
+        "artifact_id": 12728442549,
+        "bytes": 42806453,
+        "sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325"
+      }
+    ],
+    "raw_eeg_saved_or_uploaded": false,
+    "evaluation_labels_accessed": false,
+    "artifact_contents": "JSON metadata only, no EEG payload",
+    "local_environment": "CPython 3.13.5 Linux 6.18.55; 10/10 fictional tests; direct upstream DNS unavailable"
+  },
+  "source": {
+    "script_path": "benchmarks/wireless-brain-interface/bnci2014_001_source_probe.py",
+    "script_git_blob": "c7310cea3ead6f68e7236a683250fe7e0eb99eb7",
+    "tests_path": "benchmarks/wireless-brain-interface/test_bnci2014_001_source_probe.py",
+    "tests_git_blob": "d1d279063761eb06ba18c8e52b445831e5d9f6a5",
+    "workflow_path": ".github/workflows/wbi-source-probe.yml",
+    "workflow_git_blob": "6ac4ccd05de64fd3b2f7122fa7c23690f1a16e8f"
+  },
+  "boundaries": {
+    "publisher_authenticity": "Not independently authenticated; URL and TLS plus matching SHA do not establish publisher-signed reference hash",
+    "mat_internal_data_and_events": "TBD; only file signature inspected",
+    "source_population": "Only A01T, one of 18 sessions",
+    "decoder_accuracy": "TBD",
+    "matched_coverage_risk": "TBD",
+    "rest_false_action_safety": "NOT_ESTABLISHED",
+    "clinical_or_device_safety": "NOT_ESTABLISHED",
+    "maturity": "Research / Simulation; unchanged"
+  },
+  "decision": "Acquisition route and first real upstream file byte identity established; next acquire complete 18-session cohort and derive real metadata without E label leakage before any EEG decoder evaluation"
+}
