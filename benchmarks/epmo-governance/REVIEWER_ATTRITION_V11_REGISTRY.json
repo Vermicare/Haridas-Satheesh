@@ -4,13 +4,13 @@
   "experiment": "EPMO fictional reviewer attrition sensitivity",
   "external_actions": 0,
   "files": {
-    "REVIEWER_ATTRITION_V11.md": "3eacaa075c806c843bf9e6aea5c0fd3360f1fc005c8c30f095dafcc7ddf17e08",
+    "REVIEWER_ATTRITION_V11.md": "ba1bd64b11fff6aa2b70a4b617506c996808b80f1c60137c80f9cea1f713b727",
     "REVIEWER_ATTRITION_V11_RESULT.json": "6d5b8c714ecfe3b8d42abc65e8b8d0f1bfaf32c5b97242a0de83d3e8384286b5",
     "reviewer_attrition_sensitivity_v11.py": "76dbd55242b360c51f394d6c44fe46776ea5a655361610ac8c3781b5118d23d5",
     "test_reviewer_attrition_sensitivity_v11.py": "81693496ef54abe0b3ccbce6a80de1a7f40f218d07d5bc1a7572324190d982c2"
   },
-  "github_ci": "TBD",
-  "github_commit": "TBD",
+  "github_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40544802878; 174/174 tests passed on Ubuntu and Windows; exact v1.1 result match",
+  "github_commit": "ad3527cae8b5d90e8615963448f7d6257ed59068 (executables unchanged)",
   "observed_human_participants": 0,
   "origin": "FICTIONAL_ASSUMPTION_BASED_SIMULATION",
   "parameters": {
