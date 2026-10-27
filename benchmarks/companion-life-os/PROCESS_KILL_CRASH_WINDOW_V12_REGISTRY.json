@@ -1,0 +1,51 @@
+{
+  "schema": "portfolio-evidence-registry-v1",
+  "experiment": "companion-fictional-process-kill-v1.2",
+  "date": "2026-10-28",
+  "maturity": "public fictional software-contract simulation; no private-system maturity upgrade",
+  "hypothesis": "local SQLite v1.1 revocation and receipt transactions survive process termination at commit boundary",
+  "scenario": "fictional scenario.json",
+  "test_code_git_blob": "2bfd5d37ef50671fbe0b233fe7d0461b55eb4390",
+  "demo_code_git_blob": "1eff7f3cfdca197ccbd0ed83720a0ba48b9991e5",
+  "dependencies": "Python standard library only",
+  "python_version": "3.13 workflow; exact patch TBD",
+  "sqlite_version": "TBD; demo artifact emits actual version",
+  "journal_mode": "TBD",
+  "physical_power_loss_tested": false,
+  "external_actions": 0,
+  "real_identity_verified": false,
+  "methods": [
+    "subprocess child termination immediately before SQLite commit",
+    "subprocess child termination immediately after SQLite commit",
+    "reopen database and retry with v1.1 fictional signed boundary"
+  ],
+  "results": {
+    "pre_commit_receipt_rows": 0,
+    "post_commit_receipt_rows": 1,
+    "pre_commit_revocation_rows": 0,
+    "post_commit_revocation_rows": 1,
+    "pre_commit_receipt_retry": "first fictional receipt",
+    "post_commit_receipt_retry": "idempotent same receipt",
+    "pre_commit_revocation_retry": "fictional first use permitted",
+    "post_commit_revocation_retry": "fictional approval rejected",
+    "new_tests": 4,
+    "ubuntu_total_tests_passed": 114,
+    "windows_total_tests_passed": 114,
+    "github_actions_run_id": 40596492153,
+    "github_actions_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40596492153",
+    "run_head_sha": "08c61985542f44e9cc50acb0e253f4bda003e09d",
+    "ubuntu_artifact_id": 12776351503,
+    "windows_artifact_id": 12776726141,
+    "artifact_contents_independently_inspected": false
+  },
+  "limitations": [
+    "software process kill not physical power cut",
+    "not storage tamper or filesystem corruption testing",
+    "legacy base-class direct write bypass remains",
+    "no trusted real identity, consent, revocation operator, or clock",
+    "no real external connector or exactly-once effect",
+    "no independent reviewer or user study"
+  ],
+  "next_experiment": "fail closed all legacy write paths in isolated fictional adapter and test outbox/ack process-kill window",
+  "decision": "retain stage; no release/merge"
+}
