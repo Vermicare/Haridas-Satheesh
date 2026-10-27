@@ -1,0 +1,17 @@
+{
+  "commit": "be20aa1f044599ecf6fc64cd42a24d31e48b9645",
+  "experiment_id": "retail-store-disjoint-transfer-v15",
+  "frozen_v12_blob": "ddd12a4e0695c474f752d98c99fd781931373bce",
+  "frozen_v14_blob": "6e2e59a847ed5f9d568ca093b5f3aa88a875ada1",
+  "independent_external_review": "TBD",
+  "latent_demand_ground_truth": "UNAVAILABLE",
+  "new_source_blob": "ef762c021094d9de29f7bc1933d001e9251f7378",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "pyarrow_pin": "20.0.0",
+  "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+  "real_evaluation_scope": "different stores; SAME already-inspected dates",
+  "result_present": true,
+  "result_sha256": "adcb2d0db4c27a32fd996f65b48f81b45465387a7b8bf010cb65bfd67bf762df",
+  "run_id": "40445663158",
+  "temporal_holdout_independence": false
+}
