@@ -47,3 +47,20 @@ Use one frozen decoder's test probabilities for ungated, confidence-only abstent
 **Security/IP/privacy:** do not publish raw EEG, private identities, credentialed URLs, personal contact details, or employer data. Dataset subject numbers are public pseudonymous IDs, not participant names. Preserve source licensing and attribution.
 
 **Hosted verification:** [Actions #40415140397](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40415140397) passed on Ubuntu and Windows, preserving the frozen synthetic evaluator Git blob `2becec81a8002cc5ff2f445889b7617baf9937b9` and CSV SHA-256 `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a`. Both logs show all nine fictional metadata regressions passing. This is software-contract evidence, not EEG validation.
+
+
+## October 27 source-archive gate — no real data ingested
+
+**New primary-source constraint:** the official BCI Competition IV dataset 2a training GDFs contain cue class events 769–772, while evaluation GDFs use an unknown cue marker (783) and their class labels are released separately. The publisher's dataset download lists a roughly 420 MB GDF archive. Consequently **E labels must not enter acquisition preflight, training, calibration, or threshold selection**. An E-session accuracy score is not available merely from reading the E GDF. The dataset also has eyes-open/eyes-closed idle calibration events, but these do **not** by themselves constitute a validated continuous rest/false-action evaluation protocol.
+
+Primary sources: [official dataset download](https://www.bbci.de/competition/iv/download/); [competition review with event codes and E-label separation](https://pmc.ncbi.nlm.nih.gov/articles/PMC3396284/).
+
+Added a **no-extraction source-archive inspector** ([implementation](bnci2a_source_archive_preflight.py); [14 synthetic ZIP tests](test_bnci2a_source_archive_preflight.py)). It checks all 18 named T/E GDF files, SHA-256 of archive and members, ZIP CRC on streamed GDF bytes, GDF signature, member/path duplication, traversal, symlinks, encrypted members, size/ratio limits and exclusion of embedded MAT/other non-document files. It writes **hashes and sizes only**; never extracts EEG, imports labels or runs a decoder. The source URL field is explicitly a *declared, unverified* provenance string, not publisher authentication. The separate BNCI2a trial split preflight still requires genuine source-derived run/trial metadata and cannot be satisfied by this ZIP check alone.
+
+To run **after independently obtaining the publisher archive** (do not commit the archive, extracted signals, evaluation labels or personal information):
+
+    python -B benchmarks/wireless-brain-interface/bnci2a_source_archive_preflight.py --archive /private/path/BCICIV_2a_gdf.zip --out /private/path/source_manifest.json --source-url https://www.bbci.de/competition/download/competition_iv/BCICIV_2a_gdf.zip
+
+**Run provenance:** local CPython 3.11 Linux standard-library-only synthetic ZIP fixtures; 14/14 tests passed. GitHub-hosted Ubuntu/Windows verification is **TBD** until the current workflow run is inspected. Actual 420 MB archive download was unavailable in this execution environment; actual publisher SHA-256, per-file SHA-256, GDF event counts, source authenticity, loader version, test labels, all EEG outcomes and safety claims are **TBD**. This is a *software and acquisition-integrity gate*, not a real EEG benchmark or maturity advancement.
+
+**Next decisive evidence step:** acquire the 18 actual GDFs from the official publisher; run this gate; preserve source hash/URL/terms; then use a pinned GDF loader to derive **real** trial/run identifiers without E class labels and check the 18 predeclared folds. Only after freezing preprocessing, classifier and thresholds may E labels be loaded in an isolated final scoring stage. Report idle/rest separately with defensible windows; do not infer false-action safety from motor-imagery accuracy.
