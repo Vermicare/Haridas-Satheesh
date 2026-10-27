@@ -32,7 +32,7 @@ python -B -m unittest -v test_estimand_alignment_v16
 python -B estimand_alignment_v16.py --source STORE_DISJOINT_V15_RESULT.json --output /new/path/estimand_alignment_v16_output.json
 ```
 
-The [dedicated GitHub Actions workflow](../../../.github/workflows/retail-estimand-audit-v16.yml) pins the existing v1.5 result Git blob `399099b75745ccaae6ad1aa1cc62ef6c67bc7a67`, tests on Ubuntu and Windows, and uploads only a derived aggregate audit. It downloads **no publisher rows** and does not modify the v1.2–v1.5 source/results. Exact successful CI run and operating-system patch versions: **TBD until verified**.
+The [dedicated GitHub Actions workflow](../../../.github/workflows/retail-estimand-audit-v16.yml) pins the existing v1.5 result Git blob `399099b75745ccaae6ad1aa1cc62ef6c67bc7a67`, tests on Ubuntu and Windows, and uploads only a derived aggregate audit. It downloads **no publisher rows** and does not modify the v1.2–v1.5 source/results. **Verified CI:** [GitHub Actions #40523860820](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40523860820) passed **4/4 tests on Ubuntu and 4/4 on Windows**, both logs inspected. Both jobs pinned the original v1.5 result blob, emitted the same aggregate JSON fields/values, and uploaded their audit artifact. Tested code-bearing/documentation head: `cc1108d8bb09107a7c48817811590de61a40e60e`. Precise Python patch and operating-system image revisions: **TBD** (not claimed).
 
 ## Next decisive evidence
 
