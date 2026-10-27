@@ -20,7 +20,7 @@ The retained unflashed ESP-IDF v6.1 bundle reports a **2 MB flash-size setting**
 ## Evidence and regression
 
 - Local isolated test command: `python -m unittest -v test_read_only_flash_probe_v15.py`
-- **14/14 fictional transcript tests passed locally** under CPython (2026-10-28); actual GitHub CI outcome must be checked separately. The fixtures are synthetic strings resembling common esptool v4/v5 output, not captured from a physical ESP32-S3.
+- **14/14 fictional transcript tests passed locally** under CPython 3.13.5/Linux. [GitHub Actions #40580874050](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40580874050) passed **118/118 tests on Ubuntu and 118/118 on Windows** (both job logs inspected), including all 14 new cases. The fixtures are synthetic strings resembling common esptool v4/v5 output, not captured from a physical ESP32-S3.
 - Negative controls: wrong/missing/multiple chip identifications; missing/multiple/unsupported/malformed flash sizes; error and warning text; unsupported build size; oversized transcript; and redaction of fictional MAC.
 - No real `flash-id` command was run, no board was connected, no firmware was flashed, and **zero physical BH1750/SCD40 readings** were acquired. Firmware flashed identity, actual flash size, sensor accuracy and 600-second coverage remain **TBD**.
 - Known limitations: a forged transcript can pass; esptool output formats can change; text parsing is not hardware attestation; a successful size comparison cannot authorize flashing.
