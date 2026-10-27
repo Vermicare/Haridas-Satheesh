@@ -12,6 +12,8 @@ import sys
 import zipfile
 from pathlib import Path
 
+from firmware_internal_integrity import FirmwareIntegrityError, validate_bundle_internal
+
 EXPECTED_HASHES = {
     "iot_dual_sensor_capture.bin",
     "bootloader/bootloader.bin",
@@ -160,6 +162,13 @@ def audit_zip(path, observed_flash_mb=None, expected_pr_head=None):
     if len(files["iot_dual_sensor_capture.bin"]) > factory[0]["size"]:
         raise AuditError("application does not fit factory partition")
 
+    # A rehashed ZIP can still contain a corrupted or wrong-chip ESP image.
+    # Check each image's own segment XOR/SHA256 and the partition-table MD5.
+    try:
+        internal = validate_bundle_internal(files, settings)
+    except FirmwareIntegrityError as exc:
+        raise AuditError("internal firmware integrity: " + str(exc)) from exc
+
     try:
         provenance = files["BUILD_PROVENANCE.txt"].decode("ascii")
     except UnicodeError as e:
@@ -202,6 +211,7 @@ def audit_zip(path, observed_flash_mb=None, expected_pr_head=None):
         "factory_partition_bytes": factory[0]["size"],
         "app_binary_bytes": len(files["iot_dual_sensor_capture.bin"]),
         "verified_sha256": digests,
+        "internal_image_integrity": internal,
         "device_identity": "TBD",
         "flashed_binary_identity": "TBD",
         "physical_sensor_measurements": "NONE",
