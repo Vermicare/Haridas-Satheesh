@@ -62,7 +62,10 @@ def main(argv=None):
     try:
         raw = ns.transcript.read_text(encoding="utf-8")
         report = inspect_transcript(raw, ns.build_flash_mb)
-    except (OSError, UnicodeError, ProbeError) as exc:
+    except (OSError, UnicodeError):
+        print(json.dumps({"gate": "HOLD_PROBE_REJECTED", "reason": "transcript unreadable or invalid UTF-8", "flash_authorized": False}))
+        return 2
+    except ProbeError as exc:
         print(json.dumps({"gate": "HOLD_PROBE_REJECTED", "reason": str(exc), "flash_authorized": False}))
         return 2
     print(json.dumps(report, indent=2, sort_keys=True))
