@@ -1,0 +1,42 @@
+name: WBI upstream MAT source fingerprint (no EEG artifacts)
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci2014_001_source_probe.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2014_001_source_probe.py'
+      - '.github/workflows/wbi-source-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Validate source-route and byte-stream contracts (fictional bytes)
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci2014_001_source_probe
+  upstream-read-only-fingerprint:
+    needs: source-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Stream one publisher MAT file without saving EEG
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci2014_001_source_probe.py
+          --output "$RUNNER_TEMP/bnci_A01T_metadata_only.json"
+      - name: Retain only checksum and provenance metadata
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bnci-A01T-source-metadata-only
+          path: ${{ runner.temp }}/bnci_A01T_metadata_only.json
+          retention-days: 14
