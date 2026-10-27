@@ -1,27 +1,34 @@
 {
   "experiment_id": "companion-fictional-revocation-v1.1-2026-10-27",
-  "status": "local_synthetic_executed_hosted_verification_TBD",
+  "status": "verified_synthetic_cross_platform_software_contract_only",
   "source_provenance": {
     "repository": "Vermicare/Haridas-Satheesh",
     "base_draft_pr": 10,
     "base_branch_head_at_design": "12abb5fb574c8c976cf935a3dbd6936169823120",
     "existing_scenario": "benchmarks/companion-life-os/scenario.json",
     "upstream_dependencies_manually_mirrored_locally": true,
-    "git_commit_for_new_code": "TBD"
+    "git_commit_for_new_code": "b700f0d03426ab3b38e88340a4e2a39e138cb7be"
   },
   "runtime_local": {
     "python": "3.13.5",
     "sqlite": "3.46.1",
     "operating_system": "Linux"
   },
-  "runtime_hosted": "TBD",
+  "runtime_hosted": {
+    "python": "3.13.16",
+    "sqlite": "TBD",
+    "operating_system": [
+      "Ubuntu GitHub runner",
+      "Windows GitHub runner"
+    ]
+  },
   "source_sha256": "31999dab83c041d1f0f9253ffdc3a87fa3fa10607b44dcfb4a5005998d5e770f",
   "test_sha256": "88a8644270e7f40ac6c8413a7346190c646b53828666e8a259fc8ef601aca0e5",
   "demo_sha256": "560ccddd1f370a885afe6101584dd097055d05df069f5ead065ff38298594430",
   "new_tests_local_passed": 15,
   "new_tests_local_total": 15,
-  "hosted_ubuntu_tests": "TBD",
-  "hosted_windows_tests": "TBD",
+  "hosted_ubuntu_tests": "109/109 passed",
+  "hosted_windows_tests": "109/109 passed",
   "baseline_negative_control": "v1.0 fictional receipt accepted after test-only revocation",
   "candidate_result": "local v1.1 denied revoked token before receipt and after restart",
   "demo_preserved_receipts": 1,
@@ -45,5 +52,19 @@
     "failed_tests": 2,
     "reason": "Windows SQLite handles left open by test fixtures; TempDirectory cleanup WinError 32; Linux passed"
   },
-  "correction_commit": "b700f0d03426ab3b38e88340a4e2a39e138cb7be"
+  "correction_commit": "b700f0d03426ab3b38e88340a4e2a39e138cb7be",
+  "hosted_run": {
+    "id": 40498978104,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40498978104",
+    "code_commit": "b700f0d03426ab3b38e88340a4e2a39e138cb7be",
+    "both_job_logs_inspected": true,
+    "ubuntu_artifact": {
+      "id": 12730969098,
+      "sha256": "5e4e47c494fd991f7e8fb64faea83895710e0337766f91c35e43e6196459bf94"
+    },
+    "windows_artifact": {
+      "id": 12731024188,
+      "sha256": "a9443c56b64a9a082091d3375a455a7611b8b37cc04c2f4bb9c27c93d002ee57"
+    }
+  }
 }
