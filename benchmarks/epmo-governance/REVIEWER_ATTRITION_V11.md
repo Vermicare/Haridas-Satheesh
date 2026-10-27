@@ -33,7 +33,7 @@ python -B -m unittest -v test_reviewer_attrition_sensitivity_v11
 python -B reviewer_attrition_sensitivity_v11.py > REVIEWER_ATTRITION_V11_RESULT.json
 ~~~
 
-The test suite compares the complete 1,000-replication output to the committed JSON, in addition to nine quick contract and adversarial checks. **Local 10/10 tests passed**, including exact JSON reproduction. The source/result SHA-256 hashes and Python environment are in [the registry](REVIEWER_ATTRITION_V11_REGISTRY.json). Cross-platform GitHub Actions result is **TBD** until independently observed. Earlier v1.0 results and stronger evidence are preserved unchanged.
+The test suite compares the complete 1,000-replication output to the committed JSON, in addition to nine quick contract and adversarial checks. **Local 10/10 tests passed**, including exact JSON reproduction. The source/result SHA-256 hashes and Python environment are in [the registry](REVIEWER_ATTRITION_V11_REGISTRY.json). Independently inspected [GitHub Actions run #40544802878](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40544802878) passed **174/174 tests on Ubuntu and 174/174 on Windows**, including the v1.1 exact 1,000-replication result check, at executable-unchanged branch commit `ad3527cae8b5d90e8615963448f7d6257ed59068`. Both job logs were inspected. This verifies reproducible fictional software behavior, not model validity or human outcomes. Earlier v1.0 results and stronger evidence are preserved unchanged.
 
 ## Decision / next gate
 
