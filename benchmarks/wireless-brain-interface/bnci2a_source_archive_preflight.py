@@ -39,6 +39,7 @@ def inspect_archive(path: Path, source_url: str = "TBD", *, max_gdf_bytes: int =
         raise ValueError("invalid source URL declaration")
     gdf = {}
     docs = []
+    document_checksums = {}
     try:
         with zipfile.ZipFile(path) as archive:
             entries = archive.infolist()
@@ -97,7 +98,25 @@ def inspect_archive(path: Path, source_url: str = "TBD", *, max_gdf_bytes: int =
                 elif basename.lower().endswith(".gdf"):
                     raise ValueError("unexpected GDF file")
                 elif PurePosixPath(basename).suffix.lower() in SAFE_DOCUMENT_SUFFIXES:
+                    # ZIP metadata and an archive-level hash alone do not verify
+                    # decompression or CRC for members never opened. Stream every
+                    # permitted document, without extracting or publishing its text.
+                    digest = hashlib.sha256()
+                    count = 0
+                    with archive.open(info) as stream:
+                        for block in iter(lambda: stream.read(CHUNK), b""):
+                            count += len(block)
+                            if count > max_gdf_bytes:
+                                raise ValueError("document exceeds streamed size limit")
+                            digest.update(block)
+                    if count != info.file_size:
+                        raise ValueError("document size mismatch")
                     docs.append(name)
+                    document_checksums[name] = {
+                        "bytes": count,
+                        "sha256": digest.hexdigest(),
+                        "zip_crc32": f"{info.CRC:08x}",
+                    }
                 else:
                     # In particular, never ingest test-session class labels (.mat).
                     raise ValueError("unexpected non-document member; label firewall")
@@ -115,6 +134,7 @@ def inspect_archive(path: Path, source_url: str = "TBD", *, max_gdf_bytes: int =
         "gdf_file_count": len(gdf),
         "gdf": dict(sorted(gdf.items())),
         "additional_document_members": sorted(docs),
+        "document_checksums": dict(sorted(document_checksums.items())),
         "evaluation_labels_accessed": False,
         "trial_counts_verified": False,
         "real_eeg_signal_or_outcome_metrics": "TBD",
