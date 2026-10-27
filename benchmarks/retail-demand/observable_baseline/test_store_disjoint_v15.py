@@ -84,9 +84,31 @@ class StoreDisjointTests(unittest.TestCase):
 
     def test_invalid_intervals_rejected(self):
         for interval in (None, [], [-0.01], [0.2, -0.1], [float("nan"), 0.1],
-                         [float("-inf"), 0.1], [True, False]):
+                         [float("-inf"), 0.1], [True, False], [0, 10 ** 1000]):
             with self.subTest(interval=interval), self.assertRaises(EvidenceError):
                 target.interpret_primary_gate(self.fictional_metrics(interval))
+
+    def test_nonfinite_negative_boolean_or_unrepresentable_mae_rejected(self):
+        for bad in (float("nan"), float("inf"), float("-inf"), -0.01,
+                    True, False, None, "0.46", 10 ** 1000):
+            for key in ("weekday", "last"):
+                with self.subTest(bad=repr(bad), key=key):
+                    m = self.fictional_metrics([-0.04, -0.01])
+                    if key == "weekday":
+                        m["weekday_median_last4_day_weighted_mae"] = bad
+                    else:
+                        m["original_v12_metrics"]["day_weighted_mae"]["last_observed"] = bad
+                    with self.assertRaisesRegex(EvidenceError, "invalid primary-gate MAE"):
+                        target.interpret_primary_gate(m)
+
+    def test_missing_or_malformed_primary_metrics_rejected(self):
+        for bad in ({}, None, {"weekday_median_minus_last_observed_store_cluster_ci95": [-0.1, -0.01]},
+                    {"weekday_median_minus_last_observed_store_cluster_ci95": [-0.1, -0.01],
+                     "weekday_median_last4_day_weighted_mae": 0.46,
+                     "original_v12_metrics": None}):
+            with self.subTest(bad=repr(bad)), self.assertRaisesRegex(
+                    EvidenceError, "missing primary-gate evidence"):
+                target.interpret_primary_gate(bad)
 
 
 if __name__ == "__main__":
