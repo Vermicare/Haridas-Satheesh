@@ -6,6 +6,8 @@ on:
       - 'benchmarks/wireless-brain-interface/bnci_a02t_metadata_v03.py'
       - 'benchmarks/wireless-brain-interface/test_bnci_a02t_metadata_v03.py'
       - '.github/workflows/wbi-a02t-metadata-v03.yml'
+      - 'benchmarks/wireless-brain-interface/bnci_a02t_structural_gate_v04.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_a02t_structural_gate_v04.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -29,6 +31,13 @@ jobs:
         run: >-
           python -B benchmarks/wireless-brain-interface/bnci_a02t_metadata_v03.py
           --output "$RUNNER_TEMP/bnci_A02T_metadata_only.json"
+      - name: Fifteen fail-closed structural gate regressions (synthetic, offline)
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci_a02t_structural_gate_v04
+      - name: Enforce pinned A02T byte identity and real-source structural gate
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci_a02t_structural_gate_v04.py
+          --input "$RUNNER_TEMP/bnci_A02T_metadata_only.json"
       - name: Upload derived metadata only, never raw EEG or class labels
         if: success()
         uses: actions/upload-artifact@v4
