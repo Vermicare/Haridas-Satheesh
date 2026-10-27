@@ -1,6 +1,6 @@
 {
   "experiment_id": "companion-fictional-revocation-v1.1-2026-10-27",
-  "status": "verified_synthetic_cross_platform_software_contract_only",
+  "status": "v11_inherited_api_bypass_corrected_hosted_final_TBD",
   "source_provenance": {
     "repository": "Vermicare/Haridas-Satheesh",
     "base_draft_pr": 10,
@@ -22,11 +22,11 @@
       "Windows GitHub runner"
     ]
   },
-  "source_sha256": "31999dab83c041d1f0f9253ffdc3a87fa3fa10607b44dcfb4a5005998d5e770f",
-  "test_sha256": "88a8644270e7f40ac6c8413a7346190c646b53828666e8a259fc8ef601aca0e5",
+  "source_sha256": "b7bebe7a5cf78b4fd5bc6e24cf71f65d1a14e4eafa51eefd1c33e71c664fb029",
+  "test_sha256": "fb387e33568aa9c3c197d1a14f84b7d187bd08d141a6a203b0323897b1703cc6",
   "demo_sha256": "560ccddd1f370a885afe6101584dd097055d05df069f5ead065ff38298594430",
-  "new_tests_local_passed": 15,
-  "new_tests_local_total": 15,
+  "new_tests_local_passed": 16,
+  "new_tests_local_total": 16,
   "hosted_ubuntu_tests": "109/109 passed",
   "hosted_windows_tests": "109/109 passed",
   "baseline_negative_control": "v1.0 fictional receipt accepted after test-only revocation",
@@ -66,5 +66,16 @@
       "id": 12731024188,
       "sha256": "a9443c56b64a9a082091d3375a455a7611b8b37cc04c2f4bb9c27c93d002ee57"
     }
-  }
+  },
+  "inherited_api_negative_control": {
+    "pre_fix_result": "revoked approval accepted via inherited FictionalDurableStore.execute on new subclass",
+    "local_receipts": 1,
+    "external_actions": 0,
+    "fix": "override public execute to fail closed; require signed boundary",
+    "corrected_code_commit": "b725bac8a2623c1a197f0803c78b518a414d7af9",
+    "legacy_base_class_still_callable": true
+  },
+  "final_hosted_run": "TBD",
+  "final_hosted_ubuntu_tests": "TBD",
+  "final_hosted_windows_tests": "TBD"
 }
