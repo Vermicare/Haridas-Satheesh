@@ -1,0 +1,111 @@
+name: Retail v1.7 post-hoc day-weighted paired store bootstrap
+on:
+  push:
+    branches:
+      - research/retail-store-disjoint-v15-20261027
+    paths:
+      - '.github/workflows/retail-dayweighted-sensitivity-v17.yml'
+      - 'benchmarks/retail-demand/observable_baseline/store_cluster_day_weighted_v17.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_store_cluster_day_weighted_v17.py'
+  pull_request:
+    paths:
+      - '.github/workflows/retail-dayweighted-sensitivity-v17.yml'
+      - 'benchmarks/retail-demand/observable_baseline/store_cluster_day_weighted_v17.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_store_cluster_day_weighted_v17.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify frozen original source and result blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/official_holdout_v12.py)" = ddd12a4e0695c474f752d98c99fd781931373bce
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/weekday_median_v14.py)" = 6e2e59a847ed5f9d568ca093b5f3aa88a875ada1
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/STORE_DISJOINT_V15_RESULT.json)" = 399099b75745ccaae6ad1aa1cc62ef6c67bc7a67
+      - name: Run fictional-only paired-cluster adversarial tests
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_store_cluster_day_weighted_v17
+  publisher-posthoc-sensitivity:
+    needs: fictional-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify frozen source/result identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/official_holdout_v12.py)" = ddd12a4e0695c474f752d98c99fd781931373bce
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/weekday_median_v14.py)" = 6e2e59a847ed5f9d568ca093b5f3aa88a875ada1
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/STORE_DISJOINT_V15_RESULT.json)" = 399099b75745ccaae6ad1aa1cc62ef6c67bc7a67
+      - name: Install pinned Parquet reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Fetch publisher TRAIN and EVAL; enforce pinned SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/08c1fab7f9257bc73679d415d644165d351d4/data'
+          for split in train eval; do
+            if ! curl --fail --location --retry 1 --connect-timeout 20 --max-time 900 "$root/$split.parquet" --output "$RUNNER_TEMP/$split.parquet"; then
+              curl --fail --location --retry 2 --connect-timeout 20 --max-time 900 "https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K/resolve/main/data/$split.parquet" --output "$RUNNER_TEMP/$split.parquet"
+            fi
+          done
+          printf '%s  %s\n' '6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d' "$RUNNER_TEMP/train.parquet" | sha256sum --check
+          printf '%s  %s\n' '1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e' "$RUNNER_TEMP/eval.parquet" | sha256sum --check
+      - name: Compute descriptive paired store bootstrap; preserve failed v1.5 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python -B benchmarks/retail-demand/observable_baseline/store_cluster_day_weighted_v17.py \
+            --train "$RUNNER_TEMP/train.parquet" --eval "$RUNNER_TEMP/eval.parquet" \
+            --preserved benchmarks/retail-demand/observable_baseline/STORE_DISJOINT_V15_RESULT.json \
+            --output artifacts/retail_dayweighted_sensitivity_v17.json
+      - name: Write aggregate-only run provenance
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,platform,subprocess,sys
+          from pathlib import Path
+          root=Path('artifacts');root.mkdir(exist_ok=True)
+          result=root/'retail_dayweighted_sensitivity_v17.json'
+          obj={'experiment_id':'retail-v17-posthoc-dayweighted-cluster-sensitivity',
+               'run_id':os.environ.get('GITHUB_RUN_ID','TBD'),
+               'commit':os.environ.get('GITHUB_SHA','TBD'),
+               'python':sys.version,'platform':platform.platform(),'pyarrow_pin':'20.0.0',
+               'source_blob':subprocess.check_output(['git','rev-parse','HEAD:benchmarks/retail-demand/observable_baseline/store_cluster_day_weighted_v17.py'],text=True).strip(),
+               'result_present':result.exists(),
+               'result_sha256':hashlib.sha256(result.read_bytes()).hexdigest() if result.exists() else 'TBD',
+               'predeclared_v15_gate':'FAILED_UNCHANGED',
+               'independent_temporal_holdout':False,'external_review':'TBD',
+               'raw_publisher_rows_uploaded':False}
+          (root/'retail_dayweighted_sensitivity_v17_provenance.json').write_text(json.dumps(obj,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: retail-v17-posthoc-aggregate-only
+          path: artifacts/*.json
+          retention-days: 14
+          if-no-files-found: error
