@@ -1,0 +1,47 @@
+{
+  "artifact": "adaptive_cooling_original_capture_chain_v1",
+  "date_utc": "2026-10-26",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "target_branch": "research/cooling-explicit-fixture-gate-20261023",
+  "question": "Can an offline preflight detect substitution or mutation of original logger bytes, converted CSV, instrument manifest, or frozen run plan relative to a declared capture manifest?",
+  "baseline": "Existing dry_run_integrity.py hashes the parsed measurement CSV, not the original logger and run-plan bundle",
+  "data_class": "FICTIONAL_TEST_ONLY",
+  "physical_capture": "TBD",
+  "instruments": "TBD",
+  "actual_measurements": "TBD",
+  "results": "22/22 fictional-only regression tests passed in each of two separate clean CPython 3.13.5/Linux directories; normalized test-name/status outputs identical; elapsed times differed",
+  "source_git_blob_sha": "4846d16d0ac648d368ddc76becc56a28913c9476",
+  "test_git_blob_sha": "9f3d91304395936bab8e2afd302890614b2267c5",
+  "ci": {
+    "status": "VERIFIED",
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40295332717",
+    "head_sha": "a7aff02b1505a4facbcce230e7c8584661b848e4",
+    "ubuntu": "62/62 passed",
+    "windows": "62/62 passed",
+    "scope": "14 origin + 26 dry-run + 22 capture-chain fictional-only tests; no physical instruments",
+    "verified_from": "GitHub Actions completed jobs and inspected raw job logs"
+  },
+  "negative_controls": [
+    "original logger mutation",
+    "measurement CSV substitution",
+    "instrument manifest mutation",
+    "missing or empty original artifacts",
+    "unsafe path traversal, aliases and symlinks",
+    "duplicate JSON fields and nonfinite constants",
+    "invalid, missing or mismatched SHA-256",
+    "unpinned or changed manifest",
+    "short or timezone-naive declared capture",
+    "missing thermal-storage recharge accounting"
+  ],
+  "claim_boundary": "Byte consistency of a declared bundle only; no proof of real instrument source, CSV conversion semantics, thermal comfort, energy savings or efficiency",
+  "maturity_advanced": false,
+  "decision": "Preserve prototype/documented R&D stage; require physical dry run and controlled comparison per issue #15",
+  "local_run_conditions": {
+    "python": "CPython 3.13.5",
+    "os": "Linux",
+    "dependencies": "Python standard library only",
+    "clean_directories": 2,
+    "tests_per_run": 22
+  },
+  "normalized_test_log_sha256": "292b4af15a7821c830cc290b2daef9853eda0693d7f8603bbda57edba00b2720"
+}

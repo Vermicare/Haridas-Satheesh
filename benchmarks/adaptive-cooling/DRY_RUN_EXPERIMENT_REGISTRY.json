@@ -1,0 +1,143 @@
+{
+  "artifact": "adaptive_cooling_dry_run_integrity_v0.1",
+  "date_utc": "2026-10-24",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cooling-explicit-fixture-gate-20261023",
+  "baseline": "Committed raw_data_template.csv plus earlier explicit synthetic-origin preflight",
+  "hypothesis": "A deterministic offline preflight can reject internally inconsistent timestamp/power/energy records before physical bench claims.",
+  "dataset": "fictional, generated in temporary directories by test_dry_run_integrity.py",
+  "actual_sensor_capture": "TBD",
+  "physical_instrument_identity": "TBD",
+  "real_energy_measurement": "TBD",
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "platform": "Linux",
+    "dependencies": "standard library only",
+    "unit_tests": 14
+  },
+  "local_result": "14/14 fictional-only regression tests passed; physical evidence not obtained",
+  "tested_source_git_blob_sha": "c5269110c0a4f391b9468fed245fba839e765043",
+  "tested_test_git_blob_sha": "a626258a097ef1c6c13e926a0e71f1a038a3a7cf",
+  "thresholds": {
+    "minimum_duration_seconds": 600,
+    "maximum_sample_gap_seconds": 60,
+    "energy_absolute_tolerance_wh": 0.5,
+    "energy_relative_tolerance": 0.3
+  },
+  "negative_controls": [
+    "unchanged energy with nonzero power",
+    "energy counter reset",
+    "timestamp reversal",
+    "short duration",
+    "sample gap",
+    "mixed run IDs",
+    "mixed conditions",
+    "invalid humidity",
+    "missing numeric",
+    "extra CSV field",
+    "naive timestamp",
+    "negative power",
+    "nonfinite numeric"
+  ],
+  "decision": "Keep at Prototype / Documented R&D; perform actual instrumented logging dry run next",
+  "limitations": "Internal consistency only; invented records can pass; energy integration assumes representative sampling; no meter calibration or provenance authentication",
+  "ci_status": "VERIFIED: GitHub Actions run 40051385064; Python 3.13 Linux and Windows each 25/25 tests passed (11 existing origin + 14 new dry-run)",
+  "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40051385064",
+  "ci_head_sha": "08cc7f0a5e7eb76c78b94947e51c277f247fda98",
+  "v0_2_raw_snapshot_provenance": {
+    "hypothesis": "A single-read SHA-256 snapshot and optional pinned digest prevent reuse of a passing structural report for changed CSV bytes.",
+    "prior_defect": "v0.1 output was not bound to exact raw CSV bytes; a post-audit edit could be overlooked.",
+    "changes": "Read bytes once; hash and parse same snapshot; report digest and byte count; reject mismatched or malformed optional pinned SHA-256.",
+    "source_blob_sha": "9438017485c2151b5b3d34bdbf07f78bf0e44c68",
+    "test_blob_sha": "39e897f1299c0445811ac304801fafe20c11054e",
+    "tests_added": 5,
+    "total_dry_run_tests": 19,
+    "total_origin_gate_tests": 11,
+    "test_fixture": "Fictional CSV rows generated in Python unittest temporary directories",
+    "actual_physical_capture": "TBD",
+    "pinned_real_capture_sha256": "TBD",
+    "physical_origin_authenticated": false,
+    "energy_performance_claim_permitted": false,
+    "local_execution": "TBD; GitHub Actions cross-platform CI is verification target",
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40095057391",
+      "head_sha": "c4d97ed9bcd5cef6da5ec3ca3b15e31a609ca0a6",
+      "ubuntu": "30/30 passed",
+      "windows": "30/30 passed",
+      "scope": "11 origin-gate and 19 dry-run tests; fictional-only, no hardware",
+      "source_blob_sha": "9438017485c2151b5b3d34bdbf07f78bf0e44c68",
+      "test_blob_sha": "39e897f1299c0445811ac304801fafe20c11054e"
+    },
+    "negative_controls": [
+      "CSV edited after SHA-256 pinning",
+      "malformed pinned digest",
+      "filesystem mutation after snapshot acquisition"
+    ],
+    "limits": "SHA-256 binds report to bytes read, not to a real sensor, calibration, firmware, timestamp authority, or unmodified later filesystem state.",
+    "decision": "No stage change; preserve physical dry-run gate in issue #15."
+  },
+  "v0_3_finite_derived_arithmetic": {
+    "date_utc": "2026-10-25",
+    "hypothesis": "A finite but very large instantaneous-power pair can overflow naive trapezoidal averaging, bypass energy consistency, and break strict JSON.",
+    "prior_failure": "v0.2 returned STRUCTURE_ONLY_PROVENANCE_UNVERIFIED for fictional power_w=1e308 with a stalled counter; power integral became Infinity, Infinity>Infinity evaluated false, and strict JSON serialization raised ValueError.",
+    "source_git_blob_sha": "f9c38f9b5308d16f4e22fac99d1ad5639d30f37e",
+    "test_git_blob_sha": "1cd4cca06416cae4bcd34eb288398d5f9288a4af",
+    "fix": "Compute a/2+b/2 before integration; reject nonfinite derived energy/counter/tolerance and return JSON-safe null for invalid derived energy.",
+    "new_tests": 4,
+    "total_tests_per_os": 37,
+    "local_reproduction": {
+      "runtime": "CPython 3.13.5/Linux",
+      "independent_fictional_reproducer": "3 failing cases before fix; 4/4 after fix in two local executions",
+      "raw_physical_capture": "TBD"
+    },
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40185598055",
+      "ubuntu": "37/37 passed",
+      "windows": "37/37 passed",
+      "scope": "14 origin gate and 23 dry-run tests; synthetic only"
+    },
+    "negative_controls": [
+      "finite-input arithmetic overflow hides unchanged energy counter",
+      "derived energy integral overflow on pathological timestamp gaps",
+      "overflowing derived tolerance bypass",
+      "positive finite arithmetic control"
+    ],
+    "actual_sensor_capture": "TBD",
+    "physical_origin_authenticated": false,
+    "performance_claim_permitted": false,
+    "maturity_advanced": false,
+    "decision": "Keep Prototype / Documented R&D; physical instrumented logging dry run and controlled comparisons are the next evidence gate."
+  },
+  "v0_4_interval_cancellation": {
+    "date_utc": "2026-10-26",
+    "hypothesis": "Whole-run energy counter and power totals can agree while opposing interval errors cancel",
+    "negative_control": "FICTIONAL 11 samples/600 seconds, constant 60W, cumulative counter stalled five minutes then increases 2Wh/min",
+    "independent_arithmetic": {
+      "power_integral_wh": 10,
+      "counter_delta_wh": 10,
+      "global_disagreement_wh": 0,
+      "interval_disagreements": 10
+    },
+    "implementation": "Add interval-level trapezoidal comparison, conservative provisional tolerance and explicit mismatch count",
+    "source_git_blob_sha": "57f2ce45129f7521933ba69469af5160f218778b",
+    "test_git_blob_sha": "b43dcd8d6992a584a065da5e48f2585d3095a5d2",
+    "new_fictional_tests": 3,
+    "hosted_ci": {
+      "status": "VERIFIED",
+      "run_id": 40231888178,
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40231888178",
+      "head_sha": "4980c53ffd71f276d863cf4191ad3bf6bfa7d105",
+      "ubuntu": "40/40 passed",
+      "windows": "40/40 passed",
+      "scope": "14 origin-gate + 26 dry-run fictional-only tests; no physical devices",
+      "verified_from": "GitHub Actions job status and raw job logs"
+    },
+    "caveat": "Meter quantization/update latency can cause false positives; inspect cadence and uncertainty, do not infer physical tampering",
+    "real_capture": "TBD",
+    "performance_claim_permitted": false,
+    "maturity_advanced": false,
+    "decision": "Hold Prototype / Documented R&D; require instrumented dry run"
+  }
+}

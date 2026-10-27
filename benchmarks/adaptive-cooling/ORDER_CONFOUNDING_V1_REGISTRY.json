@@ -1,0 +1,64 @@
+{
+  "schema_version": "cooling-order-confounding-v1-registry",
+  "date_utc": "2026-10-27",
+  "project": "Adaptive Personal Cooling",
+  "evidence_type": "fictional deterministic experimental-design negative control",
+  "runtime": {
+    "implementation": "CPython",
+    "python": "3.13.5",
+    "platform": "Linux x86_64 local; GitHub Actions ubuntu-latest and windows-latest"
+  },
+  "run_conditions": {
+    "seed": 20261027,
+    "blocks": 6,
+    "slot_min": 10,
+    "baseline_c": 30,
+    "drift_c_per_min": -0.02,
+    "true_treatment_effect_c": 0,
+    "carryover_c": 0,
+    "conditions": [
+      "ambient",
+      "fan_only",
+      "prototype"
+    ]
+  },
+  "results": {
+    "fixed_prototype_minus_ambient_c": -0.40000000000000213,
+    "balanced_prototype_minus_ambient_c": 0,
+    "new_tests_passed_local": 7,
+    "hosted_tests": "86/86 Ubuntu and 86/86 Windows",
+    "physical_measurements": 0
+  },
+  "local_sha256": {
+    "source": "6ee8d05055139786d1b6e0705cc432197076ed6a04c0a86288d60de11f5528f2",
+    "tests": "7203e38534799d4d0d1a3dd9757f2b5e4868392b2e664e0b2934b01d942e7030",
+    "full_generated_result": "ff04f0b34236d0e964b6444b777fefbeca002060b112ea953cc63cca5916f67f",
+    "test_log": "46e009a2ee3a9dd58181d966198d19ba15fdffcf33d38705e7408b575d13723e"
+  },
+  "verified_github_git_blob_sha": {
+    "source": "6b89fafcc49c926a6945df05a26a12e45659c9b3",
+    "tests": "5cfee8c2b42670f1cc56a6d5937a54259c429bcc"
+  },
+  "note": "Public RESULT.json is a summary; script emits full per-run JSON for independent reproduction. Local full-result hash is not the hash of the public summary.",
+  "real_physical_results": "TBD",
+  "calibration_uncertainty": "TBD",
+  "cooling_performance": "TBD",
+  "maturity_advance": false,
+  "decision": "preregister blocked order and carryover controls; physical dry run remains required",
+  "primary_sources": [
+    "https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd443.htm",
+    "https://www.itl.nist.gov/div898/handbook/pri/section3/pri332.htm"
+  ],
+  "hosted_ci": {
+    "run_id": 40553879781,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40553879781",
+    "tested_commit": "8a0f0c09e9ce4ea723deb20142243492b3c4e30b",
+    "job_ids": [
+      122364592063,
+      122364592537
+    ],
+    "status": "completed",
+    "conclusion": "success",
+    "logs_inspected": true
+  }
+}

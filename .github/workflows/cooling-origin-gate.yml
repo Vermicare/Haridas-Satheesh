@@ -1,0 +1,42 @@
+name: Cooling evidence integrity (synthetic contracts)
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/adaptive-cooling/fixture_origin_gate.py'
+      - 'benchmarks/adaptive-cooling/test_fixture_origin_gate.py'
+      - 'benchmarks/adaptive-cooling/dry_run_integrity.py'
+      - 'benchmarks/adaptive-cooling/test_dry_run_integrity.py'
+      - 'benchmarks/adaptive-cooling/DRY_RUN_INTEGRITY.md'
+      - 'benchmarks/adaptive-cooling/DRY_RUN_EXPERIMENT_REGISTRY.json'
+      - 'benchmarks/adaptive-cooling/capture_chain.py'
+      - 'benchmarks/adaptive-cooling/test_capture_chain.py'
+      - 'benchmarks/adaptive-cooling/capture_alignment.py'
+      - 'benchmarks/adaptive-cooling/test_capture_alignment.py'
+      - 'benchmarks/adaptive-cooling/CAPTURE_ALIGNMENT_V1.md'
+      - 'benchmarks/adaptive-cooling/CAPTURE_CHAIN_V1.md'
+      - 'benchmarks/adaptive-cooling/CAPTURE_CHAIN_V1_REGISTRY.json'
+      - 'benchmarks/adaptive-cooling/order_confounding_v1.py'
+      - 'benchmarks/adaptive-cooling/test_order_confounding_v1.py'
+      - 'benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1.md'
+      - 'benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1_RESULT.json'
+      - 'benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1_REGISTRY.json'
+      - '.github/workflows/cooling-origin-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integrity:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run fictional-only origin, dry-run, capture-chain, alignment and order regressions
+        working-directory: benchmarks/adaptive-cooling
+        run: python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py test_capture_chain.py test_capture_alignment.py test_order_confounding_v1.py

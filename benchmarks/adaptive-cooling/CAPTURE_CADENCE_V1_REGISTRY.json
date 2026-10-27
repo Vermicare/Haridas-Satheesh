@@ -1,0 +1,60 @@
+{
+  "schema_version": "portfolio-experiment-registry-v1",
+  "experiment_id": "cooling-declared-cadence-v1-2026-10-27",
+  "project": "Adaptive Personal Cooling",
+  "hypothesis": "A nominal sample interval in a frozen manifest can contradict the hashed CSV's observed gaps even when the existing <=60 s CSV gap check passes.",
+  "baseline": "capture_alignment.py v1 (source blob 91aeb332397e067fa8f53de66ef9db2bbf967db5) did not compare observed gaps to manifest sample_interval_s",
+  "method": "Reject any observed consecutive CSV timestamp gap outside 0.5x to 1.5x the declared nominal interval, with 1e-6 s arithmetic slack; provisional review gate, not calibrated timing tolerance.",
+  "evidence_class": "fictional-only software negative controls",
+  "dataset": "Temporary synthetic 60 W cooling CSV bundles; no hardware or real measurements",
+  "provenance": {
+    "repository": "Vermicare/Haridas-Satheesh",
+    "branch": "research/cooling-explicit-fixture-gate-20261023",
+    "source": "benchmarks/adaptive-cooling/capture_alignment.py",
+    "source_blob_sha": "7230068f1c51a3e0ac513856bca10534b4a0aaca",
+    "tests": "benchmarks/adaptive-cooling/test_capture_alignment.py",
+    "tests_blob_sha": "2e3a14150c1f6a8a93b19f25473e0e52248ea642",
+    "workflow": ".github/workflows/cooling-origin-gate.yml",
+    "code_test_commit": "2f87a09c1835af1377a66c52693545f341b152d4"
+  },
+  "execution": {
+    "date_utc": "2026-10-27",
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40462666047",
+    "status": "completed_success",
+    "python": "3.13 (GitHub Actions setup-python)",
+    "operating_systems": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "command": "python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py test_capture_chain.py test_capture_alignment.py",
+    "tests_per_os": 79,
+    "new_tests": 4,
+    "seed": "not applicable; deterministic fictional fixtures",
+    "data_source_version": "not applicable; generated fixtures"
+  },
+  "results": {
+    "ubuntu": "79/79 passed",
+    "windows": "79/79 passed",
+    "declared_5s_observed_60s": "REJECTED",
+    "declared_60s_observed_20s": "REJECTED",
+    "single_10s_gap_in_5s_series": "REJECTED",
+    "matched_5s_fictional_series": "DECLARATIONS_ALIGNED_ORIGIN_UNVERIFIED",
+    "physical_capture": "TBD",
+    "actual_instrument_models": "TBD",
+    "actual_clock_jitter": "TBD",
+    "thermal_performance": "TBD",
+    "energy_savings": "TBD"
+  },
+  "maturity_before": "Prototype / Documented R&D",
+  "maturity_after": "Prototype / Documented R&D",
+  "limitations": [
+    "Hash consistency does not authenticate physical origin or prove logger-to-CSV conversion.",
+    "Fixed nominal cadence assumption may reject valid event-driven or variable-rate logger recordings.",
+    "50% cadence tolerance is provisional, not calibrated or derived from a timing standard.",
+    "Fictional consistent data can pass; no real cooling, comfort, safety or efficiency measured."
+  ],
+  "decision": "Keep draft/unmerged; add cadence review gate without advancing maturity; require real physical logger dry run and controlled comparisons.",
+  "next_experiment": "Issue #15: inventory actual instruments and uncertainties, freeze nominal cadence, capture original >=10 minute logger bytes, replay conversion, inspect gaps/energy/geometry and preserve negative findings.",
+  "outreach": "none",
+  "release": "none"
+}
