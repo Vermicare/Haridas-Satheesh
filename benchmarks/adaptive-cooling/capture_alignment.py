@@ -90,6 +90,17 @@ def audit(bundle_dir: str | Path, *, expected_manifest_sha256: str | None = None
             declared_first = _time(manifest['metadata']['capture_start'])
             declared_last = _time(manifest['metadata']['capture_end'])
             interval = float(manifest['metadata']['sample_interval_s'])
+            # The CSV's generic <=60 s gap limit is insufficient when the
+            # frozen manifest declares a faster nominal sample cadence.
+            # +/-50% is a provisional REVIEW tolerance, not calibrated jitter.
+            # Report a contradiction rather than silently accepting sparse
+            # records as evidence of the declared capture resolution.
+            observed_gaps = [(b - a).total_seconds()
+                             for a, b in zip(stamps, stamps[1:])]
+            if any(gap < interval * 0.5 - 1e-6 or
+                   gap > interval * 1.5 + 1e-6
+                   for gap in observed_gaps):
+                problems.append('DECLARED_CADENCE_MISMATCH')
             # Declarations must encompass the observed samples and be within
             # one sample interval at each boundary. Never silently stretch a run.
             slack = interval + 1e-6
