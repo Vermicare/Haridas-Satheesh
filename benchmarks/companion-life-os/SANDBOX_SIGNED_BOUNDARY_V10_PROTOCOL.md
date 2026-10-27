@@ -17,3 +17,10 @@
 **Threat boundary:** HMAC is symmetric and both public keys are deliberately test-only. The fixture issuer can mint arbitrary fictional subjects and the verifier possesses signing secrets. This is **not** human authentication, independent identity proof, trusted time, real consent, tamper-proof storage, exactly-once external delivery, or evidence of a deployed Life OS.
 
 **Provenance:** planned on 2026-10-27 against draft PR #10 head `c77705cfbc47b5fa4f928e7fc2a0c173995591bf`; executable and CI results remain **TBD until independently published and verified**.
+
+## Primary-standard decision check (2026-10-27)
+
+- [NIST SP 800-63B-4, final July 2025](https://csrc.nist.gov/pubs/sp/800/63/b/4/final): authenticating a claimant requires proof of control of an authenticator bound to a subscriber; a fictional subject string or issuer-generated test token does not meet that requirement. **Decision:** the next experiment must separate an authenticator-verification stub, account binding and a relying-party assertion, with the mock trust boundary explicitly labeled.
+- [IETF RFC 8725 (JWT Best Current Practices)](https://www.rfc-editor.org/rfc/rfc8725): explicit token types, audience/claim validation and algorithm restrictions are relevant threat-model checks. The v1.0 token format is **not JWT/JWS** and does not claim RFC compliance. **Decision:** avoid inventing a production token standard; evaluate a mature, standards-based test IdP for any subsequent non-fictional prototype.
+
+These are design constraints, not evidence of security certification, novelty or compliance.
