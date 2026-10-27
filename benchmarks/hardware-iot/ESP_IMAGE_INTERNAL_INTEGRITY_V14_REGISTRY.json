@@ -16,7 +16,15 @@
     "os": "Linux",
     "run_time_utc": "2026-10-27",
     "source_revision": "e490b42c0ad8bfac14b3f67c023e9d2b3987fe23",
-    "github_actions_new_regression_result": "TBD"
+    "github_actions_new_regression_result": {
+      "run_id": 40483035863,
+      "code_commit": "e490b42c0ad8bfac14b3f67c023e9d2b3987fe23",
+      "ubuntu": "104/104 PASS",
+      "windows": "104/104 PASS",
+      "new_adversarial": "7/7 PASS",
+      "log_inspection": "both jobs inspected",
+      "hardware": "NOT_PERFORMED"
+    }
   },
   "observed_static": {
     "bootloader": {
@@ -51,7 +59,7 @@
     "device_probe": "TBD",
     "observed_flash_capacity": "TBD",
     "flashed_image": "NOT_PERFORMED",
-    "bh1750_sc40_capture": "NOT_PERFORMED"
+    "bh1750_scd40_capture": "NOT_PERFORMED"
   },
   "decision": "STATIC_PACKAGE_PASS_FLASH_NOT_AUTHORIZED",
   "next_experiment": "Read-only physical ESP32-S3 chip and flash-capacity probe; then reviewed >=600 s dual-sensor capture",
