@@ -5,24 +5,25 @@
   "question": "Can an offline fail-closed parser screen operator-supplied esptool flash-id transcripts before the physical flash review?",
   "input_provenance": "FICTIONAL_TRANSCRIPTS_ONLY",
   "source_path": "benchmarks/hardware-iot/read_only_flash_probe_v15.py",
-  "source_git_blob_sha": "6979dfb7ebd4cbd1daeb6bdb854cda7233fa0ee1",
+  "source_git_blob_sha": "59ddb1941168709d789c5ed5b8ef3dd4b3e8b0fd",
   "tests_path": "benchmarks/hardware-iot/test_read_only_flash_probe_v15.py",
-  "tests_git_blob_sha": "5ec7f1f711a06b621ecc1f563ea1dbd588891303",
+  "tests_git_blob_sha": "67a1e28ad420e19cfe86d35e1a624d59bbb793c5",
   "execution": {
     "local": {
       "runtime": "CPython 3.13.5, Linux x86_64, GCC 14.2.0",
       "command": "python -m unittest discover -v",
-      "new_tests_passed": 14,
+      "new_tests_passed": 15,
       "physical_device_used": false
     },
     "github_actions": {
-      "run_id": 40580874050,
-      "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40580874050",
+      "run_id": 40581083385,
+      "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40581083385",
       "python": "3.13",
-      "ubuntu_tests_passed": 118,
-      "windows_tests_passed": 118,
+      "ubuntu_tests_passed": 119,
+      "windows_tests_passed": 119,
       "job_logs_inspected": true,
-      "conclusion": "success"
+      "conclusion": "success",
+      "tested_source_commit": "b47c0818b75eae434985d58dedfea2df6d5220f1"
     }
   },
   "expected_unflashed_build_flash_mb": 2,
@@ -41,5 +42,13 @@
   "decision": "HOLD_PENDING_READ_ONLY_PHYSICAL_DEVICE_AND_CONFIGURATION_REVIEW",
   "maturity": "Prototype / Hardware Architecture (unchanged)",
   "next_experiment": "Collect genuine private flash-id output with independent board/port review, then separately assess board-matched firmware and >=600-second sensor capture",
-  "unknown": "TBD"
+  "unknown": "TBD",
+  "negative_controls": [
+    "wrong or ambiguous chip",
+    "missing, duplicate or malformed flash-size field",
+    "warnings and errors",
+    "unsupported sizes",
+    "fictional MAC excluded",
+    "unreadable private transcript path not exposed"
+  ]
 }
