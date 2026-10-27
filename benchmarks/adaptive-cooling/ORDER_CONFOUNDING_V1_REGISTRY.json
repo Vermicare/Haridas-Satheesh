@@ -6,7 +6,7 @@
   "runtime": {
     "implementation": "CPython",
     "python": "3.13.5",
-    "platform": "Linux x86_64 (local execution; hosted CI pending)"
+    "platform": "Linux x86_64 local; GitHub Actions ubuntu-latest and windows-latest"
   },
   "run_conditions": {
     "seed": 20261027,
@@ -26,7 +26,7 @@
     "fixed_prototype_minus_ambient_c": -0.40000000000000213,
     "balanced_prototype_minus_ambient_c": 0,
     "new_tests_passed_local": 7,
-    "hosted_tests": "TBD",
+    "hosted_tests": "86/86 Ubuntu and 86/86 Windows",
     "physical_measurements": 0
   },
   "local_sha256": {
@@ -48,5 +48,17 @@
   "primary_sources": [
     "https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd443.htm",
     "https://www.itl.nist.gov/div898/handbook/pri/section3/pri332.htm"
-  ]
+  ],
+  "hosted_ci": {
+    "run_id": 40553879781,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40553879781",
+    "tested_commit": "8a0f0c09e9ce4ea723deb20142243492b3c4e30b",
+    "job_ids": [
+      122364592063,
+      122364592537
+    ],
+    "status": "completed",
+    "conclusion": "success",
+    "logs_inspected": true
+  }
 }
