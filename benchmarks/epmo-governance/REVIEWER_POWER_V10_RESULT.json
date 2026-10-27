@@ -1,0 +1,93 @@
+{
+  "alpha_two_sided": 0.05,
+  "decision": "Planning sensitivity only; no efficacy or study-power guarantee",
+  "external_actions": 0,
+  "negative_cases_per_reviewer": 13,
+  "observed_effect": "TBD",
+  "observed_human_participants": 0,
+  "origin": "FICTIONAL_ASSUMPTION_BASED_SIMULATION",
+  "permutations_per_replication": 199,
+  "replications": 400,
+  "results": [
+    {
+      "estimated_rejection_probability": 0.025,
+      "monte_carlo_se": 0.0078,
+      "rejections": 10,
+      "replications": 400,
+      "reviewers_per_arm": 12,
+      "scenario": "null"
+    },
+    {
+      "estimated_rejection_probability": 0.0475,
+      "monte_carlo_se": 0.0106,
+      "rejections": 19,
+      "replications": 400,
+      "reviewers_per_arm": 24,
+      "scenario": "null"
+    },
+    {
+      "estimated_rejection_probability": 0.025,
+      "monte_carlo_se": 0.0078,
+      "rejections": 10,
+      "replications": 400,
+      "reviewers_per_arm": 48,
+      "scenario": "null"
+    },
+    {
+      "estimated_rejection_probability": 0.05,
+      "monte_carlo_se": 0.0109,
+      "rejections": 20,
+      "replications": 400,
+      "reviewers_per_arm": 96,
+      "scenario": "null"
+    },
+    {
+      "estimated_rejection_probability": 0.305,
+      "monte_carlo_se": 0.023,
+      "rejections": 122,
+      "replications": 400,
+      "reviewers_per_arm": 12,
+      "scenario": "ten_point_reduction"
+    },
+    {
+      "estimated_rejection_probability": 0.5975,
+      "monte_carlo_se": 0.0245,
+      "rejections": 239,
+      "replications": 400,
+      "reviewers_per_arm": 24,
+      "scenario": "ten_point_reduction"
+    },
+    {
+      "estimated_rejection_probability": 0.905,
+      "monte_carlo_se": 0.0147,
+      "rejections": 362,
+      "replications": 400,
+      "reviewers_per_arm": 48,
+      "scenario": "ten_point_reduction"
+    },
+    {
+      "estimated_rejection_probability": 0.9975,
+      "monte_carlo_se": 0.0025,
+      "rejections": 399,
+      "replications": 400,
+      "reviewers_per_arm": 96,
+      "scenario": "ten_point_reduction"
+    }
+  ],
+  "scenarios": [
+    {
+      "control_probability": 0.2,
+      "name": "null",
+      "worksheet_probability": 0.2
+    },
+    {
+      "control_probability": 0.2,
+      "name": "ten_point_reduction",
+      "worksheet_probability": 0.1
+    }
+  ],
+  "seed": 20261027,
+  "test": "reviewer-level two-sided Monte Carlo permutation; (1+extreme)/(1+permutations)",
+  "version": "1.0",
+  "within_reviewer_icc_assumed": 0.1
+}
