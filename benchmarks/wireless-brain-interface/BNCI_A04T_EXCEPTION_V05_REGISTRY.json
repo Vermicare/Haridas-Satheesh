@@ -1,0 +1,66 @@
+{
+  "schema": "wbi.bnci.a04t.exception_metadata.v0.5",
+  "created_date_ist": "2026-10-28",
+  "project": "Wireless Brain Interface",
+  "stage": "Research / Simulation",
+  "stage_change": false,
+  "dataset": "BNCI2014_001",
+  "source_catalog": "https://bnci-horizon-2020.eu/database/data-sets",
+  "source_file": "A04T.mat",
+  "session": "T_training",
+  "license_notice": "CC BY-ND 4.0 (publisher catalog); do not redistribute raw data",
+  "source_sha256_observed": "15850d81b95fc88cc8b9589eb9b713d49fa071e28adaf32d675b3eaa30591d6e",
+  "source_bytes_observed": 37150377,
+  "source_authenticated_by_publisher": false,
+  "source_sha256_independent_repeat": "TBD",
+  "observed": {
+    "recording_blocks": 7,
+    "cue_free_baseline_blocks": 1,
+    "task_blocks": 6,
+    "cues_total": 288,
+    "channels_per_block": 25,
+    "sampling_rate_hz": 250
+  },
+  "preregistered_gate": {
+    "baseline_blocks_min": 1,
+    "baseline_blocks_max": 3,
+    "task_blocks_exact": 6,
+    "cues_per_task_block_exact": 48,
+    "channels_exact": 25,
+    "sampling_rate_hz_exact": 250
+  },
+  "execution": {
+    "workflow_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40589338663",
+    "workflow_head_sha": "a73bb52d08c24993beb3f6599813dfd9e715b7b1",
+    "status": "success",
+    "operating_system": "Ubuntu",
+    "python": "3.13 (exact patch TBD)",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "tests_passed": 13,
+    "tests_total": 13,
+    "source_git_blob": "a799307d33475e79da111c2e201eeb3852729b04",
+    "test_git_blob": "ea2cfa1bf0725afd21a9d54c5ab1dc3f21072bee",
+    "metadata_only_artifact_id": 12772823419,
+    "artifact_zip_sha256_reported_by_ci": "a07346cf6d0f7c252eb75dd167731077c412c1fc7ccda93b568e11ed9821ede7",
+    "artifact_independently_downloaded": false
+  },
+  "privacy": {
+    "raw_eeg_uploaded": false,
+    "class_label_values_inspected": false,
+    "evaluation_session_accessed": false
+  },
+  "performance": {
+    "decoder_accuracy": "TBD",
+    "false_action_risk": "TBD",
+    "matched_coverage_benefit": "TBD",
+    "clinical_validity": "TBD"
+  },
+  "decision": "Keep Research / Simulation; documented A04T baseline exception confirmed; require independent hash repeat and training-only manifest",
+  "next_experiment": "Independently reacquire A04T and match source SHA-256; then inspect remaining training files without evaluation labels",
+  "sources": [
+    "https://www.bbci.de/competition/iv/desc_2a.pdf",
+    "https://bnci-horizon-2020.eu/database/data-sets",
+    "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40589338663"
+  ]
+}
