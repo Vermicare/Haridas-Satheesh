@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Benchmark Contract
 
-**Status:** protocol only; results are TBD.  
+**Status:** [frozen synthetic evaluator](SYNTHETIC_EVALUATOR.md) has a [preserved two-run same-runtime execution record](EXECUTION_RECORD.md), including byte-identical risk–coverage CSV SHA-256 `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a`. Its **synthetic** results do not show gate superiority over simple abstention. Real public-EEG results remain **TBD**. [Draft PR #16](https://github.com/Vermicare/Haridas-Satheesh/pull/16) contains additional independently hosted cross-OS reproduction and a metadata-only prospective EEG split protocol; it is unmerged and does not establish EEG decoding.  
 **Maturity remains:** Research / Simulation.
 
 ## Question
