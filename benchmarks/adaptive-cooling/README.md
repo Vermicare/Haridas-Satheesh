@@ -137,3 +137,10 @@ The earlier hashed byte-chain and CSV numeric preflights did **not** compare CSV
 ## Declared-cadence negative control (draft; fictional-only, 2026-10-27)
 
 [Reproducible method and failure boundary](CAPTURE_CADENCE_V1.md) · [machine-readable evidence registry](CAPTURE_CADENCE_V1_REGISTRY.json). The previous alignment gate accepted an internally coherent 60-second sampled CSV with a frozen manifest claiming 5-second samples, because only a generic 60-second maximum gap was checked. The new review-only cadence consistency check rejects that contradiction, oversampling declarations and a missing nominal sample. [GitHub CI #40462666047](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40462666047) passed **79/79 fictional-only tests on Ubuntu and 79/79 on Windows**. This is not instrument timing characterization or real cooling evidence. Actual sensor provenance, raw logger conversion replay, calibration, controlled thermal benefit, heat rejection and full energy accounting remain **TBD** under [Issue #15](https://github.com/Vermicare/Haridas-Satheesh/issues/15).
+
+
+## Trial-order confounding negative control (draft; fictional-only, 2026-10-27)
+
+[Reproducible method](ORDER_CONFOUNDING_V1.md) · [executable](order_confounding_v1.py) · [seven regression tests](test_order_confounding_v1.py) · [machine-readable summary](ORDER_CONFOUNDING_V1_RESULT.json) · [provenance](ORDER_CONFOUNDING_V1_REGISTRY.json).
+
+A zero-effect fictional model with −0.02 °C/min environmental drift falsely shows **−0.400 °C** prototype-minus-ambient under fixed ambient → fan-only → prototype ordering; a six-permutation balanced schedule gives **0.000 °C** under the same simplified linear assumptions. Carryover remains a separate failure mode. This is a *study-design* negative control, **not physical cooling evidence**. Predeclare order/blocking, washout, energy boundary and primary metric before the real controlled comparison. First physical milestone remains the genuine ≥600-second instrumented logging dry run in [Issue #15](https://github.com/Vermicare/Haridas-Satheesh/issues/15). All measured outcomes **TBD**.
