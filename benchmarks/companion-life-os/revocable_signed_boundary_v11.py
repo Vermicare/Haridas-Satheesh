@@ -32,6 +32,10 @@ class FictionalRevocableStore(FictionalDurableStore):
                 revoked_at TEXT NOT NULL,
                 reason TEXT NOT NULL)''')
 
+    def execute(self, *args, **kwargs):
+        # Prevent bypassing the revocation gate via the inherited v0.3 API.
+        raise ContractError('use FictionalRevocableBoundary for signed fictional execution')
+
     def revoke_digest(self, digest, *, now, reason):
         # The caller is a synthetic test operator. This does not authenticate them.
         if not isinstance(digest, str) or len(digest) != 64 or any(
