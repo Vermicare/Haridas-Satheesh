@@ -1,5 +1,12 @@
 name: WBI upstream MAT source fingerprint (no EEG artifacts)
 on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci2014_001_source_probe.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2014_001_source_probe.py'
+      - '.github/workflows/wbi-source-probe.yml'
   pull_request:
     paths:
       - 'benchmarks/wireless-brain-interface/bnci2014_001_source_probe.py'
