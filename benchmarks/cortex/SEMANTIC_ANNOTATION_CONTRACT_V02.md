@@ -35,7 +35,7 @@ python -B semantic_annotation_contract_v02.py check blind_case_20261024.json bli
 
 The second command must return nonzero for an unfilled template. It checks the frozen case/archive SHA-256, existing v0.1/v0.4 provenance gates, and v0.2 semantic shape. It returns only aggregate error codes, never annotation text, IDs, paths, identities, or measured human results. It cannot authenticate the author of a submission.
 
-**Local evidence:** 22/22 direct shape tests passed on the prepared exact-source Python file on this run; Python/runtime version for that local container is not yet pinned in a published registry. The six additional integrated tests and final-head cross-platform CI are **pending verification**; do not claim those passed until inspected.
+**Local evidence:** 22/22 direct shape tests passed on the prepared exact-source Python file on this run; Python/runtime version for that local container is not yet pinned in a published registry. The six additional integrated tests passed as part of [GitHub Actions #40515442312](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40515442312): **163/163 tests on Ubuntu and 163/163 on Windows**. Both job logs were inspected; the integrated negative control confirms that the source-only fictional decision passes predecessor gates but fails v0.2 solely for the missing statement. The tested commit is `c6dd625751d4a84f4a7402676ec4a783e7a5512e`. The [machine-readable registry](SEMANTIC_ANNOTATION_CONTRACT_V02_REGISTRY.json) pins executable blobs and run conditions. This remains fictional structural readiness only.
 
 ## Predeclared next experiment
 
