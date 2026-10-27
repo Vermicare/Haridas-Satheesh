@@ -52,15 +52,29 @@ def select_disjoint_training_cohort(train_ids, count=SAMPLE_SIZE):
 
 def interpret_primary_gate(metrics):
     """Predeclared primary comparator: weekday median vs last-observed, store cluster CI."""
-    interval = metrics["weekday_median_minus_last_observed_store_cluster_ci95"]
-    if (not isinstance(interval, list) or len(interval) != 2 or
-            not all(type(x) in (int, float) for x in interval)):
-        raise EvidenceError("missing primary store-cluster interval")
     import math
-    if not all(math.isfinite(x) for x in interval) or interval[0] > interval[1]:
+
+    def finite_number(value):
+        # bool is a subclass of int; huge ints may overflow float conversion.
+        if type(value) not in (int, float):
+            return False
+        try:
+            return math.isfinite(value)
+        except (OverflowError, ValueError):
+            return False
+
+    try:
+        interval = metrics["weekday_median_minus_last_observed_store_cluster_ci95"]
+        weekday = metrics["weekday_median_last4_day_weighted_mae"]
+        last = metrics["original_v12_metrics"]["day_weighted_mae"]["last_observed"]
+    except (KeyError, TypeError) as exc:
+        raise EvidenceError("missing primary-gate evidence") from exc
+    if (not isinstance(interval, list) or len(interval) != 2 or
+            not all(finite_number(x) for x in interval) or interval[0] > interval[1]):
         raise EvidenceError("invalid primary store-cluster interval")
-    point_better = (metrics["weekday_median_last4_day_weighted_mae"] <
-                    metrics["original_v12_metrics"]["day_weighted_mae"]["last_observed"])
+    if not finite_number(weekday) or not finite_number(last) or weekday < 0 or last < 0:
+        raise EvidenceError("invalid primary-gate MAE")
+    point_better = weekday < last
     return {
         "predeclared_primary_comparator": "weekday-median minus last-observed per-series MAE, paired store-cluster 95% interval",
         "point_mae_better": bool(point_better),
