@@ -82,6 +82,14 @@ class SemanticAnnotationContractTests(unittest.TestCase):
         self.item["objects"][2]["status"] = {"open": True}
         self.assertIn("v02:object[2]:invalid_status", self.errors())
 
+    def test_reject_risk_with_decision_status(self):
+        self.item["objects"][2]["status"] = "active"
+        self.assertIn("v02:object[2]:invalid_status", self.errors())
+
+    def test_reject_decision_with_risk_status(self):
+        self.item["objects"][0]["status"] = "open"
+        self.assertIn("v02:object[0]:invalid_status", self.errors())
+
     def test_reject_nontext_semantic_claim(self):
         self.item["objects"][3]["statement"] = ["fictional"]
         self.assertIn("v02:object[3]:invalid_statement", self.errors())
