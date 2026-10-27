@@ -26,17 +26,24 @@
     "workflow_git_blob": "75e50b765a2dabbe5281abe5d08b0670c0d1c2b8"
   },
   "run_conditions": {
-    "local": "CPython 3.11, Linux, standard library only; isolated synthetic ZIPs",
+    "local": "CPython 3.13.5, Linux, standard library only; isolated synthetic ZIPs",
     "local_command": "python -B -m unittest discover -s benchmarks/wireless-brain-interface -p test_bnci2a_source_archive_preflight.py -v",
-    "hosted_os": "Ubuntu and Windows workflow configured; verification TBD",
-    "hosted_run_url": "TBD"
+    "hosted_os": "Ubuntu and Windows, CPython 3.13.16, GitHub Actions; both job logs inspected",
+    "hosted_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40451014392",
+    "hosted_tested_commit": "5fd272e769bfe44bca388c06d7e8176e1d5578ef"
   },
   "results": {
     "local_synthetic_tests_passed": 14,
     "local_synthetic_tests_failed": 0,
     "source_archive_files_verified": 0,
     "actual_eeg_trials_examined": 0,
-    "real_eeg_metrics": "TBD"
+    "real_eeg_metrics": "TBD",
+    "hosted_ubuntu_synthetic_archive_tests_passed": 14,
+    "hosted_windows_synthetic_archive_tests_passed": 14,
+    "hosted_ubuntu_fictional_split_tests_passed": 9,
+    "hosted_windows_fictional_split_tests_passed": 9,
+    "hosted_original_frozen_synthetic_csv_sha256": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a",
+    "hosted_frozen_source_blob_verified": true
   },
   "negative_controls": [
     "missing session",
