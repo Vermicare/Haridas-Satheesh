@@ -12,11 +12,31 @@ from flash_bundle_preflight import AuditError, audit_zip
 HEAD = "a" * 40
 
 
+def fake_esp_image(payload):
+    """Synthetic ESP32-S3 image: structural fixture, never flash to a board."""
+    header = bytearray(24)
+    header[0] = 0xE9
+    header[1] = 1
+    header[2] = 2  # DIO
+    header[3] = 0x1F  # 2 MB, 80 MHz
+    struct.pack_into("<H", header, 12, 9)  # ESP32-S3
+    header[23] = 1  # appended digest
+    body = bytes(header) + struct.pack("<II", 0x3FC90000, len(payload)) + payload
+    body += bytes((15 - len(body)) % 16)
+    checksum = 0xEF
+    for byte in payload:
+        checksum ^= byte
+    body += bytes([checksum])
+    return body + hashlib.sha256(body).digest()
+
+
 def fake_members():
     # Minimal fictional partition table with one factory partition; NOT valid firmware.
     part = bytearray(b"\xff" * 96)
     struct.pack_into("<HBBII", part, 0, 0x50AA, 0, 0, 0x10000, 0x100000)
     part[12:20] = b"factory\x00"
+    part[32:48] = bytes.fromhex("ebeb") + bytes([0xFF] * 14)
+    part[48:64] = hashlib.md5(part[:32]).digest()
     args = {
         "flash_settings": {"flash_mode": "dio", "flash_size": "2MB", "flash_freq": "80m"},
         "write_flash_args": ["--flash-mode", "dio", "--flash-size", "2MB", "--flash-freq", "80m"],
@@ -29,8 +49,8 @@ def fake_members():
         "physical_sensor_capture=NOT_PERFORMED", "device_identity=TBD", "",
     ])
     return {
-        "iot_dual_sensor_capture.bin": b"\xe9" + b"a" * 200,
-        "bootloader/bootloader.bin": b"\xe9" + b"b" * 100,
+        "iot_dual_sensor_capture.bin": fake_esp_image(b"fictional-app"),
+        "bootloader/bootloader.bin": fake_esp_image(b"fictional-bootloader"),
         "partition_table/partition-table.bin": bytes(part),
         "flasher_args.json": json.dumps(args).encode(),
         "BUILD_PROVENANCE.txt": provenance.encode(),
@@ -149,6 +169,56 @@ class BundlePreflightTests(unittest.TestCase):
         with self.assertRaisesRegex(AuditError, "overlapping partitions"):
             self.audit()
 
+
+    def test_internal_header_and_partition_digests_are_verified(self):
+        r = self.audit()
+        internal = r["internal_image_integrity"]
+        self.assertEqual(internal["application"]["chip_id"], 9)
+        self.assertEqual(internal["bootloader"]["segment_count"], 1)
+        self.assertEqual(internal["partition_table"]["partition_count"], 1)
+        self.assertEqual(r["flash_authorization"], "HOLD_PENDING_OPERATOR_AND_DEVICE_REVIEW")
+
+    def test_wrong_chip_id_rejected_even_with_new_zip_hashes(self):
+        image = bytearray(self.members["iot_dual_sensor_capture.bin"])
+        struct.pack_into("<H", image, 12, 0)
+        self.members["iot_dual_sensor_capture.bin"] = bytes(image)
+        with self.assertRaisesRegex(AuditError, "chip id mismatch"):
+            self.audit()
+
+    def test_wrong_image_header_flash_size_rejected(self):
+        image = bytearray(self.members["bootloader/bootloader.bin"])
+        image[3] = 0x3F
+        self.members["bootloader/bootloader.bin"] = bytes(image)
+        with self.assertRaisesRegex(AuditError, "image header flash size"):
+            self.audit()
+
+    def test_forged_embedded_image_digest_rejected(self):
+        image = bytearray(self.members["iot_dual_sensor_capture.bin"])
+        image[-1] ^= 1
+        self.members["iot_dual_sensor_capture.bin"] = bytes(image)
+        with self.assertRaisesRegex(AuditError, "embedded image SHA256 mismatch"):
+            self.audit()
+
+    def test_forged_partition_entry_with_stale_md5_rejected(self):
+        part = bytearray(self.members["partition_table/partition-table.bin"])
+        part[12] ^= 1
+        self.members["partition_table/partition-table.bin"] = bytes(part)
+        with self.assertRaisesRegex(AuditError, "partition table: MD5 mismatch"):
+            self.audit()
+
+    def test_segment_xor_corruption_rejected_with_new_zip_hashes(self):
+        image = bytearray(self.members["iot_dual_sensor_capture.bin"])
+        image[32] ^= 1
+        self.members["iot_dual_sensor_capture.bin"] = bytes(image)
+        with self.assertRaisesRegex(AuditError, "segment XOR checksum mismatch"):
+            self.audit()
+
+    def test_missing_embedded_image_digest_flag_rejected(self):
+        image = bytearray(self.members["iot_dual_sensor_capture.bin"])
+        image[23] = 0
+        self.members["iot_dual_sensor_capture.bin"] = bytes(image)
+        with self.assertRaisesRegex(AuditError, "embedded SHA256 flag missing"):
+            self.audit()
 
 if __name__ == "__main__":
     unittest.main()
