@@ -32,13 +32,15 @@
     ],
     "alpha": 0.05,
     "workflow": ".github/workflows/epmo-governance-synthetic.yml",
-    "github_actions_run": "TBD"
+    "github_actions_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40433944874",
+    "github_actions_verified_commit": "cb80b467beee09d04fa93ae2abc26cee994ac946",
+    "github_actions_python": "CPython 3.13.16"
   },
   "verification": {
     "local_unittest": "8/8 PASS",
     "local_simulation": "PASS",
     "result_exact_git_blob_match": true,
-    "github_cross_os": "TBD"
+    "github_cross_os": "164/164 tests PASS on Ubuntu and Windows; exact frozen simulation JSON MATCH on both; both job logs inspected"
   },
   "observed_human_results": {
     "participants": 0,
