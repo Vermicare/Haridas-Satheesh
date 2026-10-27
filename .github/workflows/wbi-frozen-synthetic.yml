@@ -9,6 +9,8 @@ on:
       - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
       - 'benchmarks/wireless-brain-interface/bnci2a_split_preflight.py'
       - 'benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py'
+      - 'benchmarks/wireless-brain-interface/bnci2a_source_archive_preflight.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2a_source_archive_preflight.py'
   pull_request:
     paths:
       - '.github/workflows/wbi-frozen-synthetic.yml'
@@ -16,6 +18,8 @@ on:
       - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
       - 'benchmarks/wireless-brain-interface/bnci2a_split_preflight.py'
       - 'benchmarks/wireless-brain-interface/test_bnci2a_split_preflight.py'
+      - 'benchmarks/wireless-brain-interface/bnci2a_source_archive_preflight.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci2a_source_archive_preflight.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -44,3 +48,6 @@ jobs:
       - name: Run fictional BNCI2a split integrity regressions (NO EEG)
         shell: bash
         run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_split_preflight.py' -v
+      - name: Run synthetic ZIP source-integrity and label-firewall regressions (NO EEG)
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_bnci2a_source_archive_preflight.py' -v
