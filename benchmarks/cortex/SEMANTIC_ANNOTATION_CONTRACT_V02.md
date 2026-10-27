@@ -22,7 +22,7 @@ The `annotation_schema_version` must equal `cortex-fictional-annotation-v0.2`. T
 | dependency | `statement` | No unsupported invented dependencies |
 | conditional follow-up | `condition`, `action` | Omit the object if not a supported follow-up |
 
-Text is nonblank, bounded to 500 characters, and rejects NUL/control characters. Owner is at most 120 characters. Due dates are valid ISO calendar dates or `null`. Unknown fields are rejected to prevent undocumented scoring assumptions. The v0.1 source/citation gates still apply. A **valid empty object list is allowed**: no annotation should be fabricated to fill a quota.
+Text is nonblank, bounded to 500 characters, and rejects NUL/control characters. Owner is at most 120 characters. Due dates are valid ISO calendar dates or `null`. Decision status is `active`, `superseded` or `null`; risk status is `open`, `closed` or `null` (cross-kind status strings fail closed). Unknown fields are rejected to prevent undocumented scoring assumptions. The v0.1 source/citation gates still apply. A **valid empty object list is allowed**: no annotation should be fabricated to fill a quota.
 
 ## Reproduce (Python 3.13, standard library)
 
@@ -35,7 +35,7 @@ python -B semantic_annotation_contract_v02.py check blind_case_20261024.json bli
 
 The second command must return nonzero for an unfilled template. It checks the frozen case/archive SHA-256, existing v0.1/v0.4 provenance gates, and v0.2 semantic shape. It returns only aggregate error codes, never annotation text, IDs, paths, identities, or measured human results. It cannot authenticate the author of a submission.
 
-**Local evidence:** 20/20 direct shape tests passed on the prepared exact-source Python file on this run; Python/runtime version for that local container is not yet pinned in a published registry. The six additional integrated tests and full cross-platform CI are **pending verification**; do not claim those passed until inspected.
+**Local evidence:** 22/22 direct shape tests passed on the prepared exact-source Python file on this run; Python/runtime version for that local container is not yet pinned in a published registry. The six additional integrated tests and final-head cross-platform CI are **pending verification**; do not claim those passed until inspected.
 
 ## Predeclared next experiment
 
