@@ -123,5 +123,47 @@ class AlignmentTests(unittest.TestCase):
         self.assertIn('ALIGNMENT_UNREADABLE_OR_AMBIGUOUS', audit(self.root)['problems'])
 
 
+    def _set_fictional_cadence(self, gaps, declared_interval):
+        # Preserve 60 W and derive the fictional cumulative Wh from elapsed
+        # time so that only the nominal-cadence declaration is under test.
+        elapsed = 0
+        base = self.rows[0].copy()
+        rows = []
+        for dt in [0] + list(gaps):
+            elapsed += dt
+            row = base.copy()
+            row['timestamp'] = (self.start + timedelta(seconds=elapsed)).isoformat()
+            row['energy_wh'] = str(elapsed / 60)
+            rows.append(row)
+        self.rows = rows
+        self.metadata['sample_interval_s'] = declared_interval
+        self.metadata['capture_end'] = (self.start + timedelta(seconds=elapsed)).isoformat()
+        self.save()
+
+    def test_fictional_matching_five_second_cadence_is_structural_only(self):
+        self._set_fictional_cadence([5] * 120, 5)
+        result = audit(self.root)
+        self.assertEqual(result['status'], 'DECLARATIONS_ALIGNED_ORIGIN_UNVERIFIED', result)
+        self.assertFalse(result['physical_origin_authenticated'])
+
+    def test_fictional_sparse_sixty_second_data_misdeclared_as_five_seconds(self):
+        self.metadata['sample_interval_s'] = 5
+        self.save()
+        result = audit(self.root)
+        self.assertIn('DECLARED_CADENCE_MISMATCH', result['problems'])
+        self.assertEqual(result['status'], 'REJECTED')
+
+    def test_fictional_twenty_second_data_misdeclared_as_sixty_seconds(self):
+        self._set_fictional_cadence([20] * 30, 60)
+        self.assertIn('DECLARED_CADENCE_MISMATCH', audit(self.root)['problems'])
+
+    def test_fictional_single_missing_five_second_sample_rejected(self):
+        self._set_fictional_cadence([5] * 59 + [10] + [5] * 60, 5)
+        result = audit(self.root)
+        self.assertIn('DECLARED_CADENCE_MISMATCH', result['problems'])
+        self.assertEqual(result['csv_integrity_status'],
+                         'STRUCTURE_ONLY_PROVENANCE_UNVERIFIED')
+
+
 if __name__ == '__main__':
     unittest.main()
