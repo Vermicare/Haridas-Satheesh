@@ -16,7 +16,7 @@
   },
   "runtime_hosted": "TBD",
   "source_sha256": "31999dab83c041d1f0f9253ffdc3a87fa3fa10607b44dcfb4a5005998d5e770f",
-  "test_sha256": "f1b22870f714ae0b33b04e42dc00f903b67d542c1df378e264baa0774bbc2c01",
+  "test_sha256": "88a8644270e7f40ac6c8413a7346190c646b53828666e8a259fc8ef601aca0e5",
   "demo_sha256": "560ccddd1f370a885afe6101584dd097055d05df069f5ead065ff38298594430",
   "new_tests_local_passed": 15,
   "new_tests_local_total": 15,
@@ -39,5 +39,11 @@
     "https://www.sqlite.org/lang_transaction.html",
     "https://www.sqlite.org/isolation.html",
     "https://csrc.nist.gov/pubs/sp/800/63/b/4/final"
-  ]
+  ],
+  "red_ci_windows": {
+    "run_id": 40498874654,
+    "failed_tests": 2,
+    "reason": "Windows SQLite handles left open by test fixtures; TempDirectory cleanup WinError 32; Linux passed"
+  },
+  "correction_commit": "b700f0d03426ab3b38e88340a4e2a39e138cb7be"
 }
