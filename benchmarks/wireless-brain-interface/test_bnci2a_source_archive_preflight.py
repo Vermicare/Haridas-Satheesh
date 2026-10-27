@@ -1,6 +1,7 @@
 """Synthetic ZIP contract tests only. No public EEG downloaded or processed."""
 from __future__ import annotations
 
+import hashlib
 import tempfile
 import unittest
 import warnings
@@ -103,6 +104,34 @@ class TestSourceArchivePreflight(unittest.TestCase):
     def test_benign_document_allowed(self):
         fixture(self.path, extra=[("README.txt", b"Publisher notes")])
         self.assertEqual(inspect_archive(self.path)["additional_document_members"], ["README.txt"])
+
+    def test_document_bytes_are_hashed_without_text_disclosure(self):
+        fixture(self.path, extra=[("README.txt", b"Publisher notes")])
+        result = inspect_archive(self.path)
+        doc = result["document_checksums"]["README.txt"]
+        self.assertEqual(doc["bytes"], len(b"Publisher notes"))
+        self.assertEqual(doc["sha256"], hashlib.sha256(b"Publisher notes").hexdigest())
+        self.assertNotIn("Publisher notes", str(result))
+
+    def test_corrupted_permitted_document_crc_rejected(self):
+        # Before this fix, unread README.txt was accepted despite corrupt CRC.
+        with zipfile.ZipFile(self.path, "w", compression=zipfile.ZIP_STORED) as archive:
+            for name in sorted(EXPECTED):
+                archive.writestr(name, b"GDF 2.20" + name.encode())
+            archive.writestr("README.txt", b"Publisher notes")
+        raw = bytearray(self.path.read_bytes())
+        idx = raw.index(b"Publisher notes")
+        raw[idx] ^= 1
+        self.path.write_bytes(raw)
+        with self.assertRaisesRegex(ValueError, "archive integrity failure"):
+            inspect_archive(self.path)
+
+    def test_empty_permitted_document_is_hashed(self):
+        fixture(self.path, extra=[("NOTES.md", b"")])
+        result = inspect_archive(self.path)
+        self.assertEqual(result["document_checksums"]["NOTES.md"]["bytes"], 0)
+        self.assertEqual(result["document_checksums"]["NOTES.md"]["sha256"],
+                         hashlib.sha256(b"").hexdigest())
 
     def test_not_zip_rejected(self):
         self.path.write_bytes(b"not zip")
