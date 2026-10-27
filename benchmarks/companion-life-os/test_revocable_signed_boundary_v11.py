@@ -5,6 +5,7 @@ import sqlite3
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from pathlib import Path
 
 from authorization_guard_v02 import ContractError
@@ -82,7 +83,7 @@ class FictionalRevocationTests(unittest.TestCase):
     def test_repeat_revocation_does_not_rewrite_first_event(self):
         self.assertTrue(self.revoke()['new_revocation'])
         self.assertFalse(self.revoke(now='2026-10-01T10:31:00Z', reason='different reason')['new_revocation'])
-        with self.store._connect() as db:
+        with closing(self.store._connect()) as db:
             row = db.execute('SELECT revoked_at,reason FROM fictional_revocations').fetchone()
         self.assertEqual(row, (NOW, 'fictional operator withdrew approval'))
         self.assertEqual(self.store.revocation_count(), 1)
@@ -160,7 +161,7 @@ class FictionalRevocationTests(unittest.TestCase):
         self.assertEqual(self.store.receipt_count(), 0)
 
     def test_missing_revocation_table_fails_closed(self):
-        with self.store._connect() as db:
+        with closing(self.store._connect()) as db:
             db.execute('DROP TABLE fictional_revocations')
         with self.assertRaises(sqlite3.OperationalError):
             self.execute()
