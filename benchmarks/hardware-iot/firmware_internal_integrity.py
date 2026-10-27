@@ -76,15 +76,15 @@ def validate_partition_md5(data):
         raise FirmwareIntegrityError("partition table: invalid size")
     for offset in range(0, len(data), 32):
         entry = data[offset:offset + 32]
-        if entry[:2] == b"\\xeb\\xeb":
-            if entry[2:16] != b"\\xff" * 14:
+        if entry[:2] == b"\xeb\xeb":
+            if entry[2:16] != b"\xff" * 14:
                 raise FirmwareIntegrityError("partition table: malformed MD5 marker")
             if hashlib.md5(data[:offset]).digest() != entry[16:32]:
                 raise FirmwareIntegrityError("partition table: MD5 mismatch")
             if any(byte != 0xFF for byte in data[offset + 32:]):
                 raise FirmwareIntegrityError("partition table: unexpected bytes after MD5")
             return {"partition_count": offset // 32, "md5": entry[16:32].hex()}
-        if entry[:2] != b"\\xaa\\x50":
+        if entry[:2] != b"\xaa\x50":
             raise FirmwareIntegrityError("partition table: missing MD5 or invalid entry")
     raise FirmwareIntegrityError("partition table: missing MD5 trailer")
 
