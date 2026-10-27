@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "WBI_BNCI_A02T_METADATA_GATE_V04",
+  "date_utc": "2026-10-27",
+  "stage": "Research / Simulation; unchanged",
+  "hypothesis": "A source-metadata-only CI workflow must fail when expected A02T source byte identity or block structure is inconsistent",
+  "source": {
+    "dataset": "BNCI2014_001",
+    "file": "A02T.mat",
+    "session": "T_training",
+    "url": "https://bnci-horizon-2020.eu/database/data-sets/001-2014/A02T.mat",
+    "bytes": 43068077,
+    "sha256": "5ddd5cb520b1692c3ba1363f48d98f58f0e46f3699ee50d749947950fc39db27",
+    "publisher_signed_checksum": false,
+    "license_redistribution_review": "TBD"
+  },
+  "code": {
+    "inspector_git_blob": "abd4172979fca96e0c3fc05a572ca71ac25de0ba",
+    "inspector_tests_git_blob": "09f19b49426cf0f3c227174da5b7b1d422bd3ef5",
+    "gate_git_blob": "4e926e481948ad7554ee6fd19e9f65f32e23dbf4",
+    "gate_tests_git_blob": "68316d64443bd7f0f938e8b194dbb39f744088c8",
+    "workflow_git_blob": "b8548ec4b97454ec8c51e38b79693b07d72af2c1"
+  },
+  "execution": {
+    "tested_commit": "63a2c964f7cb40087876f6b8b3eae22560a7a4b7",
+    "run_id": 40571300834,
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40571300834",
+    "job_id": 122425898787,
+    "job_conclusion": "success",
+    "os": "GitHub-hosted Ubuntu",
+    "python": "3.13.16",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "original_inspector_tests": "7/7 passed",
+    "new_gate_tests": "15/15 passed",
+    "real_metadata_gate": "passed",
+    "artifact_id": 12764609295,
+    "artifact_zip_sha256": "e7cc8641eb00aa7576aa4037a97b68c860017ca74d9b5e4603c465df00203521"
+  },
+  "observed": {
+    "blocks": 9,
+    "baseline_blocks": 3,
+    "task_blocks": 6,
+    "cues_total": 288,
+    "cues_per_task_block": 48,
+    "signal_columns": 25,
+    "sampling_frequency_hz": 250,
+    "first_task_block_zero_based": 3
+  },
+  "limits": {
+    "remaining_uninspected_sessions": 16,
+    "evaluation_session_or_labels_accessed": false,
+    "raw_eeg_uploaded": false,
+    "real_decoding_accuracy": "TBD",
+    "matched_coverage_false_action_risk": "TBD",
+    "publisher_authenticity": "TBD",
+    "external_review": "TBD",
+    "clinical_safety": "NOT_ESTABLISHED"
+  },
+  "decision": "Accept A02T as metadata-verified training source only; reject green-but-structurally-invalid workflow outputs",
+  "next_experiment": "Inspect another training source under same fail-closed gate, then assemble 18-file provenance manifest before frozen held-out evaluation"
+}
