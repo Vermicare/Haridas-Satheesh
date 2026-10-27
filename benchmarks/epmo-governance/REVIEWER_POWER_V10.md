@@ -38,7 +38,7 @@ python -B reviewer_power_sensitivity_v10.py > /tmp/epmo-reviewer-power-v10.json
 sha256sum /tmp/epmo-reviewer-power-v10.json
 ```
 
-The saved output is [REVIEWER_POWER_V10_RESULT.json](REVIEWER_POWER_V10_RESULT.json). The local result SHA-256 was `b6eef6d872f2de56793d367b0c7f9da27a0005df446aada4c73c5707931f69da`. The Python source SHA-256 was `70455a68426c8bdf4b676f918c10e9c7e2524dc912e9cd3e2415ff2f47866dcf`, and the test source SHA-256 was `4cd6fc39a06bc57737d011515a6e15584598cc27c3fda831cef88596f4231261`. These hashes cover this **local** execution; GitHub-hosted cross-OS CI verification is a separate gate and must not be inferred until it passes.
+The saved output is [REVIEWER_POWER_V10_RESULT.json](REVIEWER_POWER_V10_RESULT.json). The local result SHA-256 was `b6eef6d872f2de56793d367b0c7f9da27a0005df446aada4c73c5707931f69da`. The Python source SHA-256 was `70455a68426c8bdf4b676f918c10e9c7e2524dc912e9cd3e2415ff2f47866dcf`, and the test source SHA-256 was `4cd6fc39a06bc57737d011515a6e15584598cc27c3fda831cef88596f4231261`. These hashes cover the **local** execution. Independently, [GitHub Actions #40433944874](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40433944874) passed at commit `cb80b467beee09d04fa93ae2abc26cee994ac946`: **164/164 tests on Ubuntu and 164/164 on Windows** (CPython 3.13.16), and both jobs recomputed the complete 400-replication simulation with **exact JSON equality** against the committed result. Both job logs were inspected. This verifies reproducibility of the fictional simulation, **not** its assumptions or any human-study outcome.
 
 ## Next evidence-producing decision
 
