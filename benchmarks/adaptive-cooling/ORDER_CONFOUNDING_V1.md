@@ -19,7 +19,7 @@ python -B -m unittest -v test_order_confounding_v1.py
 python -B order_confounding_v1.py > ORDER_CONFOUNDING_V1_RESULT.json
 ```
 
-Python standard library only. Exact source/test hashes and local run conditions are in [registry](ORDER_CONFOUNDING_V1_REGISTRY.json); output in [result](ORDER_CONFOUNDING_V1_RESULT.json). **7/7 fictional-only tests passed locally.** Hosted CI result: TBD until executed and checked.
+Python standard library only. Exact source/test hashes and local run conditions are in [registry](ORDER_CONFOUNDING_V1_REGISTRY.json); output in [result](ORDER_CONFOUNDING_V1_RESULT.json). **7/7 fictional-only tests passed locally.** **Hosted [GitHub Actions #40553879781](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40553879781) passed 86/86 fictional-only tests on Ubuntu and 86/86 on Windows**, including seven new order/carryover tests; both raw job logs inspected. Tested code/workflow commit: `8a0f0c09e9ce4ea723deb20142243492b3c4e30b`.
 
 ## Fictional negative control
 
