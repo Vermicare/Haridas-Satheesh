@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "epmo-reviewer-power-sensitivity-v10",
+  "date_local": "2026-10-27",
+  "maturity": "Research / Simulation",
+  "origin": "FICTIONAL_ASSUMPTION_BASED_SIMULATION",
+  "question": "Reviewer-level detection sensitivity under assumed 20% vs 10% false approval probabilities on 13 fictional negative cases per reviewer",
+  "provenance": {
+    "branch": "research/epmo-fictional-governance-20261024",
+    "source_path": "benchmarks/epmo-governance/reviewer_power_sensitivity_v10.py",
+    "source_git_blob": "2f9d8e18b22324d2b7b504e5540cf1b7d84b35e3",
+    "source_sha256": "70455a68426c8bdf4b676f918c10e9c7e2524dc912e9cd3e2415ff2f47866dcf",
+    "test_git_blob": "b3e55a262c6c9e3c03de226a864565ebe60d51db",
+    "test_sha256": "4cd6fc39a06bc57737d011515a6e15584598cc27c3fda831cef88596f4231261",
+    "result_git_blob": "08c141fd18781c8940483bf883e115d598854f75",
+    "result_sha256": "b6eef6d872f2de56793d367b0c7f9da27a0005df446aada4c73c5707931f69da",
+    "reference_packet": "REVIEW_TREATMENT_V09.md"
+  },
+  "run_conditions": {
+    "environment": "Linux 6.18.55 / CPython 3.13.5",
+    "dependencies": "Python standard library only",
+    "seed": 20261027,
+    "replications": 400,
+    "permutations_per_replication": 199,
+    "within_reviewer_icc_assumed": 0.1,
+    "negative_cases_per_reviewer": 13,
+    "arm_sizes": [
+      12,
+      24,
+      48,
+      96
+    ],
+    "alpha": 0.05,
+    "workflow": ".github/workflows/epmo-governance-synthetic.yml",
+    "github_actions_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40433944874",
+    "github_actions_verified_commit": "cb80b467beee09d04fa93ae2abc26cee994ac946",
+    "github_actions_python": "CPython 3.13.16"
+  },
+  "verification": {
+    "local_unittest": "8/8 PASS",
+    "local_simulation": "PASS",
+    "result_exact_git_blob_match": true,
+    "github_cross_os": "164/164 tests PASS on Ubuntu and Windows; exact frozen simulation JSON MATCH on both; both job logs inspected"
+  },
+  "observed_human_results": {
+    "participants": 0,
+    "false_approval_rate": "TBD",
+    "review_seconds": "TBD",
+    "treatment_effect": "TBD"
+  },
+  "limits": [
+    "Hypothetical effect and baseline",
+    "Within-reviewer heterogeneity assumed, not measured",
+    "Case-level cross-reviewer dependence not modeled",
+    "No human study conducted",
+    "No validated power or enrollment target",
+    "No employer data, external actions or production claims"
+  ],
+  "decision": "Do not advance maturity; freeze human protocol and independently estimate realistic effect/heterogeneity before recruitment."
+}

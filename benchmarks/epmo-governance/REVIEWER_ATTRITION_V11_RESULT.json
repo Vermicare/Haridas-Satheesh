@@ -1,0 +1,63 @@
+{
+  "alpha_two_sided": 0.05,
+  "cases_per_reviewer": 13,
+  "decision": "Illustrates complete-case selection bias under hypothetical missing-not-at-random; not observed human evidence",
+  "external_actions": 0,
+  "missingness_rules": {
+    "hypothetical_effect_complete": "none; assumed treatment probability 0.10 versus control 0.20",
+    "null_complete": "none",
+    "null_random_25pct": "25% independent dropout in each arm",
+    "null_selective_treatment_dropout": "treatment: 80% dropout if >=4/13 fictional false approvals, else 5%; control: 5% dropout"
+  },
+  "observed_effect": "TBD",
+  "observed_human_participants": 0,
+  "origin": "FICTIONAL_ASSUMPTION_BASED_SIMULATION",
+  "permutations": 199,
+  "replications": 1000,
+  "results": [
+    {
+      "estimated_rejection_probability": 0.066,
+      "mean_control_retained": 48.0,
+      "mean_observed_treatment_minus_control": -0.0017,
+      "mean_treatment_retained": 48.0,
+      "monte_carlo_standard_error": 0.0079,
+      "null_true": true,
+      "rejections": 66,
+      "scenario": "null_complete"
+    },
+    {
+      "estimated_rejection_probability": 0.05,
+      "mean_control_retained": 36.09,
+      "mean_observed_treatment_minus_control": 0.0006,
+      "mean_treatment_retained": 35.86,
+      "monte_carlo_standard_error": 0.0069,
+      "null_true": true,
+      "rejections": 50,
+      "scenario": "null_random_25pct"
+    },
+    {
+      "estimated_rejection_probability": 0.443,
+      "mean_control_retained": 45.55,
+      "mean_observed_treatment_minus_control": -0.0632,
+      "mean_treatment_retained": 34.9,
+      "monte_carlo_standard_error": 0.0157,
+      "null_true": true,
+      "rejections": 443,
+      "scenario": "null_selective_treatment_dropout"
+    },
+    {
+      "estimated_rejection_probability": 0.899,
+      "mean_control_retained": 48.0,
+      "mean_observed_treatment_minus_control": -0.1004,
+      "mean_treatment_retained": 48.0,
+      "monte_carlo_standard_error": 0.0095,
+      "null_true": false,
+      "rejections": 899,
+      "scenario": "hypothetical_effect_complete"
+    }
+  ],
+  "reviewers_assigned_per_arm": 48,
+  "seed": 20261027,
+  "version": "1.1",
+  "within_reviewer_icc_assumed": 0.1
+}

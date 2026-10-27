@@ -1,0 +1,40 @@
+name: EPMO fictional governance contract
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/epmo-governance/**'
+      - '.github/workflows/epmo-governance-synthetic.yml'
+  push:
+    paths:
+      - 'benchmarks/epmo-governance/**'
+      - '.github/workflows/epmo-governance-synthetic.yml'
+permissions:
+  contents: read
+jobs:
+  fictional-contract:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run adversarial tests
+        working-directory: benchmarks/epmo-governance
+        run: python -m unittest discover -v
+      - name: Reproduce assumption-based reviewer sensitivity exactly
+        working-directory: benchmarks/epmo-governance
+        run: >-
+          python -c "import json,subprocess,sys,pathlib;
+          expected=json.loads(pathlib.Path('REVIEWER_POWER_V10_RESULT.json').read_text(encoding='utf-8'));
+          actual=json.loads(subprocess.check_output([sys.executable,'-B','reviewer_power_sensitivity_v10.py'],text=True));
+          assert actual == expected, 'assumption-based simulation drift';
+          print('EPMO v1.0 fictional reviewer sensitivity: exact JSON MATCH')"
+      - name: Produce deterministic fictional receipt
+        run: python benchmarks/epmo-governance/governance_demo.py benchmarks/epmo-governance/synthetic_scenario.json --output demo_result.json
+      - name: Verify receipt structure
+        run: python -c "import json; x=json.load(open('demo_result.json')); assert (x['accepted'],x['rejected'],x['external_actions']) == (4,2,0)"
+      - name: Demonstrate distinct fictional review aids without private gold
+        run: python -B benchmarks/epmo-governance/review_treatment_v09.py --demo

@@ -73,3 +73,7 @@ This portfolio intentionally does not disclose:
 
 The direction is moving from:
 **workflow automation → portfolio intelligence → AI-assisted governance → enterprise innovation systems.**
+
+## Independent public-safe experiment (fictional)
+
+The [fictional approval-and-correction contract](../benchmarks/epmo-governance/README.md) is a **separate independent simulation**, not an export or reproduction of employer systems. It includes a 30–60 second executable demonstration, 19 adversarial tests, and [an evidence registry](../benchmarks/epmo-governance/EXPERIMENT_REGISTRY.json). Declared actor roles are not authenticated and the digest chain is not tamper-proof; no real external actions, business efficiency metrics, or production assurances are claimed. Its next gate is [authenticated durable sandbox authorization](https://github.com/Vermicare/Haridas-Satheesh/issues/14), with all real-world performance values **TBD**.
