@@ -99,6 +99,13 @@ class FictionalRevocationTests(unittest.TestCase):
         self.assertEqual(old['external_actions'], 0)
         self.assertEqual(self.store.receipt_count(), 1)
 
+    def test_inherited_v03_execute_bypass_fails_closed(self):
+        self.revoke()
+        with self.assertRaisesRegex(ContractError, 'use FictionalRevocableBoundary'):
+            self.store.execute(self.s, self.scope, principal='fictional-user',
+                               now=NOW, trusted_principals={'fictional-user'})
+        self.assertEqual(self.store.receipt_count(), 0)
+
     def test_concurrent_revocation_and_execute_have_serializable_outcome(self):
         with ThreadPoolExecutor(max_workers=2) as pool:
             f_revoke = pool.submit(self.revoke)
