@@ -38,6 +38,7 @@ jobs:
           python demo_correction_ledger_v05.py > demo-v05.json
           python demo_actual_receipt_integration_v06.py > demo-v06.json
           python demo_fictional_outbox_v07.py > demo-v07.json
+          python demo_sandbox_issuer_v10.py > demo-v10.json
       - uses: actions/upload-artifact@v4
         with:
           name: companion-authorization-${{ matrix.os }}
@@ -47,3 +48,4 @@ jobs:
             benchmarks/companion-life-os/demo-v05.json
             benchmarks/companion-life-os/demo-v06.json
             benchmarks/companion-life-os/demo-v07.json
+            benchmarks/companion-life-os/demo-v10.json
