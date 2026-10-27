@@ -32,9 +32,11 @@ jobs:
         shell: bash
         working-directory: benchmarks/cortex
         run: |
-          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py test_archive_citation_gate_v04.py test_prov_o_mapping_v01.py test_reviewer_pair_preflight_v01.py
+          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py test_archive_citation_gate_v04.py test_prov_o_mapping_v01.py test_reviewer_pair_preflight_v01.py test_source_span_completeness_v01.py
           python -B blind_review_preflight.py manifest blind_case_20261024.json blind_archive_20261024.json
           python -B archive_citation_gate_v04.py demo
+          python -B source_span_completeness_v01.py demo
+          python -c "from source_span_completeness_v01 import demo; d=demo(); assert d['original']['counts']['exact']==7; assert d['omitted_source']['counts']['partial']==1; assert d['omitted_source']['strict_exact_source_ratio']==0.857143; assert d['frozen_evaluator_source_traceability_omitted']==1.0"
           python -c "import hashlib;from archive_citation_gate_v04 import demo;assert hashlib.sha256(demo().encode('utf-8')).hexdigest() == '76e54d346299c9a8bb0d2b3485eae6f5b0a834c27128135cf6302d458f44420a'"
           python -c "import hashlib,pathlib; a=pathlib.Path('blind_case_20261024.json').read_bytes(); b=pathlib.Path('blind_archive_20261024.json').read_bytes(); assert hashlib.sha256(a).hexdigest() == 'f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d'; assert hashlib.sha256(b).hexdigest() == '897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046'"
           python -B run_lineage_shift.py
