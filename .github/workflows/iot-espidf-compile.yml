@@ -26,12 +26,20 @@ jobs:
         run: |
           set -euo pipefail
           root=benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build
+          stage="$RUNNER_TEMP/esp32s3-unflashed"
           test -s "$root/iot_dual_sensor_capture.bin"
           test -s "$root/bootloader/bootloader.bin"
           test -s "$root/partition_table/partition-table.bin"
           test -s "$root/flasher_args.json"
+          # The official container may leave build/ root-owned. Stage in a
+          # runner-writable directory instead of chmod/chown on source output.
+          mkdir -p "$stage/bootloader" "$stage/partition_table"
+          cp "$root/iot_dual_sensor_capture.bin" "$stage/"
+          cp "$root/bootloader/bootloader.bin" "$stage/bootloader/"
+          cp "$root/partition_table/partition-table.bin" "$stage/partition_table/"
+          cp "$root/flasher_args.json" "$stage/"
           (
-            cd "$root"
+            cd "$stage"
             sha256sum iot_dual_sensor_capture.bin bootloader/bootloader.bin partition_table/partition-table.bin flasher_args.json > SHA256SUMS.txt
             sha256sum --check SHA256SUMS.txt
           )
@@ -48,19 +56,13 @@ jobs:
             printf 'device_identity=TBD\n'
             printf 'physical_sensor_capture=NOT_PERFORMED\n'
             printf 'calibration=TBD\n'
-          } > "$root/BUILD_PROVENANCE.txt"
-          test -s "$root/BUILD_PROVENANCE.txt"
+          } > "$stage/BUILD_PROVENANCE.txt"
+          test -s "$stage/BUILD_PROVENANCE.txt"
       - name: Preserve downloadable unflashed firmware and hashes
         uses: actions/upload-artifact@v4
         with:
           name: esp32s3-unflashed-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/iot_dual_sensor_capture.bin
-            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/bootloader/bootloader.bin
-            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/partition_table/partition-table.bin
-            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/flasher_args.json
-            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/SHA256SUMS.txt
-            benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build/BUILD_PROVENANCE.txt
+          path: ${{ runner.temp }}/esp32s3-unflashed/
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
