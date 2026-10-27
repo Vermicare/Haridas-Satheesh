@@ -1,0 +1,77 @@
+{
+  "schema_version": "cooling-order-confounding-v1-summary",
+  "evidence_type": "fictional_deterministic_negative_control",
+  "date_utc": "2026-10-27",
+  "assumptions": {
+    "baseline_c": 30,
+    "linear_drift_c_per_min": -0.02,
+    "slot_min": 10,
+    "blocks": 6,
+    "true_treatment_effect_c": 0,
+    "carryover_c": 0,
+    "seed": 20261027
+  },
+  "fixed": {
+    "order_per_block": [
+      "ambient",
+      "fan_only",
+      "prototype"
+    ],
+    "means_c": {
+      "ambient": 28.400000000000002,
+      "fan_only": 28.2,
+      "prototype": 28
+    },
+    "prototype_minus_ambient_c": -0.40000000000000213
+  },
+  "balanced": {
+    "orders": [
+      [
+        "fan_only",
+        "prototype",
+        "ambient"
+      ],
+      [
+        "fan_only",
+        "ambient",
+        "prototype"
+      ],
+      [
+        "prototype",
+        "ambient",
+        "fan_only"
+      ],
+      [
+        "prototype",
+        "fan_only",
+        "ambient"
+      ],
+      [
+        "ambient",
+        "fan_only",
+        "prototype"
+      ],
+      [
+        "ambient",
+        "prototype",
+        "fan_only"
+      ]
+    ],
+    "means_c": {
+      "ambient": 28.2,
+      "fan_only": 28.2,
+      "prototype": 28.2
+    },
+    "prototype_minus_ambient_c": 0
+  },
+  "new_tests_passed_locally": 7,
+  "physical_measurements": 0,
+  "performance_claim_permitted": false,
+  "limitations": [
+    "assumption-based linear drift",
+    "no measurement noise",
+    "no physical instrument",
+    "carryover not resolved by balancing"
+  ],
+  "reproduce": "python -B order_confounding_v1.py > full_result.json"
+}
