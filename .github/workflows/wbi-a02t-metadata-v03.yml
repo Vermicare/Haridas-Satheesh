@@ -1,0 +1,39 @@
+name: WBI A02T public training metadata preflight (no EEG artifact)
+on:
+  push:
+    branches: [research/wbi-independent-repro-20261026]
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci_a02t_metadata_v03.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_a02t_metadata_v03.py'
+      - '.github/workflows/wbi-a02t-metadata-v03.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  a02t-training-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned MAT reader
+        run: python -m pip install --disable-pip-version-check numpy==2.3.3 scipy==1.16.2
+      - name: Seven synthetic contract regressions (no network)
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci_a02t_metadata_v03
+      - name: Fetch public A02T training file; emit structural metadata only
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci_a02t_metadata_v03.py
+          --output "$RUNNER_TEMP/bnci_A02T_metadata_only.json"
+      - name: Upload derived metadata only, never raw EEG or class labels
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bnci-A02T-training-metadata-only
+          path: ${{ runner.temp }}/bnci_A02T_metadata_only.json
+          retention-days: 14
+          if-no-files-found: error
