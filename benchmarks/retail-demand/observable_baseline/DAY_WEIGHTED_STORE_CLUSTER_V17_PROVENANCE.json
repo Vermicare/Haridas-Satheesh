@@ -1,0 +1,15 @@
+{
+  "commit": "875536dd3f2849b62caab8625b3f345096843121",
+  "experiment_id": "retail-v17-posthoc-dayweighted-cluster-sensitivity",
+  "external_review": "TBD",
+  "independent_temporal_holdout": false,
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "predeclared_v15_gate": "FAILED_UNCHANGED",
+  "pyarrow_pin": "20.0.0",
+  "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+  "raw_publisher_rows_uploaded": false,
+  "result_present": true,
+  "result_sha256": "52a87d45b7574be642851299f3a848b9a497e59b7b0a8f47caddb757715fe650",
+  "run_id": "40561762763",
+  "source_blob": "ae3b8fab13d1e34200286a681a61b8697d07a920"
+}
