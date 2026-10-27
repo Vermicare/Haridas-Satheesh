@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.4",
+  "date_utc": "2026-10-27",
+  "family": "Hardware/IoT",
+  "experiment": "ESP32-S3 unflashed firmware internal integrity",
+  "stage": "Prototype / Hardware Architecture",
+  "artifact": {
+    "origin": "GitHub Actions run 40457717468",
+    "name": "esp32s3-unflashed-40457717468-1.zip",
+    "sha256": "0a7b0fa13fb80ea7d63f85d756c1729636ffbfe8bd1cda6ff5fdb0985afdd7f3",
+    "pr_head_sha": "9061ed016a359d6ddf2d6b2fc38412f2dc396140",
+    "status": "UNFLASHED"
+  },
+  "run_conditions": {
+    "runtime": "CPython 3.13.5",
+    "os": "Linux",
+    "run_time_utc": "2026-10-27",
+    "source_revision": "e490b42c0ad8bfac14b3f67c023e9d2b3987fe23",
+    "github_actions_new_regression_result": "TBD"
+  },
+  "observed_static": {
+    "bootloader": {
+      "segments": 3,
+      "chip_id": 9,
+      "flash_header": "DIO/2MB/80MHz",
+      "embedded_sha256": "6cc1a19dbe01ee53021a6dcea15cb994f7441fc0a9d16c345b4d2832362ea898",
+      "embedded_sha256_verified": true
+    },
+    "application": {
+      "segments": 6,
+      "chip_id": 9,
+      "flash_header": "DIO/2MB/80MHz",
+      "embedded_sha256": "46c80710e86fec257eaf98ba64cda8be1d78eac1ab9e6f36b2085a21956c7800",
+      "embedded_sha256_verified": true
+    },
+    "partition_table": {
+      "entries": 3,
+      "md5": "f4ad4f4538564b5d7435b62c75b69524",
+      "md5_verified": true
+    }
+  },
+  "negative_controls": [
+    "chip ID mismatch",
+    "flash size nibble mismatch",
+    "embedded image SHA256 mismatch",
+    "partition MD5 mismatch",
+    "segment XOR mismatch",
+    "missing embedded SHA256 flag"
+  ],
+  "physical": {
+    "device_probe": "TBD",
+    "observed_flash_capacity": "TBD",
+    "flashed_image": "NOT_PERFORMED",
+    "bh1750_sc40_capture": "NOT_PERFORMED"
+  },
+  "decision": "STATIC_PACKAGE_PASS_FLASH_NOT_AUTHORIZED",
+  "next_experiment": "Read-only physical ESP32-S3 chip and flash-capacity probe; then reviewed >=600 s dual-sensor capture",
+  "primary_sources": [
+    "https://docs.espressif.com/projects/esptool/en/latest/esp32s3/advanced-topics/firmware-image-format.html",
+    "https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/partition-tables.html"
+  ]
+}
