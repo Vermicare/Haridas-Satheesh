@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "experiment": "WBI BNCI2014_001 ZIP permitted-document CRC verification",
+  "date_local": "2026-10-27",
+  "scope": "synthetic ZIP regression only; no EEG acquisition",
+  "previous_version": "BNCI2A_SOURCE_ARCHIVE_V01_REGISTRY.json",
+  "finding": "Prior inspector did not open allowlisted ZIP document entries, so document CRC was not checked",
+  "source": {
+    "path": "benchmarks/wireless-brain-interface/bnci2a_source_archive_preflight.py",
+    "git_blob": "9eebcf5a71daed20917219b406f15419a824cebe"
+  },
+  "tests": {
+    "path": "benchmarks/wireless-brain-interface/test_bnci2a_source_archive_preflight.py",
+    "git_blob": "523fcac141ac4e195b0bf9ed2fbdb6eaddeb1b2a",
+    "new_negative_controls": [
+      "corrupt README.txt CRC rejected",
+      "intact README.txt SHA256 and bytes verified without text disclosure",
+      "empty NOTES.md hashed"
+    ]
+  },
+  "execution": {
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40474963906",
+    "tested_commit": "968ecf5792acb7e955ae32900cc2730ca4766ef6",
+    "ubuntu_archive_tests": "17/17 passed",
+    "windows_archive_tests": "17/17 passed",
+    "ubuntu_split_tests": "9/9 passed",
+    "windows_split_tests": "9/9 passed",
+    "local_updated_code_execution": "TBD",
+    "python": "3.13 (exact patch version TBD)",
+    "runner": "GitHub Actions ubuntu-latest and windows-latest"
+  },
+  "frozen_synthetic": {
+    "source_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+    "csv_sha256": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a",
+    "unchanged": true
+  },
+  "real_eeg": {
+    "publisher_archive_sha256": "TBD",
+    "gdf_sha256": "TBD",
+    "trials": "TBD",
+    "outcome_metrics": "TBD",
+    "clinical_safety": "NOT_ESTABLISHED"
+  },
+  "decision": "No stage advancement; acquire official source, authenticate provenance, validate actual session metadata and freeze decoder before held-out scoring",
+  "limitations": [
+    "Synthetic ZIP members are not real GDF recordings",
+    "CRC/SHA256 do not authenticate publisher",
+    "No evaluation labels ingested",
+    "No human review, clinical or physical validation"
+  ]
+}
