@@ -1,0 +1,43 @@
+{
+  "experiment_id": "companion-fictional-revocation-v1.1-2026-10-27",
+  "status": "local_synthetic_executed_hosted_verification_TBD",
+  "source_provenance": {
+    "repository": "Vermicare/Haridas-Satheesh",
+    "base_draft_pr": 10,
+    "base_branch_head_at_design": "12abb5fb574c8c976cf935a3dbd6936169823120",
+    "existing_scenario": "benchmarks/companion-life-os/scenario.json",
+    "upstream_dependencies_manually_mirrored_locally": true,
+    "git_commit_for_new_code": "TBD"
+  },
+  "runtime_local": {
+    "python": "3.13.5",
+    "sqlite": "3.46.1",
+    "operating_system": "Linux"
+  },
+  "runtime_hosted": "TBD",
+  "source_sha256": "31999dab83c041d1f0f9253ffdc3a87fa3fa10607b44dcfb4a5005998d5e770f",
+  "test_sha256": "f1b22870f714ae0b33b04e42dc00f903b67d542c1df378e264baa0774bbc2c01",
+  "demo_sha256": "560ccddd1f370a885afe6101584dd097055d05df069f5ead065ff38298594430",
+  "new_tests_local_passed": 15,
+  "new_tests_local_total": 15,
+  "hosted_ubuntu_tests": "TBD",
+  "hosted_windows_tests": "TBD",
+  "baseline_negative_control": "v1.0 fictional receipt accepted after test-only revocation",
+  "candidate_result": "local v1.1 denied revoked token before receipt and after restart",
+  "demo_preserved_receipts": 1,
+  "demo_revocation_events": 1,
+  "external_actions": 0,
+  "real_identity_verified": false,
+  "real_consent_verified": false,
+  "real_connector": false,
+  "power_loss_test": "TBD",
+  "independent_reviewer": "TBD",
+  "reviewer_burden_minutes": "TBD",
+  "maturity_advanced": false,
+  "release": false,
+  "primary_sources": [
+    "https://www.sqlite.org/lang_transaction.html",
+    "https://www.sqlite.org/isolation.html",
+    "https://csrc.nist.gov/pubs/sp/800/63/b/4/final"
+  ]
+}
