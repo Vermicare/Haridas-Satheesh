@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "id": "WBI_BNCI_MAT_RUN_METADATA_V02",
+  "date_utc": "2026-10-27",
+  "stage": "Research / Simulation; unchanged",
+  "source": {
+    "dataset": "BNCI2014_001",
+    "file": "A01T.mat",
+    "session": "T only",
+    "bytes": 42806453,
+    "sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325",
+    "publisher_signed_checksum": false
+  },
+  "execution": {
+    "run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40506426387",
+    "tested_commit": "72502ee76ff0985e8ec2f696078bc76e6714998e",
+    "job_id": 122196773046,
+    "artifact_id": 12735471349,
+    "python": "3.13.16",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "os": "GitHub-hosted Ubuntu",
+    "tests": "7/7 passed",
+    "raw_eeg_uploaded": false
+  },
+  "observed": {
+    "mat_blocks": 9,
+    "baseline_blocks_without_cues": 3,
+    "task_blocks_with_cues": 6,
+    "task_cues_total": 288,
+    "channel_columns": 25,
+    "sampling_rate_hz": 250,
+    "zero_based_baseline_indices": [
+      0,
+      1,
+      2
+    ],
+    "zero_based_task_indices": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "baseline_samples": [
+      29683,
+      20172,
+      41463
+    ],
+    "task_samples_each": 96735,
+    "cues_per_task_block": 48
+  },
+  "code": {
+    "inspector_git_blob": "9a8407c4a326e1ee8701345824cb473fd5b767fa",
+    "tests_git_blob": "d672e934c2af9c2fb7b4679980a2810753e34b05",
+    "workflow_git_blob": "04a2e1ee1890b8d83897c62e040d4bfa2ee34236"
+  },
+  "limits": {
+    "E_session_ingested": false,
+    "other_17_sessions_ingested": false,
+    "EEG_values_exported": false,
+    "class_labels_exported": false,
+    "decoding_metrics": "TBD",
+    "rest_false_action": "TBD",
+    "source_authenticity": "TBD",
+    "clinical_safety": "NOT_ESTABLISHED"
+  },
+  "decision": "For A01T MAT route task run 1 maps to zero-based block 3; validate each remaining file independently before split generation."
+}
