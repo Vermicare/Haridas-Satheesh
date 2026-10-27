@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "experiment": "WBI BNCI2014_001 publisher GDF archive no-extraction preflight",
+  "date_local": "2026-10-27",
+  "scope": "Synthetic ZIP archive-integrity contract tests; no publisher EEG archive acquired",
+  "primary_sources": [
+    "https://www.bbci.de/competition/iv/download/",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC3396284/"
+  ],
+  "dataset": {
+    "publisher_archive_url": "https://www.bbci.de/competition/download/competition_iv/BCICIV_2a_gdf.zip",
+    "publisher_archive_sha256": "TBD",
+    "publisher_archive_bytes": "TBD",
+    "gdf_sha256": "TBD",
+    "actual_trial_manifest": "TBD",
+    "eval_labels": "not loaded",
+    "loader_version": "TBD",
+    "terms_review": "TBD"
+  },
+  "software": {
+    "source_path": "benchmarks/wireless-brain-interface/bnci2a_source_archive_preflight.py",
+    "source_git_blob": "432adcdfd7a3254e944e7345930d25a13f116a3c",
+    "tests_path": "benchmarks/wireless-brain-interface/test_bnci2a_source_archive_preflight.py",
+    "tests_git_blob": "bc6f61d80b3f016aa2029f256b5c4300c9b40a96",
+    "workflow_path": ".github/workflows/wbi-frozen-synthetic.yml",
+    "workflow_git_blob": "75e50b765a2dabbe5281abe5d08b0670c0d1c2b8"
+  },
+  "run_conditions": {
+    "local": "CPython 3.11, Linux, standard library only; isolated synthetic ZIPs",
+    "local_command": "python -B -m unittest discover -s benchmarks/wireless-brain-interface -p test_bnci2a_source_archive_preflight.py -v",
+    "hosted_os": "Ubuntu and Windows workflow configured; verification TBD",
+    "hosted_run_url": "TBD"
+  },
+  "results": {
+    "local_synthetic_tests_passed": 14,
+    "local_synthetic_tests_failed": 0,
+    "source_archive_files_verified": 0,
+    "actual_eeg_trials_examined": 0,
+    "real_eeg_metrics": "TBD"
+  },
+  "negative_controls": [
+    "missing session",
+    "unexpected GDF",
+    "embedded E label MAT",
+    "path traversal",
+    "duplicate member",
+    "case-variant file",
+    "bad GDF magic",
+    "corrupted ZIP CRC",
+    "symlink",
+    "size limit",
+    "non-ZIP input"
+  ],
+  "original_synthetic_evidence": {
+    "source_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+    "csv_sha256": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a",
+    "unchanged": true
+  },
+  "limitations": [
+    "Archive SHA256 proves byte integrity only, not publisher authenticity",
+    "No GDF event/run/trial parsing or EEG data examined",
+    "E class labels are separately distributed; archive gate rejects embedded label files",
+    "No real-data benchmark, idle-state false-action result or clinical validation",
+    "No maturity advancement"
+  ],
+  "decision": "Maintain Research / Simulation; next acquire official source, hash it, derive actual label-free trial metadata, then freeze decoder before E scoring"
+}
