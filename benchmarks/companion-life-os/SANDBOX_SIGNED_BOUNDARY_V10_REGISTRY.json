@@ -1,0 +1,72 @@
+{
+  "experiment_id": "companion-signed-sandbox-v1.0-20261027",
+  "project": "Companion Intelligence — Life OS",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "pr": 10,
+  "branch": "research/companion-auth-negative-controls-20261024",
+  "maturity": "public fictional simulation/contract only; private implementation unassessed",
+  "question": "Does a fictional issuer-signed identity and scenario-bound approval reject unauthorized changes before existing SQLite receipt insertion?",
+  "baseline": "v0.3 caller-supplied principal and allowlist; v0.9 independent fictional sink integrity preserved",
+  "method": "separate test-only HMAC-SHA256 identity and approval attestations; canonical JSON; scenario SHA-256 binding; existing v0.3 durable store",
+  "fixture": "benchmarks/companion-life-os/scenario.json (synthetic, modified only in test memory)",
+  "code_git_blob": "47d9dee97120509ec752db179c50e25455525ae9",
+  "test_git_blob": "8b03d281253038f1bc67b6bd1fdad3e1ca94bece",
+  "demo_git_blob": "79f2eb7c0739f578437cdbf3743e8f1e8a807b2e",
+  "local": {
+    "date": "2026-10-27",
+    "python": "CPython 3.13.5",
+    "platform": "Linux",
+    "tests": "15/15 passed",
+    "repetitions": 2,
+    "demo": {
+      "stored_fictional_receipts": 1,
+      "replay_idempotent": true,
+      "negative_controls_rejected": 3,
+      "external_actions": 0
+    }
+  },
+  "hosted": {
+    "run_id": 40428436801,
+    "commit": "e7277d4ce02cb77fa1a787b7335480b0f9b61df3",
+    "ubuntu": "94/94 tests passed",
+    "windows": "94/94 tests passed",
+    "demo": "executed and artifact upload step passed on both OS",
+    "job_logs_inspected": true,
+    "artifacts": [
+      {
+        "name": "companion-authorization-ubuntu-latest",
+        "sha256": "7ae2e82537f51447bdeaaffc718a410015905ef5a932fb306998da156b31ebcb"
+      },
+      {
+        "name": "companion-authorization-windows-latest",
+        "sha256": "b8aa73042551d0a62b10f8f88611e6ae879c602462617fd8ec56e473892255a6"
+      }
+    ]
+  },
+  "conditions": {
+    "python_dependency": "stdlib only",
+    "python_version_ci": "3.13",
+    "seed": "N/A",
+    "clock": "fictional caller-provided 2026-10-01T10:30:00Z",
+    "keys": "PUBLIC TEST-ONLY embedded fixtures; not real secrets",
+    "connector": "simulated-task-store; no network actions"
+  },
+  "unknowns": {
+    "human_identity_authentication": "TBD",
+    "trusted_time": "TBD",
+    "real_user_consent": "TBD",
+    "real_connector": "TBD",
+    "power_loss": "TBD",
+    "tamper_resistance": "TBD",
+    "reviewer_time": "TBD",
+    "real_world_value": "TBD"
+  },
+  "limits": [
+    "Symmetric HMAC means verifier has signing key; no independent issuer trust.",
+    "Test issuer can mint arbitrary fictional subjects; no real login or human authentication.",
+    "Existing SQLite store returns idempotent replay; not a global exactly-once external-action guarantee.",
+    "Public deterministic test keys are not secrets and must never be deployed."
+  ],
+  "decision": "retain draft, no maturity advancement, release or external action",
+  "next_experiment": "Replace fixture issuer with isolated trusted IdP emulator and trusted clock, then adversarially test process crash, signed approval revocation, and measured blinded reviewer burden before considering real integration."
+}
