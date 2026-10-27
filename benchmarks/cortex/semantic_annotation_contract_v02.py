@@ -85,7 +85,8 @@ def validate_semantic_annotation(submission: object) -> list[str]:
             if "due" in obj and not _date_or_unknown(obj["due"]):
                 errors.append(label + ":invalid_due")
         if kind in {"decisions", "risks"} and "status" in obj:
-            if obj["status"] not in (None, "active", "superseded", "open", "closed"):
+            allowed = (None, "active", "superseded") if kind == "decisions" else (None, "open", "closed")
+            if obj["status"] not in allowed:
                 errors.append(label + ":invalid_status")
         if kind == "decisions" and "supersedes" in obj:
             if obj["supersedes"] is not None and not _text(obj["supersedes"], 120):
