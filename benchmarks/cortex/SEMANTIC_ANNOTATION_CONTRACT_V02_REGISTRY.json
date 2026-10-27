@@ -1,0 +1,58 @@
+{
+  "schema": "portfolio-evidence-registry-v1",
+  "experiment_id": "CORTEX_SEMANTIC_ANNOTATION_CONTRACT_V02_2026_10_27",
+  "family": "CORTEX",
+  "date": "2026-10-27",
+  "stage": "Architecture / R&D",
+  "provenance": "AUTHOR_CREATED_FICTIONAL_TESTS_ONLY",
+  "hypothesis": "Earlier source-only reviewer intake can accept structurally valid but semantically unscorable objects; a prospective typed annotation contract should reject those without modifying frozen evidence.",
+  "negative_control": "A fictional source-only decision with valid record/source/archive metadata passes predecessor intake but fails v0.2 solely for missing statement; hosted integration assertion verifies the error list.",
+  "artifacts": {
+    "source_blob_sha": "85913ce453f84dd0c7ba01f3b64361c2e17370ef",
+    "shape_tests_blob_sha": "2d98dbccb201256fa0c3e28c0d24dc3d6a352d82",
+    "integration_tests_blob_sha": "228c21411d5c1030acfe3d453befe1f99d4a5b47",
+    "template_blob_sha": "05a0096d8d954e20cbe727215bd260d217bb6dc7",
+    "workflow_blob_sha": "1adb6eb7fa0631265948e062065a567435348755",
+    "original_case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+    "original_archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046"
+  },
+  "verified_execution": {
+    "ci_run_id": 40515442312,
+    "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40515442312",
+    "tested_commit": "c6dd625751d4a84f4a7402676ec4a783e7a5512e",
+    "runner_os": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python": "3.13 via actions/setup-python@v5; exact patch TBD",
+    "ubuntu_tests_passed": 163,
+    "windows_tests_passed": 163,
+    "new_direct_shape_tests": 22,
+    "new_integrated_tests": 6,
+    "workflow_result": "success",
+    "logs_inspected": true,
+    "local_direct_tests": "22/22 passed; Linux CPython 3.13.5"
+  },
+  "results": {
+    "semantic_annotation_schema_structural_controls": "PASS_ON_FICTIONAL_INPUTS",
+    "actual_reviewers": 0,
+    "independent_annotation": "TBD",
+    "adjudicated_gold": "TBD",
+    "semantic_accuracy": "TBD",
+    "source_semantic_support": "TBD",
+    "measured_review_seconds": "TBD",
+    "correction_burden_vs_manual": "TBD",
+    "external_validation": "TBD",
+    "real_workflow_effectiveness": "TBD"
+  },
+  "limitations": [
+    "Existing v0.1 and v0.4 validators check structural references, not source meaning.",
+    "Typed fields are necessary but not sufficient for semantic agreement.",
+    "Manual elapsed time remains self-reported and unverified.",
+    "New schema is prospective; old frozen packet and evaluator remain untouched.",
+    "Test fixtures are fictional; no human reviewer submissions or employer records are published."
+  ],
+  "decision": "No maturity change, release or merge. Retain draft until independent review and evidence-quality gate.",
+  "next_experiment": "Two voluntary blinded independent annotations of frozen fictional packet, adjudicate labels before general extractor run, then fairly timed manual-note comparison.",
+  "kill_or_reframe": "If unsupported records or correction burden exceed manual notes, narrow to provenance/lineage assistance."
+}
