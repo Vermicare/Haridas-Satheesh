@@ -80,3 +80,13 @@ The [red/green execution record](JSON_ACK_INTEGRITY_V08.md) and [machine-readabl
 ## v0.9 — independent fictional sink validation
 
 [Red/green evidence](FICTIONAL_SINK_INTEGRITY_V09.md) · [machine-readable registry](FICTIONAL_SINK_INTEGRITY_V09_REGISTRY.json) · [tests](test_fictional_sink_integrity_v09.py). Three before-fix direct-sink negative controls reproduced acceptance of a missing action, blank decision and corrupted persisted acknowledgment. [CI #40334808905](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40334808905) failed exactly these three cases on each OS; [corrected CI #40334887066](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40334887066) passed **79/79 on Ubuntu and 79/79 on Windows**. The fake sink now validates its own payload and replay acknowledgment. Fictional SQLite software integrity only: no authenticated consent, real connector, exactly-once guarantee or maturity upgrade.
+
+## v1.0 — fictional signed-issuer sandbox boundary (2026-10-27)
+
+[Protocol](SANDBOX_SIGNED_BOUNDARY_V10_PROTOCOL.md) · [source](sandbox_issuer_v10.py) · [15 adversarial tests](test_sandbox_issuer_v10.py) · [30–60-second demonstration](demo_sandbox_issuer_v10.py) · [machine-readable evidence registry](SANDBOX_SIGNED_BOUNDARY_V10_REGISTRY.json).
+
+The fictional test harness now issues separate HMAC-signed identity and approval attestations. The verifier rejects tampering, a mismatched fictional identity, wrong scope/connector, scenario mutation, expiry and duplicate signed claim keys **before** invoking the existing v0.3 SQLite receipt path. No real human identity is authenticated: the public test-only symmetric keys are not production secrets and the clock is fixture-supplied.
+
+[Verified GitHub Actions #40428436801](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40428436801) at executable commit `e7277d4ce02cb77fa1a787b7335480b0f9b61df3`: **94/94 tests passed on Ubuntu and 94/94 on Windows**; both job logs inspected. The v1.0 demo executed and artifact upload passed on both OS. Local CPython 3.13.5/Linux: 15/15 new tests passed twice, one fictional receipt persisted after restart and three invalid attempts rejected. No external actions. These are software-contract tests, not authenticated consent, trusted time, tamper-proof storage, exactly-once real effects, private implementation verification or a maturity advance.
+
+**Next:** Issue #11 — isolated test identity provider and trusted-time emulator with explicit threat model; then independently reviewed crash/revocation and blinded reviewer burden measurements. Keep draft/unmerged; no release.
