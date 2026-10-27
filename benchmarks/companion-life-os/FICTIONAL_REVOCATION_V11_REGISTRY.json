@@ -1,13 +1,13 @@
 {
   "experiment_id": "companion-fictional-revocation-v1.1-2026-10-27",
-  "status": "v11_inherited_api_bypass_corrected_hosted_final_TBD",
+  "status": "verified_synthetic_cross_platform_with_inherited_API_bypass_fixed",
   "source_provenance": {
     "repository": "Vermicare/Haridas-Satheesh",
     "base_draft_pr": 10,
     "base_branch_head_at_design": "12abb5fb574c8c976cf935a3dbd6936169823120",
     "existing_scenario": "benchmarks/companion-life-os/scenario.json",
     "upstream_dependencies_manually_mirrored_locally": true,
-    "git_commit_for_new_code": "b700f0d03426ab3b38e88340a4e2a39e138cb7be"
+    "git_commit_for_new_code": "b725bac8a2623c1a197f0803c78b518a414d7af9"
   },
   "runtime_local": {
     "python": "3.13.5",
@@ -27,8 +27,8 @@
   "demo_sha256": "560ccddd1f370a885afe6101584dd097055d05df069f5ead065ff38298594430",
   "new_tests_local_passed": 16,
   "new_tests_local_total": 16,
-  "hosted_ubuntu_tests": "109/109 passed",
-  "hosted_windows_tests": "109/109 passed",
+  "hosted_ubuntu_tests": "110/110 passed",
+  "hosted_windows_tests": "110/110 passed",
   "baseline_negative_control": "v1.0 fictional receipt accepted after test-only revocation",
   "candidate_result": "local v1.1 denied revoked token before receipt and after restart",
   "demo_preserved_receipts": 1,
@@ -54,17 +54,17 @@
   },
   "correction_commit": "b700f0d03426ab3b38e88340a4e2a39e138cb7be",
   "hosted_run": {
-    "id": 40498978104,
-    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40498978104",
-    "code_commit": "b700f0d03426ab3b38e88340a4e2a39e138cb7be",
+    "id": 40499334471,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40499334471",
+    "code_commit": "b725bac8a2623c1a197f0803c78b518a414d7af9",
     "both_job_logs_inspected": true,
     "ubuntu_artifact": {
-      "id": 12730969098,
-      "sha256": "5e4e47c494fd991f7e8fb64faea83895710e0337766f91c35e43e6196459bf94"
+      "id": 12731408849,
+      "sha256": "a3215b71cdbce3b0a2429a28fdca5c38be693e49e51e12896b21c624624a4104"
     },
     "windows_artifact": {
-      "id": 12731024188,
-      "sha256": "a9443c56b64a9a082091d3375a455a7611b8b37cc04c2f4bb9c27c93d002ee57"
+      "id": 12731997838,
+      "sha256": "436b4ef2464ba2ee45d7c19dd1f94da68fedfcd6b30b0a42dcecf2371d214bba"
     }
   },
   "inherited_api_negative_control": {
@@ -75,7 +75,20 @@
     "corrected_code_commit": "b725bac8a2623c1a197f0803c78b518a414d7af9",
     "legacy_base_class_still_callable": true
   },
-  "final_hosted_run": "TBD",
-  "final_hosted_ubuntu_tests": "TBD",
-  "final_hosted_windows_tests": "TBD"
+  "final_hosted_run": {
+    "id": 40499334471,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40499334471",
+    "code_commit": "b725bac8a2623c1a197f0803c78b518a414d7af9",
+    "both_job_logs_inspected": true,
+    "ubuntu_artifact": {
+      "id": 12731408849,
+      "sha256": "a3215b71cdbce3b0a2429a28fdca5c38be693e49e51e12896b21c624624a4104"
+    },
+    "windows_artifact": {
+      "id": 12731997838,
+      "sha256": "436b4ef2464ba2ee45d7c19dd1f94da68fedfcd6b30b0a42dcecf2371d214bba"
+    }
+  },
+  "final_hosted_ubuntu_tests": "110/110 passed",
+  "final_hosted_windows_tests": "110/110 passed"
 }
