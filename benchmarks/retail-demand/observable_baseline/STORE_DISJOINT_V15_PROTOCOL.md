@@ -43,3 +43,25 @@ The hosted workflow is [retail-store-disjoint-v15.yml](../../../.github/workflow
 | Stage change | None |
 
 **Four lenses:** hiring manager—transparent comparison and negative results; technical reviewer—same-date limitation and frozen selection; innovation leader—no promotion on favorable post-hoc point estimate; founder—no sales uplift, inventory value, users, pilot or deployment claim.
+
+
+## Verified first execution and decision — 2026-10-27
+
+[GitHub Actions run #40445663158](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40445663158) **passed 33/33 fictional contract tests** and completed the one frozen publisher-data evaluation. Both original train/eval byte hashes matched; the immutable publisher revision URLs returned HTTP 404 and fallback to publisher main was accepted **only after both original SHA-256 pins matched**. Frozen v1.2/v1.4 source Git blobs matched. Python 3.13.16, Ubuntu runner, pyarrow 20.0.0; precise platform and source blobs are in [provenance](STORE_DISJOINT_V15_PROVENANCE.json).
+
+The new cohort contains **512 series across 293 stores**, with **zero store overlap** with the original 512-series / 374-store cohort. Of 3,584 possible evaluation days, **2,092 in-stock days** were scored and **1,492 censored days excluded**. All 512 series had at least one in-stock evaluation day. Day-weighted observed-sales MAE:
+
+| Frozen comparator | New store-disjoint cohort MAE |
+|---|---:|
+| Causal stockout-history | **0.499880** |
+| Seasonal naive | 0.514213 |
+| Weekday median (v1.4) | 0.516406 |
+| Last observed | 0.536860 |
+
+**Predeclared primary gate FAILED:** weekday median improved the point MAE over last-observed, but the paired store-cluster 95% interval for weekday-minus-last-observed per-series MAE was **[−0.063019, +0.033285]**, crossing zero. No superiority claim.
+
+**Secondary, non-primary observation:** stockout-history outperformed weekday median in point MAE; the paired weekday-minus-correction store-cluster interval was **[+0.000875, +0.043310]**. This is exploratory, with multiple-comparison and same-date limitations; it does **not** establish stockout correction's latent-demand recovery, causal value or temporal generalization. The changed ranking relative to the original cohort is a useful **heterogeneity/instability finding**, not a basis to choose a winner post-hoc.
+
+[Exact aggregate result](STORE_DISJOINT_V15_RESULT.json) and [run provenance](STORE_DISJOINT_V15_PROVENANCE.json) were preserved **byte-identically** from the downloaded hosted artifact: ZIP SHA-256 dbdd3c83e901bbcf4a74196656368a392545e57d7bcc129fd937a0bc41c367f7; result SHA-256 adcb2d0db4c27a32fd996f65b48f81b45465387a7b8bf010cb65bfd67bf762df; provenance SHA-256 aa984fc3ae3fad5b85f555e527ace2b673f2e435a7bda0e4bb592eebbe92f7e3. Both committed Git blob identities were checked against the downloaded artifact's original bytes. Raw publisher rows were not committed.
+
+**Decision:** maintain Research / Architecture, preserve the failed primary gate, and require an untouched temporal/external holdout with independent model implementation, product/store dependence and decision-value metrics before any maturity or performance promotion. No release, merger, real-world intervention or collaborator result.
