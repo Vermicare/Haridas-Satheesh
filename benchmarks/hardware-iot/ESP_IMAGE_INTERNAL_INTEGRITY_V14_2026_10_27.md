@@ -25,6 +25,10 @@ Artifact: `esp32s3-unflashed-40457717468-1.zip` from [GitHub Actions run 4045771
 - Partition-table MD5 trailer: `f4ad4f4538564b5d7435b62c75b69524` **matches recomputation** over the three 32-byte partition entries.
 - Host inspection runtime: CPython 3.13.5, Linux; inspection time 2026-10-27 UTC. These are **local static computations**; the regression suite is a separate evidence claim.
 
+## Independently executed regression evidence
+
+[GitHub Actions run 40483035863](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40483035863) **passed at code commit `e490b42c0ad8bfac14b3f67c023e9d2b3987fe23`**. Both job logs were inspected: **104/104 Ubuntu tests and 104/104 Windows tests passed**, including all seven new internal-image integrity regression tests. This is software-contract verification on synthetic fixtures, **not a physical flash or sensor test**.
+
 ## Reproduce
 
 Run the existing command on the **exact retained ZIP**, with the PR head recorded in its `BUILD_PROVENANCE.txt`:
