@@ -58,7 +58,7 @@ class SemanticAnnotationIntegrationTests(unittest.TestCase):
         self.submission["objects"][0].pop("statement")
         code, result = self.check()
         self.assertEqual(code, 1)
-        self.assertIn("v02:object[0]:missing_semantic_fields", result["errors"])
+        self.assertEqual(result["errors"], ["v02:object[0]:missing_semantic_fields"])
 
     def test_missing_archival_evidence_rejected_by_predecessor(self):
         self.submission["objects"][0].pop("archive_sources")
