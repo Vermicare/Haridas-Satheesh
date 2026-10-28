@@ -1,0 +1,119 @@
+{
+  "experiment": "wbi-v07-exact-coverage-synthetic-drift-falsification",
+  "date": "2026-10-28",
+  "evidence_class": "FICTIONAL_SYNTHETIC_ONLY_NOT_EEG",
+  "stage": "Research / Simulation (unchanged)",
+  "code_bearing_commit": "a9479b766b578edff744946e34d04f90699b0527",
+  "frozen_original_evaluator": {
+    "git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+    "sha256": "dd40d8b22c4b03194b4ba6ea82da832fcd7754b5434d4e41b4d944f21b11de7d",
+    "modified": false
+  },
+  "protocol": {
+    "replicates": 12,
+    "rows_per_split": 240,
+    "actions_per_policy_per_replicate": 120,
+    "coverage_each": 0.5,
+    "weight_grid": [
+      0,
+      0.1,
+      0.25,
+      0.5,
+      1
+    ],
+    "selection": "calibration-only minimum wrong count; smallest weight tie",
+    "test_label_used_for_selection": false,
+    "stress": "permute test drift only, preserve labels and confidences"
+  },
+  "result": {
+    "held_out_candidate_minus_baseline_wrong_total": -7,
+    "held_out_wins_ties_losses": [
+      4,
+      5,
+      3
+    ],
+    "held_out_per_replicate_deltas": [
+      -3,
+      -3,
+      0,
+      0,
+      0,
+      2,
+      1,
+      0,
+      -4,
+      2,
+      -2,
+      0
+    ],
+    "permuted_drift_candidate_minus_baseline_wrong_total": 8,
+    "permuted_wins_ties_losses": [
+      1,
+      6,
+      5
+    ],
+    "permuted_per_replicate_deltas": [
+      1,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      3,
+      3,
+      0
+    ],
+    "actions_each_total": 1440,
+    "selected_weights": [
+      0.1,
+      0.25,
+      0,
+      0,
+      0,
+      0.25,
+      0.25,
+      0.1,
+      0.25,
+      0.25,
+      0.1,
+      0
+    ],
+    "interpretation": "small synthetic advantage reverses under drift permutation; no real-world safety claim"
+  },
+  "verification": {
+    "run_id": 40718361067,
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40718361067",
+    "conclusion": "success",
+    "ubuntu": {
+      "job_id": 122922130852,
+      "python": "3.13.17",
+      "tests_passed": 14,
+      "artifact_id": 12829137804,
+      "artifact_zip_sha256": "b0dc46f7103958a30a727b42dee657000adf58ec84094fca9bc8d10ddf81c062",
+      "json_sha256": "f84121751719f31e737718d7e011f99feafa52008dc73214301e1ef43894e478"
+    },
+    "windows": {
+      "job_id": 122922131242,
+      "python": "3.13.16",
+      "tests_passed": 14,
+      "artifact_id": 12830170932,
+      "artifact_zip_sha256": "0a128f7d420861b7e44bbb5074e776b799a17e0f2dbb8725d4767ed289df5977",
+      "json_sha256": "0754a91dd5daad07671be6fc62c4ad1bb45db5174b3428d1f8493c5fc379fa12"
+    },
+    "artifacts_independently_downloaded_and_sha256_verified": true,
+    "substantive_json_equal_excluding_runner_provenance": true
+  },
+  "limitations": {
+    "real_eeg": "TBD",
+    "matched_coverage_real_eeg": "TBD",
+    "clinical_safety": "TBD",
+    "independent_external_review": "TBD",
+    "statistical_significance": "NOT_TESTED",
+    "new_collaborators": "NONE",
+    "maturity_advanced": false,
+    "release": false
+  }
+}
