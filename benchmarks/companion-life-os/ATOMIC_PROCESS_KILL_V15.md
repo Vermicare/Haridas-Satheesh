@@ -35,7 +35,7 @@ python -B demo_atomic_process_kill_v15.py
 - Test-only public keys, a fixture-supplied clock, a fictional approval and synthetic scenario are used. There is **no authenticated real human**, no external connector and **zero real-world actions**.
 - The known **v0.7 direct outbox and legacy base-store bypasses remain**. These tests cannot establish global revocation or authorization safety.
 - `PRAGMA integrity_check` is a limited structural check, not a complete integrity or security proof.
-- Hosted run conditions: Ubuntu Python **3.13.17** and Windows Python **3.13.16**, as printed in the logs; exact runner image revision, SQLite library version, journal mode and synchronous setting **TBD**. Four new tests passed on each platform; 129/129 total on each. Uploaded ZIP member bytes were **not** independently inspected.
+- Hosted run conditions: Ubuntu Python **3.13.17** and Windows Python **3.13.16**, as printed in the logs; exact runner image revision, SQLite library version, journal mode and synchronous setting **TBD**. Four new tests passed on each platform; 129/129 total on each. The original run's uploaded ZIP bytes were not independently inspected; a later identical-code run's Ubuntu/Windows ZIPs **were independently downloaded, hashed and inspected** (see below).
 - A passing test supports only the predeclared local fictional process-crash ordering. No maturity advance, merge, release or real consent claim.
 
 ## Provenance / next gate
@@ -47,3 +47,7 @@ Source: `atomic_revocation_delivery_v14.py` (unchanged), new `test_atomic_proces
 ## Execution / learning (2026-10-28)
 
 [Ubuntu and Windows CI #40673893645](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40673893645) completed successfully. Ubuntu job `122767269818` passed 129 tests in 1.471 seconds; Windows job `122767269343` passed 129 tests in 10.425 seconds. Each log independently shows all four actual `os._exit` tests passing and `demo-v15.json` generation. Artifact uploads completed (Ubuntu `12808504687`, Windows `12809487428`). The observed outcomes agree with the preregistered state matrix; there is no performance comparison or claim about power-loss safety. No failures were observed in this run; the known legacy bypass remains a separate verified negative result.
+
+## Independent artifact check
+
+The later [GitHub Actions run #40673916922](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40673916922) executed the **same v1.5 code and workflow**, with a registry-only change. Both uploaded ZIP archives were independently downloaded and their full SHA-256 digests matched GitHub's artifact metadata: Ubuntu artifact `12809602519`, SHA-256 `d2940cbcd956e647967b0f287594adce070bae302e7155e582ac1f0a95d1c4f0`; Windows artifact `12809532865`, SHA-256 `bb34d6d47ef3fa715b1104aba73b0fe54d1c0a12db652dacf3fdfa89f478cd40`. Each archive contained 11 JSON demo files. The extracted `demo-v15.json` independently parsed and reported `pending/0` before the sink/ack commit and `acked/1` after it, `external_actions: 0`, `physical_power_loss_tested: false` and `legacy_bypass_eliminated: false`. The ZIP hashes differ across operating systems because the archives contain multiple demo files and ZIP metadata; no cross-platform byte-identity claim is made. These artifact observations corroborate the logged tests but do not extend the security boundary.
