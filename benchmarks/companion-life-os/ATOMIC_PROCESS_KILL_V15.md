@@ -1,6 +1,6 @@
 # Companion v1.5 — actual child-process termination at fictional atomic sink/ack commit
 
-**Date:** 2026-10-28. **Status:** independent hosted execution **TBD** until final-head job logs are inspected. **Branch:** unmerged draft [PR #10](https://github.com/Vermicare/Haridas-Satheesh/pull/10). **Maturity:** unchanged; fictional software-contract research.
+**Date:** 2026-10-28. **Status:** verified in [GitHub Actions #40673893645](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40673893645) at tested commit `d93e39712ad493a0d27ef5aee308b5c46f87a7a8`; Ubuntu **129/129** and Windows **129/129** tests passed, including **4/4 new child-process kill tests per OS**. Both job logs inspected; demo generation and artifact upload succeeded. **Branch:** unmerged draft [PR #10](https://github.com/Vermicare/Haridas-Satheesh/pull/10). **Maturity:** unchanged; fictional software-contract research.
 
 ## Question / falsifiable prediction
 
@@ -35,7 +35,7 @@ python -B demo_atomic_process_kill_v15.py
 - Test-only public keys, a fixture-supplied clock, a fictional approval and synthetic scenario are used. There is **no authenticated real human**, no external connector and **zero real-world actions**.
 - The known **v0.7 direct outbox and legacy base-store bypasses remain**. These tests cannot establish global revocation or authorization safety.
 - `PRAGMA integrity_check` is a limited structural check, not a complete integrity or security proof.
-- SQLite version, OS runner image, journal/synchronous settings and final test counts: **TBD** until verified logs.
+- Hosted run conditions: Ubuntu Python **3.13.17** and Windows Python **3.13.16**, as printed in the logs; exact runner image revision, SQLite library version, journal mode and synchronous setting **TBD**. Four new tests passed on each platform; 129/129 total on each. Uploaded ZIP member bytes were **not** independently inspected.
 - A passing test supports only the predeclared local fictional process-crash ordering. No maturity advance, merge, release or real consent claim.
 
 ## Provenance / next gate
@@ -43,3 +43,7 @@ python -B demo_atomic_process_kill_v15.py
 Source: `atomic_revocation_delivery_v14.py` (unchanged), new `test_atomic_process_kill_v15.py`, new `demo_atomic_process_kill_v15.py`, fictional `scenario.json`. The original v1.4 [protocol](ATOMIC_REVOCATION_DELIVERY_V14.md) and [legacy-bypass negative control](REVOCATION_OUTBOX_GAP_V13.md) remain authoritative.
 
 **Next decisive falsification:** retire or block all old dispatch/write entry points in a separately versioned fictional adapter and demonstrate red/green negative controls against direct legacy calls. Independently review the threat model before any action-capable integration. If the bypass cannot be closed, reframe to a read-only advisor.
+
+## Execution / learning (2026-10-28)
+
+[Ubuntu and Windows CI #40673893645](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40673893645) completed successfully. Ubuntu job `122767269818` passed 129 tests in 1.471 seconds; Windows job `122767269343` passed 129 tests in 10.425 seconds. Each log independently shows all four actual `os._exit` tests passing and `demo-v15.json` generation. Artifact uploads completed (Ubuntu `12808504687`, Windows `12809487428`). The observed outcomes agree with the preregistered state matrix; there is no performance comparison or claim about power-loss safety. No failures were observed in this run; the known legacy bypass remains a separate verified negative result.
