@@ -1,0 +1,32 @@
+name: IoT host capture chain v18 (fictional-only)
+on:
+  push:
+    branches:
+      - research/iot-host-chain-v18-20261029
+  pull_request:
+    paths:
+      - 'benchmarks/hardware-iot/capture_chain_v18.py'
+      - 'benchmarks/hardware-iot/test_capture_chain_v18.py'
+      - '.github/workflows/iot-host-chain-v18.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-host-chain:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run adversarial fictional-only capture chain tests
+        working-directory: benchmarks/hardware-iot
+        run: python -B -m unittest -v test_capture_chain_v18.py
+# No connected device, serial port access, flash, credentials or uploads.
