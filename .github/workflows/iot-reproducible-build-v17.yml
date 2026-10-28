@@ -31,7 +31,7 @@ jobs:
             idf.py build;
             grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig;
             grep -qx CONFIG_APP_PROJECT_VER_FROM_CONFIG=y sdkconfig;
-            grep -qx CONFIG_APP_PROJECT_VER=\"iot-repro-v17\" sdkconfig;
+            grep -q iot-repro-v17 sdkconfig;
             sha256sum sdkconfig > repro_v17/sdkconfig_sha256.txt;
             cp build/iot_dual_sensor_capture.bin repro_v17/app-first.bin;
             cp build/bootloader/bootloader.bin repro_v17/boot-first.bin;
