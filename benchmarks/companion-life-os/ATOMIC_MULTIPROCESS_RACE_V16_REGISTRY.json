@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "companion-fictional-multiprocess-v16",
+  "date_utc": "2026-10-28",
+  "public_maturity": "In Progress; implementation private; no advancement",
+  "scope": "fictional single SQLite file; no external effects",
+  "pr_url": "https://github.com/Vermicare/Haridas-Satheesh/pull/10",
+  "provenance": {
+    "code_bearing_commit": "2fc88f09a532a070184456b7e88390f7ef10bc45",
+    "test_git_blob": "3a53f0d44a1133928946072a788971e210b50a7d",
+    "demo_git_blob": "8f00f21357beef48179b2d712bf55a94e14eb6d5",
+    "unchanged_atomic_adapter_git_blob": "46c194432d4d620e6929d84da5dd7bf468e0a7b0",
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40788961543",
+    "final_demo_run_url": "TBD",
+    "runtime": "Python 3.13 (CI); patch and SQLite versions TBD",
+    "platforms": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "source_dataset": "fictional scenario.json and public test-only keys"
+  },
+  "observed": {
+    "ubuntu_tests_passed": 131,
+    "windows_tests_passed": 131,
+    "new_tests_per_os": 2,
+    "fresh_revocation_dispatch_races_per_os": 6,
+    "independent_dispatch_processes_per_os": 6,
+    "unexpected_results": 0,
+    "external_actions": 0,
+    "final_demo_log_verified": "TBD"
+  },
+  "negative_controls": [
+    "legacy v0.7 direct outbox bypass remains",
+    "legacy v0.3 base-store bypass remains"
+  ],
+  "unknowns": [
+    "actual real human authentication",
+    "trusted clock",
+    "real consent",
+    "real connector and independent sink",
+    "physical power loss",
+    "independent security review",
+    "exact runner image and SQLite settings",
+    "both transaction winner orders exercised"
+  ],
+  "next_experiment": "deny-by-default isolated fictional surface; red/green legacy-bypass elimination",
+  "maturity_advance": false,
+  "release_justified": false
+}
