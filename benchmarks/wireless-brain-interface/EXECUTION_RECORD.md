@@ -13,7 +13,7 @@ SHA-256 of the CSV on both runs:
 
 `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a`
 
-This is a same-runtime deterministic rerun, **not** independent cross-environment reproduction. Clean CI / second-environment reproduction remains outstanding.
+This was a same-runtime deterministic rerun, **not** independent cross-environment reproduction at the time (2026-09-28). The subsequent independent cross-platform verification is documented in the dated addendum below.
 
 ## Frozen thresholds selected from calibration only
 
@@ -38,3 +38,13 @@ Nominal/drift segmentation exposed an important failure mode. The authorization 
 Before real EEG work, extend the evaluator to compare policies on a common risk–coverage frontier (or matched coverage targets) and add an explicit drift-gate diagnostic. If the gate still fails to improve incorrect-action risk at comparable coverage across multiple deterministic fixtures, reframe the contribution rather than protecting the architecture.
 
 The generated risk–coverage CSV is preserved beside this record. Unknown real-EEG metrics remain **TBD**.
+
+## 2026-10-26 addendum — independent synthetic cross-platform reproduction
+
+The original September result above is preserved unchanged. [Draft PR #16](https://github.com/Vermicare/Haridas-Satheesh/pull/16) introduced a separate verifier and workflow; it remains **open, draft and unmerged**. [GitHub Actions run #40301577095](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40301577095) completed successfully on both **Ubuntu** (job `121500489305`) and **Windows** (job `121500489045`), CPython **3.13.16** on each. Both job logs were inspected on 2026-10-28 and report:
+
+- Frozen main-branch evaluator Git blob: `2becec81a8002cc5ff2f445889b7617baf9937b9` (unchanged).
+- Two isolated reruns per operating system; CSV SHA-256: `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a` (matches the original record).
+- Stdout SHA-256: `39014b30200d6ddd20b7791ba3e70c48f17770a65a833d365af30b04b7a55c91` on both systems.
+
+**Boundary:** This is independent reproducibility of a deterministic *synthetic* evaluator only. It does not establish public-EEG decoding, a coverage-matched advantage over simple abstention, human safety, or clinical validity. Original results and CSV were not replaced. Maturity remains Research / Simulation; real-EEG outcome metrics remain **TBD**.
