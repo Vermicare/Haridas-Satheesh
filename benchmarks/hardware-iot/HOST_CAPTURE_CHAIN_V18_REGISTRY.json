@@ -15,7 +15,25 @@
     "isolated_repetitions": 2,
     "fictional_tests_per_run": 14,
     "passed_per_run": 14,
-    "github_actions": "TBD"
+    "github_actions": {
+      "run_id": 40765891927,
+      "conclusion": "success",
+      "tested_head": "3254c505620afbc48cae43bc09d4f77082d8646f",
+      "ubuntu": {
+        "job_id": 123089812510,
+        "tests": 14,
+        "passed": 14,
+        "log_inspected": true
+      },
+      "windows": {
+        "job_id": 123089813017,
+        "tests": 14,
+        "passed": 14,
+        "log_inspected": true
+      },
+      "existing_preflight_run_id": 40765891713,
+      "existing_preflight_conclusion": "success"
+    }
   },
   "evidence": {
     "source": "synthetic fictional tests only",
