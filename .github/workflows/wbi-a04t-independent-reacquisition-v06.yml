@@ -1,0 +1,43 @@
+name: WBI A04T independent training-source reacquisition
+on:
+  push:
+    branches: [research/wbi-independent-repro-20261026]
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci_a04t_reacquire_v06.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_a04t_reacquire_v06.py'
+      - '.github/workflows/wbi-a04t-independent-reacquisition-v06.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-reacquisition:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned MAT reader
+        run: python -m pip install --disable-pip-version-check numpy==2.3.3 scipy==1.16.2
+      - name: Adversarial fictional-only pinned-source regressions
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci_a04t_reacquire_v06 test_bnci_a04t_exception_v05
+      - name: Independently reacquire official training bytes and compare prior fingerprint
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci_a04t_reacquire_v06.py
+          --output "${{ runner.temp }}/a04t_reacquisition_metadata_v06.json"
+      - name: Upload metadata only (never EEG samples or class labels)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a04t-reacquisition-metadata-${{ matrix.os }}
+          path: ${{ runner.temp }}/a04t_reacquisition_metadata_v06.json
+          retention-days: 14
+          if-no-files-found: error
