@@ -45,6 +45,7 @@ jobs:
           python demo_atomic_revocation_delivery_v14.py > demo-v14.json
           python demo_atomic_process_kill_v15.py > demo-v15.json
           python demo_atomic_multiprocess_v16.py > demo-v16.json
+          python -c "import json; d=json.load(open('demo-v16.json', encoding='utf-8')); assert d['success'] and d['tests_run']==2 and d['external_actions']==0; print(json.dumps(d,sort_keys=True))"
       - uses: actions/upload-artifact@v4
         with:
           name: companion-authorization-${{ matrix.os }}
