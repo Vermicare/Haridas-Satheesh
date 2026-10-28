@@ -86,7 +86,6 @@
   "sqlite_versions": "TBD",
   "journal_mode": "TBD",
   "synchronous_mode": "TBD",
-  "source_blob_sha256": "Not a SHA-256 field: see source_git_blobs; full source SHA-256 TBD",
   "physical_power_loss_tested": false,
   "real_identity_verified": false,
   "real_external_actions": 0,
@@ -109,5 +108,6 @@
     "Only disposable SQLite test databases",
     "No physical power-loss or external side effects",
     "Legacy direct outbox remains unsafe"
-  ]
+  ],
+  "source_sha256": "TBD (source Git blob IDs pinned separately)"
 }
