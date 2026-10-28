@@ -1,0 +1,17 @@
+# WBI A04T — independent training-source reacquisition v0.6 (2026-10-28)
+
+**Question.** Can the exact public A04T training-file byte fingerprint and its seven-block exception-aware metadata be reproduced in fresh hosted environments, without opening evaluation files or uploading EEG/labels?
+
+**Previously observed (not independently authenticated):** [A04T v0.5 record](BNCI_A04T_EXCEPTION_V05.md) reported 37,150,377 bytes, SHA-256 `15850d81b95fc88cc8b9589eb9b713d49fa071e28adaf32d675b3eaa30591d6e`, seven blocks (one cue-free baseline + six 48-cue tasks), 25 channels, 250 Hz. The prior source was acquired once on Ubuntu; the hash is an observation, not a publisher signature.
+
+**Frozen acceptance, before fresh acquisition:** The [v0.6 verifier](bnci_a04t_reacquire_v06.py) requires byte-for-byte SHA-256 and length equality **before** invoking the existing v0.5 metadata inspector; it then checks the A04T seven-block exception, six task blocks, 288 cue positions, and privacy/performance flags. Any mismatch fails closed. The independent [13 fictional adversarial tests](test_bnci_a04t_reacquire_v06.py) check altered bytes, truncation, false performance/label-access claims and metadata contradictions. No numeric decoding outcome is generated.
+
+**Reproduce:** Run `python -B -m unittest -v test_bnci_a04t_reacquire_v06 test_bnci_a04t_exception_v05` from this directory after installing pinned `numpy==2.3.3 scipy==1.16.2`; for public-data acquisition, run `python -B bnci_a04t_reacquire_v06.py --output /private/new_metadata_only.json`. A strict allowlisted HTTPS redirect policy and bounded download are inherited from v0.5. The [GitHub Actions workflow](../../.github/workflows/wbi-a04t-independent-reacquisition-v06.yml) runs on fresh Ubuntu and Windows environments and uploads **metadata-only** JSON, never EEG or class labels.
+
+**Pre-execution local software check:** 13/13 fictional tests passed on Linux using CPython standard library. Published source/test/workflow Git blobs were reread and matched the locally tested copies: `5fba60b4b9739451e9e419d81010bcbeeab92366`, `d4cb8fee1ce5253864c33df8297461f138605818`, `10e931059ef5ca343a5cda8541e7073a32ae1e74`.
+
+**Hosted execution:** [GitHub Actions #40633875375](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40633875375). Per-operating-system results **TBD until completed logs and metadata are checked**. Do not call a queued/running job a verified reproduction.
+
+**Threat model / limits:** Two downloads from the same official distribution host are independent transfers but **not independent publisher authentication**. The same v0.5 MAT parser is reused, so parser correctness is not independently established. Successful metadata matching is not decoding, action-risk reduction, clinical safety, real-time control, physical hardware validation or evidence of novelty. The previously preserved synthetic evaluator result remains untouched. No source EEG or class labels may enter public Git or CI artifacts.
+
+**Stage:** Research / Simulation; unchanged. **Next gate:** complete label-safe provenance of the remaining training/evaluation file *identities* (not held-out label values), then freeze and run leakage-safe held-out EEG decoding and matched-coverage authorization comparisons. Reframe the drift gate if it cannot beat simple confidence abstention at comparable useful-action coverage.
