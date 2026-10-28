@@ -66,6 +66,18 @@ class Tests(unittest.TestCase):
     def test_missing_provenance(self):
         with self.assertRaises(ValueError):
             capture(Sensor(), '/does/not/matter', run_id='', placement='fixture')
+    def test_early_dropout_cannot_pass_600_second_gate(self):
+        class Dropout(Sensor):
+            @property
+            def data_ready(self): return c.now() < 10
+        with tempfile.TemporaryDirectory() as td:
+            c = Clock()
+            r = capture(Dropout(), Path(td)/'dropout.jsonl', run_id='F',
+                        placement='fixture', duration_s=600, poll_s=5,
+                        monotonic=c.now, sleep=c.sleep)
+            self.assertEqual(r['samples'], 2)
+            self.assertFalse(r['capture_quality_gate_passed'])
+
     def test_600_second_elapsed_flag_fictional(self):
         with tempfile.TemporaryDirectory() as td:
             c = Clock()
