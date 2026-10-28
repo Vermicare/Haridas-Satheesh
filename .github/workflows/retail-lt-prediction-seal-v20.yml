@@ -29,7 +29,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Fifteen fictional prediction-seal negative controls
+      - name: Seventeen fictional prediction-seal negative controls
         working-directory: benchmarks/retail-demand/observable_baseline
         run: python -B -m unittest -v test_freshretail_lt_prediction_seal_v20
   publisher-train-only:
