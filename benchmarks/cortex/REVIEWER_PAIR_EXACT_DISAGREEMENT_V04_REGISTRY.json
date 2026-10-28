@@ -17,7 +17,19 @@
   },
   "corrected_demo_workflow": {
     "commit": "263ca66e8eebc3655bb1a7a79ef5f0e3c92c559b",
-    "final_head_ci": "TBD"
+    "verified_run_id": 40738549357,
+    "ubuntu_tests_passed": 201,
+    "windows_tests_passed": 201,
+    "job_logs_inspected": true,
+    "ubuntu_artifact_sha256": "16f3b4038cd582696010a4ef1a115e536f16ee6719977db544054f0c010d7b28",
+    "windows_artifact_sha256": "118b1f29ea55aa8a37058e862f7ab99bd7c0917934745959d0b845f895925f63",
+    "both_archives_downloaded_and_parsed": true,
+    "fictional_demo": {
+      "human_reviewers": 0,
+      "external_actions": 0,
+      "matching_groups": 1,
+      "changed_statement_mismatch_groups": 1
+    }
   },
   "intermediate_failure": {
     "run_id": 40738524280,
