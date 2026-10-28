@@ -1,0 +1,63 @@
+{
+  "schema": "cortex-pair-semantic-gate-evidence-v0.3",
+  "date": "2026-10-28",
+  "project": "CORTEX",
+  "maturity": "Architecture / R&D",
+  "evidence_class": "fictional_only_deterministic_negative_control",
+  "research_question": "Can source-only reviewer submissions pass the v0.1 pair gate while failing the v0.2 individual semantic shape contract?",
+  "before": {
+    "gate": "reviewer_pair_preflight_v01.compare_pair",
+    "source_only_pair_valid": true
+  },
+  "after": {
+    "gate": "reviewer_pair_semantic_gate_v03.compare_semantic_pair",
+    "source_only_pair_ready": false,
+    "complete_fictional_pair_ready": true,
+    "semantic_accuracy": "TBD",
+    "human_independence": "TBD",
+    "correction_burden": "TBD"
+  },
+  "verification": {
+    "run_id": 40689993941,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40689993941",
+    "tested_commit": "0cb760bcfbff6596a1211c3069b998b54e0942b4",
+    "ubuntu_tests": {
+      "passed": 189,
+      "total": 189
+    },
+    "windows_tests": {
+      "passed": 189,
+      "total": 189
+    },
+    "new_adversarial_tests_per_os": 15,
+    "job_logs_inspected": true
+  },
+  "provenance": {
+    "source_git_blob": "ab895d8ec042783350d4e31ac940e194121ec2e8",
+    "tests_git_blob": "7d92ba59ee72816ea1e56c7dbfe27938d1d16c99",
+    "workflow_git_blob": "68e3b268b1a4f1545de2f0121575c7e2ee12c200",
+    "case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+    "archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046"
+  },
+  "run_conditions": {
+    "os": [
+      "GitHub hosted Ubuntu",
+      "GitHub hosted Windows"
+    ],
+    "python_requested": "3.13",
+    "python_patch": "TBD",
+    "runner_image_revision": "TBD",
+    "dependencies": "Python standard library",
+    "seed": "not applicable",
+    "real_human_reviewers": 0
+  },
+  "next_experiment": "Two voluntary independent blinded annotations and privately frozen adjudicated labels before a general extractor; measure correction time against a fair manual comparator.",
+  "decision": "No maturity advancement; preserve v0.1/v0.2 and require v0.3 when reporting pair semantic readiness.",
+  "limits": [
+    "Not semantic accuracy",
+    "Not authenticated reviewer identity",
+    "Not measured timing",
+    "Not production or real workflow evidence",
+    "Not patentability or novelty evidence"
+  ]
+}
