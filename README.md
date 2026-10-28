@@ -236,7 +236,7 @@ The long game is understanding what happens when those layers begin to converge 
 | **Wireless Brain Interface** | Research / Simulation; synthetic only | [Case study](case-studies/wireless-brain-interface.md) · [Verified same-runtime synthetic execution](benchmarks/wireless-brain-interface/EXECUTION_RECORD.md) |
 | **Companion Intelligence** | In Progress; implementation private | [Case study](case-studies/companion-intelligence-life-os.md) · [Synthetic benchmark](benchmarks/companion-life-os/README.md) |
 | **Adaptive Personal Cooling** | Prototype / R&D; bench evidence pending | [Case study](case-studies/adaptive-personal-cooling.md) · [Bench protocol](benchmarks/adaptive-cooling/README.md) |
-| **Retail Demand Intelligence** | Research / Architecture; [2025 preregistered in-stock MAE gate passed](benchmarks/retail-demand/README.md) vs last-observed, **not** validated lost demand or business impact | [Case study](case-studies/retail-demand-intelligence.md) · [Verified 2025 experiment](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V21_TEMPORAL_TRANSFER_RESULT.md) |
+| **Retail Demand Intelligence** | Research / Architecture; 2025 preregistered in-stock MAE gate passed vs last-observed, **not** validated lost demand or business impact | [Case study](case-studies/retail-demand-intelligence.md) · [Verified 2025 experiment](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V21_TEMPORAL_TRANSFER_RESULT.md) |
 | **EPMO Microsoft 365 Automation** | Implemented / In Progress | [Case study](case-studies/epmo-automation-portfolio.md) |
 
 ---
