@@ -1,6 +1,7 @@
 """Fictional v1.4 integration and negative controls; zero external actions."""
 import copy
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -87,9 +88,10 @@ class AtomicDeliveryTests(unittest.TestCase):
 
     def test_tampered_approval_binding_rejected(self):
         nonce = self.stage()
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db:
             db.execute("""UPDATE fictional_atomic_outbox_v14
                           SET approval_digest=? WHERE nonce=?""", ('0'*64, nonce))
+            db.commit()
         with self.assertRaisesRegex(FictionalDeliveryError, 'binding changed'):
             self.adapter.dispatch(nonce)
         self.assertEqual(self.adapter.counts(nonce)['fictional_sink_rows'], 0)
