@@ -20,13 +20,17 @@
     "fake sink row only; external_actions=0"
   ],
   "test_fixture": "fictional test_revocable_signed_boundary_v11.fixture; public test-only HMAC keys; caller-provided clock",
-  "runtime": "Python 3.13 intended; actual hosted runtime TBD",
-  "dependencies": "Python standard library; exact runner image TBD",
+  "runtime": "GitHub Actions workflow requested CPython 3.13; exact patch version TBD; Ubuntu and Windows jobs",
+  "dependencies": "Python standard library; runner image revision TBD",
   "random_seed": "not used",
   "static_review": "v0.7 stage and dispatch do not read fictional_revocations; v1.1 checked execution does",
-  "execution_status": "TBD - hosted test logs not yet verified",
-  "test_pass_count": "TBD",
-  "observed_fake_sink_rows": "TBD",
+  "execution_status": "verified successful on Ubuntu and Windows at executable head c9a6892effccc48f6eba928e895dc0c34f2415f9",
+  "test_pass_count": {
+    "ubuntu": 116,
+    "windows": 116,
+    "v13_negative_controls_each_os": 2
+  },
+  "observed_fake_sink_rows": "one per fictional case in each OS's passing assertions; actual demo artifact bytes not independently inspected",
   "physical_measurements": "TBD - none attempted",
   "external_actions": 0,
   "limitations": [
@@ -37,5 +41,14 @@
   ],
   "decision": "No stage advancement; preserve negative control and design cancellation-aware fictional adapter.",
   "next_experiment": "Bind approval digest to outbox item, retire legacy entry points, serialize cancellation versus fake delivery, inject sink/ack crash.",
-  "kill_reframe": "Read-only advisory if bypass-free cancellation cannot be demonstrated."
+  "kill_reframe": "Read-only advisory if bypass-free cancellation cannot be demonstrated.",
+  "hosted_evidence": {
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40610312405",
+    "ubuntu_job_id": 122559985904,
+    "windows_job_id": 122559987950,
+    "inspected_at_utc": "2026-10-28",
+    "workflow_demo_step": "completed",
+    "artifact_upload_step": "completed",
+    "artifact_zip_contents": "TBD - not inspected"
+  }
 }
