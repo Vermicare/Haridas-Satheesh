@@ -1,0 +1,53 @@
+{
+  "schema_version": "cooling-scd40-independent-receipt-verification-v2",
+  "date_utc": "2026-10-28",
+  "evidence_class": "fictional_test_double_software_only",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cooling-explicit-fixture-gate-20261023",
+  "source": {
+    "path": "benchmarks/adaptive-cooling/scd40_capture_verify_v2.py",
+    "git_blob_sha1": "2021b7b23c3a6a05cc5565a75969cbef8509715b",
+    "sha256": "f3937ddb4d27ece6227b67f08a4f6c9060af6477779e88fb2a5e4920e8618822"
+  },
+  "tests": {
+    "path": "benchmarks/adaptive-cooling/test_scd40_capture_verify_v2.py",
+    "git_blob_sha1": "9568f5cbfa861a56f882f4e98755b7e58e62bdc2",
+    "sha256": "a3f79fa199fb1a401ec93e58a7b18ed1655f708013f710bd8735881f3a3c4700",
+    "new_tests": 19,
+    "negative_controls": "tampered pre-pinned SHA; forged completion, missing sample, gaps, order, duration, origin, truncated/duplicate JSON; integration with unchanged v1 logger test double"
+  },
+  "integration": {
+    "logger_path": "benchmarks/adaptive-cooling/scd40_dry_run_capture_v1.py",
+    "logger_git_blob_sha1": "820b686da1e2541f8d8d1654f7cda2d7fed8b4ae",
+    "real_sensor_executions": 0
+  },
+  "hosted_ci": {
+    "workflow": ".github/workflows/cooling-origin-gate.yml",
+    "workflow_git_blob_sha1": "7d4b35a41195f6b66518af356d1f3f1df8fb79f6",
+    "run_id": 40782430636,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40782430636",
+    "code_bearing_commit": "b1ff360f6f889e4a1bbe51fa69c85c0d31e778e4",
+    "ubuntu": {
+      "job_id": 123147188622,
+      "passed": 120,
+      "total": 120
+    },
+    "windows": {
+      "job_id": 123147188349,
+      "passed": 120,
+      "total": 120
+    },
+    "conclusion": "success"
+  },
+  "private_capture_bytes": "TBD",
+  "real_samples": 0,
+  "physical_origin_authenticated": false,
+  "calibration_verified": false,
+  "cooling_performance_claim_permitted": false,
+  "limits": [
+    "Hash supplied at verification time must have been independently pinned before verification; same-party post-hoc hashes cannot prove provenance.",
+    "Clock values and declared physical origin are not authenticated.",
+    "Positive tests are fictional and do not establish a working sensor, cooling effect, or device identity."
+  ],
+  "next_step": "Wire actual SCD40 to Raspberry Pi, preserve private >=600-second raw capture and separately pinned SHA-256, run verifier and record actual geometry/instrument uncertainty; then obtain independent thermal/airflow/power instruments for controlled comparison."
+}
