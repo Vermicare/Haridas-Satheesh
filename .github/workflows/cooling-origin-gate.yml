@@ -20,6 +20,11 @@ on:
       - 'benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1.md'
       - 'benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1_RESULT.json'
       - 'benchmarks/adaptive-cooling/ORDER_CONFOUNDING_V1_REGISTRY.json'
+      - 'benchmarks/adaptive-cooling/order_carryover_sensitivity_v2.py'
+      - 'benchmarks/adaptive-cooling/test_order_carryover_sensitivity_v2.py'
+      - 'benchmarks/adaptive-cooling/ORDER_CARRYOVER_SENSITIVITY_V2.md'
+      - 'benchmarks/adaptive-cooling/ORDER_CARRYOVER_SENSITIVITY_V2_RESULT.json'
+      - 'benchmarks/adaptive-cooling/ORDER_CARRYOVER_SENSITIVITY_V2_REGISTRY.json'
       - '.github/workflows/cooling-origin-gate.yml'
   workflow_dispatch:
 permissions:
@@ -39,4 +44,4 @@ jobs:
           python-version: '3.13'
       - name: Run fictional-only origin, dry-run, capture-chain, alignment and order regressions
         working-directory: benchmarks/adaptive-cooling
-        run: python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py test_capture_chain.py test_capture_alignment.py test_order_confounding_v1.py
+        run: python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py test_capture_chain.py test_capture_alignment.py test_order_confounding_v1.py test_order_carryover_sensitivity_v2.py
