@@ -41,6 +41,7 @@ jobs:
           python demo_sandbox_issuer_v10.py > demo-v10.json
           python demo_revocable_signed_boundary_v11.py > demo-v11.json
           python demo_process_kill_v12.py > demo-v12.json
+          python demo_revocation_outbox_gap_v13.py > demo-v13.json
       - uses: actions/upload-artifact@v4
         with:
           name: companion-authorization-${{ matrix.os }}
@@ -53,3 +54,4 @@ jobs:
             benchmarks/companion-life-os/demo-v10.json
             benchmarks/companion-life-os/demo-v11.json
             benchmarks/companion-life-os/demo-v12.json
+            benchmarks/companion-life-os/demo-v13.json
