@@ -1,0 +1,92 @@
+{
+  "experiment_id": "iot-reproducible-build-control-v17",
+  "date_utc": "2026-10-28",
+  "maturity": "Prototype / Hardware Architecture; unchanged",
+  "scope": "two clean unflashed builds; same checkout and container",
+  "result": "PASS_SAME_CONTAINER_ONLY",
+  "source": {
+    "repository": "Vermicare/Haridas-Satheesh",
+    "pr": 22,
+    "head_sha": "5a9009d7d9ef2d2d2d500aad4a50c5c596e780c5",
+    "checked_out_merge_sha": "8d440e64331a03788379d30b8270ad964933dfa3",
+    "branch": "research/iot-reproducible-build-v17-20261028"
+  },
+  "config": {
+    "reproducible_build": true,
+    "project_ver_from_config": true,
+    "project_ver": "iot-repro-v17",
+    "sdkconfig_sha256": "45c2865ae1ae348a2ad1696136f783aa94afc11264152981056519ceeaf75816"
+  },
+  "environment": {
+    "esp_idf": "v6.1",
+    "compiler": "xtensa-esp-elf-gcc (crosstool-NG esp-15.2.0_20251204) 15.2.0",
+    "container_image": "espressif/idf:v6.1",
+    "resolved_container_digest": "sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c",
+    "python": "3.12.3",
+    "host_image_revision": "TBD"
+  },
+  "execution": {
+    "run_id": 40659292470,
+    "job_id": 122717976330,
+    "conclusion": "success",
+    "artifact_id": 12802833314,
+    "artifact_zip_sha256": "f658976e6a846f1fdc73888ad3872f70e53fdf395d7ae1bee283308a4549c6d0",
+    "artifact_digest_verified": true,
+    "sha256sums_all_eight_members_verified": true,
+    "independent_byte_comparison": true,
+    "preflight_run_id": 40659292677,
+    "preflight_tests_per_os": 124,
+    "preflight_os": [
+      "Ubuntu",
+      "Windows"
+    ]
+  },
+  "members": [
+    {
+      "name": "application",
+      "bytes": 196000,
+      "sha256": "3acc2c98ea480f15dbeaffa8d49c8812427dba73c69511e7bcc5a928e10d73f1",
+      "pair_identical": true
+    },
+    {
+      "name": "bootloader",
+      "bytes": 21072,
+      "sha256": "da59a63758341ef54ff0083f178ea1f29ed7bc9cf89a8c7f64e9b0d2d9a9184b",
+      "pair_identical": true
+    },
+    {
+      "name": "partition",
+      "bytes": 3072,
+      "sha256": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+      "pair_identical": true
+    },
+    {
+      "name": "flash_arguments",
+      "bytes": 937,
+      "sha256": "43c1bb75a3e03982c9732cc7b2f3ff68e3dc5addef324eb1df34e1d293863aa2",
+      "pair_identical": true
+    }
+  ],
+  "failure_learning": {
+    "early_runs": [
+      40659014849,
+      40659124132
+    ],
+    "cause": "nested sh -ec incompatible with action command wrapper; precompile invocation failure",
+    "fixed_in_sha": "5a9009d7d9ef2d2d2d500aad4a50c5c596e780c5"
+  },
+  "unknown": {
+    "cross_run_reproducibility": "TBD",
+    "cross_machine_reproducibility": "TBD",
+    "causal_attribution_of_all_v16_differences": "TBD",
+    "physical_flash_identity": "TBD",
+    "real_sensor_measurements": "TBD",
+    "calibration": "TBD",
+    "product_outcomes": "TBD"
+  },
+  "decision": "retain current maturity; next immutable-digest independent cross-run test",
+  "prior_art": [
+    "https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/reproducible-builds.html",
+    "https://github.com/espressif/esp-idf/issues/13680"
+  ]
+}
