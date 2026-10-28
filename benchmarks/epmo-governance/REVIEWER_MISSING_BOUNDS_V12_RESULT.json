@@ -1,0 +1,69 @@
+{
+  "actual_completion_rates": "TBD",
+  "assigned_per_arm": 48,
+  "assumed_reviewer_icc": "0.10 (from v1.1)",
+  "assumed_true_null_false_approval_probability": "0.20 in both arms",
+  "cases_per_completed_reviewer": 13,
+  "decision": "Do not claim an assigned-reviewer benefit from complete cases when worst-case bounds include zero; predefine missingness before any private pilot.",
+  "external_actions": 0,
+  "generator": "reviewer_attrition_sensitivity_v11.reviewer_rate and retained",
+  "human_treatment_effect": "TBD",
+  "observed_human_reviewers": 0,
+  "origin": "FICTIONAL_ASSUMPTION_BASED_MISSINGNESS_PREFLIGHT",
+  "scenarios": [
+    {
+      "contrast": {
+        "assigned_difference_lower": {"decimal": "-0.208333", "exact": "-5/24"},
+        "assigned_difference_upper": {"decimal": "0.270833", "exact": "13/48"},
+        "complete_case_difference": {"decimal": "0.001334", "exact": "23/17238"},
+        "direction": "worksheet_minus_manual; negative means fewer false approvals",
+        "interval_type": "sharp no-assumption finite-sample identification bounds; NOT a confidence interval",
+        "zero_in_identification_interval": true
+      },
+      "manual": {
+        "assigned": 48,
+        "assigned_mean_lower": {"decimal": "0.169872", "exact": "53/312"},
+        "assigned_mean_upper": {"decimal": "0.357372", "exact": "223/624"},
+        "complete_case_rate": {"decimal": "0.209073", "exact": "106/507"},
+        "completed": 39, "missing": 9, "observed_false_approvals": 106
+      },
+      "observed_fixture_sha256": "f1700143053334c523bd4c2de6a3f87961027a41de1dbc644dbc178a9b9f30f3",
+      "scenario": "null_random_25pct",
+      "worksheet": {
+        "assigned": 48,
+        "assigned_mean_lower": {"decimal": "0.149038", "exact": "31/208"},
+        "assigned_mean_upper": {"decimal": "0.440705", "exact": "275/624"},
+        "complete_case_rate": {"decimal": "0.210407", "exact": "93/442"},
+        "completed": 34, "missing": 14, "observed_false_approvals": 93
+      }
+    },
+    {
+      "contrast": {
+        "assigned_difference_lower": {"decimal": "-0.133013", "exact": "-83/624"},
+        "assigned_difference_upper": {"decimal": "0.137821", "exact": "43/312"},
+        "complete_case_difference": {"decimal": "-0.054431", "exact": "-121/2223"},
+        "direction": "worksheet_minus_manual; negative means fewer false approvals",
+        "interval_type": "sharp no-assumption finite-sample identification bounds; NOT a confidence interval",
+        "zero_in_identification_interval": true
+      },
+      "manual": {
+        "assigned": 48,
+        "assigned_mean_lower": {"decimal": "0.176282", "exact": "55/312"},
+        "assigned_mean_upper": {"decimal": "0.238782", "exact": "149/624"},
+        "complete_case_rate": {"decimal": "0.188034", "exact": "22/117"},
+        "completed": 45, "missing": 3, "observed_false_approvals": 110
+      },
+      "observed_fixture_sha256": "714326fd7c5338d7a124d4410b0a31e66f03c6fbf876789ed521a5884e4fc04b",
+      "scenario": "null_selective_treatment_dropout",
+      "worksheet": {
+        "assigned": 48,
+        "assigned_mean_lower": {"decimal": "0.105769", "exact": "11/104"},
+        "assigned_mean_upper": {"decimal": "0.314103", "exact": "49/156"},
+        "complete_case_rate": {"decimal": "0.133603", "exact": "33/247"},
+        "completed": 38, "missing": 10, "observed_false_approvals": 66
+      }
+    }
+  ],
+  "seed": 20261028,
+  "version": "1.2"
+}
