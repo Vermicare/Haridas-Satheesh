@@ -8,6 +8,7 @@ from __future__ import annotations
 import itertools
 import json
 import math
+import sys
 from collections import Counter
 from statistics import mean
 
@@ -61,6 +62,8 @@ def analyze(carryover_c: float) -> dict:
 
 
 def main():
+    # Preserve canonical LF output on Windows as well as Unix.
+    sys.stdout.reconfigure(newline='\n')
     print(json.dumps({'scenarios': [analyze(-0.6), analyze(0.0), analyze(0.6)],
                       'interpretation': 'FICTIONAL one-slot carryover sensitivity only; do not select a favorable schedule post hoc; measure stabilization/washout before causal inference.'},
                      sort_keys=True, indent=2, allow_nan=False))
