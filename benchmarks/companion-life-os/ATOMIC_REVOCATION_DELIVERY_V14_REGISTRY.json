@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "experiment_id": "companion-atomic-revocation-delivery-v14-20261028",
+  "date": "2026-10-28",
+  "branch": "research/companion-auth-negative-controls-20261024",
+  "stage": "In Progress / fictional software contract",
+  "maturity_advanced": false,
+  "hypothesis": "For the new same-database fake sink adapter only, revocation committed before dispatch cancels pending delivery without a fake sink row.",
+  "comparison": "v1.3 verified unsafe legacy outbox path remains callable and deliberately unmodified",
+  "sources": {
+    "adapter": {
+      "path": "benchmarks/companion-life-os/atomic_revocation_delivery_v14.py",
+      "git_blob": "46c194432d4d620e6929d84da5dd7bf468e0a7b0"
+    },
+    "tests": {
+      "path": "benchmarks/companion-life-os/test_atomic_revocation_delivery_v14.py",
+      "git_blob": "2f0e5000f7bdf688d252f0ff985a354f62e62f02"
+    },
+    "demo": {
+      "path": "benchmarks/companion-life-os/demo_atomic_revocation_delivery_v14.py",
+      "git_blob": "fc9e52796a3de212711c99f4661cd66eb2fbe84e"
+    },
+    "workflow": {
+      "path": ".github/workflows/companion-authorization-v02.yml",
+      "git_blob": "b19042a0d5d65be6f937400ce42b1b2a39eedd3d"
+    }
+  },
+  "run": {
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40645089504",
+    "head_commit": "0c09a8dae693eb246ea2383963bc6cb03cb7c48a",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "platform": "windows-2025-vs2026",
+        "job_id": 122671934674,
+        "python": "3.13.16",
+        "tests_passed": 125,
+        "tests_total": 125,
+        "new_v14_tests_passed": 9,
+        "demo_step": "success",
+        "artifact_upload": "success"
+      },
+      {
+        "platform": "ubuntu-24.04",
+        "job_id": 122671935087,
+        "python": "3.13.17",
+        "tests_passed": 125,
+        "tests_total": 125,
+        "new_v14_tests_passed": 9,
+        "demo_step": "success",
+        "artifact_upload": "success"
+      }
+    ]
+  },
+  "observations": {
+    "revocation_before_dispatch_fake_sink_rows": 0,
+    "dispatch_before_revocation_fake_sink_rows": 1,
+    "precommit_failure_rolls_back": true,
+    "postcommit_retry_idempotent": true,
+    "concurrent_fake_rows": 1,
+    "legacy_bypass_still_reproduced": true,
+    "real_external_actions": 0
+  },
+  "unknowns": {
+    "sqlite_version": "TBD",
+    "journal_mode": "TBD",
+    "synchronous_mode": "TBD",
+    "physical_power_loss": "NOT TESTED",
+    "authenticated_human_identity": "NOT TESTED",
+    "external_connector": "NOT TESTED",
+    "independent_security_review": "TBD",
+    "real_world_effectiveness": "TBD"
+  },
+  "negative_result": "v0.7 legacy outbox still delivers fictional work after approval revocation; v1.4 is not a global fix.",
+  "failure_learning": "First Windows hosted run failed during temporary-directory cleanup because a sqlite3 test connection was not explicitly closed; fixed and independently rerun.",
+  "decision": "no maturity advancement; keep draft/unmerged; retire all legacy dispatch routes before any security claim",
+  "primary_references": [
+    "https://www.sqlite.org/lang_transaction.html",
+    "https://www.sqlite.org/isolation.html",
+    "https://www.sqlite.org/wal.html"
+  ]
+}
