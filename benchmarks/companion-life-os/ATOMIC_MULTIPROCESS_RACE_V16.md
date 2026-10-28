@@ -26,9 +26,15 @@ The second command emits one JSON object with actual test count, elapsed time, S
 
 ## Execution evidence and provenance
 
-The **code-bearing** test head 2fc88f09a532a070184456b7e88390f7ef10bc45 passed [GitHub Actions #40788961543](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40788961543): **131/131 total tests on Ubuntu and 131/131 on Windows**, including both new tests. Both job logs were inspected. This is two new tests over the previously verified 129-test suite. Source Git blob: 3a53f0d44a1133928946072a788971e210b50a7d. Existing v1.4 adapter Git blob (unchanged): 46c194432d4d620e6929d84da5dd7bf468e0a7b0. The added demonstration and workflow-log JSON assertion require a separate final-head run; **status TBD until checked**.
+The **code-bearing** test head 2fc88f09a532a070184456b7e88390f7ef10bc45 passed [GitHub Actions #40788961543](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40788961543): **131/131 total tests on Ubuntu and 131/131 on Windows**, including both new tests. Both job logs were inspected. This is two new tests over the previously verified 129-test suite. Source Git blob: 3a53f0d44a1133928946072a788971e210b50a7d. Existing v1.4 adapter Git blob (unchanged): 46c194432d4d620e6929d84da5dd7bf468e0a7b0. The added demonstration and workflow-log JSON assertion passed [GitHub Actions #40789289224](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40789289224) on **both Ubuntu and Windows**, at demo-bearing head ed74e1027810638525c43fb72a2049cc448869a4: **131/131 full tests per OS**, plus **2/2 JSON-demo rerun tests per OS**, zero errors and zero external actions. Both logs were inspected; the artifact-upload steps succeeded. ZIP archive bytes were **not** independently downloaded or inspected.
 
 The [SQLite transaction specification](https://www.sqlite.org/lang_transaction.html) and [isolation documentation](https://www.sqlite.org/isolation.html) explain why BEGIN IMMEDIATE serializes writers **within one SQLite database**. This is a documented property, not a new algorithm or a claim of patentable novelty.
+
+## Reproducibility finding: checkout newline normalization
+
+The v1.6 demo exposed a **non-substantive but important cross-platform byte difference**: Ubuntu checked out the test file with LF newlines (raw SHA-256 26b3b4d7c8e39de6957bec5fcca5f1177128d1d7af9339fd56daabc08fab0ece), while Windows checked it out with CRLF (raw SHA-256 11e18f5d89be483c25834bc04bb090d818dcc1ea355f5e3257b827efb03151a0). The **LF-normalized SHA-256 matched on both**: 26b3b4d7c8e39de6957bec5fcca5f1177128d1d7af9339fd56daabc08fab0ece. Both logs printed the normalized and raw digests. The Git blob identity remained pinned; never claim raw checkout-byte identity across operating systems.
+
+**Four-lens review:** hiring manager — runnable no-network, machine-readable demonstration; technical reviewer — check same-file transaction serialization and untested interleavings; innovation leader — established SQLite locking, **not novel**; founder — known legacy bypasses and absent real authentication prevent an execution-capable deployment claim.
 
 ## Negative evidence / remaining gaps
 
