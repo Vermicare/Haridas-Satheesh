@@ -50,3 +50,6 @@ jobs:
       - name: Run fictional-only origin, dry-run, capture-chain, alignment and order regressions
         working-directory: benchmarks/adaptive-cooling
         run: python -B -m unittest -v test_fixture_origin_gate.py test_dry_run_integrity.py test_capture_chain.py test_capture_alignment.py test_order_confounding_v1.py test_order_carryover_sensitivity_v2.py
+      - name: Reproduce and byte-compare fictional carryover JSON
+        working-directory: benchmarks/adaptive-cooling
+        run: python -B -c "import pathlib,subprocess,sys,hashlib; expected=pathlib.Path('ORDER_CARRYOVER_SENSITIVITY_V2_RESULT.json').read_bytes(); actual=subprocess.check_output([sys.executable,'-B','order_carryover_sensitivity_v2.py']); assert actual == expected, 'FICTIONAL_RESULT_BYTE_MISMATCH'; print('fictional_result_sha256='+hashlib.sha256(actual).hexdigest())"
