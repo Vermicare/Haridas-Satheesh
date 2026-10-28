@@ -39,7 +39,9 @@
     ],
     "new_test_count": 17,
     "local_tests": "PASS",
-    "cross_platform_ci": "TBD"
+    "cross_platform_ci": "PASS: https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40699223219 (191/191 Ubuntu, 191/191 Windows)",
+    "verified_commit": "4a7f55a7b7b2bdfb323f25917b17e561f00552ad",
+    "hosted_job_logs_inspected": true
   },
   "results": {
     "selective_completed_manual": 45,
