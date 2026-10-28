@@ -26,7 +26,7 @@ jobs:
             sh -ec '
             mkdir -p repro_v17;
             idf.py --version > repro_v17/idf_version.txt;
-            xtensa-esp32s3-elf-gcc --version | head -n 1 > repro_v17/compiler_version.txt;
+            xtensa-esp-elf-gcc --version | head -n 1 > repro_v17/compiler_version.txt;
             git rev-parse HEAD > repro_v17/checkout_sha.txt;
             idf.py build;
             grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig;
