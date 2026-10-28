@@ -13,7 +13,7 @@ The earlier 2024 comparison did not establish superiority: its correctly matched
 3. Only after both matches, hash the pinned EVAL bytes (2,009,424 bytes; SHA-256 `370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626`) and parse the selected public labels. Reject duplicate/missing future days, out-of-horizon dates, changed method names, invalid hourly status, nonfinite predictions or changed source bytes. **Never replace a selected series using EVAL availability.**
 4. Score observed *in-stock* business-hour sales only. Compute the day-weighted weekday-minus-last-observed MAE and its **matching** paired whole-store percentile interval. Report all four methods and denominator/censoring counts; no post-hoc model promotion.
 
-Executable: [v2.1 scorer](freshretail_lt_score_v21.py), [15 fictional adversarial tests](test_freshretail_lt_score_v21.py), [hosted workflow](../../../../.github/workflows/retail-lt-presealed-score-v21.yml), [machine-readable registry](FRESHRETAIL_LT_V21_SCORE_REGISTRY.json). Local execution after independently obtaining exact publisher files:
+Executable: [v2.1 scorer](freshretail_lt_score_v21.py), [15 fictional adversarial tests](test_freshretail_lt_score_v21.py), [hosted workflow](../../../.github/workflows/retail-lt-presealed-score-v21.yml), [machine-readable registry](FRESHRETAIL_LT_V21_SCORE_REGISTRY.json). Local execution after independently obtaining exact publisher files:
 
 ```sh
 python -B -m unittest -v test_freshretail_lt_score_v21
