@@ -1,0 +1,48 @@
+{
+  "schema": "cortex-exact-disagreement-v0.4-evidence",
+  "date": "2026-10-28",
+  "project": "CORTEX",
+  "maturity": "Architecture / R&D",
+  "evidence_kind": "fictional contract tests only",
+  "branch": "research/cortex-fixture-integrity-v04-20261023",
+  "code_blob_sha": "d8e89d7004206893a21e5c960a607b4783f0f0f4",
+  "test_blob_sha": "7ca691f0bf3f54ff4ea15e3a72126674ecd3111f",
+  "first_hosted_execution": {
+    "run_id": 40738440351,
+    "commit": "5ce6d0bf92110395072b65c69889a5c69447224c",
+    "ubuntu_tests_passed": 201,
+    "windows_tests_passed": 201,
+    "new_tests_per_os": 12,
+    "job_logs_inspected": true
+  },
+  "corrected_demo_workflow": {
+    "commit": "263ca66e8eebc3655bb1a7a79ef5f0e3c92c559b",
+    "final_head_ci": "TBD"
+  },
+  "intermediate_failure": {
+    "run_id": 40738524280,
+    "cause": "literal backslash-n in workflow YAML artifact path",
+    "correction": "real multiline YAML artifact path"
+  },
+  "observations": {
+    "fictional_same_source_changed_statement_flagged": true,
+    "duplicate_source_ambiguous": true,
+    "zero_real_reviewers": true,
+    "external_actions": 0,
+    "semantic_agreement": "TBD",
+    "correction_burden": "TBD"
+  },
+  "environment": {
+    "python": "3.13 requested; patch TBD",
+    "runner_image_revision": "TBD",
+    "dependencies": "Python standard library",
+    "seed": "not applicable"
+  },
+  "maturity_advanced": false,
+  "release": false,
+  "limitations": [
+    "exact text differences do not imply semantic disagreement",
+    "exact equality does not establish independence or correctness",
+    "human review and measured burden TBD"
+  ]
+}
