@@ -96,6 +96,16 @@ class TrainOnlySealV20Tests(unittest.TestCase):
         with self.assertRaisesRegex(v20.SealError, 'invalid frozen cohort'):
             v20.sealed_predictions(((1, 2), (1, 2)), self.sample)
 
+    def test_stream_filter_discards_pre_window_train_year(self):
+        older = rows(n=1, start=dt.date(2024, 1, 1))[0]
+        self.assertFalse(v20.in_frozen_training_window(older))
+        self.assertTrue(v20.in_frozen_training_window(self.sample[0]))
+
+    def test_stream_filter_rejects_eval_origin(self):
+        future = rows(n=1, start=dt.date(2025, 7, 14))[0]
+        with self.assertRaisesRegex(v20.SealError, 'EVAL-origin'):
+            v20.in_frozen_training_window(future)
+
     def test_no_future_label_input_in_seal_interface(self):
         self.assertEqual(v20.sealed_predictions.__code__.co_argcount, 2)
         result = v20.sealed_predictions(self.selected, self.sample)
