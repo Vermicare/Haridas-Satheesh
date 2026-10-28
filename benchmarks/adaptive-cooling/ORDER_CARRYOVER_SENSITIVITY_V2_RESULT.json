@@ -1,0 +1,132 @@
+{
+  "interpretation": "FICTIONAL one-slot carryover sensitivity only; do not select a favorable schedule post hoc; measure stabilization/washout before causal inference.",
+  "scenarios": [
+    {
+      "assumed_carryover_c": -0.6,
+      "assumed_linear_drift_c_per_min": -0.02,
+      "assumed_slot_min": 10.0,
+      "assumed_true_prototype_effect_c": 0.0,
+      "bias_by_comparator": {
+        "prototype_minus_ambient_c": {
+          "max_c": 0.40000000000000213,
+          "mean_c": 0.1833333333333315,
+          "min_c": 0.0,
+          "rounded_bias_histogram": {
+            "+0.000000": 48,
+            "+0.100000": 240,
+            "+0.200000": 240,
+            "+0.300000": 168,
+            "+0.400000": 24
+          },
+          "zero_bias_schedule_count": 48
+        },
+        "prototype_minus_fan_only_c": {
+          "max_c": 0.40000000000000213,
+          "mean_c": 0.1833333333333315,
+          "min_c": 0.0,
+          "rounded_bias_histogram": {
+            "+0.000000": 48,
+            "+0.100000": 240,
+            "+0.200000": 240,
+            "+0.300000": 168,
+            "+0.400000": 24
+          },
+          "zero_bias_schedule_count": 48
+        }
+      },
+      "block_boundary_carryover_resets": false,
+      "performance_claim_permitted": false,
+      "physical_measurements": 0,
+      "physical_origin_authenticated": false,
+      "schema_version": "cooling-order-carryover-sensitivity-v2",
+      "seed": 20261027,
+      "seeded_order_bias_c": {
+        "prototype_minus_ambient_c": 0.19999999999999574,
+        "prototype_minus_fan_only_c": 0.09999999999999787
+      },
+      "unique_balanced_block_orderings": 720
+    },
+    {
+      "assumed_carryover_c": 0.0,
+      "assumed_linear_drift_c_per_min": -0.02,
+      "assumed_slot_min": 10.0,
+      "assumed_true_prototype_effect_c": 0.0,
+      "bias_by_comparator": {
+        "prototype_minus_ambient_c": {
+          "max_c": 0.0,
+          "mean_c": 0.0,
+          "min_c": 0.0,
+          "rounded_bias_histogram": {
+            "+0.000000": 720
+          },
+          "zero_bias_schedule_count": 720
+        },
+        "prototype_minus_fan_only_c": {
+          "max_c": 0.0,
+          "mean_c": 0.0,
+          "min_c": 0.0,
+          "rounded_bias_histogram": {
+            "+0.000000": 720
+          },
+          "zero_bias_schedule_count": 720
+        }
+      },
+      "block_boundary_carryover_resets": false,
+      "performance_claim_permitted": false,
+      "physical_measurements": 0,
+      "physical_origin_authenticated": false,
+      "schema_version": "cooling-order-carryover-sensitivity-v2",
+      "seed": 20261027,
+      "seeded_order_bias_c": {
+        "prototype_minus_ambient_c": 0.0,
+        "prototype_minus_fan_only_c": 0.0
+      },
+      "unique_balanced_block_orderings": 720
+    },
+    {
+      "assumed_carryover_c": 0.6,
+      "assumed_linear_drift_c_per_min": -0.02,
+      "assumed_slot_min": 10.0,
+      "assumed_true_prototype_effect_c": 0.0,
+      "bias_by_comparator": {
+        "prototype_minus_ambient_c": {
+          "max_c": 0.0,
+          "mean_c": -0.18333333333333424,
+          "min_c": -0.4000000000000057,
+          "rounded_bias_histogram": {
+            "+0.000000": 48,
+            "-0.100000": 240,
+            "-0.200000": 240,
+            "-0.300000": 168,
+            "-0.400000": 24
+          },
+          "zero_bias_schedule_count": 48
+        },
+        "prototype_minus_fan_only_c": {
+          "max_c": 0.0,
+          "mean_c": -0.18333333333333424,
+          "min_c": -0.4000000000000057,
+          "rounded_bias_histogram": {
+            "+0.000000": 48,
+            "-0.100000": 240,
+            "-0.200000": 240,
+            "-0.300000": 168,
+            "-0.400000": 24
+          },
+          "zero_bias_schedule_count": 48
+        }
+      },
+      "block_boundary_carryover_resets": false,
+      "performance_claim_permitted": false,
+      "physical_measurements": 0,
+      "physical_origin_authenticated": false,
+      "schema_version": "cooling-order-carryover-sensitivity-v2",
+      "seed": 20261027,
+      "seeded_order_bias_c": {
+        "prototype_minus_ambient_c": -0.1999999999999993,
+        "prototype_minus_fan_only_c": -0.10000000000000142
+      },
+      "unique_balanced_block_orderings": 720
+    }
+  ]
+}
