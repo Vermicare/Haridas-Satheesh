@@ -6,11 +6,15 @@ on:
       - '.github/workflows/retail-lt-presealed-score-v21.yml'
       - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_score_v21.py'
       - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_score_v21.py'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_secondary_v22.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_secondary_v22.py'
   pull_request:
     paths:
       - '.github/workflows/retail-lt-presealed-score-v21.yml'
       - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_score_v21.py'
       - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_score_v21.py'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_secondary_v22.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_secondary_v22.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -31,7 +35,7 @@ jobs:
           python-version: '3.13'
       - name: Run fictional label firewall and estimand controls
         working-directory: benchmarks/retail-demand/observable_baseline
-        run: python -B -m unittest -v test_freshretail_lt_score_v21
+        run: python -B -m unittest -v test_freshretail_lt_score_v21 test_freshretail_lt_secondary_v22
   pinned-2025-temporal-transfer:
     needs: fictional-negative-controls
     runs-on: ubuntu-latest
@@ -72,6 +76,31 @@ jobs:
           assert r['result']['maturity_change'] == 'NONE'
           print('Preregistered decision:',r['result']['decision'])
           PY
+      - name: Post-hoc strongest-simple-comparator sensitivity (NOT confirmatory)
+        working-directory: benchmarks/retail-demand/observable_baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B freshretail_lt_secondary_v22.py --train "$RUNNER_TEMP/lt_train.parquet" --eval "$RUNNER_TEMP/lt_eval.parquet" --output "$RUNNER_TEMP/lt_v22_exploratory.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          r=json.loads((Path(os.environ['RUNNER_TEMP'])/'lt_v22_exploratory.json').read_text())
+          assert r['original_v21_primary_gate'] == 'PASSED_UNCHANGED'
+          assert r['original_v15_2024_primary_gate'] == 'FAILED_UNCHANGED'
+          assert r['frozen_prediction_sha256'] == '5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20'
+          assert r['scored_in_stock_days'] == 1766 and r['stockout_censored_days'] == 1818
+          assert r['maturity_change'] == 'NONE'
+          print('Post-hoc secondary:',r['exploratory_secondary']['decision'])
+          PY
+      - name: Upload exploratory aggregate-only sensitivity
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-lt-v22-exploratory-aggregate
+          path: ${{ runner.temp }}/lt_v22_exploratory.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Upload aggregate-only evidence; never raw publisher data or predictions
         if: always()
         uses: actions/upload-artifact@v4
