@@ -1,6 +1,6 @@
 # Wireless Brain Interface — Frozen Synthetic Evaluator
 
-**Status:** synthetic protocol specified and evaluator committed; a same-runtime deterministic execution record is published in [EXECUTION_RECORD.md](EXECUTION_RECORD.md). Independent cross-environment reproduction remains TBD.  
+**Status:** frozen synthetic evaluator committed; original same-runtime evidence in [EXECUTION_RECORD.md](EXECUTION_RECORD.md), with independent cross-platform reproduction on the **unmerged** [draft PR #16](https://github.com/Vermicare/Haridas-Satheesh/pull/16) verified in [GitHub Actions #40301577095](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40301577095) on 2026-10-26.  
 **Maturity remains:** Research / Simulation.  
 **Purpose:** satisfy the pre-EEG evidence gate in Issue #3 without using real EEG labels.
 
@@ -14,7 +14,7 @@ The fixture is not evidence that WBI works on EEG. Its job is to make the evalua
 
 ## Run
 
-Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **A same-runtime deterministic execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent cross-environment execution remains TBD.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
+Implementation: [`synthetic_evaluator.py`](./synthetic_evaluator.py). **The original same-runtime execution is documented in [EXECUTION_RECORD.md](EXECUTION_RECORD.md); independent Windows/Linux reproduction is verified on unmerged [draft PR #16](https://github.com/Vermicare/Haridas-Satheesh/pull/16), not incorporated into the main-branch evaluator.** The evaluator is designed to emit machine-readable summary results and a risk–coverage table and to run hand-checkable contract tests before evaluation.
 
 ## Frozen contract
 
@@ -41,3 +41,9 @@ Next gate: connect this evaluator logic unchanged to a longitudinal public motor
 Reframe the claimed contribution if lower incorrect-action risk is mainly purchased by near-total abstention, or if the authorization gate does not improve on simple abstention at comparable coverage.
 
 Unknown real-EEG metrics remain **TBD**.
+
+## Independent reproduction (verified draft evidence, not merged)
+
+On **2026-10-26**, [GitHub Actions run #40301577095](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40301577095) completed successfully on **Ubuntu and Windows**, each using **CPython 3.13.16**. Both job logs explicitly reported the unchanged original evaluator Git blob `2becec81a8002cc5ff2f445889b7617baf9937b9`, two isolated reruns, the preserved CSV SHA-256 `65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a`, and identical stdout SHA-256 `39014b30200d6ddd20b7791ba3e70c48f17770a65a833d365af30b04b7a55c91`. These values were checked against both hosted job logs and the original [execution record](EXECUTION_RECORD.md).
+
+The verifier and cross-platform workflow live in **draft, unmerged PR #16**, not in the main-branch evaluator. This establishes deterministic **synthetic** software reproducibility, **not** real electroencephalography (EEG) decoding, matched-coverage safety benefit, clinical validation, or product readiness. In the frozen synthetic results, the drift gate has **not** shown superiority to simple confidence abstention at comparable coverage. No maturity advancement. Further public-EEG work must preserve the held-out-label boundary and preregistered comparison.
