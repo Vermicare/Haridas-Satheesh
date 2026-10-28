@@ -1,0 +1,6 @@
+# Research-only reproducibility control, not a physical flash configuration.
+# ESP-IDF v6.1 official Kconfig: removes build date/time and path dependencies.
+CONFIG_APP_REPRODUCIBLE_BUILD=y
+# Freeze embedded app version instead of deriving it from the checkout description.
+CONFIG_APP_PROJECT_VER_FROM_CONFIG=y
+CONFIG_APP_PROJECT_VER="iot-repro-v17"
