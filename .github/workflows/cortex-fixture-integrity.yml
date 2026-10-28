@@ -52,5 +52,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: cortex-fictional-shift-${{ matrix.os }}
-          path: |\n            benchmarks/cortex/synthetic_lineage_shift_results.json\n            benchmarks/cortex/cortex-exact-disagreement-v04.json
+          path: |
+            benchmarks/cortex/synthetic_lineage_shift_results.json
+            benchmarks/cortex/cortex-exact-disagreement-v04.json
           if-no-files-found: error
