@@ -3,7 +3,7 @@
   "date_utc": "2026-10-28",
   "maturity": "Prototype / Hardware Architecture; unchanged",
   "scope": "two clean unflashed builds; same checkout and container",
-  "result": "PASS_SAME_CONTAINER_ONLY",
+  "result": "PASS_TWO_HOSTED_RUNS_SAME_IMAGE_AND_FIRMWARE_CONFIG",
   "source": {
     "repository": "Vermicare/Haridas-Satheesh",
     "pr": 22,
@@ -39,7 +39,26 @@
     "preflight_os": [
       "Ubuntu",
       "Windows"
-    ]
+    ],
+    "second_run": {
+      "run_id": 40660083184,
+      "job_id": 122720638715,
+      "conclusion": "success",
+      "head_sha": "5fe82887ff5286c55d518b254eea6390bc45b5ff",
+      "checked_out_merge_sha": "21236c8fe227a07f39425a0165027256d184a7c3",
+      "artifact_id": 12803990362,
+      "artifact_zip_sha256": "d1471fdb8de9b12c1777f73701283a9af4b68f6c6330c346cdee2c294a0aa4ce",
+      "artifact_digest_verified": true,
+      "sha256sums_all_eight_members_verified": true,
+      "all_eight_members_cross_run_identical": true,
+      "sdkconfig_sha256": "45c2865ae1ae348a2ad1696136f783aa94afc11264152981056519ceeaf75816",
+      "resolved_container_digest": "sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c",
+      "firmware_config_workflow_unchanged_between_heads": true,
+      "changed_files_only": [
+        "benchmarks/hardware-iot/REPRODUCIBLE_BUILD_CONTROL_V17.md",
+        "benchmarks/hardware-iot/REPRODUCIBLE_BUILD_CONTROL_V17_REGISTRY.json"
+      ]
+    }
   },
   "members": [
     {
@@ -76,15 +95,15 @@
     "fixed_in_sha": "5a9009d7d9ef2d2d2d500aad4a50c5c596e780c5"
   },
   "unknown": {
-    "cross_run_reproducibility": "TBD",
-    "cross_machine_reproducibility": "TBD",
+    "cross_run_reproducibility": "OBSERVED across two hosted runs with identical firmware/config and same resolved image digest; checkout merge SHA differs because documentation changed",
+    "cross_machine_reproducibility": "TBD across different toolchain/container/OS",
     "causal_attribution_of_all_v16_differences": "TBD",
     "physical_flash_identity": "TBD",
     "real_sensor_measurements": "TBD",
     "calibration": "TBD",
     "product_outcomes": "TBD"
   },
-  "decision": "retain current maturity; next immutable-digest independent cross-run test",
+  "decision": "retain current maturity; two-run same-image equality observed; next immutable image pin and independent toolchain/host test",
   "prior_art": [
     "https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/reproducible-builds.html",
     "https://github.com/espressif/esp-idf/issues/13680"

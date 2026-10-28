@@ -1,6 +1,6 @@
 # Hardware/IoT v1.7 — controlled ESP32-S3 reproducible-build experiment
 
-**Status (2026-10-28):** **Controlled same-container clean-build equality VERIFIED** by independently downloaded GitHub Actions artifact and logs; independent cross-run or cross-host reproducibility **TBD**. **Stage:** Prototype / Hardware Architecture (unchanged). **No physical hardware, flashing, sensor readings, calibration or deployment.**
+**Status (2026-10-28):** **Controlled same-container and two separate hosted-run byte equality VERIFIED** by independently downloaded artifacts and logs; cross-host/toolchain reproduction **TBD**. **Stage:** Prototype / Hardware Architecture (unchanged). **No physical hardware, flashing, sensor readings, calibration or deployment.**
 
 ## Why this experiment exists
 
@@ -17,7 +17,7 @@ Espressif documents [CONFIG_APP_REPRODUCIBLE_BUILD](https://docs.espressif.com/p
 - First build: run `idf.py build` in the CI container; assert effective `sdkconfig` and retain app, bootloader, partition, flash arguments and per-file hashes.
 - Second build: `idf.py fullclean`, delay, rebuild from the **same checkout in the same container**, retain the same four members, verify hashes, compare each member byte-for-byte.
 - Report: preserve both builds and a `comparison_status.txt` (MATCH/MISMATCH). The job must fail if the members differ, but retain the negative artifact when possible.
-- Reproduction: the workflow's source and commands are public; an independent rerun from the same commit and fixed container digest is still **TBD**.
+- Reproduction: the workflow's source and commands are public; a second hosted run with unchanged firmware/config/workflow files and the same resolved container digest is verified below; a genuinely independent toolchain/host reproduction remains **TBD**.
 
 ## Predeclared decision
 
@@ -25,7 +25,7 @@ Espressif documents [CONFIG_APP_REPRODUCIBLE_BUILD](https://docs.espressif.com/p
 
 **FAIL** if any member differs or any build/config/hash step fails. Preserve logs and differences; do not weaken comparisons or reinterpret the v1.6 negative control. A later run with a pinned immutable image digest and separately provisioned environment is needed for stronger reproducibility.
 
-**Verified in-scope result:** PASS for four retained member pairs under one container/run. **Unknown:** independent cross-run, cross-machine, causal timestamp isolation, physical flashed firmware identity and physical sensor measurements **TBD**.
+**Verified in-scope result:** PASS for four retained member pairs under one container/run. **Unknown:** cross-host/toolchain reproduction, causal timestamp isolation, physical flashed firmware identity and physical sensor measurements **TBD**.
 
 ## Limitations and next physical gate
 
@@ -51,3 +51,11 @@ The [retained artifact #12802833314](https://github.com/Vermicare/Haridas-Sathee
 **Failure/learning:** earlier experimental CI runs [#40659014849](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40659014849) and [#40659124132](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40659124132) failed before compilation because a nested `sh -ec` invocation was incompatible with the action's command wrapper (`sh: 0: -c requires an argument`). The corrected direct command chain passed. These two failures are **CI invocation errors**, not firmware mismatches.
 
 **Prior art / external limitation:** [Espressif Issue #13680](https://github.com/espressif/esp-idf/issues/13680) documents an earlier reproducible-build limitation in which toolchain paths could affect ELF SHA across machines. Thus even a local MATCH does not establish cross-machine byte identity. The next independent experiment should pin the immutable container digest, use a separate runner/time, verify source and config identity, and repeat the artifact comparison. **No maturity advancement, merge, release, physical flash, user outcome or product claim.**
+
+## Independent second hosted run — cross-run equality observed (2026-10-28)
+
+A later **documentation/registry-only** branch commit `5fe82887ff5286c55d518b254eea6390bc45b5ff` triggered [GitHub Actions #40660083184](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40660083184), which **completed successfully** (job `122720638715`) using PR merge checkout `21236c8fe227a07f39425a0165027256d184a7c3`. [Commit comparison](https://github.com/Vermicare/Haridas-Satheesh/compare/5a9009d7d9ef2d2d2d500aad4a50c5c596e780c5...5fe82887ff5286c55d518b254eea6390bc45b5ff) confirms **only this protocol and the registry changed**; firmware source, `sdkconfig.defaults` and workflow were unchanged. The two Git checkout merge SHAs differ; do **not** call this the same-checkout rerun.
+
+The second job again resolved the **same** `espressif/idf:v6.1` image digest `sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c`, reported ESP-IDF v6.1 and `xtensa-esp-elf-gcc 15.2.0`, and reproduced effective `sdkconfig` SHA-256 `45c2865ae1ae348a2ad1696136f783aa94afc11264152981056519ceeaf75816`. The independently downloaded [second artifact #12803990362](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40660083184/artifacts/12803990362) has ZIP SHA-256 `d1471fdb8de9b12c1777f73701283a9af4b68f6c6330c346cdee2c294a0aa4ce`, matching GitHub's digest. All eight member manifest entries verified independently; all four within-run pairs matched, and **all eight first/second binary/config members matched the corresponding bytes from the first run #40659292470**. The exact application/bootloader/partition/flash-arguments SHA-256 values in the table above therefore hold across **both** separate hosted runs (four clean builds total).
+
+**Evidence upgrade (narrow):** observed **cross-run byte repeatability under the same resolved image digest, compiler version, effective configuration and unchanged firmware source**, despite different documentation-only PR merge commits. This does **not** establish reproducibility across different container digests, compiler versions, machines/operating systems, or flash devices; it does **not** prove timestamps were the only cause of the earlier v1.6 mismatch. Preserve the historical negative result. Next: immutable image pin and independent environment, then real read-only flash identity and private sensor capture. **No maturity advancement, merge, release or physical measurements.**
