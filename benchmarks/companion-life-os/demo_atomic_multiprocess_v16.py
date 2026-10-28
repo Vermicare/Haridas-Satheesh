@@ -13,7 +13,9 @@ import unittest
 
 def main():
     path = Path(__file__).with_name("test_atomic_multiprocess_v16.py")
-    source_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+    source_bytes = path.read_bytes()
+    source_hash = hashlib.sha256(source_bytes).hexdigest()
+    normalized_hash = hashlib.sha256(source_bytes.replace(b"\r\n", b"\n")).hexdigest()
     suite = unittest.defaultTestLoader.loadTestsFromName(
         "test_atomic_multiprocess_v16")
     start = time.monotonic()
@@ -23,6 +25,8 @@ def main():
         "experiment": "fictional-cross-process-revocation-v16",
         "synthetic": True,
         "test_file_sha256": source_hash,
+        "test_file_sha256_normalized_lf": normalized_hash,
+        "checkout_line_endings": "CRLF" if b"\r\n" in source_bytes else "LF",
         "tests_run": result.testsRun,
         "failures": len(result.failures),
         "errors": len(result.errors),
