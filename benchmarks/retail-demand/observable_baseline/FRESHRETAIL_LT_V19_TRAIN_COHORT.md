@@ -26,3 +26,23 @@ If 512 qualify, the output only establishes a **frozen training-only cohort**. N
 **Hiring manager:** inspect executable provenance, negative-result handling and clean-runner test evidence. **Technical reviewer:** challenge the strict 90-day requirement, identifier stability, date/status validation and the future-label firewall. **Innovation leader:** this tests transportability to a later public calendar, not algorithmic novelty. **Founder:** no measured inventory or commercial impact, so no pilot/product claim.
 
 **Privacy / IP:** public publisher data only, no employer data, no contact tracking, no raw rows in GitHub. Publisher-byte identity does not independently authenticate the publisher. No patentability statement.
+
+## Verified hosted result — 2026-10-28
+
+[Hosted run #40682609113](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40682609113) and [separate hosted run #40682619596](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40682619596) both **succeeded** on the same source revision and code-bearing head `444fc9dd0e7b423103a292a741d3f04fb02cbfdb`. Both ran **10/10 fictional adversarial tests on Ubuntu and 10/10 on Windows** and downloaded only the pinned TRAIN file. The Python 3.13.16 / PyArrow 20.0.0 real-data pass produced:
+
+| Aggregate TRAIN-only observation | Verified value |
+|---|---:|
+| Original TRAIN bytes / SHA-256 | 315,398,578 / `e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3` |
+| Earlier rows outside the frozen 2025 window | 6,895,143 |
+| Rows inside frozen 90-day window | 974,406 |
+| Distinct series with any rows in window | 13,255 |
+| Complete valid 90-day series | **7,552** |
+| Duplicate / invalid-stock-status rows | **0 / 0** |
+| TRAIN-only cohort frozen | **512 series** |
+| Frozen cohort SHA-256 | `dc128d3bed90035214c80529bf58e685ad7d49c717d95bd10c30c2b9407ca016` |
+| Evaluation labels opened / forecast results | **No / TBD** |
+
+**Independent artifact check:** the first uploaded ZIP (artifact `12814240520`) has SHA-256 `4a95fdf4fc6a1e3935b3589fa4af21135349f2670f47d4ed4633b7b412468585`; its sole JSON member has SHA-256 `e6cead2de3f940635b3860fb528bf633af91d54a7142b84204fe160e9a546132` and Git blob `533aae9c66d89fd26d1e9978fbdd88b2c5c9d3b9`. The [committed aggregate result](FRESHRETAIL_LT_V19_TRAIN_RESULT.json) was reread and matches that blob **byte-for-byte**. The second artifact (ID `12813118806`) independently reproduced **all substantive counts, the source fingerprint and the cohort digest**; its JSON differs only in `provenance.git_checkout` (PR merge checkout vs branch head). Raw source rows and cohort IDs were not published.
+
+**Decision:** the predeclared TRAIN-only eligibility gate **PASSES**. This is **not** a forecasting superiority result or evidence of a real-world benefit. Do **not** inspect evaluation labels until all four frozen model predictions have been sealed with provenance and a reproducible hash; reject missing future dates without replacing series. The previous v1.5 superiority failure is preserved. Stage **Research / Architecture**, unchanged.
