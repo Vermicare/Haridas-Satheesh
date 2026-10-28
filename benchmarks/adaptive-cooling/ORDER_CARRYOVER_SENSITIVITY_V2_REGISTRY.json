@@ -1,0 +1,72 @@
+{
+  "schema_version": "cooling-order-carryover-sensitivity-v2-registry",
+  "date_utc": "2026-10-28",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/cooling-explicit-fixture-gate-20261023",
+  "evidence_class": "FICTIONAL_ONLY_DETERMINISTIC_SIMULATION",
+  "hypothesis": "Six-permutation position balancing cancels linear drift but may retain apparent treatment bias under one-slot carryover.",
+  "provenance": {
+    "upstream_simulator": "benchmarks/adaptive-cooling/order_confounding_v1.py",
+    "upstream_simulator_git_blob": "6b89fafcc49c926a6945df05a26a12e45659c9b3",
+    "script": "benchmarks/adaptive-cooling/order_carryover_sensitivity_v2.py",
+    "script_git_blob": "b2831abbd24c3ca4695989374d5272fc2f3a52dd",
+    "script_sha256": "49cd3f01ffcc670160bff468f05629b2cef31f07907737b14a3f4a950706891c",
+    "tests": "benchmarks/adaptive-cooling/test_order_carryover_sensitivity_v2.py",
+    "tests_git_blob": "aa7905adb3fd1d5f15af8d8252e984b4db83e31e",
+    "tests_sha256": "d0bfb81704bf72128f3191daf0c06e5dd270e2b118151ce549526c839cb1f3b3",
+    "result": "benchmarks/adaptive-cooling/ORDER_CARRYOVER_SENSITIVITY_V2_RESULT.json",
+    "result_git_blob": "6d0ab5d94f386821e5aedf8c718281c7bfc9ac27",
+    "result_sha256": "a17e1ded6268fe8497347a6d14086e45230e2cfc7eee5fe8498dadd4c6064e31"
+  },
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "operating_system": "Linux (local sandbox)",
+    "dependencies": "Python standard library only",
+    "seed": 20261027,
+    "assumptions": {
+      "global_drift_c_per_min": -0.02,
+      "slot_min": 10,
+      "true_effect_c": 0,
+      "one_slot_carryover_c": [
+        -0.6,
+        0,
+        0.6
+      ],
+      "block_boundary_reset": false
+    },
+    "orderings_per_scenario": 720,
+    "local_test_runs": 2,
+    "local_test_result": "7/7 passed each in two fresh directories using a compatible local simulator shim; authoritative exact-branch upstream integration test is CI TBD",
+    "stdout_sha256_both_runs": "a17e1ded6268fe8497347a6d14086e45230e2cfc7eee5fe8498dadd4c6064e31",
+    "github_actions": "TBD"
+  },
+  "results": {
+    "no_carryover_bias_range_c": [
+      0,
+      0
+    ],
+    "warming_carryover_apparent_prototype_minus_fan_range_c": [
+      -0.4,
+      0
+    ],
+    "cooling_carryover_apparent_prototype_minus_fan_range_c": [
+      0,
+      0.4
+    ],
+    "zero_bias_orderings_under_nonzero_carryover": 48,
+    "negative_result": "Position balancing does not guarantee elimination of one-slot carryover bias."
+  },
+  "limitations": [
+    "No physical measurements or instrument authentication.",
+    "Assumed additive one-slot carryover is not calibrated to a device.",
+    "The frequency of biased permutations is not a probability of real-world outcomes.",
+    "No causal prototype performance or energy claims.",
+    "A genuine logging dry run and controlled physical comparison remain TBD."
+  ],
+  "stage_before": "Prototype / Documented R&D",
+  "stage_after": "Prototype / Documented R&D",
+  "next_experiment": "Genuine >=600-second timestamped logger dry run with real instrument manifest and observed stabilization/washout; see issue #15.",
+  "physical_measurements": 0,
+  "performance_claim_permitted": false,
+  "external_review": "TBD"
+}
