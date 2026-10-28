@@ -33,7 +33,7 @@ python compare_firmware_rebuild_v16.py /private/attempt1.zip /private/attempt2.z
 python -m unittest -v test_compare_firmware_rebuild_v16.py
 ```
 
-The comparison script rejects altered SHA256SUMS, duplicate/unexpected ZIP members, different checkout/run provenance, and identical attempt IDs. It emits only SHA-256, byte-count, differing-offset ranges and non-identifying run metadata. **Five synthetic negative/positive contract tests passed locally on CPython 3.13/Linux**; hosted CI for this newly published script is **TBD** until executed. Original downloaded ZIPs remain outside Git.
+The comparison script rejects altered SHA256SUMS, duplicate/unexpected ZIP members, different checkout/run provenance, and identical attempt IDs. It emits only SHA-256, byte-count, differing-offset ranges and non-identifying run metadata. **Five synthetic negative/positive contract tests passed locally on CPython 3.13/Linux.** [Final code-head GitHub Actions #40652577103](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40652577103) **passed 124/124 tests on Ubuntu and 124/124 on Windows**, including all five new adversarial comparison tests; both hosted job logs were inspected. These are host/software tests, not physical data. Original downloaded ZIPs remain outside Git.
 
 ## Decision / next experiment
 
