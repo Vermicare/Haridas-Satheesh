@@ -18,7 +18,7 @@ For worksheet-minus-manual difference, the bounds are `[L_worksheet - U_manual, 
 - Deterministic seed `20261028`, 48 **fictional assigned** reviewers per arm, 13 negative fictional cases, 20% assumed true-null error propensity in both arms, assumed intrareviewer correlation 0.10. Second scenario consumes seed+1.
 - Scenarios: independent 25% random dropout; v1.1's deliberately adversarial selective worksheet dropout (80% when potential error >=4/13, otherwise 5%; manual dropout 5%). These probabilities are invented, not estimates of actual participation.
 - Python 3.13 standard library, no network, no dependencies, no real accounts. Exact arithmetic uses `fractions.Fraction`; output decimals are display-only six-place rounding. Unknown human outcomes `TBD`.
-- Local first execution: CPython 3.13.5 Linux; 17/17 new tests passed. Cross-platform CI status: **TBD until independently executed**.
+- Local first execution: CPython 3.13.5 Linux; 17/17 new tests passed. Cross-platform verification: [GitHub Actions #40699223219](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40699223219) **passed 191/191 tests on Ubuntu and 191/191 on Windows** at commit `4a7f55a7b7b2bdfb323f25917b17e561f00552ad`, including all 17 v1.2 tests. Both final-head job logs were inspected. This verifies deterministic fictional software behavior, not human outcomes.
 
 ## Executed fictional results
 
@@ -40,7 +40,7 @@ python -B -c "import json; assert json.load(open('reproduced_v12.json')) == json
 python -B demo_reviewer_missing_bounds_45s.py
 ```
 
-The two new suites have **17 tests** covering exact arithmetic, complete/no completions, extremal sharpness, no complete-case estimate with zero completers, invalid counts/types, randomized fixture bounds, deterministic reproduction, frozen JSON and a 30–60-second narratable fictional demo. The standard cross-platform EPMO workflow discovers these tests; CI evidence must be recorded **after** a successful run. SHA-256 source/test/result and runtime conditions are in [registry](REVIEWER_MISSING_BOUNDS_V12_REGISTRY.json). No private gold, reviewer IDs, responses or contact details are committed.
+The two new suites have **17 tests** covering exact arithmetic, complete/no completions, extremal sharpness, no complete-case estimate with zero completers, invalid counts/types, randomized fixture bounds, deterministic reproduction, frozen JSON and a 30–60-second narratable fictional demo. The standard cross-platform EPMO workflow discovered all new tests and independently reproduced the frozen result on both operating systems. Git blob identities, local source/test SHA-256 and run conditions are in [registry](REVIEWER_MISSING_BOUNDS_V12_REGISTRY.json). No private gold, reviewer IDs, responses or contact details are committed.
 
 ## External method relevance — not evidence of project efficacy
 
