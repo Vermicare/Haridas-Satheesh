@@ -9,8 +9,8 @@
     "upstream_simulator": "benchmarks/adaptive-cooling/order_confounding_v1.py",
     "upstream_simulator_git_blob": "6b89fafcc49c926a6945df05a26a12e45659c9b3",
     "script": "benchmarks/adaptive-cooling/order_carryover_sensitivity_v2.py",
-    "script_git_blob": "b2831abbd24c3ca4695989374d5272fc2f3a52dd",
-    "script_sha256": "49cd3f01ffcc670160bff468f05629b2cef31f07907737b14a3f4a950706891c",
+    "script_git_blob": "49754e1c4b309e2191e251988da82ac04b239e94",
+    "script_sha256": "e3fac100b1d258bbd181d52cc8c660c4298e42615960282e08ec5edafe1ac3eb",
     "tests": "benchmarks/adaptive-cooling/test_order_carryover_sensitivity_v2.py",
     "tests_git_blob": "aa7905adb3fd1d5f15af8d8252e984b4db83e31e",
     "tests_sha256": "d0bfb81704bf72128f3191daf0c06e5dd270e2b118151ce549526c839cb1f3b3",
@@ -36,9 +36,12 @@
     },
     "orderings_per_scenario": 720,
     "local_test_runs": 2,
-    "local_test_result": "7/7 passed each in two fresh directories using a compatible local simulator shim; authoritative exact-branch upstream integration test is CI TBD",
+    "local_test_result": "7/7 passed twice in fresh Linux directories with compatible local simulator shim; exact committed v1 upstream tested by hosted CI.",
     "stdout_sha256_both_runs": "a17e1ded6268fe8497347a6d14086e45230e2cfc7eee5fe8498dadd4c6064e31",
-    "github_actions": "TBD"
+    "github_actions": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40639496681",
+    "hosted_result": "93/93 tests on Ubuntu and 93/93 on Windows; both jobs reproduced canonical LF JSON SHA-256 a17e1ded6268fe8497347a6d14086e45230e2cfc7eee5fe8498dadd4c6064e31",
+    "hosted_tested_commit": "e8828c4163db3357567d9161c7b734dbd1c43dca",
+    "newline_failure_learning": "Earlier run #40639428614 passed working-tree byte equality but produced different raw Windows stdout SHA-256 4a667f95a1f889ada60a672f48e42f3536dcc3ee888b35066c5d2b306287858b due to CRLF translation. Fixed source stdout LF and pinned canonical digest; do not reinterpret earlier raw hash as cross-OS reproducibility."
   },
   "results": {
     "no_carryover_bias_range_c": [
