@@ -1,0 +1,69 @@
+{
+  "origin": "FICTIONAL_ASSUMPTION_BASED_MISSINGNESS_PREFLIGHT",
+  "version": "1.2",
+  "date": "2026-10-28",
+  "stage": "Research / Simulation — unchanged",
+  "question": "Can an assigned-reviewer false-approval benefit be identified with outcome-dependent missingness?",
+  "provenance": {
+    "branch": "research/epmo-fictional-governance-20261024",
+    "original_v11_generator_git_blob": "9a30b12c0efad22fe5dcd216f9f9fe6c0ada1367",
+    "new_git_blobs": {
+      "reviewer_missing_bounds_v12.py": "964435b3d90d4452c52a40e2289c635acc41a097",
+      "test_reviewer_missing_bounds_v12.py": "2bf8eeb142894501a2533d60f6c86dc07da0cbfb",
+      "demo_reviewer_missing_bounds_45s.py": "a1d523e31bb2c173db59af23bf3d818ec4195bb0",
+      "test_demo_reviewer_missing_bounds_v12.py": "334de9a12d50bc82d10fa06edf16d89251918f3b",
+      "REVIEWER_MISSING_BOUNDS_V12_RESULT.json": "5bff5045bdc951063b1ea10e4ed1b3803b4db207",
+      "REVIEWER_MISSING_BOUNDS_V12.md": "4610ce31a25b76588f11a5d8a45c29769db49d7c"
+    },
+    "source_sha256": {
+      "reviewer_missing_bounds_v12.py": "e297a1bb119b441d338a3cb478626d4c9dfae2278be27e17bf30e0abc96398b7",
+      "test_reviewer_missing_bounds_v12.py": "cc6055ac0be4b1f9963150a30a93221d75d7dd24b8dae3cb294563acce21a0ee",
+      "demo_reviewer_missing_bounds_45s.py": "5feffdc5af10dc1135745680e7a4fe79fb74d20b06321ef112e3ceb095619a10",
+      "test_demo_reviewer_missing_bounds_v12.py": "3e6e9d69eacbb26a879a0f24bb0fb007433f1a1bf58ba20374273e7a3495c2df",
+      "REVIEWER_MISSING_BOUNDS_V12_RESULT.json": "TBD (Git blob recorded; committed pretty-print differs from locally generated JSON)"
+    },
+    "local_generated_result_sha256": "082ac9e27be138da21486491683e1288b390ccdaf3b3b05efe19f0265ab8c0f5"
+  },
+  "run_conditions": {
+    "local_python": "3.13.5",
+    "local_os": "Linux",
+    "dependencies": "Python standard library only",
+    "seed": 20261028,
+    "assigned_per_arm": 48,
+    "cases_per_reviewer": 13,
+    "assumed_true_null_probability": 0.2,
+    "assumed_icc": 0.1,
+    "scenario_seeds": [
+      20261028,
+      20261029
+    ],
+    "new_test_count": 17,
+    "local_tests": "PASS",
+    "cross_platform_ci": "TBD"
+  },
+  "results": {
+    "selective_completed_manual": 45,
+    "selective_completed_worksheet": 38,
+    "selective_naive_difference": "-121/2223",
+    "selective_sharp_difference_lower": "-83/624",
+    "selective_sharp_difference_upper": "43/312",
+    "includes_zero": true,
+    "human_treatment_effect": "TBD",
+    "real_completion_rates": "TBD",
+    "external_actions": 0
+  },
+  "limitations": [
+    "Single invented seeded realization, not participant evidence",
+    "Sharp identification bounds are not confidence intervals",
+    "No sampling uncertainty, partial completions or noncompliance model",
+    "Invented missingness probabilities",
+    "No effect, adoption, ROI or production safety demonstrated"
+  ],
+  "primary_sources": [
+    "https://www.nationalacademies.org/publications/12955",
+    "https://www.ema.europa.eu/en/scientific-guidelines/ich-e9-statistical-principles-clinical-trials"
+  ],
+  "next_experiment": "Privately preregister consented reviewer-level assignment, all assigned denominators, partial-completion policy and missingness sensitivity; do not recruit yet",
+  "advance": "Independent consented pilot with measured false approvals, review burden and missingness robustness; separate authenticated approval safety gate",
+  "kill_reframe": "Reframe if uncertainty permits substantial harm or review aid increases attrition or burden"
+}
