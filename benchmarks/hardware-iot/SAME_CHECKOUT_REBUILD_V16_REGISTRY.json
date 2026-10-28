@@ -46,7 +46,19 @@
     "passed": 5,
     "failed": 0
   },
-  "hosted_script_tests": "TBD",
+  "hosted_script_tests": {
+    "run_id": 40652577103,
+    "commit": "cb04272f1049288e5b0a548f2ae8299a5eeb2c84",
+    "ubuntu": {
+      "passed": 124,
+      "failed": 0
+    },
+    "windows": {
+      "passed": 124,
+      "failed": 0
+    },
+    "log_reviewed": true
+  },
   "physical_samples": 0,
   "actual_flash_identity": "TBD",
   "next_experiment": "Same checkout, explicitly timestamp-disabled/fixed-version dual build with container digest; compare retained bytes",
