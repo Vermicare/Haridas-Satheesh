@@ -6,17 +6,18 @@
   "branch": "research/cooling-explicit-fixture-gate-20261023",
   "source": {
     "path": "benchmarks/adaptive-cooling/scd40_dry_run_capture_v1.py",
-    "git_blob_sha1": "e90335763f361cbcee1f491093893734a819ad1b"
+    "git_blob_sha1": "820b686da1e2541f8d8d1654f7cda2d7fed8b4ae"
   },
   "tests": {
     "path": "benchmarks/adaptive-cooling/test_scd40_dry_run_capture_v1.py",
-    "git_blob_sha1": "239c545dd1ad36bed4284ae3744b79f667ee2ae3",
-    "local_passed": 7,
-    "local_total": 7,
+    "git_blob_sha1": "5bfe657ed919ac8b1ab6ad0e9d6ff55292e08ea3",
+    "local_passed": 8,
+    "local_total": 8,
     "executions": 2,
     "command": "python -B -m unittest -v test_scd40_dry_run_capture_v1.py",
     "runtime": "CPython 3.13.5",
-    "platform": "Linux x86_64 6.18.55"
+    "platform": "Linux x86_64 6.18.55",
+    "new_negative_control": "two early samples followed by 590 seconds of silence must not pass"
   },
   "hosted_ci_status": "TBD_NOT_VERIFIED",
   "physical_sensor_executions": 0,
