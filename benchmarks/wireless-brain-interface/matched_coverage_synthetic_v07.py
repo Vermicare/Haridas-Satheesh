@@ -30,7 +30,7 @@ class GateError(ValueError):
 
 def frozen_identity():
     raw = Path(frozen.__file__).read_bytes()
-    git_blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw).hexdigest()
+    git_blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
     if git_blob != ORIGINAL_BLOB:
         raise GateError("original frozen evaluator source changed; abort")
     return {"git_blob": git_blob, "sha256": hashlib.sha256(raw).hexdigest()}
@@ -147,7 +147,7 @@ def main():
     result = run()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True,
-                                     allow_nan=False) + "\\n", encoding="utf-8", newline="\\n")
+                                     allow_nan=False) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({"experiment": result["experiment"],
                       "aggregate": result["aggregate"],
                       "evidence_class": result["evidence_class"]}, sort_keys=True))
