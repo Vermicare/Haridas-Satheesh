@@ -1,0 +1,51 @@
+name: WBI v0.7 exact-coverage synthetic falsification
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - '.github/workflows/wbi-matched-coverage-v07.yml'
+      - 'benchmarks/wireless-brain-interface/matched_coverage_synthetic_v07.py'
+      - 'benchmarks/wireless-brain-interface/test_matched_coverage_synthetic_v07.py'
+      - 'benchmarks/wireless-brain-interface/MATCHED_COVERAGE_SYNTHETIC_V07.md'
+  pull_request:
+    paths:
+      - '.github/workflows/wbi-matched-coverage-v07.yml'
+      - 'benchmarks/wireless-brain-interface/matched_coverage_synthetic_v07.py'
+      - 'benchmarks/wireless-brain-interface/test_matched_coverage_synthetic_v07.py'
+      - 'benchmarks/wireless-brain-interface/MATCHED_COVERAGE_SYNTHETIC_V07.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-matched-coverage:
+    name: Synthetic only / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Preserve original Git blob line endings
+        shell: bash
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run fictional adversarial contracts
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_matched_coverage_synthetic_v07.py' -v
+      - name: Generate aggregate-only fictional comparison
+        shell: bash
+        run: python -B benchmarks/wireless-brain-interface/matched_coverage_synthetic_v07.py --output benchmarks/wireless-brain-interface/v07_result.json
+      - name: Upload synthetic evidence with OS provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: wbi-v07-synthetic-${{ matrix.os }}
+          path: benchmarks/wireless-brain-interface/v07_result.json
+          if-no-files-found: error
+          retention-days: 14
