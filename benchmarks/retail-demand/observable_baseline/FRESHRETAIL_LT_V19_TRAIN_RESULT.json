@@ -1,0 +1,36 @@
+{
+  "analysis": "TRAIN_ONLY_NO_EVAL_LABEL_ACCESS",
+  "distinct_training_series": 13255,
+  "duplicate_training_rows": 0,
+  "earlier_training_rows_ignored": 6895143,
+  "eligible_complete_valid_series": 7552,
+  "evaluation_file_opened": false,
+  "evaluation_labels_read": false,
+  "experiment": "retail-lt-train-only-cohort-v19",
+  "forecast_origin": "2025-07-14",
+  "forecast_scores": "TBD",
+  "invalid_stock_status_rows": 0,
+  "latent_demand_accuracy": "TBD",
+  "maturity_change": "NONE",
+  "provenance": {
+    "dataset": "Dingdong-Inc/FreshRetailNet-LT",
+    "git_checkout": "444fc9dd0e7b423103a292a741d3f04fb02cbfdb",
+    "publisher_revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "pyarrow": "20.0.0",
+    "python": "3.13.16",
+    "runner_os": "Linux",
+    "source_authenticity_beyond_publisher": "TBD",
+    "train_bytes_verified": 315398578,
+    "train_sha256_verified": "e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3"
+  },
+  "required_cohort": 512,
+  "required_training_days_per_series": 90,
+  "selected_cohort_sha256": "dc128d3bed90035214c80529bf58e685ad7d49c717d95bd10c30c2b9407ca016",
+  "selected_series": 512,
+  "status": "TRAIN_COHORT_FROZEN_NO_EVAL_ACCESS",
+  "training_rows_in_window": 974406,
+  "training_window": [
+    "2025-04-15",
+    "2025-07-13"
+  ]
+}
