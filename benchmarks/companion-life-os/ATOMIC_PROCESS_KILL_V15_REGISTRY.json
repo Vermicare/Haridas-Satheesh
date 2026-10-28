@@ -104,10 +104,34 @@
   },
   "evidence_limitations": [
     "Both CI job logs inspected",
-    "Uploaded artifact ZIP bytes not independently inspected",
     "Only disposable SQLite test databases",
     "No physical power-loss or external side effects",
-    "Legacy direct outbox remains unsafe"
+    "Legacy direct outbox remains unsafe",
+    "Downloaded final tested artifact ZIPs, checked SHA-256 against GitHub and independently parsed demo-v15.json"
   ],
-  "source_sha256": "TBD (source Git blob IDs pinned separately)"
+  "source_sha256": "TBD (source Git blob IDs pinned separately)",
+  "artifact_independent_verification": {
+    "source_run": 40673916922,
+    "ubuntu": {
+      "artifact_id": 12809602519,
+      "zip_sha256": "d2940cbcd956e647967b0f287594adce070bae302e7155e582ac1f0a95d1c4f0",
+      "member": "demo-v15.json",
+      "verified": true
+    },
+    "windows": {
+      "artifact_id": 12809532865,
+      "zip_sha256": "bb34d6d47ef3fa715b1104aba73b0fe54d1c0a12db652dacf3fdfa89f478cd40",
+      "member": "demo-v15.json",
+      "verified": true
+    },
+    "verified_claims": [
+      "11 ZIP members in each artifact",
+      "demo-v15.json JSON parses",
+      "before kill pending and zero fake sink rows",
+      "after kill acked and one fake sink row",
+      "zero external actions in fictional demo",
+      "legacy bypass eliminated is false",
+      "physical power loss tested is false"
+    ]
+  }
 }
