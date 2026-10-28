@@ -1,0 +1,43 @@
+name: WBI A05T training-source structure gate v0.8
+on:
+  push:
+    branches: [research/wbi-independent-repro-20261026]
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci_a05t_source_gate_v08.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_a05t_source_gate_v08.py'
+      - '.github/workflows/wbi-a05t-source-gate-v08.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  training-source-structure:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned structural reader
+        run: python -m pip install --disable-pip-version-check numpy==2.3.3 scipy==1.16.2
+      - name: Fictional-only adversarial structural regressions
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci_a05t_source_gate_v08
+      - name: Acquire A05T training only and export metadata only
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci_a05t_source_gate_v08.py
+          --output "${{ runner.temp }}/a05t_training_metadata_v08.json"
+      - name: Upload metadata only; never EEG samples or class labels
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a05t-training-metadata-${{ matrix.os }}
+          path: ${{ runner.temp }}/a05t_training_metadata_v08.json
+          retention-days: 14
+          if-no-files-found: error
