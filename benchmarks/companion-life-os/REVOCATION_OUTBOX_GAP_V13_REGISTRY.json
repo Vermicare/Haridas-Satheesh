@@ -1,0 +1,41 @@
+{
+  "experiment_id": "companion-revocation-outbox-gap-v1.3",
+  "date_utc": "2026-10-28",
+  "maturity": "fictional Simulation / software-contract only",
+  "scope": "disposable local SQLite receipt, outbox and fake sink; zero external actions",
+  "source_ref": "research/companion-auth-negative-controls-20261024",
+  "source_files": [
+    "benchmarks/companion-life-os/revocable_signed_boundary_v11.py",
+    "benchmarks/companion-life-os/fictional_outbox_v07.py",
+    "benchmarks/companion-life-os/test_revocation_outbox_gap_v13.py",
+    "benchmarks/companion-life-os/demo_revocation_outbox_gap_v13.py"
+  ],
+  "hypothesis": "A revoked fictional approval still permits pending delivery through the legacy outbox path.",
+  "baseline": "v1.1 revocation-aware signed receipt creation",
+  "comparison": "v0.7 outbox staging and dispatch of an existing receipt",
+  "predeclared_checks": [
+    "stage before revoke then legacy dispatch",
+    "revoke before stage then legacy dispatch",
+    "signed path denies post-revocation receipt",
+    "fake sink row only; external_actions=0"
+  ],
+  "test_fixture": "fictional test_revocable_signed_boundary_v11.fixture; public test-only HMAC keys; caller-provided clock",
+  "runtime": "Python 3.13 intended; actual hosted runtime TBD",
+  "dependencies": "Python standard library; exact runner image TBD",
+  "random_seed": "not used",
+  "static_review": "v0.7 stage and dispatch do not read fictional_revocations; v1.1 checked execution does",
+  "execution_status": "TBD - hosted test logs not yet verified",
+  "test_pass_count": "TBD",
+  "observed_fake_sink_rows": "TBD",
+  "physical_measurements": "TBD - none attempted",
+  "external_actions": 0,
+  "limitations": [
+    "This is not a private-system exploit.",
+    "Not an authentication or consent guarantee.",
+    "Separate databases do not prove distributed exactly-once execution.",
+    "No independent human or security review."
+  ],
+  "decision": "No stage advancement; preserve negative control and design cancellation-aware fictional adapter.",
+  "next_experiment": "Bind approval digest to outbox item, retire legacy entry points, serialize cancellation versus fake delivery, inject sink/ack crash.",
+  "kill_reframe": "Read-only advisory if bypass-free cancellation cannot be demonstrated."
+}
