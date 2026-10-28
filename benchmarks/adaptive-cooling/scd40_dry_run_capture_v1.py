@@ -47,6 +47,7 @@ def capture(sensor, destination, *, run_id, placement, duration_s=600.0,
     started = monotonic()
     samples = 0
     last_sample_time = None
+    first_sample_time = None
     max_sample_gap_s = 0.0
     active = False
     # Exclusive create avoids overwriting evidence. Failures remain inspectable.
@@ -70,6 +71,8 @@ def capture(sensor, destination, *, run_id, placement, duration_s=600.0,
                     temp, rh, co2 = sensor.temperature, sensor.relative_humidity, sensor.CO2
                     values = valid_sample(temp, rh, co2)
                     now_mono = monotonic()
+                    if first_sample_time is None:
+                        first_sample_time = now_mono
                     if last_sample_time is not None and now_mono <= last_sample_time:
                         raise ValueError('non-increasing sample monotonic timestamp')
                     if last_sample_time is not None:
@@ -91,7 +94,9 @@ def capture(sensor, destination, *, run_id, placement, duration_s=600.0,
                     emit({'event': 'stop_failed', 'exception_type': type(exc).__name__})
                     raise
         elapsed = monotonic() - started
-        quality_pass = elapsed >= 600 and samples >= 2 and max_sample_gap_s <= 60
+        quality_pass = (elapsed >= 600 and samples >= 2 and max_sample_gap_s <= 60
+                        and first_sample_time - started <= 60
+                        and monotonic() - last_sample_time <= 60)
         emit({'event': 'complete', 'utc': utc_now().isoformat(),
               'elapsed_monotonic_s': elapsed, 'samples': samples,
               'max_sample_gap_s': max_sample_gap_s if samples >= 2 else None,
