@@ -1,5 +1,10 @@
 name: Cooling evidence integrity (synthetic contracts)
 on:
+  push:
+    branches: [research/cooling-explicit-fixture-gate-20261023]
+    paths:
+      - 'benchmarks/adaptive-cooling/**'
+      - '.github/workflows/cooling-origin-gate.yml'
   pull_request:
     paths:
       - 'benchmarks/adaptive-cooling/fixture_origin_gate.py'
