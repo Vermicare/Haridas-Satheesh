@@ -74,8 +74,16 @@ def training_cohort(rows, size=v19.COHORT, expected_digest=EXPECTED_COHORT_SHA25
                       'selected_cohort_sha256': digest}
 
 
+def in_frozen_training_window(raw):
+    """Discard earlier TRAIN years, never tolerate future TRAIN dates."""
+    day = v19.day(raw['dt'])
+    if day >= v19.ORIGIN:
+        raise SealError('TRAIN contains EVAL-origin or future row')
+    return v19.START <= day <= v19.END
+
+
 def parquet_selected_training(path, selected):
-    """Stream TRAIN columns only; no EVAL or future covariates."""
+    """Stream only frozen 90-day TRAIN rows; no EVAL or future covariates."""
     import pyarrow as pa
     import pyarrow.parquet as pq
     parquet = pq.ParquetFile(path)
@@ -85,7 +93,9 @@ def parquet_selected_training(path, selected):
         stores, products = batch.column(0).to_pylist(), batch.column(1).to_pylist()
         indices = [i for i, key in enumerate(zip(stores, products)) if key in selected]
         if indices:
-            yield from batch.take(pa.array(indices, type=pa.int32())).to_pylist()
+            for raw in batch.take(pa.array(indices, type=pa.int32())).to_pylist():
+                if in_frozen_training_window(raw):
+                    yield raw
 
 
 def sealed_predictions(selected, selected_training_rows):
