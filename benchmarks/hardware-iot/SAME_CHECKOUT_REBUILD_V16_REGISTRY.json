@@ -1,0 +1,54 @@
+{
+  "schema_version": "iot-firmware-same-checkout-rebuild-v16",
+  "date_utc": "2026-10-28",
+  "status": "EXECUTED_SAME_CHECKOUT_NONIDENTICAL",
+  "stage": "Prototype / Hardware Architecture",
+  "source_repository": "Vermicare/Haridas-Satheesh",
+  "draft_pr": 7,
+  "github_actions_run_id": 40457717468,
+  "workflow": "iot-espidf-compile.yml",
+  "checkout_merge_sha": "b26cc0cc12eba8317bb7f97fa202b7356f221349",
+  "pr_head_sha": "9061ed016a359d6ddf2d6b2fc38412f2dc396140",
+  "esp_idf_requested": "v6.1",
+  "target": "esp32s3",
+  "actual_container_digest": "TBD",
+  "artifacts": [
+    {
+      "attempt": 1,
+      "id": 12713162757,
+      "zip_sha256": "0a7b0fa13fb80ea7d63f85d756c1729636ffbfe8bd1cda6ff5fdb0985afdd7f3",
+      "app_sha256": "a1b031bc4413f320f0e33113868e4ee03e102df2298a141509f08c30c26b6046",
+      "boot_sha256": "05e50692dd1dcb14f402eb2f080981bcc812d51f3da235fe87bf97a3662e02d9",
+      "expires_utc": "2026-11-10T05:54:12Z"
+    },
+    {
+      "attempt": 2,
+      "id": 12800162656,
+      "zip_sha256": "e99e7eee7bf2a3c7dac2b4f0e5914f6eee687538b7d82b93fa954534b16bddb2",
+      "app_sha256": "80cb6e803154525e26a79b0acaf5bcf6fdefb8c5cf3c55de08d5d380e2129454",
+      "boot_sha256": "df6a233f7960762afb5b19b8620f6981dbcd637dd2bb7230351197943c5f0ea1",
+      "expires_utc": "2026-11-11T07:47:20Z"
+    }
+  ],
+  "unchanged": {
+    "partition_table_sha256": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+    "flasher_args_sha256": "43c1bb75a3e03982c9732cc7b2f3ff68e3dc5addef324eb1df34e1d293863aa2"
+  },
+  "observed_different_bytes": {
+    "application": 70,
+    "bootloader": 39
+  },
+  "observed_timestamp_change": true,
+  "timestamp_causality": "STRONG_HYPOTHESIS_NOT_FULLY_ISOLATED",
+  "script_tests_local": {
+    "python": "3.13",
+    "os": "Linux",
+    "passed": 5,
+    "failed": 0
+  },
+  "hosted_script_tests": "TBD",
+  "physical_samples": 0,
+  "actual_flash_identity": "TBD",
+  "next_experiment": "Same checkout, explicitly timestamp-disabled/fixed-version dual build with container digest; compare retained bytes",
+  "no_release": true
+}
