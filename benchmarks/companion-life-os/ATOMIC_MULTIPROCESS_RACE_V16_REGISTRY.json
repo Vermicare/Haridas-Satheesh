@@ -8,16 +8,17 @@
   "provenance": {
     "code_bearing_commit": "2fc88f09a532a070184456b7e88390f7ef10bc45",
     "test_git_blob": "3a53f0d44a1133928946072a788971e210b50a7d",
-    "demo_git_blob": "8f00f21357beef48179b2d712bf55a94e14eb6d5",
+    "demo_git_blob": "0c8d3bb055ea426e2f20bf4bfbd527c8298221e7",
     "unchanged_atomic_adapter_git_blob": "46c194432d4d620e6929d84da5dd7bf468e0a7b0",
     "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40788961543",
-    "final_demo_run_url": "TBD",
+    "final_demo_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40789289224",
     "runtime": "Python 3.13 (CI); patch and SQLite versions TBD",
     "platforms": [
       "ubuntu-latest",
       "windows-latest"
     ],
-    "source_dataset": "fictional scenario.json and public test-only keys"
+    "source_dataset": "fictional scenario.json and public test-only keys",
+    "demo_bearing_commit": "ed74e1027810638525c43fb72a2049cc448869a4"
   },
   "observed": {
     "ubuntu_tests_passed": 131,
@@ -27,7 +28,16 @@
     "independent_dispatch_processes_per_os": 6,
     "unexpected_results": 0,
     "external_actions": 0,
-    "final_demo_log_verified": "TBD"
+    "final_demo_log_verified": true,
+    "final_head_full_tests_per_os": 131,
+    "demo_tests_per_os": 2,
+    "raw_checkout_sha256": {
+      "ubuntu_lf": "26b3b4d7c8e39de6957bec5fcca5f1177128d1d7af9339fd56daabc08fab0ece",
+      "windows_crlf": "11e18f5d89be483c25834bc04bb090d818dcc1ea355f5e3257b827efb03151a0"
+    },
+    "normalized_lf_sha256_both": "26b3b4d7c8e39de6957bec5fcca5f1177128d1d7af9339fd56daabc08fab0ece",
+    "artifact_upload_steps_passed": true,
+    "artifact_zip_bytes_independently_inspected": false
   },
   "negative_controls": [
     "legacy v0.7 direct outbox bypass remains",
