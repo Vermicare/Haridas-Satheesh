@@ -1,0 +1,40 @@
+{
+  "experiment": "cortex-gold-denominator-citation-v0.2",
+  "date": "2026-10-28",
+  "stage": "Architecture / R&D",
+  "data": "author-created fictional fixture only",
+  "hypothesis": "matched-only source exactness can conceal missing gold records and duplicate predictions",
+  "source_blobs": {
+    "fixture": "6540101a695ddeae1eb9832e627dbbff67394e00",
+    "baseline": "080fd86a451e2175c88c46339e8390072e3dcab6",
+    "frozen_evaluator": "8119649def3e893da5371a55e3baae519477b908",
+    "v01_audit": "f83fabe83fd6f031f402cf970abbf7bf6ccf03fa",
+    "new_source": "TBD",
+    "new_tests": "TBD"
+  },
+  "runtime": {
+    "python": "3.13 target; exact patch TBD",
+    "os": "Ubuntu/Windows CI pending",
+    "dependencies": "Python standard library only",
+    "seed": "not applicable"
+  },
+  "predeclared_expected": {
+    "baseline_gold_denominator_ratio": 1,
+    "one_record_omitted_ratio": 0.857143,
+    "omission_legacy_traceability": 1,
+    "duplicate_clean_gate": false
+  },
+  "observed": {
+    "hosted_tests": "TBD",
+    "source_hashes": "TBD",
+    "demonstration": "TBD"
+  },
+  "real_world": {
+    "semantic_accuracy": "TBD",
+    "human_review": "TBD",
+    "correction_minutes": "TBD"
+  },
+  "decision": "No maturity advancement; require independent annotations and measured correction burden",
+  "next": "Issue #12 blinded fictional annotation and manual-note comparator",
+  "privacy": "No raw reviewer submissions, outreach, employer or private data"
+}
