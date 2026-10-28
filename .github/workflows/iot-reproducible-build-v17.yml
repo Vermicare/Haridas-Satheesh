@@ -23,35 +23,33 @@ jobs:
           target: esp32s3
           path: benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture
           command: >-
-            sh -ec '
-            mkdir -p repro_v17;
-            idf.py --version > repro_v17/idf_version.txt;
-            xtensa-esp-elf-gcc --version | head -n 1 > repro_v17/compiler_version.txt;
-            git rev-parse HEAD > repro_v17/checkout_sha.txt;
-            idf.py build;
-            grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig;
-            grep -qx CONFIG_APP_PROJECT_VER_FROM_CONFIG=y sdkconfig;
-            grep -q iot-repro-v17 sdkconfig;
-            sha256sum sdkconfig > repro_v17/sdkconfig_sha256.txt;
-            cp build/iot_dual_sensor_capture.bin repro_v17/app-first.bin;
-            cp build/bootloader/bootloader.bin repro_v17/boot-first.bin;
-            cp build/partition_table/partition-table.bin repro_v17/partition-first.bin;
-            cp build/flasher_args.json repro_v17/flasher-first.json;
-            idf.py fullclean;
-            sleep 3;
-            idf.py build;
-            grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig;
-            cp build/iot_dual_sensor_capture.bin repro_v17/app-second.bin;
-            cp build/bootloader/bootloader.bin repro_v17/boot-second.bin;
-            cp build/partition_table/partition-table.bin repro_v17/partition-second.bin;
-            cp build/flasher_args.json repro_v17/flasher-second.json;
-            cd repro_v17;
-            sha256sum *.bin *.json > SHA256SUMS.txt;
-            sha256sum --check SHA256SUMS.txt;
-            if cmp -s app-first.bin app-second.bin && cmp -s boot-first.bin boot-second.bin && cmp -s partition-first.bin partition-second.bin && cmp -s flasher-first.json flasher-second.json; then echo MATCH > comparison_status.txt; else echo MISMATCH > comparison_status.txt; fi;
-            cat comparison_status.txt;
-            cat SHA256SUMS.txt;
-            '
+            mkdir -p repro_v17 &&
+            idf.py --version > repro_v17/idf_version.txt &&
+            xtensa-esp-elf-gcc --version | head -n 1 > repro_v17/compiler_version.txt &&
+            git rev-parse HEAD > repro_v17/checkout_sha.txt &&
+            idf.py build &&
+            grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig &&
+            grep -qx CONFIG_APP_PROJECT_VER_FROM_CONFIG=y sdkconfig &&
+            grep -q iot-repro-v17 sdkconfig &&
+            sha256sum sdkconfig > repro_v17/sdkconfig_sha256.txt &&
+            cp build/iot_dual_sensor_capture.bin repro_v17/app-first.bin &&
+            cp build/bootloader/bootloader.bin repro_v17/boot-first.bin &&
+            cp build/partition_table/partition-table.bin repro_v17/partition-first.bin &&
+            cp build/flasher_args.json repro_v17/flasher-first.json &&
+            idf.py fullclean &&
+            sleep 3 &&
+            idf.py build &&
+            grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig &&
+            cp build/iot_dual_sensor_capture.bin repro_v17/app-second.bin &&
+            cp build/bootloader/bootloader.bin repro_v17/boot-second.bin &&
+            cp build/partition_table/partition-table.bin repro_v17/partition-second.bin &&
+            cp build/flasher_args.json repro_v17/flasher-second.json &&
+            cd repro_v17 &&
+            sha256sum *.bin *.json > SHA256SUMS.txt &&
+            sha256sum --check SHA256SUMS.txt &&
+            (cmp -s app-first.bin app-second.bin && cmp -s boot-first.bin boot-second.bin && cmp -s partition-first.bin partition-second.bin && cmp -s flasher-first.json flasher-second.json && echo MATCH > comparison_status.txt || echo MISMATCH > comparison_status.txt) &&
+            cat comparison_status.txt &&
+            cat SHA256SUMS.txt
       - name: Preserve both unflashed builds and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
