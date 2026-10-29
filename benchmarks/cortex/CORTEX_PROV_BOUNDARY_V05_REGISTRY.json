@@ -1,0 +1,46 @@
+{
+  "schema": "cortex-prov-boundary-v0.5-registry",
+  "date": "2026-10-29",
+  "project": "CORTEX",
+  "stage": "Architecture / R&D",
+  "provenance": "AUTHOR_CREATED_FICTIONAL",
+  "case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+  "archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046",
+  "source_sha256": "9fadeca6469a6fb73cd7fbd7915d2cf6ed6b11a5bd6775f467c17e297169c507",
+  "test_sha256": "0934f0117dd1058f3f5ede943021406746a51f1610aa7d10b94a039945f55114",
+  "source_git_blob": "efd1ad28089e22ccc8914e64cc4ec33ae00245f8",
+  "test_git_blob": "2662d331be8e66572ab9c8932e860a0c0ccd43ea",
+  "runtime": {
+    "python": "3.13.5",
+    "platform": "Linux 6.18.55 x86_64",
+    "dependencies": "Python standard library for CLI/tests",
+    "independent_turtle_parser": "RDFLib 7.5.0 local"
+  },
+  "results": {
+    "local_tests_passed": 14,
+    "local_tests_total": 14,
+    "initial_test_assertion_failure": "13/14; test counted three prefix declarations as triples; corrected before publication",
+    "generated_rdf_triples": 14,
+    "generated_turtle_sha256": "7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0",
+    "human_reviewers": 0,
+    "external_actions": 0
+  },
+  "unknowns": {
+    "hosted_ubuntu_windows": "TBD",
+    "full_prov_constraints": "TBD",
+    "semantic_agreement": "TBD",
+    "human_correction_time": "TBD",
+    "archive_authenticity": "TBD",
+    "generalization": "TBD"
+  },
+  "sources": [
+    "https://www.w3.org/TR/prov-o/",
+    "https://www.w3.org/TR/prov-constraints/"
+  ],
+  "limitations": [
+    "fixed fictional case, not general extractor",
+    "PROV mapping is not ontology compliance certification",
+    "governance supersession is not automatically PROV content revision",
+    "no real human, business, clinical, or external validation"
+  ]
+}
