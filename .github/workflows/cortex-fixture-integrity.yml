@@ -45,6 +45,14 @@ jobs:
           python -c "import hashlib,pathlib; a=pathlib.Path('blind_case_20261024.json').read_bytes(); b=pathlib.Path('blind_archive_20261024.json').read_bytes(); assert hashlib.sha256(a).hexdigest() == 'f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d'; assert hashlib.sha256(b).hexdigest() == '897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046'"
           python -B run_lineage_shift.py
           python -c "import hashlib,pathlib; p=pathlib.Path('synthetic_lineage_shift_results.json'); assert hashlib.sha256(p.read_bytes()).hexdigest() == '2c3d060df1932318cc64dba980946ebaad3c47fd56a7509b488f9f53e2dc6180'"
+      - name: Independently verify frozen fictional PROV projection v0.5
+        shell: bash
+        working-directory: benchmarks/cortex
+        run: |
+          python -B -m unittest -v test_cortex_prov_boundary_v05.py
+          python -B cortex_prov_boundary_v05.py export blind_case_20261024.json blind_archive_20261024.json > cortex-prov-v05.ttl
+          python -m pip install --disable-pip-version-check rdflib==7.5.0
+          python -c "import hashlib,pathlib; from rdflib import Graph; p=pathlib.Path('cortex-prov-v05.ttl'); b=p.read_bytes().replace(b'\r\n',b'\n'); assert hashlib.sha256(b).hexdigest() == '7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0'; g=Graph(); g.parse(data=b.decode('utf-8'),format='turtle'); assert len(g)==14; assert not any(str(p).endswith(('wasRevisionOf','hadPrimarySource','wasInvalidatedBy')) for s,p,o in g); print('CORTEX_V05_VERIFIED: 14 triples, canonical SHA-256 pinned, forbidden PROV edges absent')"
       - name: Compare fictional graph traversal scaling (non-gating timing)
         shell: bash
         working-directory: benchmarks/cortex
