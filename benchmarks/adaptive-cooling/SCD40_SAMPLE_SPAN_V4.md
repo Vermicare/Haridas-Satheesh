@@ -29,7 +29,7 @@ python -B -m unittest -v test_scd40_sample_span_gate_v4.py
 python -B scd40_sample_span_gate_v4.py PRIVATE_CAPTURE.jsonl --expected-sha256 <independently-pre-pinned-sha256>
 ```
 
-**Local verification:** CPython 3.13.5, Linux, 2026-10-30: **4/4 new fictional regression tests passed**. Separate source-blob reconstruction and the full 7-test local negative-control suite also passed. Hosted Windows/Ubuntu final-head CI: **TBD until verified**. See [registry](SCD40_SAMPLE_SPAN_V4_REGISTRY.json) for exact known/unknown boundaries.
+**Local verification:** CPython 3.13.5, Linux, 2026-10-30: **4/4 new fictional regression tests passed**. Separate source-blob reconstruction and the full 7-test local negative-control suite also passed. **Hosted cross-platform verification:** [GitHub Actions #40968518413](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40968518413) at code/workflow head `0643766943fa5a7eb63ec09ba39dce1167817b32` completed successfully on Ubuntu and Windows. Both job logs were inspected: **131/131 fictional tests passed on each OS**, including all four new v0.4 tests, and the preexisting canonical-LF fictional carryover digest matched. No physical hardware was used. See [registry](SCD40_SAMPLE_SPAN_V4_REGISTRY.json) for exact known/unknown boundaries.
 
 **30–90 second demonstration:** run the first command and show the test in which v2 accepts the 600-second logger receipt while v0.4 flags 480 seconds of sensor-sample coverage. Then show the normal fictional span control and byte-tamper rejection.
 
@@ -38,3 +38,7 @@ python -B scd40_sample_span_gate_v4.py PRIVATE_CAPTURE.jsonl --expected-sha256 <
 The next physical gate remains an independently inspectable **genuine** Raspberry Pi/SCD40 >=600-second raw logging session, actual instrument manifest and wiring review, pre-pinned raw SHA-256, independent timestamp checks and a separate temperature/RH reference. Only then preregister repeated ambient/fan-only/prototype trials with heat rejection, energy and uncertainty. **No thermal performance or project maturity claim.**
 
 **Kill/reframe:** if the logger cannot establish near-complete sample coverage, preserve the failed capture, diagnose startup, cadence and dropout, and repeat rather than counting host runtime as continuous sensor observation. The sample-span tolerance must be frozen or justified before real observations, not tuned after seeing a run.
+
+## Four-lens review
+
+**Hiring manager:** demonstrates a reproducible defect and bounded correction, not a finished thermal product. **Technical reviewer:** exact historical source blobs, adversarial control and hosted test logs are inspectable; the provisional 10-second tolerance needs review before real use. **Innovation leader:** separates measurement-window integrity from sensor/thermal claims. **Founder:** a clean software gate cannot substitute for actual instrument provenance, economics, power, heat rejection or a controlled fan-only comparison.
