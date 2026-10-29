@@ -1,0 +1,61 @@
+{
+  "experiment": "ZHOU2020_BIDS_CHANNEL_GATE_V01",
+  "date": "2026-10-29",
+  "stage": "Research / Simulation",
+  "status": "local_fictional_contract_pass; public_metadata_read_only_inspection; no_eeg_scoring",
+  "purpose": "Reject legacy NEMAR BIDS channel mislabeling before any longitudinal EEG scoring",
+  "source": {
+    "dataset": "NEMAR nm000237 Zhou2020 BIDS derivative",
+    "required_version": "1.1.0",
+    "released": "2026-10-14",
+    "source_repo": "https://github.com/nemarDatasets/nm000237",
+    "changelog_blob": "7cb5fa6c1d8c91f90df0cee2f45493f9357f9fb6",
+    "readme_blob": "885219b0277f662879ba6c02248520806508b1ad",
+    "dataset_description_blob": "0c794cf3a1d4a744c8511593c796bc3c6cb99232",
+    "subject_1_channels_blob": "ab35ee26609e008c566beefb5b5e705808a08718",
+    "subject_13_channels_blob": "cfb30c027daf79bb6865c996b7091247a1864820",
+    "upstream_issue": "https://github.com/NeuroTechX/moabb/issues/1120",
+    "merged_fix": "https://github.com/NeuroTechX/moabb/pull/1269",
+    "legacy_issue": "S subjects 1..12 before BIDS 1.1.0 had EOG/mastoids mislabeled EEG and 4 dropped EEG channels"
+  },
+  "implementation": {
+    "file": "zhou2020_bids_channel_gate_v01.py",
+    "git_blob": "5e6a6341fe88eeee51cdbda6b3a2578d429550fb",
+    "test_file": "test_zhou2020_bids_channel_gate_v01.py",
+    "test_git_blob": "4607032d10236b72d548e2bf650471359c1f7e79",
+    "python": "CPython 3.13.5",
+    "platform": "local Linux",
+    "command": "python -B -m unittest -v test_zhou2020_bids_channel_gate_v01.py",
+    "passed": 12,
+    "total": 12,
+    "hosted_windows": "TBD",
+    "hosted_linux": "TBD",
+    "real_BIDS_metadata_gate_execution": "TBD"
+  },
+  "public_metadata_observation": {
+    "subject_1": {
+      "eeg": 41,
+      "eog": 2,
+      "misc": 2
+    },
+    "subject_13": {
+      "eeg": 26,
+      "eog": 2,
+      "misc": 0
+    },
+    "reported_events_changelog": 33534,
+    "nominal_trials_readme": 33600,
+    "eegdash_catalog_recordings": 833,
+    "nominal_runs": 840,
+    "count_discrepancy_interpretation": "Unresolved; do not infer missing specific runs/trials"
+  },
+  "held_out_labels_accessed": false,
+  "raw_eeg_downloaded": false,
+  "decoder_scored": false,
+  "physical_sensor_validated": false,
+  "clinical_claims": false,
+  "maturity_advanced": false,
+  "largest_gap": "Independent acquisition and execution against actual corrected BIDS files; reconcile subject/session/event completeness before preregistration",
+  "next_experiment": "Acquire metadata-only v1.1.0 source, verify hashes and channel gate, audit per-session counts; freeze chronological protocol before label access",
+  "stop_or_reframe": "If older channel mapping or incomplete/mismatched provenance, reject spatial evaluation; if incomplete sessions, predeclare exclusions and uncertainty rather than imputing"
+}
