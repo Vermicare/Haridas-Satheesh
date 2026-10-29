@@ -1,0 +1,45 @@
+name: WBI Zhou2020 event-row structural sample (no EEG scoring)
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - '.github/workflows/wbi-zhou2020-event-row-sample.yml'
+      - 'benchmarks/wireless-brain-interface/zhou2020_event_row_sample_v04.py'
+      - 'benchmarks/wireless-brain-interface/test_zhou2020_event_row_sample_v04.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sample:
+    name: Three pinned event row counts / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Preserve source line endings
+        shell: bash
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run fictional structural negative controls
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_zhou2020_event_row_sample_v04.py' -v
+      - name: Verify pinned public source blobs and count rows without parsing labels
+        shell: bash
+        run: python -B benchmarks/wireless-brain-interface/zhou2020_event_row_sample_v04.py --output "${RUNNER_TEMP}/zhou2020_event_row_sample_v04.json"
+      - name: Preserve aggregate and source path provenance only
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zhou2020-event-row-sample-${{ matrix.os }}
+          path: ${{ runner.temp }}/zhou2020_event_row_sample_v04.json
+          retention-days: 14
+          if-no-files-found: error
