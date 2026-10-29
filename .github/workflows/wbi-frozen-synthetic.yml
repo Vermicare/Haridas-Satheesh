@@ -84,7 +84,15 @@ jobs:
               raise SystemExit('FAIL CLOSED: missing-session inventory changed')
           if d['eeg_signals_read'] or d['trial_event_rows_read'] or d['publisher_checksum_verified']:
               raise SystemExit('FAIL CLOSED: evidence boundary unexpectedly changed')
-          print('PASS: 20 subjects, 139 session directories, 833 paired metadata runs; no EEG read')
+          # Windows stdout redirection uses CRLF; serialize artifact with fixed LF bytes.
+          import hashlib
+          canonical = (json.dumps(d, indent=2, sort_keys=True) + '\n').encode('utf-8')
+          p.write_bytes(canonical)
+          digest = hashlib.sha256(canonical).hexdigest()
+          expected_digest = 'b326896401b3bd22605dbc8187a47d34997d02e2e950190b65091552fe01e897'
+          if digest != expected_digest:
+              raise SystemExit(f'FAIL CLOSED: canonical JSON digest changed: {digest}')
+          print(f'PASS: 20 subjects, 139 session directories, 833 paired metadata runs; canonical SHA-256 {digest}; no EEG read')
           PY
       - name: Preserve only derived public Git-tree metadata (no EEG)
         if: success()
