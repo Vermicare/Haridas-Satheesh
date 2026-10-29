@@ -1,0 +1,95 @@
+{
+  "schema": "wbi-a01t-artifact-flags-audit-v1.0-evidence-registry",
+  "date_utc": "2026-10-29",
+  "source": "BNCI2014_001/A01T.mat",
+  "source_bytes": 42806453,
+  "source_sha256_observed": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325",
+  "source_publisher_signature_authenticated": false,
+  "code_bearing_commit": "11b66b9f5bc0fcab7ab99c29fe1a91fa9514e23a",
+  "workflow_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40808451206",
+  "environment": {
+    "python": "3.13",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "scikit_learn": "1.7.2",
+    "hosted_os_tests": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "real_data_os": "ubuntu-latest",
+    "exact_runner_image": "TBD"
+  },
+  "tests": {
+    "ubuntu_fictional": {
+      "passed": 15,
+      "total": 15
+    },
+    "windows_fictional": {
+      "passed": 15,
+      "total": 15
+    },
+    "real_a01t_audit_attempts_successful": 2
+  },
+  "artifact_flags_by_task_run": [
+    2,
+    4,
+    3,
+    1,
+    2,
+    3
+  ],
+  "split_counts": {
+    "training": {
+      "flagged": 9,
+      "total": 144
+    },
+    "calibration": {
+      "flagged": 1,
+      "total": 48
+    },
+    "heldout_within_day": {
+      "flagged": 5,
+      "total": 96
+    }
+  },
+  "frozen_v09_all_trial": {
+    "correct": 43,
+    "total": 96,
+    "accuracy": 0.4479166666666667,
+    "changed": false
+  },
+  "unflagged_accuracy_identification_bounds_not_observed": {
+    "unflagged_n": 91,
+    "min_correct": 38,
+    "max_correct": 43,
+    "min_accuracy": 0.4175824175824176,
+    "max_accuracy": 0.4725274725274725
+  },
+  "artifacts": [
+    {
+      "id": 12868983171,
+      "zip_sha256": "913eebc37436f6b70c88dfd66cf647a8b4a799f651483e10421a30a05da838ef",
+      "inner_json_sha256": "e9e567540b5b67002416ab0f27a5726062ed03867a6e7c2875d1d345e4a257cb"
+    },
+    {
+      "id": 12869262705,
+      "zip_sha256": "de6a1f3d6a925889b8a6f1407f80b3de06c8b1c41397f8d25f6b8d3eb99d2597",
+      "inner_json_sha256": "f6a48200d171ce5cf4928c676de44b1c0ce429edd0c31ab229cd6a0d8f8e84c7"
+    }
+  ],
+  "archive_verification": "both ZIP SHA-256 digests matched GitHub metadata; each contained exactly one JSON; all substantive fields matched, UTC run timestamp differed",
+  "no_raw_eeg_or_trial_level_outputs": true,
+  "session_E_accessed": false,
+  "real_artifact_free_accuracy": "TBD",
+  "cross_day_decoding": "TBD",
+  "drift_gate_benefit": "TBD",
+  "clinical_validation": false,
+  "maturity": "Research / Simulation unchanged",
+  "sources": [
+    "https://www.bbci.de/competition/iv/desc_2a.pdf",
+    "https://moabb.neurotechx.com/docs/generated/moabb.datasets.BNCI2014_001.html",
+    "https://github.com/NeuroTechX/moabb/issues/1102"
+  ],
+  "next_experiment": "Freeze label-safe actual clean-subset scorer without changing all-trial v0.9; then multi-subject different-day matched-coverage evaluation",
+  "kill_reframe": "If drift gate does not beat simple confidence abstention at matched coverage or artifact handling erases apparent gains, reframe."
+}
