@@ -8,6 +8,8 @@ on:
       - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_stockout_bounds_v24.py'
       - 'benchmarks/retail-demand/observable_baseline/retail_sales_floor_bounds_v25.py'
       - 'benchmarks/retail-demand/observable_baseline/test_retail_sales_floor_bounds_v25.py'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_sales_floor_v25.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_sales_floor_v25.py'
   pull_request:
     paths:
       - '.github/workflows/retail-lt-stockout-bounds-v24.yml'
@@ -15,6 +17,8 @@ on:
       - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_stockout_bounds_v24.py'
       - 'benchmarks/retail-demand/observable_baseline/retail_sales_floor_bounds_v25.py'
       - 'benchmarks/retail-demand/observable_baseline/test_retail_sales_floor_bounds_v25.py'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_sales_floor_v25.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_sales_floor_v25.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -39,6 +43,9 @@ jobs:
       - name: Conditional observed-sales floor v2.5 fictional and exhaustive-grid tests
         working-directory: benchmarks/retail-demand/observable_baseline
         run: python -B -m unittest -v test_retail_sales_floor_bounds_v25
+      - name: Frozen 2025 v2.5 transfer fictional contract tests
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_freshretail_lt_sales_floor_v25
       - name: Original v2.3 fictional bounds contract
         run: python -B benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py selftest
   pinned-public-2025-bounds:
@@ -83,11 +90,42 @@ jobs:
           assert all(v['censored_days']==1818 for v in r['paired_full_period_bounds'].values())
           print('v2.4 aggregate bounds only: PASS; latent demand: UNOBSERVED')
           PY
+      - name: Conditional observed-sales-floor v2.5 sensitivity (post-hoc, not latent truth)
+        working-directory: benchmarks/retail-demand/observable_baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B freshretail_lt_sales_floor_v25.py --train "$RUNNER_TEMP/lt_train.parquet" --eval "$RUNNER_TEMP/lt_eval.parquet" --output "$RUNNER_TEMP/retail_v25_aggregate.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          r=json.loads((Path(os.environ['RUNNER_TEMP'])/'retail_v25_aggregate.json').read_text())
+          assert r['frozen_prediction_sha256']=='5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20'
+          assert (r['observed_days'],r['censored_days'])==(1766,1818)
+          assert r['historical_v21_primary']=='PASSED_UNCHANGED'
+          assert r['historical_v22_strongest_comparator']=='INCONCLUSIVE_UNCHANGED'
+          assert r['historical_v15_2024_primary']=='FAILED_UNCHANGED'
+          assert r['maturity_change']=='NONE' and r['no_censored_latent_demand_imputed'] is True
+          for name, b in r['conditional_sales_floor_bounds'].items():
+              assert b['observed_days']==1766 and b['censored_days']==1818
+              assert b['nonnegative_only_lower']-1e-10 <= b['sales_floor_lower']
+              assert b['sales_floor_upper'] <= b['nonnegative_only_upper']+1e-10
+              print(name, b['identification_decision'], b['sales_floor_lower'], b['sales_floor_upper'])
+          print('v2.5 conditional logical sensitivity PASS; latent demand remains UNOBSERVED')
+          PY
       - name: Upload aggregate-only evidence (never source rows or forecasts)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: retail-lt-v24-logical-bounds-aggregate
           path: ${{ runner.temp }}/retail_v24_aggregate.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload v2.5 aggregate only (no publisher rows or per-series forecasts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-lt-v25-conditional-sales-floor-aggregate
+          path: ${{ runner.temp }}/retail_v25_aggregate.json
           if-no-files-found: warn
           retention-days: 14
