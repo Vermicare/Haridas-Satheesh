@@ -1,0 +1,86 @@
+name: Retail LT v2.4 post-hoc 2025 stockout identification bounds
+on:
+  push:
+    branches: [research/retail-store-disjoint-v15-20261027]
+    paths:
+      - '.github/workflows/retail-lt-stockout-bounds-v24.yml'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_stockout_bounds_v24.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_stockout_bounds_v24.py'
+  pull_request:
+    paths:
+      - '.github/workflows/retail-lt-stockout-bounds-v24.yml'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_stockout_bounds_v24.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_stockout_bounds_v24.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test fictional partial-identification transfer and original bounds engine
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_freshretail_lt_stockout_bounds_v24
+      - name: Original v2.3 fictional bounds contract
+        run: python -B benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py selftest
+  pinned-public-2025-bounds:
+    needs: fictional-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned Parquet reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Fetch exact publisher TRAIN/EVAL bytes to ephemeral private storage
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-LT/resolve/01c3bb306415e09d3ccd2fe762f33eb3aeb2affd/data'
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 900 --silent --show-error "$root/train.parquet" -o "$RUNNER_TEMP/lt_train.parquet"
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 900 --silent --show-error "$root/eval.parquet" -o "$RUNNER_TEMP/lt_eval.parquet"
+          printf '%s  %s\n' 'e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3' "$RUNNER_TEMP/lt_train.parquet" | sha256sum --check
+          printf '%s  %s\n' '370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626' "$RUNNER_TEMP/lt_eval.parquet" | sha256sum --check
+      - name: Re-seal TRAIN before opening EVAL and calculate aggregate logical bounds
+        working-directory: benchmarks/retail-demand/observable_baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B freshretail_lt_stockout_bounds_v24.py --train "$RUNNER_TEMP/lt_train.parquet" --eval "$RUNNER_TEMP/lt_eval.parquet" --output "$RUNNER_TEMP/retail_v24_aggregate.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          r=json.loads((Path(os.environ['RUNNER_TEMP'])/'retail_v24_aggregate.json').read_text())
+          assert r['frozen_prediction_sha256']=='5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20'
+          assert (r['observed_days'],r['censored_days'])==(1766,1818)
+          assert r['historical_v21_primary']=='PASSED_UNCHANGED'
+          assert r['historical_v22_strongest_comparator']=='INCONCLUSIVE_UNCHANGED'
+          assert r['historical_v15_2024_primary']=='FAILED_UNCHANGED'
+          assert r['maturity_change']=='NONE'
+          assert r['no_censored_demand_imputed'] is True
+          assert all(v['censored_days']==1818 for v in r['paired_full_period_bounds'].values())
+          print('v2.4 aggregate bounds only: PASS; latent demand: UNOBSERVED')
+          PY
+      - name: Upload aggregate-only evidence (never source rows or forecasts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-lt-v24-logical-bounds-aggregate
+          path: ${{ runner.temp }}/retail_v24_aggregate.json
+          if-no-files-found: warn
+          retention-days: 14
