@@ -51,7 +51,7 @@ class TransferTests(unittest.TestCase):
             self.score(old=old)
 
     def test_missing_eval_day_fails(self):
-        with self.assertRaisesRegex((v25.TransferError, v24.BoundsTransferError), "incomplete"):
+        with self.assertRaisesRegex(v21.ScoreError, "missing future days"):
             self.score(self.rows[:-1])
 
     def test_legacy_reproduction_failure_prevents_eval_read(self):
