@@ -34,7 +34,7 @@
   "nominal_recordings": 840,
   "publisher_aggregate_events": 33534,
   "nominal_events": 33600,
-  "source_evidence": "Live pinned upstream GitHub reads plus independently inspected GitHub Actions #40951600999 job logs: 13/13 fictional tests on Ubuntu and Windows; each job fetched and Git-blob-verified three pinned TSVs, counting 40/80/40 rows. No original NPZ bytes or full event rows verified.",
+  "source_evidence": "Live pinned upstream GitHub reads plus independently inspected GitHub Actions #40951600999 job logs: 13/13 fictional tests on Ubuntu and Windows; each job fetched and Git-blob-verified three pinned TSVs, counting 40/80/40 rows. No original NPZ bytes or full event rows verified. Independently downloaded both hosted ZIPs, verified each against its published ZIP digest, inspected their sole JSON members, and confirmed byte-identical 1375-byte JSON with SHA-256 3e3c421b642114a9a8439bd8856317cc797bec01d6d6e0492763572427fe66c8.",
   "tests": {
     "fictional_negative_controls_defined": 13,
     "local_python_execution": "TBD",
@@ -57,7 +57,9 @@
         "zip_digest": "sha256:9eba0830a525b5f3013e9540e48ddebf7cfa245c1b2b2c206f1bb232b8273ba1"
       }
     },
-    "artifact_member_bytes_independently_compared": false
+    "artifact_member_bytes_independently_compared": true,
+    "artifact_member_size_bytes": 1375,
+    "artifact_member_sha256": "3e3c421b642114a9a8439bd8856317cc797bec01d6d6e0492763572427fe66c8"
   },
   "boundaries": {
     "eeg_signals_read": false,
