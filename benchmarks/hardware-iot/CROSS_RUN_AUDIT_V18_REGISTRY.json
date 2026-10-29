@@ -4,7 +4,7 @@
   "gate": "PASS_STATIC_UNFLASHED_BINARY_EQUALITY_SOURCE_REVIEW_REQUIRED",
   "execution": {
     "method": "local CPython standard-library offline audit of two independently downloaded GitHub Actions artifact ZIPs",
-    "python_version": "TBD",
+    "python_version": "3.13.5",
     "negative_controls_passed": 11,
     "negative_controls_total": 11,
     "hosted_tests": "TBD"
