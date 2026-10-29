@@ -1,6 +1,8 @@
-# Zhou2020: corrected BIDS first-session full-cohort channel audit (v0.2)
+# Zhou2020: corrected BIDS ses-1/run-0 full-cohort channel audit (v0.2)
 
 **2026-10-29 | Research / Simulation | no stage advancement.** Independently inspected **20/20** public `ses-1/run-0` `channels.tsv` files in [NEMAR nm000237](https://github.com/nemarDatasets/nm000237/commit/a291ed8a2afab3f93b85a540134dceb98092fcaf) at pinned commit `a291ed8a2afab3f93b85a540134dceb98092fcaf`. Dataset description blob `0c794cf3a1d4a744c8511593c796bc3c6cb99232` declares derivative version **1.1.0**.
+
+> **2026-10-30 session-index erratum:** This historical v0.2 audit inspected `ses-1/run-0`, which is the **second indexed session**, not the first. The upstream corrected BIDS tree uses `ses-0` for the first indexed session. The original 20/20 channel-map PASS counts remain unchanged. See the [v0.3 full-tree inventory](ZHOU2020_GIT_TREE_INVENTORY_V03.md) for 833 observed metadata recordings across 139 session directories and an absent subject-20 `ses-6` export. The earlier statement that session/run completeness was unresolved is superseded by this **filename-level**, not event-row or signal-level, inventory.
 
 ## Live metadata result
 
