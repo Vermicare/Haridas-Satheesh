@@ -15,13 +15,19 @@
     "property_probe_seed": 20261029,
     "property_probe_cases": 10000,
     "property_probe_points_per_case": 21,
-    "exact_published_source_test": "TBD: hosted workflow logs must be inspected"
+    "exact_published_source_test": "YES: GitHub Actions #40819484263 (Ubuntu and Windows)"
   },
   "hosted_ci": {
-    "status": "TBD pending verification",
-    "url": "TBD",
-    "ubuntu": "TBD",
-    "windows": "TBD"
+    "status": "success",
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40819484263",
+    "code_bearing_commit": "4004aeefba5f0fa7037e2e0821b44a0491a8801c",
+    "ubuntu": "12/12 embedded tests PASS; fictional aggregate CLI PASS; job log inspected",
+    "windows": "12/12 embedded tests PASS; fictional aggregate CLI PASS; job log inspected",
+    "python_major_minor": "3.13 requested by workflow",
+    "python_exact_patch": "TBD",
+    "runner_image_revision": "TBD",
+    "real_publisher_data_accessed": false,
+    "artifact_zip": "not generated"
   },
   "source_provenance": "author-created fictional forecasts/outcomes; public 2025 labels not accessed by v2.3",
   "assumptions": [
