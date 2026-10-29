@@ -1,7 +1,7 @@
 # Retail Demand Intelligence — Reproducible Public-Data Benchmark
 
 **Project stage:** Research / Architecture  
-**Benchmark status:** Specification — results are **TBD**
+**Benchmark status:** Original v0.1 specification below; **2025 observed-in-stock forecasting comparison executed** ([v2.1 verified result](observable_baseline/FRESHRETAIL_LT_V21_TEMPORAL_TRANSFER_RESULT.md), on unmerged research branch), but **full-period latent-demand model ranking remains unidentified** ([v2.4 verified bounds](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V24_BOUNDS_RESULT.md)). Other planned metrics remain **TBD**.
 
 ## Evidence question
 
