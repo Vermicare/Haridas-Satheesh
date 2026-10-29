@@ -1,0 +1,57 @@
+name: WBI A01E prospective different-day baseline v1.2
+on:
+  push:
+    branches: [research/wbi-independent-repro-20261026]
+    paths:
+      - 'benchmarks/wireless-brain-interface/bnci_a01e_temporal_baseline_v12.py'
+      - 'benchmarks/wireless-brain-interface/test_bnci_a01e_temporal_baseline_v12.py'
+      - 'benchmarks/wireless-brain-interface/WBI_A01E_DIFFERENT_DAY_BASELINE_V12.md'
+      - '.github/workflows/wbi-a01e-different-day-baseline-v12.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-adversarial-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install frozen decoder dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.3.3 scipy==1.16.2 scikit-learn==1.7.2
+      - name: Fictional-only label firewall and scoring regressions
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -B -m unittest -v test_bnci_a01e_temporal_baseline_v12
+  exploratory-public-A01E:
+    needs: fictional-adversarial-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install frozen decoder dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.3.3 scipy==1.16.2 scikit-learn==1.7.2
+      - name: Fit frozen A01T model, then evaluate A01E without refitting
+        run: >-
+          python -B benchmarks/wireless-brain-interface/bnci_a01e_temporal_baseline_v12.py
+          --output "${{ runner.temp }}/wbi_a01e_aggregate_v12.json"
+      - name: Upload aggregate-only source identity and results
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wbi-a01e-exploratory-aggregate-v12
+          path: ${{ runner.temp }}/wbi_a01e_aggregate_v12.json
+          retention-days: 14
+          if-no-files-found: error
