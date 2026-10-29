@@ -15,11 +15,32 @@
   "source_origin": "public repository, fictional synthetic fixture",
   "real_external_actions": 0,
   "test_count_expected": 4,
-  "local_execution": "TBD",
-  "hosted_execution": "TBD",
-  "python_version": "TBD",
-  "operating_system": "TBD",
-  "sha256_artifact": "TBD",
+  "local_execution": "not claimed; hosted CI execution verified",
+  "hosted_execution": {
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40836954512",
+    "code_head_sha": "1c8afc90c581bf73c185042a64fd8470f7126d1c",
+    "conclusion": "success",
+    "ubuntu_tests_passed": 139,
+    "windows_tests_passed": 139,
+    "v18_tests_per_os": 4,
+    "ubuntu_job_id": 123323853356,
+    "windows_job_id": 123323853675,
+    "job_logs_inspected": true,
+    "artifact_zips_independently_inspected": false
+  },
+  "python_version": {
+    "ubuntu": "3.13.17",
+    "windows": "3.13.16"
+  },
+  "operating_system": {
+    "ubuntu": "ubuntu-24.04",
+    "windows": "windows-2025-vs2026"
+  },
+  "sha256_artifact": {
+    "ubuntu_zip_github_reported": "e6863ebc13a6625aa3d6d2faa2846e4694178de62e7263a64b05802cb0854f3b",
+    "windows_zip_github_reported": "678ab7f35d590faffc107e3b3bf1eea1108472dca1ce5153fd7f1c66b9e8afce",
+    "independent_zip_verification": "TBD"
+  },
   "human_identity_verified": false,
   "real_clock_verified": false,
   "actual_external_connector": false,
