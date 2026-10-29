@@ -41,6 +41,9 @@ E_ALLOWED = {
     ('lampx.tugraz.at', '/~bci/database/001-2014/' + E_FILE),
 }
 MAX_E_BYTES = 100 * 1024 * 1024
+# Observed on two independent hosted acquisitions, not publisher-signed.
+PINNED_E_BYTES = 43_772_146
+PINNED_E_SHA256 = '53d415f39c3d7b0c88b894d7b08d99bcdfe855ede63831d3691af1a45607fb62'
 FROZEN_T_SOURCE_BLOB = '9293fdeff26b621e966da2cd76ab2da1e3220e7f'
 FROZEN_T_CORRECT = 43
 FROZEN_T_HELDOUT = 96
@@ -64,6 +67,13 @@ class ERedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         validate_e_url(newurl)
         return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def verify_e_source_identity(raw):
+    require(type(raw) is bytes and len(raw) == PINNED_E_BYTES,
+            'A01E observed source byte count changed')
+    require(hashlib.sha256(raw).hexdigest() == PINNED_E_SHA256,
+            'A01E observed source SHA-256 changed')
 
 
 def fetch_e_bytes():
@@ -91,6 +101,7 @@ def fetch_e_bytes():
     raw = b''.join(parts)
     require(128 <= len(raw) <= MAX_E_BYTES and
             raw.startswith(b'MATLAB 5.0 MAT-file'), 'invalid E MAT response')
+    verify_e_source_identity(raw)
     return raw
 
 
