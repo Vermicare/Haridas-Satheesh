@@ -1,0 +1,77 @@
+{
+  "experiment_id": "iot-cross-run-audit-v18",
+  "date_utc": "2026-10-29",
+  "gate": "PASS_STATIC_UNFLASHED_BINARY_EQUALITY_SOURCE_REVIEW_REQUIRED",
+  "execution": {
+    "method": "local CPython standard-library offline audit of two independently downloaded GitHub Actions artifact ZIPs",
+    "python_version": "TBD",
+    "negative_controls_passed": 11,
+    "negative_controls_total": 11,
+    "hosted_tests": "TBD"
+  },
+  "artifact_a": {
+    "run_id": 40659292470,
+    "artifact_id": 12802833314,
+    "zip_sha256": "f658976e6a846f1fdc73888ad3872f70e53fdf395d7ae1bee283308a4549c6d0",
+    "checkout_merge_sha": "8d440e64331a03788379d30b8270ad964933dfa3",
+    "expiry_utc": "2026-11-11T08:51:38Z"
+  },
+  "artifact_b": {
+    "run_id": 40660083184,
+    "artifact_id": 12803990362,
+    "zip_sha256": "d1471fdb8de9b12c1777f73701283a9af4b68f6c6330c346cdee2c294a0aa4ce",
+    "checkout_merge_sha": "21236c8fe227a07f39425a0165027256d184a7c3",
+    "expiry_utc": "2026-11-11T08:58:06Z"
+  },
+  "declared_environment": {
+    "idf": "ESP-IDF v6.1",
+    "compiler": "xtensa-esp-elf-gcc (crosstool-NG esp-15.2.0_20251204) 15.2.0",
+    "sdkconfig_sha256": "45c2865ae1ae348a2ad1696136f783aa94afc11264152981056519ceeaf75816"
+  },
+  "member_pairs": [
+    {
+      "name": "application",
+      "bytes_each": 196000,
+      "sha256": "3acc2c98ea480f15dbeaffa8d49c8812427dba73c69511e7bcc5a928e10d73f1",
+      "four_builds_match": true
+    },
+    {
+      "name": "bootloader",
+      "bytes_each": 21072,
+      "sha256": "da59a63758341ef54ff0083f178ea1f29ed7bc9cf89a8c7f64e9b0d2d9a9184b",
+      "four_builds_match": true
+    },
+    {
+      "name": "partition",
+      "bytes_each": 3072,
+      "sha256": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+      "four_builds_match": true
+    },
+    {
+      "name": "flash_arguments",
+      "bytes_each": 937,
+      "sha256": "43c1bb75a3e03982c9732cc7b2f3ff68e3dc5addef324eb1df34e1d293863aa2",
+      "four_builds_match": true
+    }
+  ],
+  "source_change_review": {
+    "base": "5a9009d7d9ef2d2d2d500aad4a50c5c596e780c5",
+    "head": "5fe82887ff5286c55d518b254eea6390bc45b5ff",
+    "git_compare": "https://github.com/Vermicare/Haridas-Satheesh/compare/5a9009d7d9ef2d2d2d500aad4a50c5c596e780c5...5fe82887ff5286c55d518b254eea6390bc45b5ff",
+    "only_changed": [
+      "benchmarks/hardware-iot/REPRODUCIBLE_BUILD_CONTROL_V17.md",
+      "benchmarks/hardware-iot/REPRODUCIBLE_BUILD_CONTROL_V17_REGISTRY.json"
+    ],
+    "independently_checked_this_run": true
+  },
+  "limitations": {
+    "container_digest": "not included in artifact; earlier CI log claim not independently rechecked by this offline test",
+    "cross_toolchain": "TBD",
+    "physical_board_identity": "TBD",
+    "physical_sensor_data": "NONE",
+    "flash_authorized": false,
+    "source_equivalence_from_zip_only": "NOT_ESTABLISHED",
+    "zip_retention": "GitHub-hosted ZIPs expire 2026-11-11; archive externally if preservation is needed"
+  },
+  "decision": "No maturity advance, no physical flash, no sensor performance or product claim."
+}
