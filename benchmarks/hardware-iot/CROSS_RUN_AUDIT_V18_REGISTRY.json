@@ -5,9 +5,10 @@
   "execution": {
     "method": "local CPython standard-library offline audit of two independently downloaded GitHub Actions artifact ZIPs",
     "python_version": "3.13.5",
-    "negative_controls_passed": 11,
+    "negative_controls_passed": 10,
     "negative_controls_total": 11,
-    "hosted_tests": "TBD"
+    "hosted_tests": "TBD",
+    "positive_controls_passed": 1
   },
   "artifact_a": {
     "run_id": 40659292470,
