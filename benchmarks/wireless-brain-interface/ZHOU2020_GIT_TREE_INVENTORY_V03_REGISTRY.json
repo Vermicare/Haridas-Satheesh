@@ -1,0 +1,412 @@
+{
+  "schema": "ZHOU2020_GIT_TREE_INVENTORY_V03",
+  "run_date": "2026-10-30",
+  "evidence_class": "independent live public Git-tree metadata enumeration, not signal execution",
+  "stage": "Research / Simulation",
+  "upstream": {
+    "repository": "https://github.com/nemarDatasets/nm000237",
+    "pinned_ref": "a291ed8a2afab3f93b85a540134dceb98092fcaf",
+    "dataset_description_blob_sha1": "0c794cf3a1d4a744c8511593c796bc3c6cb99232",
+    "dataset_version": "1.1.0",
+    "source_checksum_publisher_signed": false
+  },
+  "method": "GitHub public git/trees root plus recursive subject-tree listings; inspected 20 untruncated subject trees; counted channel and event TSV path suffixes per session; separately read and JavaScript-validated first (ses-0) and last (ses-6) run-0 channel metadata where present. Count equality does not prove exact filename pairing.",
+  "nominal": {
+    "subjects": 20,
+    "sessions_per_subject": 7,
+    "runs_per_session": 6,
+    "recordings": 840
+  },
+  "observed": {
+    "subject_trees": 20,
+    "untruncated_subject_trees": 20,
+    "session_directories": 139,
+    "channel_metadata_files": 833,
+    "event_metadata_files": 833,
+    "difference_from_nominal_recordings": -7,
+    "channel_event_exact_pairing": "TBD",
+    "event_row_counts": "TBD",
+    "signal_file_integrity": "TBD",
+    "first_indexed_session": "ses-0",
+    "last_indexed_session": "ses-6",
+    "first_session_run0_channel_checks": {
+      "passed": 20,
+      "checked": 20
+    },
+    "last_session_run0_channel_checks": {
+      "passed": 19,
+      "checked": 19,
+      "absent_subject": 20
+    },
+    "cohort_blob_sha1": {
+      "subjects_1_to_12": "ab35ee26609e008c566beefb5b5e705808a08718",
+      "subjects_13_to_20": "cfb30c027daf79bb6865c996b7091247a1864820"
+    }
+  },
+  "subjects": [
+    {
+      "subject": 1,
+      "tree_sha1": "604efe84cf6ab1f3ce512a053175a421f026b9f2",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        7,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 43
+    },
+    {
+      "subject": 2,
+      "tree_sha1": "c5e1e34415274aab5347eb26928380542ef63381",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 3,
+      "tree_sha1": "4d25c427d3c2906c015df6502dfe4948a52a44fa",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 4,
+      "tree_sha1": "8666b546b6384ccc2fe58ae4c98c9f244cd43215",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 5,
+      "tree_sha1": "bdbb4c5d43ab7e3c5ef68140555cbf9142b81746",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 6,
+      "tree_sha1": "bb5c141bb70458d55c05a79a4bbd155d5d6a7df1",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 7,
+      "tree_sha1": "8179157bae92ad9979bdd3c7d24ea2f180b2286f",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 8,
+      "tree_sha1": "b99bfd4db70ecbf53f309d9248d1d5fdbbfba2f7",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 9,
+      "tree_sha1": "8620a2bc85810a7838e98eea291d5f5430d9985c",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 10,
+      "tree_sha1": "4f40a66934c8b3404a0b27f4ecb64ad208f1d457",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 11,
+      "tree_sha1": "4bac5b039cab833ba68b6c81945f51c22d6147ff",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        7,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 43
+    },
+    {
+      "subject": 12,
+      "tree_sha1": "cdc592a7e5af8ac42a677e3399a547ad94c02bff",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 13,
+      "tree_sha1": "9e53f12725af0e7207ccd6631e66ccb9e4faef48",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        5,
+        6,
+        5,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 40
+    },
+    {
+      "subject": 14,
+      "tree_sha1": "b6ae8e12134b7f12d1e3892c166bfcae75b83087",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 15,
+      "tree_sha1": "1bfd1a1bea12332a60e30bbe9111bb6355405744",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        5,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 41
+    },
+    {
+      "subject": 16,
+      "tree_sha1": "a24cf4f781c0b72c59a9221f65ae25c1a4db9108",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 17,
+      "tree_sha1": "8dff4545c04f0e6cf1931407f21bf7866dbdea8a",
+      "runs_by_session_0_to_6": [
+        4,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 40
+    },
+    {
+      "subject": 18,
+      "tree_sha1": "0ae7a98da0c6b99e2f3a8f2dae6beee3a218aa95",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 19,
+      "tree_sha1": "a3f6e7e3ed930ff72d29c8c53c223b926dc6c512",
+      "runs_by_session_0_to_6": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "total_metadata_recordings": 42
+    },
+    {
+      "subject": 20,
+      "tree_sha1": "b74192e6b92f107ed4d28945a5bdbc9d0884fd64",
+      "runs_by_session_0_to_6": [
+        3,
+        6,
+        6,
+        6,
+        9,
+        8,
+        0
+      ],
+      "total_metadata_recordings": 38
+    }
+  ],
+  "noncanonical_session_counts": [
+    {
+      "subject": 1,
+      "session": 2,
+      "observed_runs": 7,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 11,
+      "session": 2,
+      "observed_runs": 7,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 13,
+      "session": 2,
+      "observed_runs": 5,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 13,
+      "session": 4,
+      "observed_runs": 5,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 15,
+      "session": 2,
+      "observed_runs": 5,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 17,
+      "session": 0,
+      "observed_runs": 4,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 20,
+      "session": 0,
+      "observed_runs": 3,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 20,
+      "session": 4,
+      "observed_runs": 9,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 20,
+      "session": 5,
+      "observed_runs": 8,
+      "nominal_runs": 6
+    },
+    {
+      "subject": 20,
+      "session": 6,
+      "observed_runs": 0,
+      "nominal_runs": 6
+    }
+  ],
+  "absent_session_directories": [
+    {
+      "subject": 20,
+      "session": 6
+    }
+  ],
+  "previous_report_erratum": "v0.2 called ses-1 the first session; ses-0 is the first indexed session, so ses-1 is the second indexed session. v0.2 results for ses-1/run-0 remain unchanged.",
+  "local_reproduction": {
+    "python_version": "CPython (container; exact version TBD)",
+    "fictional_unittest_tests_passed": 10,
+    "upstream_python_live_execution": false,
+    "hosted_cross_platform_execution": "TBD"
+  },
+  "limitations": [
+    "Tree filenames and counts are not proof of signal integrity, trial counts, physical brain-interface performance, or held-out EEG decoding.",
+    "The 833 versus 840 discrepancy is a net count: sessions with extra run files coexist with sessions having fewer; do not label exactly seven individual recordings as missing.",
+    "The source's separate 33534 versus 33600 event discrepancy remains unresolved; event TSV row counts were not inspected.",
+    "Git blob identifiers are not independently publisher-signed source checksums.",
+    "No actual EEG signals, held-out labels or subject-level outcomes were opened."
+  ],
+  "next_experiment": "Run published Python tree inventory against pinned upstream API and verify exact channel/event filename pairing; reconcile event TSV row counts and source manifest before freezing longitudinal session split and touching held-out labels.",
+  "maturity_advanced": false
+}
