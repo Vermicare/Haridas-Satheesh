@@ -1,0 +1,28 @@
+{
+  "schema": "cortex-v05-evidence-registry",
+  "date_utc": "2026-10-29",
+  "project": "CORTEX",
+  "maturity": "Architecture / R&D",
+  "fixture_type": "author-created fictional; local test fixture",
+  "finding": "Original evaluator counts nonempty proper-subset sources as traceable; exact full-span coverage is not established by that metric",
+  "original_evaluator_blob_sha": "8119649def3e893da5371a55e3baae519477b908",
+  "original_fixture_blob_sha": "6540101a695ddeae1eb9832e627dbbff67394e00",
+  "original_evaluator_modified": false,
+  "local_adversarial_tests": 13,
+  "local_test_status": "PASS",
+  "local_runtime": "Python 3.13.5 on Linux",
+  "hosted_ubuntu_tests": "TBD",
+  "hosted_windows_tests": "TBD",
+  "runner_image": "TBD",
+  "semantic_accuracy": "TBD",
+  "independent_human_reviewers": 0,
+  "correction_time_minutes": "TBD",
+  "external_predecessor_authenticity": "TBD",
+  "release": false,
+  "limitations": [
+    "post-hoc gold-aware audit, not blinded evaluation",
+    "no real meeting data",
+    "no human review",
+    "no deployable semantic validator"
+  ]
+}
