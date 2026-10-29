@@ -37,9 +37,14 @@
     "total": 4
   },
   "hosted_ci": {
-    "ubuntu": "TBD",
-    "windows": "TBD",
-    "run_url": "TBD"
+    "ubuntu": "PASS 131/131 fictional tests",
+    "windows": "PASS 131/131 fictional tests",
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40968518413",
+    "code_workflow_head": "0643766943fa5a7eb63ec09ba39dce1167817b32",
+    "ubuntu_job_id": 123779061160,
+    "windows_job_id": 123779060956,
+    "logs_independently_inspected": true,
+    "physical_hardware": "NONE"
   },
   "physical_capture": "TBD",
   "physical_origin_authenticated": false,
