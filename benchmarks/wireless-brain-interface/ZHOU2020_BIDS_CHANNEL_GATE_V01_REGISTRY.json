@@ -2,7 +2,7 @@
   "experiment": "ZHOU2020_BIDS_CHANNEL_GATE_V01",
   "date": "2026-10-29",
   "stage": "Research / Simulation",
-  "status": "local_fictional_contract_pass; public_metadata_read_only_inspection; no_eeg_scoring",
+  "status": "local_and_hosted_fictional_contract_pass; public_metadata_read_only_inspection; no_eeg_scoring",
   "purpose": "Reject legacy NEMAR BIDS channel mislabeling before any longitudinal EEG scoring",
   "source": {
     "dataset": "NEMAR nm000237 Zhou2020 BIDS derivative",
@@ -28,9 +28,26 @@
     "command": "python -B -m unittest -v test_zhou2020_bids_channel_gate_v01.py",
     "passed": 12,
     "total": 12,
-    "hosted_windows": "TBD",
-    "hosted_linux": "TBD",
-    "real_BIDS_metadata_gate_execution": "TBD"
+    "hosted_windows": {
+      "status": "passed",
+      "run_id": 40884066464,
+      "job_id": 123482946611,
+      "tests_new": "12/12",
+      "total_fictional_tests": "38/38"
+    },
+    "hosted_linux": {
+      "status": "passed",
+      "run_id": 40884066464,
+      "job_id": 123482946050,
+      "tests_new": "12/12",
+      "total_fictional_tests": "38/38"
+    },
+    "real_BIDS_metadata_gate_execution": "TBD",
+    "hosted_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40884066464",
+    "hosted_head_sha": "55608c7f0852f2bf7f5567239d415d881733c3d1",
+    "hosted_logs_inspected": true,
+    "frozen_synthetic_original_blob_preserved": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+    "frozen_synthetic_csv_sha256_reproduced": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a"
   },
   "public_metadata_observation": {
     "subject_1": {
