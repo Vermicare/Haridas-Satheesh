@@ -3,6 +3,7 @@
 No public EEG is loaded by these tests; no clinical or safety claims.
 """
 import copy
+import hashlib
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -41,6 +42,20 @@ class TestEUrl(unittest.TestCase):
     def test_reject_host_confusion(self):
         with self.assertRaises(ValueError):
             m.validate_e_url('https://bnci-horizon-2020.eu.evil.test/database/data-sets/001-2014/A01E.mat')
+
+    def test_source_pin_accepts_exact_fictional_bytes(self):
+        raw = b'MATLAB 5.0 MAT-file' + b'x' * 256
+        with patch.object(m, 'PINNED_E_BYTES', len(raw)):
+            with patch.object(m, 'PINNED_E_SHA256', hashlib.sha256(raw).hexdigest()):
+                m.verify_e_source_identity(raw)
+
+    def test_source_pin_rejects_one_byte_mutation(self):
+        raw = b'MATLAB 5.0 MAT-file' + b'x' * 256
+        changed = raw[:-1] + b'y'
+        with patch.object(m, 'PINNED_E_BYTES', len(raw)):
+            with patch.object(m, 'PINNED_E_SHA256', hashlib.sha256(raw).hexdigest()):
+                with self.assertRaisesRegex(ValueError, 'SHA-256 changed'):
+                    m.verify_e_source_identity(changed)
 
 
 class TestScore(unittest.TestCase):
