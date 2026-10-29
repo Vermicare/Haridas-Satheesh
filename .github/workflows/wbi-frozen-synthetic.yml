@@ -13,6 +13,8 @@ on:
       - 'benchmarks/wireless-brain-interface/test_bnci2a_source_archive_preflight.py'
       - 'benchmarks/wireless-brain-interface/zhou2020_bids_channel_gate_v01.py'
       - 'benchmarks/wireless-brain-interface/test_zhou2020_bids_channel_gate_v01.py'
+      - 'benchmarks/wireless-brain-interface/zhou2020_tree_inventory_v03.py'
+      - 'benchmarks/wireless-brain-interface/test_zhou2020_tree_inventory_v03.py'
   pull_request:
     paths:
       - '.github/workflows/wbi-frozen-synthetic.yml'
@@ -24,6 +26,8 @@ on:
       - 'benchmarks/wireless-brain-interface/test_bnci2a_source_archive_preflight.py'
       - 'benchmarks/wireless-brain-interface/zhou2020_bids_channel_gate_v01.py'
       - 'benchmarks/wireless-brain-interface/test_zhou2020_bids_channel_gate_v01.py'
+      - 'benchmarks/wireless-brain-interface/zhou2020_tree_inventory_v03.py'
+      - 'benchmarks/wireless-brain-interface/test_zhou2020_tree_inventory_v03.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -58,3 +62,35 @@ jobs:
       - name: Run Zhou2020 corrected BIDS metadata contract regressions (NO EEG)
         shell: bash
         run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_zhou2020_bids_channel_gate_v01.py' -v
+      - name: Run fictional Zhou2020 Git-tree inventory regressions (NO EEG)
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_zhou2020_tree_inventory_v03.py' -v
+      - name: Execute pinned public Zhou2020 Git-tree audit (metadata only)
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -B benchmarks/wireless-brain-interface/zhou2020_tree_inventory_v03.py > "$RUNNER_TEMP/zhou2020_tree_inventory_v03.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ['RUNNER_TEMP']) / 'zhou2020_tree_inventory_v03.json'
+          d = json.loads(p.read_text(encoding='utf-8'))
+          expected = {'schema': 'ZHOU2020_TREE_INVENTORY_V03', 'observed_subjects': 20, 'observed_session_directories': 139, 'observed_channel_metadata_files': 833, 'observed_event_metadata_files': 833, 'metadata_pairing': 'PASS', 'pinned_ref': 'a291ed8a2afab3f93b85a540134dceb98092fcaf'}
+          for key, value in expected.items():
+              if d.get(key) != value:
+                  raise SystemExit(f'FAIL CLOSED: {key} observed {d.get(key)!r}, expected {value!r}')
+          if d['absent_session_directories'] != [{'subject': 20, 'session': 6}]:
+              raise SystemExit('FAIL CLOSED: missing-session inventory changed')
+          if d['eeg_signals_read'] or d['trial_event_rows_read'] or d['publisher_checksum_verified']:
+              raise SystemExit('FAIL CLOSED: evidence boundary unexpectedly changed')
+          print('PASS: 20 subjects, 139 session directories, 833 paired metadata runs; no EEG read')
+          PY
+      - name: Preserve only derived public Git-tree metadata (no EEG)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zhou2020-git-tree-inventory-${{ matrix.os }}
+          path: ${{ runner.temp }}/zhou2020_tree_inventory_v03.json
+          retention-days: 14
+          if-no-files-found: error
