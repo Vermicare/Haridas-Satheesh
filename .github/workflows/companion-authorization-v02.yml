@@ -29,7 +29,7 @@ jobs:
           python-version: "3.13"
       - name: Reproduce fictional authorization, correction, outbox and sink-integrity tests
         working-directory: benchmarks/companion-life-os
-        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06 test_fictional_outbox_v07 test_fictional_sink_integrity_v09 test_sandbox_issuer_v10 test_revocable_signed_boundary_v11 test_process_kill_v12 test_revocation_outbox_gap_v13 test_atomic_revocation_delivery_v14 test_atomic_process_kill_v15 test_atomic_multiprocess_v16
+        run: python -m unittest -v test_authorization_guard_v02 test_authorization_store_v03 test_correction_ledger_v05 test_actual_receipt_integration_v06 test_fictional_outbox_v07 test_fictional_sink_integrity_v09 test_sandbox_issuer_v10 test_revocable_signed_boundary_v11 test_process_kill_v12 test_revocation_outbox_gap_v13 test_atomic_revocation_delivery_v14 test_atomic_process_kill_v15 test_atomic_multiprocess_v16 test_stage_receipt_revocation_gap_v17
       - name: Generate fictional machine-readable demos
         working-directory: benchmarks/companion-life-os
         run: |
@@ -45,6 +45,8 @@ jobs:
           python demo_atomic_revocation_delivery_v14.py > demo-v14.json
           python demo_atomic_process_kill_v15.py > demo-v15.json
           python demo_atomic_multiprocess_v16.py > demo-v16.json
+          python demo_stage_receipt_revocation_gap_v17.py > demo-v17.json
+          python -c "import json; d=json.load(open('demo-v17.json', encoding='utf-8')); assert d['success'] and d['tests_run']==4 and d['external_actions']==0; print(json.dumps(d,sort_keys=True))"
           python -c "import json; d=json.load(open('demo-v16.json', encoding='utf-8')); assert d['success'] and d['tests_run']==2 and d['external_actions']==0; print(json.dumps(d,sort_keys=True))"
       - uses: actions/upload-artifact@v4
         with:
@@ -62,3 +64,4 @@ jobs:
             benchmarks/companion-life-os/demo-v14.json
             benchmarks/companion-life-os/demo-v15.json
             benchmarks/companion-life-os/demo-v16.json
+            benchmarks/companion-life-os/demo-v17.json
