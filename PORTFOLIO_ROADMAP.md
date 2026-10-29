@@ -8,6 +8,13 @@ This roadmap is an evidence-gated control document for the public portfolio. It 
 
 A project may skip a gate only when existing evidence genuinely satisfies that gate's intent. A project can also move backward, merge, or be archived when evidence weakens the thesis.
 
+### October 30 — Adaptive Cooling SCD40 sample-span v0.4: false-positive quality boundary (no stage advance)
+
+[Reproducible fictional negative control and independent v0.4 review gate](https://github.com/Vermicare/Haridas-Satheesh/blob/research/cooling-explicit-fixture-gate-20261023/benchmarks/adaptive-cooling/SCD40_SAMPLE_SPAN_V4.md) exposed a narrower software-evidence failure: the unchanged v1 logger and v2 independent verifier both report a 600-second capture-quality PASS when the injected **fictional** sensor reports 97 samples only between seconds 60 and 540 (**480-second sensor sample span**). Exact original Git blobs were preserved. A supplemental read-only v0.4 checker flags the short span for review using a **provisional**, prereview minimum of 590 seconds in this 5-second-poll example; it does not authenticate hardware, calibration, actual wall time or cooling performance. [Final code-bearing hosted CI #40968518413](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40968518413) passed **131/131 fictional regression tests on Ubuntu and 131/131 on Windows**, including all four new cases; both job logs independently inspected. The original v1/v2 historical PASS flags remain unchanged and are not retroactively redefined.
+
+**Decision:** Cooling remains **Prototype / Documented R&D**. **Strongest evidence:** synthetic-tested provenance, clock, sample-span and energy-integrity preflights; **zero independently inspected real physical cooling measurements**. **Largest gap:** actual ≥600-second instrumented logging, provenance/uncertainty and controlled fan-only/prototype comparisons. **Next experiment:** genuine Raspberry Pi/SCD40 capture with independently preserved raw bytes and SHA-256, v2/v3/v4 preflight, instrument manifest, then predeclared balanced ambient/fan-only/prototype trials. **Kill/reframe:** reject incomplete sensor coverage as continuous observation; if fan-only or uncertainty explains any apparent thermal effect, withdraw performance superiority. No product, efficiency, safety, novelty, merge or release claim.
+
+
 
 
 ### October 30 — WBI v0.4: verified nonuniform event rows in three pinned source files (no stage advance)
