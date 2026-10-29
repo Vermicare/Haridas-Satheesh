@@ -10,7 +10,7 @@
     "dataset_version": "1.1.0",
     "source_checksum_publisher_signed": false
   },
-  "method": "GitHub public git/trees root plus recursive subject-tree listings; inspected 20 untruncated subject trees; counted channel and event TSV path suffixes per session; separately read and JavaScript-validated first (ses-0) and last (ses-6) run-0 channel metadata where present. Count equality does not prove exact filename pairing.",
+  "method": "GitHub public git/trees root plus recursive subject-tree listings; inspected 20 untruncated subject trees; counted channel and event TSV path suffixes per session; separately read and JavaScript-validated first (ses-0) and last (ses-6) run-0 channel metadata where present. Count equality does not prove exact filename pairing. Subsequent independent per-run index comparison confirmed exact channel/event filename pairing in all 20 subject trees; no event file contents inspected.",
   "nominal": {
     "subjects": 20,
     "sessions_per_subject": 7,
@@ -24,7 +24,7 @@
     "channel_metadata_files": 833,
     "event_metadata_files": 833,
     "difference_from_nominal_recordings": -7,
-    "channel_event_exact_pairing": "TBD",
+    "channel_event_exact_pairing": "PASS: all 833 per-subject/session/run channel and event TSV filenames paired by identical indices in 20 untruncated pinned Git trees",
     "event_row_counts": "TBD",
     "signal_file_integrity": "TBD",
     "first_indexed_session": "ses-0",
@@ -41,6 +41,14 @@
     "cohort_blob_sha1": {
       "subjects_1_to_12": "ab35ee26609e008c566beefb5b5e705808a08718",
       "subjects_13_to_20": "cfb30c027daf79bb6865c996b7091247a1864820"
+    },
+    "per_run_filename_pairing_validation": {
+      "subjects_passed": 20,
+      "subjects_checked": 20,
+      "paired_metadata_runs": 833,
+      "invalid_filename_patterns": 0,
+      "orphan_channel_or_event_files": 0,
+      "source": "Independent GitHub tree metadata inspection and JavaScript exact run-index comparison; not yet executed by published Python script"
     }
   },
   "subjects": [
@@ -395,7 +403,7 @@
   ],
   "previous_report_erratum": "v0.2 called ses-1 the first session; ses-0 is the first indexed session, so ses-1 is the second indexed session. v0.2 results for ses-1/run-0 remain unchanged.",
   "local_reproduction": {
-    "python_version": "CPython (container; exact version TBD)",
+    "python_version": "CPython 3.13.5",
     "fictional_unittest_tests_passed": 10,
     "upstream_python_live_execution": false,
     "hosted_cross_platform_execution": "TBD"
@@ -403,10 +411,10 @@
   "limitations": [
     "Tree filenames and counts are not proof of signal integrity, trial counts, physical brain-interface performance, or held-out EEG decoding.",
     "The 833 versus 840 discrepancy is a net count: sessions with extra run files coexist with sessions having fewer; do not label exactly seven individual recordings as missing.",
-    "The source's separate 33534 versus 33600 event discrepancy remains unresolved; event TSV row counts were not inspected.",
+    "The source's separate 33534 versus 33600 event discrepancy remains unresolved; event TSV row counts (filenames paired, contents not opened) were not inspected.",
     "Git blob identifiers are not independently publisher-signed source checksums.",
     "No actual EEG signals, held-out labels or subject-level outcomes were opened."
   ],
-  "next_experiment": "Run published Python tree inventory against pinned upstream API and verify exact channel/event filename pairing; reconcile event TSV row counts and source manifest before freezing longitudinal session split and touching held-out labels.",
+  "next_experiment": "Execute published Python tree inventory against pinned upstream Git API, then inspect per-run event TSV row counts and original-source manifest before freezing longitudinal split and accessing held-out labels.",
   "maturity_advanced": false
 }
