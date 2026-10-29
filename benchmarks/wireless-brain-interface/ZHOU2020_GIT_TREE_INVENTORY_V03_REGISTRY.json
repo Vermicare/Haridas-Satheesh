@@ -412,9 +412,23 @@
     "Tree filenames and counts are not proof of signal integrity, trial counts, physical brain-interface performance, or held-out EEG decoding.",
     "The 833 versus 840 discrepancy is a net count: sessions with extra run files coexist with sessions having fewer; do not label exactly seven individual recordings as missing.",
     "The source's separate 33534 versus 33600 event discrepancy remains unresolved; event TSV row counts (filenames paired, contents not opened) were not inspected.",
-    "Git blob identifiers are not independently publisher-signed source checksums.",
+    "Git blob identifiers are not independently publisher-signed source checksums. The upstream manifest lists SHA-256 digests but original NPZ bytes were not reacquired or hashed.",
     "No actual EEG signals, held-out labels or subject-level outcomes were opened."
   ],
-  "next_experiment": "Execute published Python tree inventory against pinned upstream Git API, then inspect per-run event TSV row counts and original-source manifest before freezing longitudinal split and accessing held-out labels.",
-  "maturity_advanced": false
+  "next_experiment": "Execute published Python tree inventory against pinned upstream Git API; independently verify a predeclared sample of NPZ SHA-256 digests and reconcile per-run event TSV rows and 33,534 versus 33,600 events before freezing longitudinal split.",
+  "maturity_advanced": false,
+  "upstream_source_manifest": {
+    "path": "sourcedata/sourcedata_provenance.json",
+    "git_blob_sha1": "c80403a970eb2c064e74daf50dbb08115e8299ff",
+    "manifest_n_files": 853,
+    "original_npz_entries": 833,
+    "subject_zip_entries": 20,
+    "original_npz_sha256_strings_present": 833,
+    "original_npz_bytes_independently_verified": false,
+    "source_session_indexing": "session_1..session_7 (BIDS ses-0..ses-6)",
+    "source_run_indexing": "run_01..run_N (BIDS run-0..run-(N-1))",
+    "per_subject_session_npz_count_matrix_matches_bids_metadata": true,
+    "source_recording_count_reconciled_to_bids_metadata": true,
+    "source_manifest_publisher_signed": false
+  }
 }
