@@ -1,0 +1,132 @@
+{
+  "schema": "wbi-a01t-training-only-exploratory-v09-evidence-registry",
+  "recorded_date_utc": "2026-10-29",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "research_branch": "research/wbi-independent-repro-20261026",
+  "tested_commit": "5ae3801a6406b867e2e616012212bd9d281d0e29",
+  "github_actions_run": 40795478458,
+  "github_actions_attempts": [
+    1,
+    2
+  ],
+  "source": {
+    "dataset": "BNCI2014_001",
+    "file": "A01T.mat",
+    "session": "T_training_only",
+    "source_bytes": 42806453,
+    "sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325",
+    "publisher_authenticated": false,
+    "license": "CC BY-ND 4.0",
+    "evaluation_session_downloaded": false
+  },
+  "environment": {
+    "python": "3.13.17",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "scikit_learn": "1.7.2",
+    "os_real_eeg": "Ubuntu GitHub-hosted"
+  },
+  "split": {
+    "train_runs": [
+      1,
+      2,
+      3
+    ],
+    "calibration_runs": [
+      4
+    ],
+    "heldout_within_training_runs": [
+      5,
+      6
+    ],
+    "train_n": 144,
+    "calibration_n": 48,
+    "heldout_n": 96,
+    "independent_subjects": 1
+  },
+  "model": {
+    "channels": "22 EEG, EOG excluded",
+    "filter": "8-30 Hz Butterworth order 4 per continuous run",
+    "epoch_seconds_after_trial_start": [
+      2.5,
+      4.5
+    ],
+    "features": "per-channel log variance",
+    "classifier": "train-only StandardScaler + 4-class LogisticRegression(C=1, lbfgs)",
+    "seed": 20261029
+  },
+  "result": {
+    "correct_n": 43,
+    "heldout_n": 96,
+    "accuracy": 0.4479166666666667,
+    "balanced_accuracy": 0.4479166666666667,
+    "multiclass_brier_approx": 0.5959131194218935,
+    "ece_approx": 0.14308001319357208,
+    "confidence_only": [
+      {
+        "calibration_target": 0.3,
+        "threshold_approx": 0.7473985830429806,
+        "acted_n": 19,
+        "incorrect_acted_n": 6,
+        "correct_retained_n": 13,
+        "heldout_coverage": 0.19791666666666666,
+        "incorrect_action_risk": 0.3157894736842105,
+        "correct_action_retention": 0.3023255813953488
+      },
+      {
+        "calibration_target": 0.5,
+        "threshold_approx": 0.61892840642374,
+        "acted_n": 38,
+        "incorrect_acted_n": 15,
+        "correct_retained_n": 23,
+        "heldout_coverage": 0.3958333333333333,
+        "incorrect_action_risk": 0.39473684210526316,
+        "correct_action_retention": 0.5348837209302325
+      },
+      {
+        "calibration_target": 0.7,
+        "threshold_approx": 0.5215773254988622,
+        "acted_n": 55,
+        "incorrect_acted_n": 24,
+        "correct_retained_n": 31,
+        "heldout_coverage": 0.5729166666666666,
+        "incorrect_action_risk": 0.43636363636363634,
+        "correct_action_retention": 0.7209302325581395
+      }
+    ]
+  },
+  "verification": {
+    "fictional_tests_per_os": 15,
+    "ubuntu_pass": true,
+    "windows_pass": true,
+    "live_ubuntu_attempts": 2,
+    "discrete_outcomes_identical": true,
+    "floating_point_values_byte_identical": false,
+    "max_observed_numeric_difference_less_than": 1e-12,
+    "artifacts": [
+      {
+        "attempt": 1,
+        "id": 12863746663,
+        "zip_sha256": "448f8168129b0c64f232e67be646eca07c5163d46afe259e2b6b9a90071f6b73",
+        "json_sha256": "905ef839de6e1659e00a6c484d26dce47ba8ec4160cf62cb0bb5bdfa213156f1"
+      },
+      {
+        "attempt": 2,
+        "id": 12863448094,
+        "zip_sha256": "34d7379818a0ec00301858e7d3c995bab6bd00dce2bbb1b68b22fe036f0acf8e",
+        "json_sha256": "37105b3cf276f29744c55239100d2c8602eb8cf878d26776749a8d6659d4ec96"
+      }
+    ]
+  },
+  "claims": {
+    "real_eeg_training_session_exploratory_baseline": true,
+    "different_day_E_session_validation": false,
+    "drift_gate_tested": false,
+    "matched_coverage_drift_advantage": "TBD",
+    "clinical_or_safety_validation": false,
+    "product_candidate": false,
+    "raw_eeg_or_trial_level_artifact_uploaded": false,
+    "maturity": "Research / Simulation unchanged"
+  },
+  "next_experiment": "Freeze and independently review nine-subject different-day E-session pipeline and matched-coverage confidence-only versus drift-gate comparison; preserve held-out-label firewall and negative results."
+}
