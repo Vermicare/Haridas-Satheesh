@@ -23,15 +23,40 @@
     "generated_rdf_triples": 14,
     "generated_turtle_sha256": "7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0",
     "human_reviewers": 0,
-    "external_actions": 0
+    "external_actions": 0,
+    "hosted_v05": {
+      "run_id": 40913907893,
+      "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40913907893",
+      "workflow_commit": "7cfe0ae0eece80d94e1655dd51c72652ccdce51a",
+      "conclusion": "success",
+      "ubuntu": {
+        "job_id": 123588908915,
+        "python": "3.13.17",
+        "tests_passed": 14,
+        "tests_total": 14,
+        "rdflib": "7.5.0",
+        "triples": 14
+      },
+      "windows": {
+        "job_id": 123588908473,
+        "python": "3.13.16",
+        "tests_passed": 14,
+        "tests_total": 14,
+        "rdflib": "7.5.0",
+        "triples": 14
+      },
+      "canonical_lf_turtle_sha256": "7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0",
+      "inspected": "both hosted job logs and step conclusions",
+      "boundary": "fictional fixed-case software-only; no external semantic or human review"
+    }
   },
   "unknowns": {
-    "hosted_ubuntu_windows": "TBD",
     "full_prov_constraints": "TBD",
     "semantic_agreement": "TBD",
     "human_correction_time": "TBD",
     "archive_authenticity": "TBD",
-    "generalization": "TBD"
+    "generalization": "TBD",
+    "hosted_os_images_and_wheel_hashes": "TBD"
   },
   "sources": [
     "https://www.w3.org/TR/prov-o/",
