@@ -134,8 +134,10 @@ The first evidence gate is tracked in **GitHub Issue #1**. The evaluation order 
 ### Stage A — deterministic smoke test
 Use fixed-seed synthetic EEG/physiology-like signals to verify preprocessing, confidence calibration, abstention/safety gating, metric calculation and machine-readable result generation. This stage validates the experiment machinery, not BCI performance.
 
-### Stage B — PhysioNet EEG Motor Movement/Imagery
-Use the public EEG Motor Movement/Imagery dataset as the first real-EEG benchmark. Its motor tasks and explicit rest annotations allow the project to measure false activation during idle/rest directly rather than treating classifier accuracy as a safety proxy.
+### Stage B — BNCI2014_001 different-day EEG and separate idle-state protocol
+The frozen [BNCI2014_001 protocol](https://github.com/Vermicare/Haridas-Satheesh/blob/research/wbi-independent-repro-20261026/benchmarks/wireless-brain-interface/BNCI2A_EEG_PREREG_2026_10_27.md) selects BCI Competition IV dataset 2a for its **two different-day sessions**; PhysioNet Motor Movement/Imagery in the MOABB representation has only one session and cannot itself prove different-day drift recovery. A separate PhysioNet idle/rest evaluation requires independently verified task/run labels and valid no-action windows; do **not** assume its task codes are interchangeable across runs or that any rest label automatically establishes false-action safety.
+
+An [A01T real EEG training-only exploratory pilot](https://github.com/Vermicare/Haridas-Satheesh/blob/research/wbi-independent-repro-20261026/benchmarks/wireless-brain-interface/WBI_A01T_TRAINING_ONLY_PILOT_V09_RESULT.md) now reproduces **43/96** held-out within-day predictions; this does **not** satisfy the different-day E-session, matched-coverage drift-gate or idle-state acceptance criteria.
 
 Primary comparison:
 1. conventional decoder,
