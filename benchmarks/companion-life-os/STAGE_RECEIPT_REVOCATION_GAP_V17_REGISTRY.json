@@ -1,0 +1,41 @@
+{
+  "schema": "portfolio.experiment.v1",
+  "experiment": "companion-stage-receipt-revocation-gap-v1.7",
+  "date": "2026-10-29",
+  "status": "awaiting-hosted-execution",
+  "project": "Companion Intelligence",
+  "maturity": "In Progress; implementation private",
+  "fixture": "fictional public scenario.json",
+  "test_only_keys": true,
+  "source_refs": {
+    "atomic_revocation_delivery_v14.py": "46c194432d4d620e6929d84da5dd7bf468e0a7b0",
+    "revocable_signed_boundary_v11.py": "1872e89ab44b7ee411c36712561b01d61cfa6916",
+    "fictional_outbox_v07.py": "fb5e3bdbace00236a562fa1af705189606f35624",
+    "authorization_store_v03.py": "910374f1d643d45199c961c48bed29b6f2fd265f"
+  },
+  "run_conditions": {
+    "python": "3.13 requested",
+    "operating_system": "TBD",
+    "runner_image": "TBD",
+    "sqlite_version": "TBD",
+    "journal_mode": "TBD",
+    "git_head": "TBD"
+  },
+  "expected_tests": 4,
+  "observed_tests": "TBD",
+  "expected_negative_control": "receipt committed before revocation persists despite rejected stage; legacy fake sink can consume it",
+  "observed_negative_control": "TBD",
+  "external_actions": 0,
+  "raw_private_data": false,
+  "independent_review": "TBD",
+  "stage_change": false,
+  "release": false,
+  "unknowns": [
+    "hosted test results",
+    "real consent",
+    "production key custody",
+    "isolated storage",
+    "all-entry-point denial",
+    "external connector behavior"
+  ]
+}
