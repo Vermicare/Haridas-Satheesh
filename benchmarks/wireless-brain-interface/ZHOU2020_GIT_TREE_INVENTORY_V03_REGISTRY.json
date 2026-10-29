@@ -414,7 +414,7 @@
     "The source's separate 33534 versus 33600 event discrepancy remains unresolved; event TSV row counts (filenames paired, contents not opened) were not inspected.",
     "Git blob identifiers are not independently publisher-signed source checksums. The upstream manifest lists SHA-256 digests but original NPZ bytes were not reacquired or hashed.",
     "No actual EEG signals, held-out labels or subject-level outcomes were opened.",
-    "The two hosted metadata-only artifact ZIPs were not independently compared byte-for-byte; GitHub job logs and artifact metadata were inspected."
+    "Final hosted artifact JSON members were independently compared byte-for-byte and matched; ZIP containers themselves differed. This does not validate original EEG recordings or event rows."
   ],
   "next_experiment": "Preregister a sample of original NPZ source files and missingness/session split rules; independently hash sampled NPZ bytes against upstream manifest, reconcile event-row provenance without held-out-label leakage, then evaluate confidence-only vs drift-aware authorization at matched coverage.",
   "maturity_advanced": false,
@@ -451,12 +451,25 @@
     "ubuntu_artifact_id": 12926339862,
     "windows_artifact_id": 12927936844,
     "artifact_expiry_date_utc": "2026-11-12",
-    "artifacts_byte_compared": false,
+    "artifacts_byte_compared": true,
     "logs_independently_inspected": true,
     "frozen_synthetic_evaluator_csv_sha256": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a",
     "raw_npz_bytes_verified": false,
     "event_rows_inspected": false,
     "held_out_labels_accessed": false,
-    "maturity_advanced": false
+    "maturity_advanced": false,
+    "final_head_run_id": 40942469373,
+    "final_head_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40942469373",
+    "final_head_commit": "0f6930de2c252e579cea0854d0c8c7da1b5fbaed",
+    "final_head_conclusion": "success_on_ubuntu_and_windows",
+    "final_head_logs_independently_inspected": true,
+    "final_ubuntu_artifact_id": 12927687433,
+    "final_windows_artifact_id": 12928241073,
+    "final_artifact_json_bytes_per_os": 36296,
+    "final_artifact_json_sha256": "b326896401b3bd22605dbc8187a47d34997d02e2e950190b65091552fe01e897",
+    "final_json_member_byte_identical_across_os": true,
+    "final_zip_container_byte_identical_across_os": false,
+    "final_artifacts_independently_downloaded_and_inspected": true,
+    "initial_raw_json_line_endings": "Ubuntu LF, Windows CRLF; LF-normalized JSON members identical; 2091 CRLF sequences in initial Windows member"
   }
 }
