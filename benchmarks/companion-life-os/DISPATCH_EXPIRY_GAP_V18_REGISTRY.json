@@ -1,0 +1,36 @@
+{
+  "schema": "companion-dispatch-expiry-gap-v1.8-registry",
+  "created_utc_date": "2026-10-29",
+  "project": "Companion Intelligence / fictional authorization",
+  "maturity": "In Progress / synthetic governance only, unchanged",
+  "test_path": "benchmarks/companion-life-os/test_dispatch_expiry_gap_v18.py",
+  "demo_path": "benchmarks/companion-life-os/demo_dispatch_expiry_gap_v18.py",
+  "protocol_path": "benchmarks/companion-life-os/DISPATCH_EXPIRY_GAP_V18.md",
+  "baseline_code": "benchmarks/companion-life-os/atomic_revocation_delivery_v14.py",
+  "scenario": "benchmarks/companion-life-os/scenario.json, adjusted by test_revocable_signed_boundary_v11.fixture",
+  "clock": "test-harness supplied at staging; absent at dispatch",
+  "fixture_issued_at": "2026-10-01T10:00:00Z",
+  "fixture_expires_at": "2026-10-01T11:00:00Z",
+  "fixture_staging_now": "2026-10-01T10:30:00Z",
+  "source_origin": "public repository, fictional synthetic fixture",
+  "real_external_actions": 0,
+  "test_count_expected": 4,
+  "local_execution": "TBD",
+  "hosted_execution": "TBD",
+  "python_version": "TBD",
+  "operating_system": "TBD",
+  "sha256_artifact": "TBD",
+  "human_identity_verified": false,
+  "real_clock_verified": false,
+  "actual_external_connector": false,
+  "result_interpretation": "negative control: dispatch API lacks expiry-time input; does not establish real elapsed-time behavior",
+  "known_remaining_bypasses": [
+    "legacy outbox dispatch",
+    "legacy direct database writes"
+  ],
+  "next_experiment": "isolate effect boundary and enforce grant expiry and revocation with trusted time at actual dispatch; retain old bypass negative controls",
+  "references": [
+    "https://www.rfc-editor.org/rfc/rfc9068.html#section-4",
+    "https://github.com/Vermicare/Haridas-Satheesh/issues/11"
+  ]
+}
