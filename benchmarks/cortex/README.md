@@ -1,7 +1,7 @@
 # CORTEX Synthetic Governance Benchmark
 
 **Project stage:** Architecture / R&D  
-**Benchmark status:** Executable synthetic harness committed — verified results are TBD
+**Benchmark status:** Frozen synthetic baseline and adversarial source-span checks are executable and independently verified in draft research work; **blinded human review, unseen semantic accuracy and correction burden remain TBD**
 
 ## Purpose
 
@@ -76,6 +76,10 @@ Simplify or reframe the structured-memory approach if false positives, unsupport
 
 ## Next evidence gate
 
-Run the committed `fixture.json` → `baseline.py` → `evaluator.py` pipeline twice in a clean environment. Preserve candidate and scored machine-readable outputs, runtime/dependency information, source commit SHA and output hashes. Require identical deterministic outputs and passing negative-case, source-span and reversal-lineage checks. Results remain **TBD** until produced by the evaluator.
+The original frozen fixture's **seven** baseline objects have exact source-span matches under the additive strict audit, but this is an **author-created, fixture-specific** result, not evidence of general extraction quality. The frozen scorer's nonempty-subset source-credit limitation is already demonstrated by [the existing v0.1 strict source-span negative control](source_span_completeness_v01.py), while [the v0.2 gold-denominator gate](source_span_gold_coverage_v02.py) detects omitted gold records and duplicate predictions. Do **not** mistake a perfect matched-only score for complete recall. The original scorer is preserved unchanged.
 
-After reproducibility is verified, add a genuinely different distribution-shift fixture rather than tuning against the frozen fixture. Passing the synthetic harness alone does **not** advance CORTEX beyond **Architecture / R&D**.
+[Draft PR #4](https://github.com/Vermicare/Haridas-Satheesh/pull/4) includes the [v0.4 exact-disagreement triage](https://github.com/Vermicare/Haridas-Satheesh/blob/research/cortex-fixture-integrity-v04-20261023/benchmarks/cortex/REVIEWER_PAIR_EXACT_DISAGREEMENT_V04.md), with [201/201 tests per operating system in verified hosted CI](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40738549357). These are **fictional software contract tests**; they do not establish independent reviewer agreement or semantic accuracy. Source-span completeness and archive-reference checks are not substitutes for verifying historical predecessor authenticity.
+
+**Next evidence gate:** obtain two genuinely independent, voluntary blinded annotations of the already frozen fictional meeting and archive, privately preserve adjudication and timing, and compare the measured correction burden with manual structured notes. Freeze scoring/matching rules and provenance before viewing outcomes. If reviewers are unavailable, leave all human outcomes `TBD` and do not claim external review. A separate unseen distribution-shift fixture should be scored without tuning against its labels.
+
+Passing synthetic contracts alone does **not** advance CORTEX beyond **Architecture / R&D**.
