@@ -96,7 +96,7 @@ def fetch_e_bytes():
 
 def check_frozen_training_blob():
     source = Path(__file__).with_name('bnci_a01t_training_run_pilot_v09.py').read_bytes()
-    digest = hashlib.sha1(b'blob ' + str(len(source)).encode() + b'\\0' + source).hexdigest()
+    digest = hashlib.sha1(b'blob ' + str(len(source)).encode() + bytes([0]) + source).hexdigest()
     require(digest == FROZEN_T_SOURCE_BLOB, 'frozen T implementation changed')
     return digest
 
@@ -283,7 +283,7 @@ def main():
     report = run()
     with args.output.open('x', encoding='utf-8') as f:
         json.dump(report, f, sort_keys=True, indent=2, allow_nan=False)
-        f.write('\\n')
+        f.write(chr(10))
     print(json.dumps({
         'E_sha256': report['source_E_sha256_observed_not_publisher_signed'],
         'E_bytes': report['source_E_bytes'],
