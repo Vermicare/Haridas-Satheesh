@@ -1,0 +1,84 @@
+{
+  "schema": "retail-lt-v24-bounds-registry",
+  "date": "2026-10-29",
+  "project": "Retail Demand Intelligence",
+  "maturity": "Research / Architecture unchanged",
+  "analysis": "POST_HOC_ALREADY_PUBLIC_2025_LABELS_NOT_CONFIRMATORY",
+  "code": "benchmarks/retail-demand/observable_baseline/freshretail_lt_stockout_bounds_v24.py",
+  "code_blob": "6e74e1eba4acb1ab81b48bcd35e705c54ae29ef9",
+  "tests_blob": "1d141d62f9a3281a3ad8b08c4547f6789084385d",
+  "workflow_blob": "876669a3a179e170d2d005957e76c5c03acb976f",
+  "code_bearing_commit": "85f29aa7c5997b6e1df35b60f3e8339cd6cd7848",
+  "ci": {
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40830505831",
+    "conclusion": "success",
+    "ubuntu_v24_fictional_tests": "12/12",
+    "windows_v24_fictional_tests": "12/12",
+    "ubuntu_v23_fictional_tests": "12/12",
+    "windows_v23_fictional_tests": "12/12",
+    "publisher_data_runs": 1,
+    "publisher_scoring_os": "Ubuntu",
+    "python": "3.13.17",
+    "pyarrow": "20.0.0",
+    "runner_image_revision": "TBD"
+  },
+  "source": {
+    "publisher": "Dingdong-Inc/FreshRetailNet-LT",
+    "revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "train_sha256": "e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3",
+    "eval_sha256": "370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626",
+    "cohort_sha256": "dc128d3bed90035214c80529bf58e685ad7d49c717d95bd10c30c2b9407ca016",
+    "predictions_sha256": "5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20",
+    "publisher_authenticity_independently_attested": false
+  },
+  "denominators": {
+    "selected_series": 512,
+    "total_days": 3584,
+    "observed_in_stock_days": 1766,
+    "stockout_censored_days": 1818
+  },
+  "paired_day_weighted_mae_delta_A_minus_B": {
+    "causal_stockout_history": {
+      "observed_only": -0.009671291053227624,
+      "full_period_logical_lower": -0.11809640066964286,
+      "full_period_logical_upper": 0.1085654296875,
+      "ranking": "NOT_IDENTIFIED"
+    },
+    "last_observed": {
+      "observed_only": -0.08064779161947903,
+      "full_period_logical_lower": -0.4150673828125,
+      "full_period_logical_upper": 0.33558970424107143,
+      "ranking": "NOT_IDENTIFIED"
+    }
+  },
+  "assumptions": [
+    "nonnegative demand on censored days",
+    "nonnegative forecasts",
+    "no global demand cap",
+    "no cross-day constraints",
+    "paired same-day target"
+  ],
+  "uncertainty_type": "sharp logical identification bounds; NOT statistical confidence intervals",
+  "artifact": {
+    "id": 12878772004,
+    "zip_sha256": "e8e98521df2a4e2174cdb60a2824f635fbaf8f5e37da2d09ef12866f7a6d0180",
+    "member": "retail_v24_aggregate.json",
+    "member_sha256": "e13f7e44434523000aa0b40121a7b5aff27d6154f34678c75105ad9d16448c95",
+    "independently_downloaded_and_inspected": true
+  },
+  "historical": {
+    "v21_primary": "PASSED_UNCHANGED_OBSERVED_ONLY",
+    "v22_secondary": "INCONCLUSIVE_UNCHANGED",
+    "v15_2024": "FAILED_UNCHANGED"
+  },
+  "unknowns": {
+    "latent_demand": "UNAVAILABLE",
+    "independent_external_review": "TBD",
+    "inventory_decision_value": "TBD",
+    "independent_publisher_validation": "TBD",
+    "statistical_sampling_uncertainty": "TBD"
+  },
+  "privacy": "aggregate-only; no raw rows, per-series IDs, predictions or residuals uploaded",
+  "release": "none",
+  "maturity_change": "NONE"
+}
