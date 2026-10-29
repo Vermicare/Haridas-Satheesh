@@ -406,16 +406,17 @@
     "python_version": "CPython 3.13.5",
     "fictional_unittest_tests_passed": 10,
     "upstream_python_live_execution": false,
-    "hosted_cross_platform_execution": "TBD"
+    "hosted_cross_platform_execution": "PASS: GitHub Actions #40942169065 on Ubuntu and Windows; see hosted_reproduction (local network execution still false)"
   },
   "limitations": [
     "Tree filenames and counts are not proof of signal integrity, trial counts, physical brain-interface performance, or held-out EEG decoding.",
     "The 833 versus 840 discrepancy is a net count: sessions with extra run files coexist with sessions having fewer; do not label exactly seven individual recordings as missing.",
     "The source's separate 33534 versus 33600 event discrepancy remains unresolved; event TSV row counts (filenames paired, contents not opened) were not inspected.",
     "Git blob identifiers are not independently publisher-signed source checksums. The upstream manifest lists SHA-256 digests but original NPZ bytes were not reacquired or hashed.",
-    "No actual EEG signals, held-out labels or subject-level outcomes were opened."
+    "No actual EEG signals, held-out labels or subject-level outcomes were opened.",
+    "The two hosted metadata-only artifact ZIPs were not independently compared byte-for-byte; GitHub job logs and artifact metadata were inspected."
   ],
-  "next_experiment": "Execute published Python tree inventory against pinned upstream Git API; independently verify a predeclared sample of NPZ SHA-256 digests and reconcile per-run event TSV rows and 33,534 versus 33,600 events before freezing longitudinal split.",
+  "next_experiment": "Preregister a sample of original NPZ source files and missingness/session split rules; independently hash sampled NPZ bytes against upstream manifest, reconcile event-row provenance without held-out-label leakage, then evaluate confidence-only vs drift-aware authorization at matched coverage.",
   "maturity_advanced": false,
   "upstream_source_manifest": {
     "path": "sourcedata/sourcedata_provenance.json",
@@ -430,5 +431,32 @@
     "per_subject_session_npz_count_matrix_matches_bids_metadata": true,
     "source_recording_count_reconciled_to_bids_metadata": true,
     "source_manifest_publisher_signed": false
+  },
+  "hosted_reproduction": {
+    "workflow_run_id": 40942169065,
+    "workflow_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40942169065",
+    "research_commit": "f660b8a3f2db6fd9e55d20ef9df054dba44ea0fc",
+    "execution_date_utc": "2026-10-29",
+    "operating_systems": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "final_status": "success",
+    "pinned_python_inventory_executed_against_live_public_git_api_on_both_os": true,
+    "fictional_regression_tests_passed_per_os": 10,
+    "observed_subjects_per_os": 20,
+    "observed_session_directories_per_os": 139,
+    "paired_metadata_runs_per_os": 833,
+    "absent_session_per_os": "sub-20/ses-6",
+    "ubuntu_artifact_id": 12926339862,
+    "windows_artifact_id": 12927936844,
+    "artifact_expiry_date_utc": "2026-11-12",
+    "artifacts_byte_compared": false,
+    "logs_independently_inspected": true,
+    "frozen_synthetic_evaluator_csv_sha256": "65695ce77a098e751778c3de5988fc3944bbc77ccaa53228ced858f46aaa8d5a",
+    "raw_npz_bytes_verified": false,
+    "event_rows_inspected": false,
+    "held_out_labels_accessed": false,
+    "maturity_advanced": false
   }
 }
