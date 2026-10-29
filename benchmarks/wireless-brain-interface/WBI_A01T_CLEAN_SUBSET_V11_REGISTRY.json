@@ -1,0 +1,135 @@
+{
+  "schema": "wbi-a01t-clean-subset-sensitivity-evidence-v1.1",
+  "date_utc": "2026-10-29",
+  "status": "two independently executed hosted attempts passed; post-hoc descriptive, not confirmatory",
+  "maturity": "Research / Simulation (unchanged)",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/wbi-independent-repro-20261026",
+  "code_bearing_commit": "8b4ac05c71766f3dfb9d1fa7e0f7e11e1df0bb90",
+  "pre_execution_protocol_commit": "a44bd7f08a9a150fd49d17954f354ef8761c9693",
+  "git_blob_sha1": {
+    "scorer": "6d98108bedf35a7dfd157fe3ab352ffa5cc7fe84",
+    "fictional_tests": "b414909c5d9563c722585137b4e4c6da44769c9b",
+    "workflow": "6b9b39ba0c2732b57384073b8cee8c64340c5334"
+  },
+  "original_frozen_synthetic_evaluator_git_blob_sha1": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+  "source": {
+    "dataset": "BNCI2014_001",
+    "file": "A01T.mat",
+    "bytes": 42806453,
+    "observed_sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325",
+    "publisher_signed": false,
+    "raw_eeg_uploaded": false,
+    "session_E_accessed": false
+  },
+  "method": {
+    "train_runs": [
+      1,
+      2,
+      3
+    ],
+    "calibration_runs": [
+      4
+    ],
+    "within_day_heldout_runs": [
+      5,
+      6
+    ],
+    "frozen_model": "v0.9 train-only StandardScaler + four-class LogisticRegression",
+    "thresholds": "v0.9 calibration-only 30%, 50%, 70% targets; no tuning on heldout labels",
+    "artifact_flags": "v1.0 source annotations; subset defined after v0.9 results public",
+    "post_hoc": true
+  },
+  "runtime": {
+    "python": "3.13.17",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "scikit_learn": "1.7.2",
+    "runner": "GitHub-hosted ubuntu-latest; exact image TBD",
+    "local_python": "3.13.5",
+    "local_numpy": "2.3.5",
+    "local_fictional_tests": "14/14 passed",
+    "hosted_ubuntu_fictional_tests": "14/14 passed each attempt",
+    "hosted_windows_fictional_tests": "14/14 passed each attempt"
+  },
+  "hosted_run": {
+    "id": 40813817810,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40813817810",
+    "attempts": 2,
+    "conclusion": "success",
+    "code_bearing_commit": "8b4ac05c71766f3dfb9d1fa7e0f7e11e1df0bb90"
+  },
+  "aggregate_results": {
+    "all_trials": {
+      "correct": 43,
+      "n": 96,
+      "accuracy": 0.4479166666666667
+    },
+    "source_unflagged": {
+      "correct": 42,
+      "n": 91,
+      "accuracy": 0.46153846153846156
+    },
+    "source_flagged": {
+      "correct": 1,
+      "n": 5
+    },
+    "confidence_only": {
+      "0.30": {
+        "all_acted": 19,
+        "all_incorrect": 6,
+        "clean_acted": 19,
+        "clean_incorrect": 6,
+        "clean_incorrect_risk": 0.3157894736842105
+      },
+      "0.50": {
+        "all_acted": 38,
+        "all_incorrect": 15,
+        "clean_acted": 37,
+        "clean_incorrect": 15,
+        "clean_incorrect_risk": 0.40540540540540543
+      },
+      "0.70": {
+        "all_acted": 55,
+        "all_incorrect": 24,
+        "clean_acted": 53,
+        "clean_incorrect": 23,
+        "clean_incorrect_risk": 0.4339622641509434
+      }
+    }
+  },
+  "archives": [
+    {
+      "attempt": 1,
+      "artifact_id": 12871836222,
+      "zip_sha256": "a15676a595c0f097a7f0b787fd7f77cae436a7f4f014d43ae6e978f227e251d2",
+      "inner_json_sha256": "5231abfc0cda8191e4ebefc5439d8ff05293993958ecec99b6cc28fa50973e99",
+      "members": [
+        "wbi_a01t_clean_subset_v11_aggregate.json"
+      ],
+      "independently_inspected": true
+    },
+    {
+      "attempt": 2,
+      "artifact_id": 12871154131,
+      "zip_sha256": "da8edd358d1c58c2844485e5761ed8f7c163bb6b2776afa582220c3239b1a23e",
+      "inner_json_sha256": "0b96fae725731d8b69c8b6f9188efe887e6370db26703cb589e4c6ac88308ee7",
+      "members": [
+        "wbi_a01t_clean_subset_v11_aggregate.json"
+      ],
+      "independently_inspected": true
+    }
+  ],
+  "comparison": "Both independent hosted attempts reproduced all integer counts and substantive rates; UTC and floating thresholds differed at approximately 1e-14; no byte-identity claim.",
+  "limitations": {
+    "different_day_EEG": "TBD",
+    "nine_subject_replication": "TBD",
+    "drift_gate_matched_coverage_benefit": "TBD",
+    "artifact_annotations_not_ground_truth": true,
+    "source_flag_causality": "not established",
+    "clinical_or_real_world_safety": false,
+    "patentability": "not assessed",
+    "independent_human_review": "TBD"
+  },
+  "decision": "No stage advancement; retain v0.9 43/96 primary and v1.0 38/91..43/91 identification bounds unchanged. Excluding flagged trials yields 42/91 descriptive accuracy, but at calibration-50% threshold incorrect-action risk is 15/37, slightly higher than all-trial 15/38. Next different-day nine-subject matched-coverage drift comparison."
+}
