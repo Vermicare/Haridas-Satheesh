@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "experiment": "SCD40 UTC/monotonic concordance v3",
+  "date": "2026-10-29",
+  "stage": "Prototype / Documented R&D (unchanged)",
+  "evidence_type": "fictional software-only regression",
+  "source": {
+    "path": "benchmarks/adaptive-cooling/scd40_clock_concordance_v3.py",
+    "git_blob_sha1": "6c617905b50f0825d81021d6ab7151d547ead3a1",
+    "sha256": "c224533039e16d551aa7fd583b3b2f9946ffbd6edb338f61f9dc14be1c2b1547"
+  },
+  "tests": {
+    "path": "benchmarks/adaptive-cooling/test_scd40_clock_concordance_v3.py",
+    "git_blob_sha1": "3e2e08f07e1d5d18e08593a4f08741f1b62b2a08",
+    "sha256": "f80103f26946fa5e40d10dc4c61d9b9ea1715242dbcf54b9f3d0bf245326195e"
+  },
+  "execution": {
+    "environment": "local Linux x86_64, CPython 3.13.5",
+    "command": "python -B -m unittest -v test_scd40_clock_concordance_v3.py",
+    "passed": 7,
+    "total": 7,
+    "physical_sensor_connected": false,
+    "elapsed_real_600_seconds": false,
+    "hosted_cross_platform": "TBD"
+  },
+  "negative_controls": [
+    "frozen UTC over declared 600 seconds -> review flag",
+    "UTC backward jump -> review flag",
+    "UTC forward jump -> review flag",
+    "incorrect pre-pinned digest -> reject",
+    "non-increasing declared monotonic time -> reject"
+  ],
+  "limitations": [
+    "clock concordance does not authenticate hardware or actual elapsed time",
+    "UTC jumps may be legitimate NTP corrections",
+    "default 10-second diagnostic tolerance is provisional, not calibration or pass criterion",
+    "v2 structural verification must be run separately",
+    "no thermal/energy or comfort measurements"
+  ],
+  "unknowns": {
+    "actual_sensor_capture": "TBD",
+    "independent_wall_clock": "TBD",
+    "temperature_reference": "TBD",
+    "airflow": "TBD",
+    "energy": "TBD",
+    "hosted_ci": "TBD"
+  },
+  "next_gate": "independently pinned real Raspberry Pi + SCD40 >=600-second capture, v2 and v3 diagnostics, separate reference instruments and balanced controlled comparisons"
+}
