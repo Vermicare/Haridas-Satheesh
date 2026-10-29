@@ -20,7 +20,7 @@ Sum all per-day minima and maxima and divide by the **same full-period day count
 
 [Executable with embedded 12-test contract suite](stockout_identification_bounds_v23.py) accepts strict JSON with `schema`, `cap` (null for no cap), and `rows` of opaque unique keys, nonnegative forecasts `a` and `b`, `observed` boolean and `y` **only when observed**. It rejects duplicate keys, NaN, infinities, impossible caps and any supplied censored outcome. It emits aggregate counts and bounds only, never keys, row-level forecasts or outcomes.
 
-A deliberately fictional three-day example has one observed day (`a=1,b=2,y=1`) and two censored days (`a=1,b=2,y=unknown`). Observed-only paired error difference is **-1** (A appears better); full-period difference can be **[-1, +1/3]**, allowing either model to win depending on unknown outcomes. The program must report **undetermined**, not infer a lost-demand advantage. A zero-act denominator yields null, not a fabricated zero risk.
+A deliberately fictional three-day example has one observed day (`a=1,b=2,y=1`) and two censored days (`a=1,b=2,y=unknown`). Observed-only paired error difference is **-1** (A appears better); full-period difference can be **[-1, +1/3]**, allowing either model to win depending on unknown outcomes. The program must report **undetermined**, not infer a lost-demand advantage.
 
 Reproduce from this directory, Python 3.13 standard library only:
 
@@ -29,7 +29,7 @@ python -B stockout_identification_bounds_v23.py selftest
 python -B stockout_identification_bounds_v23.py score /private/fictional_input.json /private/NEW_aggregate.json
 ```
 
-The second command requires a deliberately prepared input file and refuses to overwrite its output. Use only public/fictional data; never commit private rows or private input digests. The [cross-platform fictional workflow](../../.github/workflows/retail-stockout-bounds-v23.yml) runs the embedded tests and a disposable aggregate-only CLI example without downloading publisher labels.
+The second command requires a deliberately prepared input file and refuses to overwrite its output. Use only public/fictional data; never commit private rows or private input digests. The [cross-platform fictional workflow](../../../.github/workflows/retail-stockout-bounds-v23.yml) runs the embedded tests and a disposable aggregate-only CLI example without downloading publisher labels.
 
 ## Provenance, limits, and decision
 
