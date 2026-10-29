@@ -1,0 +1,100 @@
+{
+  "schema": "wbi-a01e-cross-day-exploratory-evidence-registry-v1.2",
+  "verified_on_utc_date": "2026-10-29",
+  "project": "Wireless Brain Interface",
+  "maturity": "Research / Simulation",
+  "stage_advanced": false,
+  "evidence_type": "exploratory public EEG, single subject, different-day confidence-only baseline",
+  "protocol": "benchmarks/wireless-brain-interface/WBI_A01E_DIFFERENT_DAY_BASELINE_V12.md",
+  "research_branch": "research/wbi-independent-repro-20261026",
+  "final_tested_code_head": "185f4c762f2f6e6476a5eadfe7371eb6657d4010",
+  "source_code_git_blob": "2a5472981edd04f783aee95cb7cb9c76150ddb9e",
+  "test_code_git_blob": "0ca3cfc2ed948c2d739c8a3ef28c18ceca4053d1",
+  "frozen_training_code_git_blob": "9293fdeff26b621e966da2cd76ab2da1e3220e7f",
+  "unchanged_main_synthetic_evaluator_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+  "dataset": {
+    "name": "BNCI2014_001 A01",
+    "training_session": "A01T",
+    "different_day_session": "A01E",
+    "training_sha256": "054f02e70cf9c4ada1517e9b9864f45407939c1062c6793516585c6f511d0325",
+    "evaluation_sha256_observed_not_publisher_signed": "53d415f39c3d7b0c88b894d7b08d99bcdfe855ede63831d3691af1a45607fb62",
+    "evaluation_bytes": 43772146,
+    "source_artifact_flagged_n": 7,
+    "training_trials": 144,
+    "calibration_trials": 48,
+    "evaluation_trials": 288
+  },
+  "environment": {
+    "hosted_scoring_os": "Ubuntu 24.04.5",
+    "python": "3.13.17",
+    "numpy": "2.3.3",
+    "scipy": "1.16.2",
+    "scikit_learn": "1.7.2",
+    "frozen_hyperparameters": "See preregistered v1.2 protocol"
+  },
+  "results": {
+    "correct_n": 165,
+    "total_n": 288,
+    "accuracy": 0.5729166666666666,
+    "balanced_accuracy": 0.5729166666666666,
+    "brier_sum_squares_approx": 0.5572808992,
+    "ece_10bin_approx": 0.0950105223,
+    "confidence_only_calibration_targets": {
+      "0.30": {
+        "acted": 59,
+        "incorrect": 20
+      },
+      "0.50": {
+        "acted": 136,
+        "incorrect": 47
+      },
+      "0.70": {
+        "acted": 194,
+        "incorrect": 76
+      }
+    },
+    "original_within_day_A01T": {
+      "correct": 43,
+      "total": 96
+    }
+  },
+  "final_hosted_verification": {
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40844636524",
+    "ubuntu_fictional_tests": {
+      "passed": 21,
+      "total": 21
+    },
+    "windows_fictional_tests": {
+      "passed": 21,
+      "total": 21
+    },
+    "public_evaluation_job": "success",
+    "job_logs_inspected": true,
+    "artifact_id": 12884695734,
+    "artifact_zip_sha256_reported_by_github": "90644202fea033a686e7b874b29b413ffc45d9096f068883e5000d5eba3636b0",
+    "artifact_zip_contents_independently_inspected": false
+  },
+  "additional_reproductions": [
+    "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40844154710",
+    "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40844371552",
+    "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40844601085",
+    "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40844614171"
+  ],
+  "limitations": {
+    "prediction_hash_byte_identical_across_runs": false,
+    "prelabel_prediction_seal_independently_timestamped": false,
+    "source_hash_publisher_signed": false,
+    "real_EEG_used": true,
+    "subjects_tested": 1,
+    "drift_aware_gate_evaluated": false,
+    "matched_coverage_safety_advantage": "TBD",
+    "rest_state_false_actions": "TBD",
+    "nine_subject_replication": "TBD",
+    "clinical_safety": "not established",
+    "hardware_validation": "TBD",
+    "external_review": "TBD"
+  },
+  "next_experiment": "Preregister nine-subject different-day matched-coverage confidence-vs-drift evaluation and independently seal predictions before label access",
+  "privacy": "aggregate only; no raw EEG, per-trial labels or probabilities published",
+  "release_or_merge": false
+}
