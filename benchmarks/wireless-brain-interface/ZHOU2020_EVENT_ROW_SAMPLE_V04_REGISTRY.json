@@ -1,0 +1,58 @@
+{
+  "schema": "ZHOU2020_EVENT_ROW_SAMPLE_V04",
+  "date": "2026-10-30",
+  "stage": "Research / Simulation",
+  "maturity_advanced": false,
+  "upstream": {
+    "repository": "https://github.com/nemarDatasets/nm000237",
+    "ref": "a291ed8a2afab3f93b85a540134dceb98092fcaf",
+    "dataset_version": "1.1.0",
+    "source_manifest_git_blob_sha1": "c80403a970eb2c064e74daf50dbb08115e8299ff",
+    "publisher_signed": false
+  },
+  "sample_selection": "three illustrative files chosen after the prior structural audit; nonrandom, not a full-cohort estimate",
+  "samples": [
+    {
+      "path": "sub-1/ses-0/eeg/sub-1_ses-0_task-imagery_run-0_events.tsv",
+      "git_blob_sha1": "0997cba4376368265a05a10f6958218dee6fb0f5",
+      "event_rows": 40
+    },
+    {
+      "path": "sub-20/ses-0/eeg/sub-20_ses-0_task-imagery_run-0_events.tsv",
+      "git_blob_sha1": "de1390ba9e0a19c678dffe638dbb32e708029be0",
+      "event_rows": 80
+    },
+    {
+      "path": "sub-20/ses-5/eeg/sub-20_ses-5_task-imagery_run-7_events.tsv",
+      "git_blob_sha1": "e184dfdf8454a1fde7da15e369fe459ed3e25de9",
+      "event_rows": 40
+    }
+  ],
+  "event_rows_in_sample": 160,
+  "naive_40_per_run_prediction": 120,
+  "original_833_recording_manifest_entries": 833,
+  "nominal_recordings": 840,
+  "publisher_aggregate_events": 33534,
+  "nominal_events": 33600,
+  "source_evidence": "Connected GitHub reader fetched three exact pinned public TSV files and independently counted newline-delimited event rows, comparing Git blob identifiers; executable CI pending",
+  "tests": {
+    "fictional_negative_controls_defined": 13,
+    "local_python_execution": "TBD",
+    "hosted_ubuntu": "TBD",
+    "hosted_windows": "TBD",
+    "workflow_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40951600999"
+  },
+  "boundaries": {
+    "eeg_signals_read": false,
+    "model_decoding_run": false,
+    "full_event_rows_counted": false,
+    "original_npz_bytes_verified": false,
+    "trial_type_values_parsed_by_executable": false,
+    "exploratory_human_preview_exposed_trial_type_values": true,
+    "prospective_label_blind_preregistration": false
+  },
+  "strongest_evidence": "three pinned source event TSVs have observed row counts 40, 80, 40; a universal 40-events-per-run assumption is false",
+  "largest_gap": "full 833-file event row denominator, original NPZ checksums, and prospective split/evaluation firewall",
+  "next_experiment": "Freeze a subject/session split and label-exposure disclosure before any new held-out EEG scoring; then audit event row counts across all pinned metadata without using trial labels for model choices, and verify sampled original NPZ checksums.",
+  "kill_reframe": "If source TSV hashes or row counts change, fail closed; if split leakage cannot be excluded, report exploratory only. No clinical or safety claim."
+}
