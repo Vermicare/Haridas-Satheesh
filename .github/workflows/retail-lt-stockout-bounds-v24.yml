@@ -6,11 +6,15 @@ on:
       - '.github/workflows/retail-lt-stockout-bounds-v24.yml'
       - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_stockout_bounds_v24.py'
       - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_stockout_bounds_v24.py'
+      - 'benchmarks/retail-demand/observable_baseline/retail_sales_floor_bounds_v25.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_retail_sales_floor_bounds_v25.py'
   pull_request:
     paths:
       - '.github/workflows/retail-lt-stockout-bounds-v24.yml'
       - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_stockout_bounds_v24.py'
       - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_stockout_bounds_v24.py'
+      - 'benchmarks/retail-demand/observable_baseline/retail_sales_floor_bounds_v25.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_retail_sales_floor_bounds_v25.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -32,6 +36,9 @@ jobs:
       - name: Test fictional partial-identification transfer and original bounds engine
         working-directory: benchmarks/retail-demand/observable_baseline
         run: python -B -m unittest -v test_freshretail_lt_stockout_bounds_v24
+      - name: Conditional observed-sales floor v2.5 fictional and exhaustive-grid tests
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_retail_sales_floor_bounds_v25
       - name: Original v2.3 fictional bounds contract
         run: python -B benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py selftest
   pinned-public-2025-bounds:
