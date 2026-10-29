@@ -34,13 +34,30 @@
   "nominal_recordings": 840,
   "publisher_aggregate_events": 33534,
   "nominal_events": 33600,
-  "source_evidence": "Connected GitHub reader fetched three exact pinned public TSV files and independently counted newline-delimited event rows, comparing Git blob identifiers; executable CI pending",
+  "source_evidence": "Live pinned upstream GitHub reads plus independently inspected GitHub Actions #40951600999 job logs: 13/13 fictional tests on Ubuntu and Windows; each job fetched and Git-blob-verified three pinned TSVs, counting 40/80/40 rows. No original NPZ bytes or full event rows verified.",
   "tests": {
     "fictional_negative_controls_defined": 13,
     "local_python_execution": "TBD",
-    "hosted_ubuntu": "TBD",
-    "hosted_windows": "TBD",
-    "workflow_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40951600999"
+    "hosted_ubuntu": "PASS 13/13 tests; pinned three-file live check PASS",
+    "hosted_windows": "PASS 13/13 tests; pinned three-file live check PASS",
+    "workflow_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40951600999",
+    "job_ids": {
+      "ubuntu": 123720863582,
+      "windows": 123720863230
+    },
+    "artifacts": {
+      "ubuntu": {
+        "id": 12931797114,
+        "expires_at": "2026-11-12T20:43:49Z",
+        "zip_digest": "sha256:beb0a8691f21bca26cd0dd08e2483ca5d3c0d62b13f9bcecb04066e6c5c05dcb"
+      },
+      "windows": {
+        "id": 12929969757,
+        "expires_at": "2026-11-12T20:43:58Z",
+        "zip_digest": "sha256:9eba0830a525b5f3013e9540e48ddebf7cfa245c1b2b2c206f1bb232b8273ba1"
+      }
+    },
+    "artifact_member_bytes_independently_compared": false
   },
   "boundaries": {
     "eeg_signals_read": false,
