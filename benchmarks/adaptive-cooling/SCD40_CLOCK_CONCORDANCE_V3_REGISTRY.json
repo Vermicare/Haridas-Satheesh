@@ -21,7 +21,29 @@
     "total": 7,
     "physical_sensor_connected": false,
     "elapsed_real_600_seconds": false,
-    "hosted_cross_platform": "TBD"
+    "hosted_cross_platform": {
+      "status": "verified_software_only",
+      "date": "2026-10-29",
+      "run_id": 40851585060,
+      "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40851585060",
+      "source_head_sha": "64d4d1dc35234e2a0f98c3416a4a5eb8b82a356c",
+      "ubuntu": {
+        "python": "3.13.17",
+        "passed": 127,
+        "total": 127,
+        "job_id": 123372106445
+      },
+      "windows": {
+        "python": "3.13.16",
+        "passed": 127,
+        "total": 127,
+        "job_id": 123372106843
+      },
+      "new_clock_tests_per_os": "7/7",
+      "job_logs_inspected": true,
+      "canonical_lf_fictional_carryover_sha256": "a17e1ded6268fe8497347a6d14086e45230e2cfc7eee5fe8498dadd4c6064e31",
+      "hardware_observations": 0
+    }
   },
   "negative_controls": [
     "frozen UTC over declared 600 seconds -> review flag",
@@ -43,7 +65,7 @@
     "temperature_reference": "TBD",
     "airflow": "TBD",
     "energy": "TBD",
-    "hosted_ci": "TBD"
+    "hosted_ci": "verified fictional software tests only"
   },
   "next_gate": "independently pinned real Raspberry Pi + SCD40 >=600-second capture, v2 and v3 diagnostics, separate reference instruments and balanced controlled comparisons"
 }
