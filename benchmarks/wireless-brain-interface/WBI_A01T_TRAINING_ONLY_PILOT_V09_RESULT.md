@@ -48,3 +48,13 @@ Both aggregate ZIPs were independently downloaded, SHA-256 checked against GitHu
 **Next:** freeze and independently review a nine-subject, different-day E-session pipeline with held-out-label isolation, comparable coverage for confidence-only versus drift-aware gating, per-subject uncertainty and a separate defensible idle/rest protocol. Reframe the drift-specific contribution if it fails simpler confidence abstention at matched coverage. No clinical, therapeutic, patentability, human-actuation, employer or commercial claim.
 
 **Four-lens review:** hiring manager — executable real-data baseline and rerun; technical reviewer — one-subject within-day selection and no E-session firewall tested; innovation leader — no drift-gate differentiation; founder — no validated safety or product benefit.
+
+
+## Dataset-implementation cross-check (2026-10-29; changes next experiment)
+
+Two documented MOABB project discussions independently reinforce limitations relevant to this exact loader:
+
+- [MOABB issue #1073 — incorrect BNCI2014_001 stimulus illustration](https://github.com/NeuroTechX/moabb/issues/1073), closed 2026-05-20, points back to the publisher's **2-second fixation, 1.25-second cue and 4-second motor-imagery interval**. The pilot deliberately uses a 2.5–4.5-second post-trial-start window rather than copying an incorrect simplified diagram. This supports window provenance; it does **not** independently validate the MAT loader or classifier.
+- [MOABB issue #1102 — artifact-flag preservation](https://github.com/NeuroTechX/moabb/issues/1102), closed 2026-06-27, describes how MAT trial-level artifact flags can be lost in MOABB conversion. This pilot **predeclared retaining all 48 trials per task run**, with no artifact exclusion. Consequently its 43/96 result must **not** be compared as equivalent to studies silently rejecting flagged trials. Before the nine-subject E-session benchmark, freeze a primary all-trials analysis and a separately reported artifact-flag sensitivity analysis; record actual flag counts, exclusions, and class/run denominators. Never tune exclusion policy on held-out outcomes.
+
+These are source-backed **protocol decisions**, not claims of originality or proof of physiological robustness.
