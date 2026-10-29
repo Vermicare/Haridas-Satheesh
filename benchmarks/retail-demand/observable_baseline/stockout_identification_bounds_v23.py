@@ -144,9 +144,9 @@ class ContractTests(unittest.TestCase):
     def test_no_censor_exact(self):
         r = evaluate(self.doc([self.row(1,2,y=1),self.row(3,1,y=2,key="2")]))
         self.assertEqual((r["full_period_paired_mae_delta_lower"],r["full_period_paired_mae_delta_upper"]),(-0.5,-0.5))
-    def test_one_unknown_reverses_observed_winner(self):
-        r = evaluate(self.doc([self.row(1,2,y=1),self.row(1,2,key="2")]))
-        self.assertEqual((r["full_period_paired_mae_delta_lower"],r["full_period_paired_mae_delta_upper"]),(-1.0,0.0))
+    def test_two_unknowns_can_reverse_observed_winner(self):
+        r = evaluate(self.doc([self.row(1,2,y=1),self.row(1,2,key="2"),self.row(1,2,key="3")]))
+        self.assertEqual((r["full_period_paired_mae_delta_lower"],r["full_period_paired_mae_delta_upper"]),(-1.0,1.0/3.0))
         self.assertEqual(r["identification_decision"],"undetermined_including_ties")
     def test_censored_alone_is_undetermined(self):
         r = evaluate(self.doc([self.row(1,2)]))
