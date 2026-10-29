@@ -1,0 +1,53 @@
+name: Retail v2.3 stockout partial-identification gate (fictional)
+on:
+  push:
+    branches:
+      - research/retail-store-disjoint-v15-20261027
+    paths:
+      - '.github/workflows/retail-stockout-bounds-v23.yml'
+      - 'benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py'
+  pull_request:
+    paths:
+      - '.github/workflows/retail-stockout-bounds-v23.yml'
+      - 'benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-bounds:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify fictional contract tests only
+        run: python -B benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py selftest
+      - name: Verify deterministic private-safe aggregate CLI
+        shell: python
+        run: |
+          import json, subprocess, sys, tempfile
+          from pathlib import Path
+          with tempfile.TemporaryDirectory() as directory:
+              root = Path(directory)
+              input_path = root / 'fictional_input.json'
+              output_path = root / 'aggregate.json'
+              input_path.write_text(json.dumps({
+                  'schema':'retail-stockout-bounds-input-v1', 'cap':None,
+                  'rows':[{'key':'fictional-1','a':1,'b':2,'observed':True,'y':1},
+                          {'key':'fictional-2','a':1,'b':2,'observed':False}]
+              }),encoding='utf-8')
+              subprocess.run([sys.executable,'-B','benchmarks/retail-demand/observable_baseline/stockout_identification_bounds_v23.py','score',str(input_path),str(output_path)],check=True)
+              result=json.loads(output_path.read_text(encoding='utf-8'))
+              assert result['full_period_paired_mae_delta_lower']==-1.0
+              assert result['full_period_paired_mae_delta_upper']==0.0
+              assert result['identification_decision']=='undetermined_including_ties'
+              assert result['latent_demand_measured'] is False
+              print('fictional aggregate CLI: PASS; real data: NOT ACCESSED')
