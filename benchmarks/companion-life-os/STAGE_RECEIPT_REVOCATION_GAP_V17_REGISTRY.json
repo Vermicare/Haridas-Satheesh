@@ -2,7 +2,7 @@
   "schema": "portfolio.experiment.v1",
   "experiment": "companion-stage-receipt-revocation-gap-v1.7",
   "date": "2026-10-29",
-  "status": "awaiting-hosted-execution",
+  "status": "verified-hosted-cross-platform",
   "project": "Companion Intelligence",
   "maturity": "In Progress; implementation private",
   "fixture": "fictional public scenario.json",
@@ -15,27 +15,45 @@
   },
   "run_conditions": {
     "python": "3.13 requested",
-    "operating_system": "TBD",
+    "operating_system": "GitHub Actions ubuntu-latest and windows-latest",
     "runner_image": "TBD",
     "sqlite_version": "TBD",
     "journal_mode": "TBD",
-    "git_head": "TBD"
+    "git_head": "7fe77c4a79c24c25ec118bc16fcb6057b1c6239c"
   },
   "expected_tests": 4,
-  "observed_tests": "TBD",
+  "observed_tests": {
+    "ubuntu_full_suite": 135,
+    "windows_full_suite": 135,
+    "v17_tests_each_os": 4,
+    "ubuntu_demo": true,
+    "windows_demo": true
+  },
   "expected_negative_control": "receipt committed before revocation persists despite rejected stage; legacy fake sink can consume it",
-  "observed_negative_control": "TBD",
+  "observed_negative_control": "confirmed on both OS: rejected stage retains earlier receipt; legacy fake outbox dispatches one fake sink row; zero external actions",
   "external_actions": 0,
   "raw_private_data": false,
   "independent_review": "TBD",
   "stage_change": false,
   "release": false,
   "unknowns": [
-    "hosted test results",
     "real consent",
     "production key custody",
     "isolated storage",
     "all-entry-point denial",
-    "external connector behavior"
-  ]
+    "external connector behavior",
+    "exact Python patch and runner image",
+    "artifact ZIP contents"
+  ],
+  "test_source_sha256_lf_normalized": "df6bb7bd2ef3df1ac2bc41e3cb8d52025ba8679a3545bdbe81e619d82a893a7c",
+  "ci": {
+    "run_id": 40802405846,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40802405846",
+    "conclusion": "success",
+    "ubuntu_job": 123213325875,
+    "windows_job": 123213326228,
+    "logs_inspected": true,
+    "artifact_uploads_succeeded": true,
+    "artifact_zip_bytes_independently_inspected": false
+  }
 }
