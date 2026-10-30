@@ -50,6 +50,7 @@ jobs:
         working-directory: benchmarks/cortex
         run: |
           python -B -m unittest -v test_cortex_prov_boundary_v05.py
+          python -B -m unittest -v test_cortex_in_memory_boundary_v06.py
           python -B cortex_prov_boundary_v05.py export blind_case_20261024.json blind_archive_20261024.json > cortex-prov-v05.ttl
           python -m pip install --disable-pip-version-check rdflib==7.5.0
           python -c "import hashlib,pathlib; from rdflib import Graph; p=pathlib.Path('cortex-prov-v05.ttl'); b=p.read_bytes().replace(b'\r\n',b'\n'); assert hashlib.sha256(b).hexdigest() == '7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0'; g=Graph(); g.parse(data=b.decode('utf-8'),format='turtle'); assert len(g)==14; assert not any(str(p).endswith(('wasRevisionOf','hadPrimarySource','wasInvalidatedBy')) for s,p,o in g); print('CORTEX_V05_VERIFIED: 14 triples, canonical SHA-256 pinned, forbidden PROV edges absent')"
