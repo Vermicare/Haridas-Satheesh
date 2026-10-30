@@ -1,6 +1,23 @@
 # Retail v2.6 — TRAIN-only daily/hourly numeric identity gate (2026-10-30)
 
-**Status: source-data execution PENDING.** This is a separately testable, additive consistency audit. No evaluation labels are read, no model retraining or performance comparison is made, and no project stage changes. The previous v2.5 conditional logical bounds and v1.5 negative superiority result remain intact.
+**Status: pinned TRAIN execution VERIFIED (Ubuntu); fictional controls VERIFIED (Ubuntu and Windows).** This is a separately testable, additive consistency audit. No evaluation labels are read, no model retraining or performance comparison is made, and no project stage changes. The previous v2.5 conditional logical bounds and v1.5 negative superiority result remain intact.
+
+
+## Independently inspected source-data result (2026-10-30)
+
+[GitHub Actions #41022154149](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41022154149), checkout `e7c3e12394a2610d0c6d77a425afdc457fd355a7`, completed **PASS**. Ubuntu and Windows each passed **12/12 fictional contract tests**, with both logs inspected. The publisher-TRAIN-only Ubuntu job downloaded the pinned 315,398,578-byte Parquet file and passed SHA-256 verification; its log reports the full 7,869,549-row scan and zero tolerance failures. The original 870-byte hosted ZIP artifact was independently downloaded, passed ZIP integrity checks and its sole JSON result was parsed and checked against the job log. ZIP SHA-256: `6b0186d8745a8d9c73920966ddba698de8d13f6e31a8ecc2c4f4e5043297ed46`.
+
+| Aggregate-only TRAIN result | Observed |
+|---|---:|
+| Rows examined | 7,869,549 |
+| Daily vs 24-hour-sum differences beyond frozen tolerance | **0** |
+| Maximum absolute difference | 1.4210854715202004e-14 |
+| Sum of absolute differences | 5.926595741945206e-10 |
+| Negative daily quantities | 0 |
+| Negative hourly quantities | 0 |
+| EVAL bytes opened / labels read | **No / No** |
+
+**Decision:** the pinned publisher TRAIN fields are **numerically consistent with daily = sum of 24 hourly quantities** at the declared tolerance. This resolves the *TRAIN numeric aggregation* question only; it **does not** independently establish what transactions the quantities represent, how global normalization was constructed, whether the 2025 EVAL split behaves identically, or whether recorded sales lower-bound the same latent-demand estimand. The v2.5 conditional bounds still cross zero; Retail remains **Research / Architecture**, no advancement. Next: obtain publisher-confirmed gross/net, returns, substitutions, cancellations and business-day boundary definitions before any stronger floor or demand claim.
 
 ## Question and preregistered test
 
