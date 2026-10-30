@@ -8,7 +8,17 @@
   "v13_tests_git_blob": "cb57d5d610ac0314d054c7bfd58135255533ad16",
   "local_environment": "CPython 3.13.5 Linux x86_64",
   "local_tests": "8/8 PASS",
-  "hosted_ci": "TBD",
+  "hosted_ci": {
+    "status": "SUCCESS",
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41117999443",
+    "head_sha": "07776d6c546ea359d0c74e31867e5b4944c2e848",
+    "ubuntu_job": 124277125530,
+    "windows_job": 124277126154,
+    "tests_per_os": "8/8",
+    "frozen_blob_check": "PASS",
+    "all_aggregate_counts": "MATCH",
+    "logs_inspected": true
+  },
   "original": {
     "baseline_wrong": 3716,
     "candidate_wrong": 3645,
