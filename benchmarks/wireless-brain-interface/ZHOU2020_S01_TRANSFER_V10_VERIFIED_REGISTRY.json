@@ -1,0 +1,63 @@
+{
+  "schema": "wbi-zhou2020-s01-transfer-verified-checkpoint-v1.0",
+  "date_utc": "2026-10-30",
+  "stage": "Research / Simulation",
+  "stage_advanced": false,
+  "source": {
+    "record": "https://zenodo.org/records/18988317",
+    "doi": "10.5281/zenodo.18988317",
+    "version": "v1",
+    "file": "S01.zip",
+    "kind": "publisher-repackaged; IEEE equivalence TBD"
+  },
+  "run": {
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41057530771",
+    "job_id": 124068719242,
+    "head_sha": "1bce7fa15b7cef7c1f042f60a5d1d9532fffd8e4",
+    "platform": "GitHub-hosted Ubuntu",
+    "python": "3.13 (exact patch TBD)",
+    "fictional_tests_passed": 10,
+    "fictional_tests_total": 10,
+    "source_downloads_verified": 1
+  },
+  "transfer": {
+    "status": "PASS_TRANSFER_AND_ZIP_STRUCTURE_ONLY",
+    "bytes_expected": 1143862039,
+    "bytes_received": 1143862039,
+    "publisher_md5": "34867b4b27a8c91fd6fe010cbf4f9caa",
+    "md5_matched": true,
+    "zip_sha256": "897c8316ac8130635821cab42d39b946dcedf54a582f3252bf028e190f294dbf",
+    "preflight": "PASS",
+    "preflight_checks": 4141,
+    "npz_member_count": 43,
+    "uncompressed_bytes": 3865018046
+  },
+  "artifact": {
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41057530771/artifacts/12977563337",
+    "zip_sha256": "f174c606fd221012d08906bd375307e4d7f5eb8ac19ae0608f99a898e5cb3bd2",
+    "json_sha256": "4dd22f27bd72f21200976372fb238517b1affdd224d27b884afec4f69f61631b",
+    "json_bytes": 4185,
+    "member_sha256_count": 43,
+    "independent_metadata_assertions_passed": 16,
+    "expires_utc": "2026-11-06"
+  },
+  "limits": {
+    "raw_archive_independently_redownloaded": false,
+    "original_npz_bytes_independently_rehashed": false,
+    "original_ieee_equivalence": "TBD",
+    "source_to_bids_mapping": "TBD",
+    "npz_arrays_opened": false,
+    "raw_signal_uploaded": false,
+    "held_out_decoding": "NOT_PERFORMED",
+    "matched_coverage_drift_superiority": "TBD",
+    "clinical_validation": "NOT_PERFORMED"
+  },
+  "next_experiment": "Independent S01 re-download and SHA-256 comparison; bounded NPZ structural inspection with allow_pickle=False; freeze source-to-BIDS mapping before held-out scoring.",
+  "stop_on": [
+    "source hash mismatch",
+    "unsafe NPZ structure",
+    "ambiguous source-to-BIDS event mapping",
+    "held-out label leakage"
+  ],
+  "report": "ZHOU2020_S01_TRANSFER_V10_VERIFIED_RESULT_20261030.md"
+}
