@@ -9,6 +9,7 @@ on:
       - 'benchmarks/wireless-brain-interface/test_wbi_matched_coverage_v11.py'
       - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
       - '.github/workflows/wbi-matched-budget-v11.yml'
+      - '.gitattributes'
   workflow_dispatch:
 
 permissions:
