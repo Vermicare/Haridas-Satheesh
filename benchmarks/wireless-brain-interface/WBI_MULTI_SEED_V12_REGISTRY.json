@@ -2,7 +2,7 @@
   "schema": "wbi-multi-seed-v1.2",
   "date": "2026-10-30",
   "stage": "Research / Simulation",
-  "evidence_class": "exploratory synthetic-only local reproduction; hosted verification pending",
+  "evidence_class": "exploratory synthetic-only; local and cross-platform hosted verification (not EEG)",
   "source_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
   "source_file": "benchmarks/wireless-brain-interface/synthetic_evaluator.py",
   "script": "benchmarks/wireless-brain-interface/wbi_v12_multiseed.py",
@@ -26,7 +26,7 @@
     "alpha_selection": "calibration-only, smallest on ties",
     "selection": "test-cohort top-k, not online"
   },
-  "local_environment": "Linux CPython 3.13; independent frozen evaluator package; GitHub-hosted CI TBD",
+  "local_environment": "Linux CPython 3.13 local; hosted Ubuntu CPython 3.13.17 and Windows CPython 3.13.16",
   "local_tests": {
     "passed": 8,
     "total": 8
@@ -51,7 +51,34 @@
       "0.4": 6
     }
   },
-  "hosted_ci": "TBD",
+  "hosted_ci": {
+    "run_id": 41101111460,
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41101111460",
+    "status": "completed",
+    "conclusion": "success",
+    "inspected_at_utc": "2026-10-30",
+    "jobs": [
+      {
+        "id": 124218346384,
+        "os": "ubuntu-latest",
+        "python": "3.13.17",
+        "tests_passed": 8,
+        "tests_total": 8,
+        "aggregate_matches_registry": true,
+        "frozen_blob_verified": true
+      },
+      {
+        "id": 124218346264,
+        "os": "windows-latest",
+        "python": "3.13.16",
+        "tests_passed": 8,
+        "tests_total": 8,
+        "aggregate_matches_registry": true,
+        "frozen_blob_verified": true
+      }
+    ],
+    "scope": "fictional multi-seed regression and deterministic aggregate only; no EEG or online authorization evidence"
+  },
   "physical_eeg": "TBD",
   "online_policy": "TBD",
   "clinical": "NOT_TESTED",
