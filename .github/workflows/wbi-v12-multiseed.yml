@@ -1,0 +1,43 @@
+name: WBI v1.2 fictional multi-seed robustness
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/wbi_v12_multiseed.py'
+      - 'benchmarks/wireless-brain-interface/test_wbi_v12_multiseed.py'
+      - 'benchmarks/wireless-brain-interface/WBI_MULTI_SEED_V12_REGISTRY.json'
+      - 'benchmarks/wireless-brain-interface/wbi_matched_coverage_v11.py'
+      - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+      - '.github/workflows/wbi-v12-multiseed.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fictional-multiseed:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: benchmarks/wireless-brain-interface
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify original frozen evaluator blob
+        run: |
+          git hash-object synthetic_evaluator.py
+          test "$(git hash-object synthetic_evaluator.py)" = "2becec81a8002cc5ff2f445889b7617baf9937b9"
+      - name: Run eight fictional-only regression tests
+        run: python -B -m unittest -v test_wbi_v12_multiseed.py
+      - name: Reproduce 200 paired fictional draws
+        run: |
+          python -B wbi_v12_multiseed.py --output wbi_v12_ci_result.json
+          python -c 'import json; a=json.load(open("wbi_v12_ci_result.json"))["aggregate"]; e=json.load(open("WBI_MULTI_SEED_V12_REGISTRY.json"))["aggregate"]; assert a["total_baseline_wrong"]==e["baseline_wrong"]; assert a["total_drift_wrong"]==e["drift_wrong"]; assert a["drift_better_pairs"]==e["better_pairs"]; assert a["tie_pairs"]==e["tied_pairs"]; assert a["drift_worse_pairs"]==e["worse_pairs"]; assert a["selected_alphas"]==e["alpha_counts"]; print("Fictional v1.2 aggregate VERIFIED",a)'
