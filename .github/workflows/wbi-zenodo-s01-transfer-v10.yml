@@ -1,0 +1,39 @@
+name: WBI v1.0 bounded original S01 transfer (no signal upload)
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/zenodo_s01_transfer_v10.py'
+      - 'benchmarks/wireless-brain-interface/test_zenodo_s01_transfer_v10.py'
+      - '.github/workflows/wbi-zenodo-s01-transfer-v10.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: wbi-s01-source-transfer-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  bounded-original-transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Network-free fictional transfer regression
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p test_zenodo_s01_transfer_v10.py -v
+      - name: Acquire and verify only S01 original ZIP; never upload raw bytes
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/wbi-s01"
+          python -B benchmarks/wireless-brain-interface/zenodo_s01_transfer_v10.py --json-out "$RUNNER_TEMP/wbi-s01/s01-metadata-only.json"
+      - name: Preserve only sanitized aggregate evidence (including failed result)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wbi-s01-transfer-v10-metadata-only
+          path: ${{ runner.temp }}/wbi-s01/s01-metadata-only.json
+          if-no-files-found: ignore
+          retention-days: 7
