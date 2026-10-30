@@ -1,0 +1,85 @@
+{
+  "schema": "ZHOU2020_EVENT_CENSUS_V05_REGISTRY",
+  "date_utc": "2026-10-30",
+  "project": "Wireless Brain Interface",
+  "stage": "Research / Simulation",
+  "stage_advanced": false,
+  "source": {
+    "repository": "nemarDatasets/nm000237",
+    "pinned_ref": "a291ed8a2afab3f93b85a540134dceb98092fcaf",
+    "source_type": "corrected public Git event TSV metadata",
+    "original_EEG_recordings_verified": false,
+    "trial_label_values_interpreted": false,
+    "prior_human_exploratory_preview_disclosed": true
+  },
+  "method": {
+    "code_path": "benchmarks/wireless-brain-interface/zhou2020_event_census_v05.py",
+    "test_path": "benchmarks/wireless-brain-interface/test_zhou2020_event_census_v05.py",
+    "workflow_path": ".github/workflows/wbi-zhou2020-event-census.yml",
+    "reused_v03_inventory": true,
+    "reused_v04_parser": true,
+    "git_blob_sha1_checked_for_each_file": true,
+    "actual_public_files_fetched": 833,
+    "fixture_tests_per_OS": 11
+  },
+  "results": {
+    "subjects": 20,
+    "session_directories": 139,
+    "paired_metadata_files": 833,
+    "event_TSV_files": 833,
+    "event_rows_total": 33534,
+    "publisher_reported_trials": 33534,
+    "nominal_840_times_40": 33600,
+    "forty_row_files": 815,
+    "non_forty_row_files": 18,
+    "histogram": {
+      "18": 1,
+      "37": 4,
+      "38": 2,
+      "39": 4,
+      "40": 815,
+      "56": 1,
+      "80": 6
+    },
+    "baseline_833_times_40": 33320,
+    "heterogeneity_offset": 214,
+    "nominal_difference": -66,
+    "interpretation": "Numerical structural reconciliation only; TSV event rows not independently proven equivalent to original EEG trials."
+  },
+  "verification": {
+    "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40981177763",
+    "code_head": "67acc3d7f574ef2bf23a385b1cb1e6a196a78321",
+    "ubuntu": {
+      "python": "3.13.17",
+      "unit_tests_passed": 11,
+      "census": "PASS",
+      "artifact_id": 12944434131,
+      "zip_sha256": "5b161c78785033daca3bbb65ae125554202ef0e14801bddd562df5fc9b61a609"
+    },
+    "windows": {
+      "python": "3.13.16",
+      "unit_tests_passed": 11,
+      "census": "PASS",
+      "artifact_id": 12943864747,
+      "zip_sha256": "5e333e2d1f18cada237f86ac82d7d4ff441bfd5f1ce2697998c73ce59b511ef6"
+    },
+    "json_member_bytes": 216160,
+    "json_member_sha256": "b891a3edfd8b1c535bc50032f7d46717de4f45d0eddbfd500f06430e757ec6b1",
+    "cross_OS_json_byte_identical": true,
+    "independent_zip_and_json_inspection": "PASS",
+    "artifact_expiry_utc": "2026-11-13"
+  },
+  "unknowns": {
+    "original_npz_EEG_byte_checksums": "TBD",
+    "event_semantics_and_original_recording_alignment": "TBD",
+    "independent_source_authenticity": "TBD",
+    "clean_held_out_subject_specific_protocol": "TBD",
+    "nine_subject_decoding_validation": "TBD",
+    "matched_coverage_drift_gate_advantage": "TBD",
+    "external_review": "TBD",
+    "clinical_safety": "TBD"
+  },
+  "next_experiment": "Predeclare original-recording checksum subset, independently verify source bytes, reconcile event-to-original recording provenance, then freeze longitudinal subject-specific held-out evaluation before any new label access.",
+  "kill_or_reframe": "Reject safety and drift-advantage claims if source integrity, untouched labels or matched-coverage risk improvement cannot be independently demonstrated.",
+  "security_privacy": "No private data, employer data, EEG signal arrays, trial label values, outreach records, or external commitments in published outputs."
+}
