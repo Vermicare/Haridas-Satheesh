@@ -1,0 +1,18 @@
+# Zhou2020 v0.6 — event-row concentration (structural, no stage advance)
+
+**2026-10-30.** Secondary read-only analysis of the independently archived [v0.5 census](https://github.com/Vermicare/Haridas-Satheesh/blob/research/wbi-independent-repro-20261026/benchmarks/wireless-brain-interface/ZHOU2020_EVENT_CENSUS_V05.md). Original input is the 216,160-byte `zhou2020_event_census_v05.json` (SHA-256 `b891a3edfd8b1c535bc50032f7d46717de4f45d0eddbfd500f06430e757ec6b1`) at pinned corrected-source ref `a291ed8a2afab3f93b85a540134dceb98092fcaf`. Original Ubuntu/Windows JSON members were byte-identical. This new analysis never reads EEG signals, original NPZ files, event types or held-out labels.
+
+## Independently recomputed findings
+
+- **833 files, 33,534 structural event rows, 18 non-40-row files across 8 of 20 subjects.**
+- Subject **17**: 4 non-40 files, **+136** rows relative to 40 per actual file; subject **20**: 3 non-40 files, **+120**. Together they account for **+256** gross excess before other subjects' deficits.
+- First indexed session **`ses-0`**: 8 non-40 files and **+254** rows; `ses-2`, `ses-4`, `ses-5`, `ses-6` contribute **−7, −30, −2, −1**; `ses-1` and `ses-3` contribute zero.
+- Relative to **833 actual files × 40 = 33,320**, observed rows are **+214**. Separately, relative to **840 nominal files × 40 = 33,600**, observed rows are **−66**. Neither arithmetic difference identifies original missing recordings or independently authenticated EEG trials.
+
+The exact v0.5 file provenance, per-subject/session rollups and histogram were recomputed, checked for duplicate paths and reconciled. Local CPython **3.13.5** ran **9/9 tests**, including eight fictional negative/contract checks and one pinned-real-JSON structural integration. New hosted v0.6 CI: **TBD**. Original v0.5 evidence and original WBI synthetic evaluator (blob `2becec81a8002cc5ff2f445889b7617baf9937b9`) remain unchanged.
+
+## Reproduction and decision
+
+Run the separately archived `zhou2020_event_concentration_v06.py` on the exact v0.5 JSON (SHA-256 pin enforced) and compare the canonical registry. The source script, adversarial tests and offline evidence package are retained separately until public GitHub write and readback are verified. **Do not treat this report alone as independently hosted execution.**
+
+**Stage:** Research / Simulation, unchanged. **Strongest evidence:** cross-platform v0.5 structural census plus frozen synthetic evaluator. **Largest gap:** original NPZ byte integrity, event-to-recording provenance and clean subject-specific held-out outcomes. **Next experiment:** freeze actual subject/session/run availability and explicit per-event/per-run/per-session/per-subject weighting *before* new outcome inspection, independently verify a fixed original-NPZ checksum subset, then compare confidence-only versus drift-aware authorization at matched action coverage. **Kill/reframe:** reject leakage or source mismatch; withdraw drift/safety claims absent outcome evidence. No release, merge, patentability, clinical or product claim.
