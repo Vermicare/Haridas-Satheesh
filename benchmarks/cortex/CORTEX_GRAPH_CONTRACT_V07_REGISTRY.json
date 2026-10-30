@@ -1,0 +1,86 @@
+{
+  "schema": "cortex-fixed-graph-contract-registry-v0.7",
+  "date": "2026-10-30",
+  "project": "CORTEX",
+  "maturity": "Research (Architecture/R&D); unchanged",
+  "scope": "exact author-created fictional 14-triple RDF graph only; no actual organizational records",
+  "provenance": {
+    "source_repository": "Vermicare/Haridas-Satheesh",
+    "research_branch": "research/cortex-fixture-integrity-v04-20261023",
+    "frozen_exporter": "benchmarks/cortex/cortex_prov_boundary_v05.py",
+    "frozen_exporter_git_blob": "efd1ad28089e22ccc8914e64cc4ec33ae00245f8",
+    "frozen_case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+    "frozen_archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046",
+    "original_turtle_canonical_lf_sha256": "7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0",
+    "new_auditor_git_blob": "3b6149047f360097e7923c7c359211bb1b479c38",
+    "new_tests_git_blob": "e469d790a26d5eefe0d6faf4482bfaca63c06e8e",
+    "workflow_git_blob": "2f394144f719e32f8b351ff418928cff36da4a53",
+    "workflow_commit": "4be046f0d8786ba386f2532410a0729dbf0e0d7b"
+  },
+  "run_conditions": {
+    "local": {
+      "python": "3.13.5",
+      "os": "Linux 6.18.57 x86_64",
+      "rdflib": "7.5.0",
+      "v07_tests": "15/15 PASS"
+    },
+    "hosted": {
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41074345425",
+      "status": "completed",
+      "conclusion": "success",
+      "matrix": [
+        "ubuntu-latest",
+        "windows-latest"
+      ],
+      "python": "3.13",
+      "rdflib": "7.5.0",
+      "v07_tests_per_os": "15/15 PASS",
+      "legacy_suite_per_os": "201/201 PASS",
+      "v05_tests_per_os": "14/14 PASS",
+      "v06_tests_per_os": "10/10 PASS",
+      "real_frozen_v05_output_audited": "PASS; 14 triples; zero missing; zero unexpected"
+    }
+  },
+  "contract": {
+    "expected_rdf_triples": 14,
+    "allowed_prov_predicate": "prov:wasDerivedFrom",
+    "local_domain_predicates": [
+      "cortex:supersedes",
+      "cortex:clarifies"
+    ],
+    "rejects": [
+      "unjustified prov:wasRevisionOf",
+      "unjustified prov:hadPrimarySource",
+      "unjustified prov:wasInvalidatedBy",
+      "reversed supersession",
+      "missing derivation",
+      "namespace substitution",
+      "extra domain edge",
+      "invalid or oversized Turtle"
+    ],
+    "accepts": [
+      "exact frozen graph",
+      "semantically equivalent reordered triples",
+      "semantically redundant duplicate triple"
+    ]
+  },
+  "known_limits": [
+    "exact graph allowlist, not a general PROV validator",
+    "no proof that historical sources are authentic",
+    "no external human annotations",
+    "no verified identity/authority or revocation",
+    "no generalized semantic accuracy or interoperability"
+  ],
+  "unknowns": {
+    "independent_semantic_review": "TBD",
+    "human_correction_time": "TBD",
+    "identity_and_authority": "TBD",
+    "retention_and_revocation": "TBD",
+    "source_span_semantic_completeness": "TBD",
+    "external_interoperability": "TBD",
+    "customer_value": "TBD"
+  },
+  "advancement": "none",
+  "next_experiment": "Two independent voluntary blinded annotations and timed manual-note comparator; freeze matching and adjudication rules before review.",
+  "kill_or_reframe": "Do not generalize this fixed graph; reframe as human-audited provenance support if unsupported edges or correction burden exceed manual notes."
+}
