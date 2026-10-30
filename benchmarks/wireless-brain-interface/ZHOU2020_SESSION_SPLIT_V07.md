@@ -26,6 +26,10 @@ sha256sum session_split_v07.json
 
 The CLI rejects a mismatched source JSON byte hash. Adversarial tests cover duplicate subject/session/run, path metadata mismatch, boolean subject, count/label independence, irregular run availability and no-outcome-claim flags. The manifest itself is **generated locally**, not an EEG dataset or trained model.
 
+## Source attribution and metadata discrepancy
+
+The [public NEMAR nm000237 dataset README](https://github.com/nemarDatasets/nm000237/blob/main/README.md) identifies the Zhou et al. 2021 dataset and labels it **CC-BY-4.0**; cite the original investigators and the dataset source when reusing derived metadata. That README describes a **nominal** 20 × 7 × 6 × 40 = 33,600-trial grid, while the pinned corrected event-TSV census contains **833 files / 33,534 structural rows**. This is a metadata-level discrepancy, **not** proof of missing original EEG trials. The upstream repository has no GitHub API license object in the checked repository metadata; this attribution is based on its README's explicit license statement.
+
 ## Limits and gate
 
 **Not a confirmed chronological or untouched held-out evaluation:** session *indices* have not been independently matched to actual acquisition timestamps; original NPZ recording bytes and event-to-NPZ pairing are **TBD**. Three event files had earlier exploratory trial-type preview disclosed in v0.4; this allocation was designed **after** structural event-count inspection. A test candidate must not be described as prospectively label-blind or as independently held out until source authenticity and a separate outcome-control protocol are established.
