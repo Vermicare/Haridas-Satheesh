@@ -1,0 +1,59 @@
+{
+  "schema": "wbi-multi-seed-v1.2",
+  "date": "2026-10-30",
+  "stage": "Research / Simulation",
+  "evidence_class": "exploratory synthetic-only local reproduction; hosted verification pending",
+  "source_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+  "source_file": "benchmarks/wireless-brain-interface/synthetic_evaluator.py",
+  "script": "benchmarks/wireless-brain-interface/wbi_v12_multiseed.py",
+  "tests": "benchmarks/wireless-brain-interface/test_wbi_v12_multiseed.py",
+  "protocol": {
+    "pairs": 200,
+    "n_cal": 240,
+    "n_test": 240,
+    "seed_start": 100000,
+    "cal_formula": "100000+2*i",
+    "test_formula": "100001+2*i",
+    "k": 120,
+    "alpha_grid": [
+      0,
+      0.05,
+      0.1,
+      0.2,
+      0.4,
+      0.8
+    ],
+    "alpha_selection": "calibration-only, smallest on ties",
+    "selection": "test-cohort top-k, not online"
+  },
+  "local_environment": "Linux CPython 3.13; independent frozen evaluator package; GitHub-hosted CI TBD",
+  "local_tests": {
+    "passed": 8,
+    "total": 8
+  },
+  "aggregate": {
+    "baseline_wrong": 3716,
+    "drift_wrong": 3645,
+    "actions_each": 24000,
+    "delta_wrong": -71,
+    "better_pairs": 76,
+    "tied_pairs": 86,
+    "worse_pairs": 38,
+    "mean_delta_wrong": -0.355,
+    "median_delta_wrong": 0,
+    "min_delta_wrong": -6,
+    "max_delta_wrong": 7,
+    "alpha_counts": {
+      "0.0": 64,
+      "0.05": 48,
+      "0.1": 46,
+      "0.2": 36,
+      "0.4": 6
+    }
+  },
+  "hosted_ci": "TBD",
+  "physical_eeg": "TBD",
+  "online_policy": "TBD",
+  "clinical": "NOT_TESTED",
+  "limitation": "Same synthetic generator encodes drift-related skill loss; exploratory post-hoc design; not real EEG superiority or safety."
+}
