@@ -33,9 +33,16 @@ jobs:
         run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_zhou2020_event_census_v05.py' -v
   pinned-census:
     needs: fictional-tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     timeout-minutes: 25
     steps:
+      - name: Preserve source line endings
+        shell: bash
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -49,7 +56,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: zhou2020-event-row-census-v05
+          name: zhou2020-event-row-census-v05-${{ matrix.os }}
           path: ${{ runner.temp }}/zhou2020_event_census_v05.json
           retention-days: 14
           if-no-files-found: error
