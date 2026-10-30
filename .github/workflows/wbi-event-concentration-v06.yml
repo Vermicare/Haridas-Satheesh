@@ -1,0 +1,49 @@
+name: WBI v0.6 pinned event-row concentration
+
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - ".github/workflows/wbi-event-concentration-v06.yml"
+      - "benchmarks/wireless-brain-interface/zhou2020_event_concentration_v06.py"
+      - "benchmarks/wireless-brain-interface/test_zhou2020_event_concentration_v06.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  concentration:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Download exact original v0.5 hosted evidence from completed run
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 40981177763
+          name: zhou2020-event-row-census-v05-${{ matrix.os }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: source
+      - name: Verify frozen v0.5 JSON, run fictional controls and real structural integration
+        shell: bash
+        run: |
+          cd benchmarks/wireless-brain-interface
+          export ZHOU2020_CENSUS_JSON="${GITHUB_WORKSPACE}/source/zhou2020_event_census_v05.json"
+          python -c "import hashlib,os,pathlib; p=pathlib.Path(os.environ['ZHOU2020_CENSUS_JSON']); assert hashlib.sha256(p.read_bytes()).hexdigest() == 'b891a3edfd8b1c535bc50032f7d46717de4f45d0eddbfd500f06430e757ec6b1'"
+          python -m unittest -v test_zhou2020_event_concentration_v06.py
+          python zhou2020_event_concentration_v06.py "$ZHOU2020_CENSUS_JSON" --output v06_output.json
+          python -c "import hashlib; p=open('v06_output.json','rb').read(); h=hashlib.sha256(p).hexdigest(); print('v06 output SHA256:',h); assert h == 'f31aac3548a71611589ddfadc447390f9f706e832f33cf0672665015af05570c'"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-v06-concentration-${{ matrix.os }}
+          path: benchmarks/wireless-brain-interface/v06_output.json
+          retention-days: 14
