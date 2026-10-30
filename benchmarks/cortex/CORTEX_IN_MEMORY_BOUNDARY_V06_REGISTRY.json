@@ -1,0 +1,50 @@
+{
+  "schema": "cortex-in-memory-boundary-v0.6-registry",
+  "date": "2026-10-30",
+  "project": "CORTEX",
+  "stage": "Architecture / R&D",
+  "provenance": "AUTHOR_CREATED_FICTIONAL",
+  "branch": "research/cortex-fixture-integrity-v04-20261023",
+  "workflow_run_id": 40993096972,
+  "workflow_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40993096972",
+  "workflow_commit": "afc1dca8f1b232b586f470408bbe6c2f71bc5fda",
+  "source_git_blob": "526f8bbb1827ebcbdb27c874cb6393b5ffbe638e",
+  "test_git_blob": "879bb1be6e890027140ce2b79d91720ddd7fa193",
+  "workflow_git_blob": "c6ec0b9e568d8cac149cbe57c9e7a90400df6a54",
+  "frozen_case_sha256": "f6357accbd87e11ffcaf1a2d39a085b0611719de6953cd3e4789ccacbb96344d",
+  "frozen_archive_sha256": "897ba394a392ffd63b5561500e5350573570c835fc699c0fd453148d4e3c8046",
+  "runtime": {
+    "python": "3.13 (GitHub Actions setup-python)",
+    "operating_systems": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "stdlib_only_for_v06": true,
+    "rdflib_for_unchanged_v05": "7.5.0"
+  },
+  "results": {
+    "ubuntu_v06_tests": "10/10 PASS",
+    "windows_v06_tests": "10/10 PASS",
+    "actual_frozen_fixture_roundtrip": "PASS both operating systems",
+    "semantic_mutation_negative_control": "PASS both operating systems",
+    "original_v05_tests": "14/14 PASS each operating system",
+    "original_v05_rdf_triples": 14,
+    "original_v05_turtle_sha256": "7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0",
+    "human_reviewers": 0,
+    "real_records": 0
+  },
+  "failure_mode": "v0.5 in-memory helper accepts semantically mutated fictional content when identifiers remain unchanged; v0.5 CLI already pins raw-file SHA-256",
+  "unknowns": {
+    "human_semantic_agreement": "TBD",
+    "review_correction_time": "TBD",
+    "generalization": "TBD",
+    "original_archive_authenticity": "TBD",
+    "hosted_os_image_hashes": "TBD"
+  },
+  "limitations": [
+    "Fixed fictional fixture only",
+    "Adapter must be explicitly used; original in-memory helper remains unchanged",
+    "Hash agreement cannot prove factual truth",
+    "No external review, product, safety, novelty, or business-performance claim"
+  ]
+}
