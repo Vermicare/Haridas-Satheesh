@@ -1,0 +1,38 @@
+name: WBI v1.3 fictional drift permutation controls
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/wbi_v13_drift_negative_controls.py'
+      - 'benchmarks/wireless-brain-interface/test_wbi_v13_drift_negative_controls.py'
+      - 'benchmarks/wireless-brain-interface/WBI_DRIFT_PERMUTATION_V13_REGISTRY.json'
+      - '.github/workflows/wbi-v13-drift-negative-controls.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-permutation-controls:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: benchmarks/wireless-brain-interface
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify unchanged frozen evaluator blob
+        run: |
+          test "$(git hash-object synthetic_evaluator.py)" = '2becec81a8002cc5ff2f445889b7617baf9937b9'
+      - name: Run eight fictional-only tests
+        run: python -B -m unittest -v test_wbi_v13_drift_negative_controls.py
+      - name: Reproduce negative-control aggregate without EEG
+        run: |
+          python -B wbi_v13_drift_negative_controls.py --output v13_ci_result.json
+          python -c 'import json; a=json.load(open("v13_ci_result.json"))["cases"]; e=json.load(open("WBI_DRIFT_PERMUTATION_V13_REGISTRY.json")); m={"informative_original":"original","permuted_both":"permuted_both","permuted_test_only":"permuted_test_only"}; assert all(a[k]["total_baseline_wrong"]==e[v]["baseline_wrong"] and a[k]["total_candidate_wrong"]==e[v]["candidate_wrong"] and a[k]["delta_wrong"]==e[v]["delta_wrong"] and a[k]["better"]==e[v]["better"] and a[k]["tied"]==e[v]["tied"] and a[k]["worse"]==e[v]["worse"] for k,v in m.items()); print("v1.3 FICTIONAL negative controls VERIFIED", {k:a[k]["delta_wrong"] for k in m})'
