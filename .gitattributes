@@ -1,0 +1,3 @@
+# Preserve exact frozen synthetic evaluator bytes on Windows and Unix checkouts.
+# Git blob 2becec81a8002cc5ff2f445889b7617baf9937b9 must remain unchanged.
+benchmarks/wireless-brain-interface/synthetic_evaluator.py text eol=lf
