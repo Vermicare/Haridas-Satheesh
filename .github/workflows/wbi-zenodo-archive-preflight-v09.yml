@@ -1,0 +1,28 @@
+name: WBI v0.9 fictional Zenodo ZIP preflight
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/zenodo_archive_preflight_v09.py'
+      - 'benchmarks/wireless-brain-interface/test_zenodo_archive_preflight_v09.py'
+      - '.github/workflows/wbi-zenodo-archive-preflight-v09.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-archive-contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile source without touching EEG
+        run: python -m py_compile benchmarks/wireless-brain-interface/zenodo_archive_preflight_v09.py
+      - name: Fictional ZIP adversarial regression
+        run: python -m unittest discover -s benchmarks/wireless-brain-interface -p test_zenodo_archive_preflight_v09.py -v
