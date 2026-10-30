@@ -1,0 +1,47 @@
+{
+  "schema_version": "iot-host-path-alias-v20-registry-1",
+  "date_utc": "2026-10-30",
+  "project": "Hardware/IoT",
+  "maturity": "Prototype / Hardware Architecture",
+  "branch": "research/iot-host-chain-v18-20261029",
+  "tested_commit": "28e75049ce27beb455b664737c84625df70bea97",
+  "source_blobs": {
+    "v18": "e94bc84f75afc2942ab30f480eb82e42577db472",
+    "v19": "2087b3fd70edfc6bb0cfd67bd8bb981eacdd7340",
+    "v20": "549be15d9c66e0630feefa52d36722e7cbcb638a",
+    "v20_tests": "c7c96170c4350bb06ae7b92d8dcf21e7ffcf78c0"
+  },
+  "inputs": "fictional only",
+  "negative_control": "bundle/raw_serial.log symlink to capture/raw_serial.log",
+  "observations": {
+    "v18": "HOST_CHAIN_INTEGRITY_PASS_SENSOR_VALIDITY_TBD",
+    "v19": "HOST_BYTE_SPAN_CONSISTENT_ORIGIN_UNVERIFIED",
+    "v20": "REVIEW_REQUIRED"
+  },
+  "ci": {
+    "preflight": {
+      "run_id": 41042153165,
+      "ubuntu": "153/153 PASS",
+      "windows": "153/153 PASS",
+      "v20_new_tests_each_os": 9,
+      "symlink_tests_skipped": 0
+    },
+    "original_chain": {
+      "run_id": 41042153219,
+      "ubuntu": "14/14 PASS",
+      "windows": "14/14 PASS"
+    },
+    "python_matrix": "3.13",
+    "exact_patch": "TBD",
+    "runner_digest": "TBD"
+  },
+  "physical_capture_count": 0,
+  "actual_flashed_firmware_sha256": "TBD",
+  "sensor_accuracy": "TBD",
+  "physical_clock_attestation": false,
+  "security_limit": "Not race-free; preflight cannot attest physical origin or defend against a concurrent malicious filesystem actor.",
+  "next_experiment": "Genuine private >=600-second dual-sensor capture; flash-ID, raw hash, light perturbation, independent review and all chain gates.",
+  "stage_advanced": false,
+  "release_created": false,
+  "merge_performed": false
+}

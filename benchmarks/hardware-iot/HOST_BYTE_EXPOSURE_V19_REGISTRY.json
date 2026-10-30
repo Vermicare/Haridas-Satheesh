@@ -1,0 +1,67 @@
+{
+  "schema_version": "iot-host-byte-exposure-v19-evidence-2026-10-30",
+  "project": "Hardware/IoT BH1750+SCD40",
+  "maturity": "Prototype / Hardware Architecture",
+  "experiment_kind": "fictional software regression",
+  "source": {
+    "repo": "Vermicare/Haridas-Satheesh",
+    "branch": "research/iot-host-chain-v18-20261029",
+    "code_bearing_commit": "49384849fd6431bdb88d9f96bc8df0eecceec648",
+    "original_v18_blob": "e94bc84f75afc2942ab30f480eb82e42577db472",
+    "original_v18_test_blob": "7063789ed300f35c71efd2303094695b0b367c1e",
+    "new_v19_blob": "2087b3fd70edfc6bb0cfd67bd8bb981eacdd7340",
+    "new_v19_test_blob": "0de623871a03833785a9b3fe778be86d09deb429"
+  },
+  "negative_control": {
+    "declared_host_duration_s": 610.1,
+    "early_host_byte_offsets_s": [
+      0.2,
+      0.3
+    ],
+    "late_host_byte_offsets_s": [
+      609.7,
+      609.9
+    ],
+    "original_v18_status": "HOST_CHAIN_INTEGRITY_PASS_SENSOR_VALIDITY_TBD",
+    "new_v19_status": "REVIEW_REQUIRED",
+    "comparison": "v0.7 already enforces >=600 s host first-to-last byte exposure; v1.8 does not"
+  },
+  "local": {
+    "runtime": "CPython 3.13.5 Linux",
+    "invocations": 2,
+    "tests_per_invocation": 20,
+    "passed_per_invocation": 20
+  },
+  "hosted": {
+    "run_id": 40975427485,
+    "link": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40975427485",
+    "ubuntu": {
+      "job_id": 123802150812,
+      "passed": 144,
+      "failed": 0,
+      "new_v19_tests": 6
+    },
+    "windows": {
+      "job_id": 123802150962,
+      "passed": 144,
+      "failed": 0,
+      "new_v19_tests": 6
+    },
+    "original_v18_only_run_id": 40975427493,
+    "original_v18_only_passed_per_os": 14,
+    "logs_inspected": true
+  },
+  "limitations": {
+    "physical_capture_count": 0,
+    "hardware_flash": "TBD",
+    "sensor_identity": "TBD",
+    "clock_attestation": "TBD",
+    "calibration": "TBD",
+    "cooling_or_environmental_performance": "TBD",
+    "physical_provenance_verified": false
+  },
+  "next_experiment": "Private >=600-second BH1750/SCD40 capture; verify v0.7 and v1.8/v1.9, raw bytes, actual flash identity, wiring and controlled light perturbation; independent review",
+  "release": false,
+  "merge": false,
+  "stage_advance": false
+}

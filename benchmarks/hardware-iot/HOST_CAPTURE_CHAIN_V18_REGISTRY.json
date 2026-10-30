@@ -1,0 +1,64 @@
+{
+  "experiment_id": "iot-host-capture-chain-v18",
+  "date_utc": "2026-10-29",
+  "maturity": "Prototype / Hardware Architecture; unchanged",
+  "source": {
+    "repository": "Vermicare/Haridas-Satheesh",
+    "branch": "research/iot-host-chain-v18-20261029",
+    "base": "research/iot-capture-preflight-20261023",
+    "code_blob": "e94bc84f75afc2942ab30f480eb82e42577db472",
+    "tests_blob": "7063789ed300f35c71efd2303094695b0b367c1e"
+  },
+  "execution": {
+    "local_os": "Linux",
+    "python": "CPython 3.13.5",
+    "isolated_repetitions": 2,
+    "fictional_tests_per_run": 14,
+    "passed_per_run": 14,
+    "github_actions": {
+      "run_id": 40765891927,
+      "conclusion": "success",
+      "tested_head": "3254c505620afbc48cae43bc09d4f77082d8646f",
+      "ubuntu": {
+        "job_id": 123089812510,
+        "tests": 14,
+        "passed": 14,
+        "log_inspected": true
+      },
+      "windows": {
+        "job_id": 123089813017,
+        "tests": 14,
+        "passed": 14,
+        "log_inspected": true
+      },
+      "existing_preflight_run_id": 40765891713,
+      "existing_preflight_conclusion": "success"
+    }
+  },
+  "evidence": {
+    "source": "synthetic fictional tests only",
+    "physical_sensor_sessions": 0,
+    "host_capture_to_bundle_consistency": "LOCAL_TEST_PASS",
+    "device_span": "TBD",
+    "real_flashed_firmware": "TBD",
+    "sensor_authenticity": "TBD",
+    "external_review": "TBD"
+  },
+  "negative_controls": [
+    "interrupted capture",
+    "leftover partial",
+    "host raw SHA mismatch",
+    "host byte count mismatch",
+    "bundle raw mismatch",
+    "CSV tampering",
+    "short host capture",
+    "short requested duration",
+    "invalid offsets",
+    "duplicate JSON key",
+    "nonfinite elapsed",
+    "boolean elapsed",
+    "UTC reversed"
+  ],
+  "limit": "Operator declarations and hashes cannot prove sensor origin, device monotonic duration, calibration or flashed firmware.",
+  "next": "Genuine private 600+ second BH1750/SCD40 capture, independent source/flash ID and wiring review, run serial_bundle.py verify and capture_chain_v18.py, then controlled light perturbation."
+}
