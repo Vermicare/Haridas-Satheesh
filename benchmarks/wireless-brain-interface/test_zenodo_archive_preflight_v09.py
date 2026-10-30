@@ -42,7 +42,11 @@ class ArchivePreflight(unittest.TestCase):
         self.assertEqual(audit(self.path, md5)['status'], 'FAIL')
 
     def test_backslash(self):
-        md5 = self.fixture([('session_1\\run_01.npz', b'a')])
+        self.fixture()
+        raw = self.path.read_bytes()
+        self.assertEqual(raw.count(b'session_1/run_01.npz'), 2)
+        self.path.write_bytes(raw.replace(b'session_1/run_01.npz', b'session_1\\run_01.npz'))
+        md5 = hashlib.md5(self.path.read_bytes()).hexdigest()
         self.assertEqual(audit(self.path, md5)['status'], 'FAIL')
 
     def test_absolute(self):
