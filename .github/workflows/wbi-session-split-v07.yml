@@ -1,0 +1,51 @@
+name: WBI v0.7 pinned candidate session split (metadata only)
+
+on:
+  push:
+    branches: [research/wbi-independent-repro-20261026]
+    paths:
+      - 'benchmarks/wireless-brain-interface/zhou2020_session_split_v07.py'
+      - 'benchmarks/wireless-brain-interface/test_zhou2020_session_split_v07.py'
+      - '.github/workflows/wbi-session-split-v07.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  session-split:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Download pinned v0.5 metadata artifact (expires 2026-11-13)
+        uses: actions/download-artifact@v4
+        with:
+          name: zhou2020-event-row-census-v05-ubuntu-latest
+          run-id: 40981177763
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: benchmarks/wireless-brain-interface
+      - name: Bind frozen input filename
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -c "from pathlib import Path; Path('zhou2020_event_census_v05.json').rename('frozen_v05_census.json')"
+      - name: Test original-source split and adversarial controls
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -m unittest -v test_zhou2020_session_split_v07
+      - name: Produce pinned candidate split manifest
+        working-directory: benchmarks/wireless-brain-interface
+        run: python zhou2020_session_split_v07.py frozen_v05_census.json --output session_split_v07.json
+      - name: Verify canonical output digest
+        working-directory: benchmarks/wireless-brain-interface
+        run: python -c "from pathlib import Path; import hashlib; p=Path('session_split_v07.json').read_bytes(); assert len(p)==228606; assert hashlib.sha256(p).hexdigest()=='5ccad200cb36ca0414cef25e19d3dc5530f1a352bb9520b7d188170a162783d8'; print('v0.7 canonical manifest PASS')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-v07-session-split-${{ matrix.os }}
+          path: benchmarks/wireless-brain-interface/session_split_v07.json
+          retention-days: 7
