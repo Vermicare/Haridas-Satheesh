@@ -54,6 +54,14 @@ jobs:
           python -B cortex_prov_boundary_v05.py export blind_case_20261024.json blind_archive_20261024.json > cortex-prov-v05.ttl
           python -m pip install --disable-pip-version-check rdflib==7.5.0
           python -c "import hashlib,pathlib; from rdflib import Graph; p=pathlib.Path('cortex-prov-v05.ttl'); b=p.read_bytes().replace(b'\r\n',b'\n'); assert hashlib.sha256(b).hexdigest() == '7cca1eea84e9ff8b916ee2a6ca8b73a0c3aeb047dafdcf521cc47d9d9ffbd9b0'; g=Graph(); g.parse(data=b.decode('utf-8'),format='turtle'); assert len(g)==14; assert not any(str(p).endswith(('wasRevisionOf','hadPrimarySource','wasInvalidatedBy')) for s,p,o in g); print('CORTEX_V05_VERIFIED: 14 triples, canonical SHA-256 pinned, forbidden PROV edges absent')"
+      - name: Audit downstream frozen fictional RDF semantic contract v0.7
+        shell: bash
+        working-directory: benchmarks/cortex
+        run: |
+          python -B -m unittest -v test_cortex_graph_contract_v07.py
+          python -B cortex_prov_boundary_v05.py export blind_case_20261024.json blind_archive_20261024.json > cortex-prov-v05.ttl
+          python -B cortex_graph_contract_v07.py audit cortex-prov-v05.ttl > cortex-graph-contract-v07.json
+          python -c "import json; d=json.load(open('cortex-graph-contract-v07.json')); assert d['valid'] is True and d['observed_triples']==14 and d['missing_triples']==0 and d['unexpected_triples']==0; print('CORTEX_V07_VERIFIED: frozen v0.5 exporter output passes independent RDF graph contract')"
       - name: Compare fictional graph traversal scaling (non-gating timing)
         shell: bash
         working-directory: benchmarks/cortex
