@@ -14,7 +14,19 @@
     "platform": "local Linux",
     "standard_library_only": true,
     "tests": "9/9 passed with pinned original JSON",
-    "hosted_cross_platform_v06": "TBD",
+    "hosted_cross_platform_v06": {
+      "status": "PASS (job logs inspected; artifact ZIP members not independently rehashed)",
+      "run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40994144308",
+      "run_id": 40994144308,
+      "run_date": "2026-10-30",
+      "ubuntu_job_id": 123863226196,
+      "windows_job_id": 123863226396,
+      "tests_per_os": "9/9",
+      "canonical_json_sha256_from_both_logs": "f31aac3548a71611589ddfadc447390f9f706e832f33cf0672665015af05570c",
+      "ubuntu_artifact_id": 12950287383,
+      "windows_artifact_id": 12950716787,
+      "artifact_member_independent_rehash": "TBD"
+    },
     "original_npz_verified": "TBD"
   },
   "results": {
