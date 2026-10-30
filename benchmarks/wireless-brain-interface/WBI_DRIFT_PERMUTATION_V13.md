@@ -1,6 +1,6 @@
 # WBI v1.3 — Drift informativeness and calibration-mismatch negative controls
 
-**Evidence date:** 2026-10-30 UTC. **Stage:** Research / Simulation (unchanged). **Evidence:** local deterministic fictional-only execution, not EEG, clinical validation or online authorization. **Hosted cross-platform status:** TBD until logs are inspected.
+**Evidence date:** 2026-10-30 UTC. **Stage:** Research / Simulation (unchanged). **Evidence:** local deterministic fictional-only execution, not EEG, clinical validation or online authorization. **Hosted cross-platform status:** **PASS**, [GitHub Actions #41117999443](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41117999443), commit `07776d6c546ea359d0c74e31867e5b4944c2e848`, Ubuntu job `124277125530` and Windows job `124277126154`; both logs independently inspected, **8/8 tests per operating system**, frozen evaluator blob check PASS and all three aggregate delta counts reproduced exactly.
 
 ## Question and decision
 
@@ -31,7 +31,7 @@ python -B -m unittest -v test_wbi_v13_drift_negative_controls.py
 python -B wbi_v13_drift_negative_controls.py --output v13_result.json
 ```
 
-The second command refuses to overwrite an existing output. Inspect `cases.*.delta_wrong` and `cases.*.records`. Keep the generated result locally; do not commit private signals. The v1.3 script imports the existing v1.1 ranking and v1.2 seed constants; the original frozen evaluator must pass Git blob `2becec81a8002cc5ff2f445889b7617baf9937b9`. Local reproduction on **CPython 3.13.5 / Linux x86_64** passed **8/8 regression tests**. Cross-platform hosted verification is **TBD** until independently inspected. [Machine-readable registry](WBI_DRIFT_PERMUTATION_V13_REGISTRY.json) contains the aggregate counts and exact source blob IDs.
+The second command refuses to overwrite an existing output. Inspect `cases.*.delta_wrong` and `cases.*.records`. Keep the generated result locally; do not commit private signals. The v1.3 script imports the existing v1.1 ranking and v1.2 seed constants; the original frozen evaluator must pass Git blob `2becec81a8002cc5ff2f445889b7617baf9937b9`. Local reproduction on **CPython 3.13.5 / Linux x86_64** passed **8/8 regression tests**. Cross-platform hosted verification is **PASS** on Ubuntu and Windows; both job logs were independently inspected. This verifies fictional software reproducibility only. [Machine-readable registry](WBI_DRIFT_PERMUTATION_V13_REGISTRY.json) contains the aggregate counts and exact source blob IDs.
 
 ## Decision gates and failures
 
