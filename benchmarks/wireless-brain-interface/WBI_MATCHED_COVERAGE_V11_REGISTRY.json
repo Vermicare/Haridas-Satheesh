@@ -1,0 +1,61 @@
+{
+  "schema": "wbi.exploratory_matched_budget.v1.1",
+  "date": "2026-10-30",
+  "stage": "Research / Simulation (unchanged)",
+  "data_type": "fictional deterministic synthetic only",
+  "source_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+  "source_execution": "independent local assembly from exact public frozen evaluator source",
+  "runtime": "CPython 3.13.5",
+  "test_rows": 240,
+  "calibration_rows": 240,
+  "alpha_grid": [
+    0,
+    0.05,
+    0.1,
+    0.2,
+    0.4,
+    0.8
+  ],
+  "selection": "calibration-label-only alpha; top-k unlabeled test confidence minus alpha*drift; stable index tie",
+  "test_feature_cohort_required": true,
+  "post_hoc_exploratory": true,
+  "budgets": [
+    {
+      "fraction": 0.25,
+      "k": 60,
+      "alpha": 0.1,
+      "confidence_wrong": 6,
+      "drift_wrong": 6,
+      "risk_difference": 0
+    },
+    {
+      "fraction": 0.5,
+      "k": 120,
+      "alpha": 0.05,
+      "confidence_wrong": 16,
+      "drift_wrong": 13,
+      "risk_difference": -0.025
+    },
+    {
+      "fraction": 0.75,
+      "k": 180,
+      "alpha": 0.1,
+      "confidence_wrong": 37,
+      "drift_wrong": 36,
+      "risk_difference": -0.005555555555555556
+    }
+  ],
+  "local_equivalent_implementation_controls": "8/8 PASS",
+  "published_repository_10_test_suite": "TBD (hosted logs not inspected)",
+  "hosted_cross_platform": "TBD",
+  "original_frozen_gate_result": "unchanged; no matched-coverage superiority established",
+  "public_eeg_validation": "TBD",
+  "limitations": [
+    "one deterministic fictional fixture",
+    "post-hoc ranking not preregistered",
+    "cohort-level top-k not online threshold policy",
+    "no multi-seed uncertainty interval",
+    "no clinical, safety, commercial or product claim"
+  ],
+  "next_experiment": "verify hosted execution; prospectively freeze online comparison before new public-EEG labels"
+}
