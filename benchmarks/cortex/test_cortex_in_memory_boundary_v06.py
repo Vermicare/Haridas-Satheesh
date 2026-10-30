@@ -1,5 +1,7 @@
 """Fictional mutation negative controls; no actual human/organizational records."""
 import copy
+import json
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
@@ -29,6 +31,20 @@ class InMemoryBoundaryTests(unittest.TestCase):
     def setUp(self):
         self.case, self.archive = fixture()
         self.baseline = frozen.render_turtle(self.case, self.archive)
+
+    def test_actual_pinned_fictional_files_and_mutation(self):
+        base = Path(__file__).resolve().parent
+        case_path = base / "blind_case_20261024.json"
+        archive_path = base / "blind_archive_20261024.json"
+        case = json.loads(case_path.read_text(encoding="utf-8"))
+        archive = json.loads(archive_path.read_text(encoding="utf-8"))
+        expected = frozen.render_turtle(case, archive)
+        self.assertEqual(render_checked(case, archive, str(case_path), str(archive_path)), expected)
+        mutated = copy.deepcopy(case)
+        mutated["meeting"]["utterances"][2]["text"] = "Public hold revoked (fictional adversarial mutation)"
+        self.assertEqual(frozen.render_turtle(mutated, archive), expected)
+        with self.assertRaisesRegex(ValueError, "^in_memory_source_mismatch$"):
+            render_checked(mutated, archive, str(case_path), str(archive_path))
 
     def test_unchanged_fictional_fixture_passes(self):
         self.assertEqual(checked(self.case, self.archive, self.case, self.archive), self.baseline)
