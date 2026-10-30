@@ -46,8 +46,8 @@
     }
   ],
   "local_equivalent_implementation_controls": "8/8 PASS",
-  "published_repository_10_test_suite": "TBD (hosted logs not inspected)",
-  "hosted_cross_platform": "TBD",
+  "published_repository_10_test_suite": "10/10 PASS on Ubuntu and 10/10 PASS on Windows at head 523e60b6b8976be786cc7a394edeea9de4f5fc9d",
+  "hosted_cross_platform": "PASS; run 41091908815; logs independently inspected; fictional only",
   "original_frozen_gate_result": "unchanged; no matched-coverage superiority established",
   "public_eeg_validation": "TBD",
   "limitations": [
@@ -57,5 +57,24 @@
     "no multi-seed uncertainty interval",
     "no clinical, safety, commercial or product claim"
   ],
-  "next_experiment": "verify hosted execution; prospectively freeze online comparison before new public-EEG labels"
+  "next_experiment": "prospectively freeze online threshold comparison before new public EEG outcomes; independently reacquire S01 and establish source-event provenance",
+  "hosted_workflow_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41091908815",
+  "hosted_head_commit": "523e60b6b8976be786cc7a394edeea9de4f5fc9d",
+  "previous_failed_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41083598639",
+  "previous_failure": "Windows checkout CRLF conversion changed runtime source-byte Git blob; expected 2becec81a8002cc5ff2f445889b7617baf9937b9, observed 889b4b4614aa7c2b65932641330c95225c38f71e; tests passed but diagnostic failed closed",
+  "fix": "Branch-local .gitattributes enforces text eol=lf for frozen synthetic_evaluator.py; original evaluator blob unchanged; workflow filter includes .gitattributes",
+  "hosted_logged_wrong_counts": {
+    "0.25": {
+      "confidence": 6,
+      "drift": 6
+    },
+    "0.50": {
+      "confidence": 16,
+      "drift": 13
+    },
+    "0.75": {
+      "confidence": 37,
+      "drift": 36
+    }
+  }
 }
