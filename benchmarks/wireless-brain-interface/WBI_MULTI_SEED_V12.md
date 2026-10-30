@@ -14,9 +14,9 @@ The [v1.1 matched-budget diagnostic](WBI_MATCHED_COVERAGE_V11.md) found 16 vs 13
 - Primary descriptive statistic: paired candidate-minus-baseline incorrect counts per test pair. This 200-seed protocol and alpha grid were chosen after the v1.1 single-fixture result; this is **exploratory, not prospective**.
 - Source: unchanged `synthetic_evaluator.py` Git blob `2becec81a8002cc5ff2f445889b7617baf9937b9`, checked at runtime by `frozen_module`. Reuses the existing v1.1 `choose_alpha` and `select_indices` functions.
 
-## Local result — independent package reproduction (not hosted evidence yet)
+## Local and hosted cross-platform verified synthetic result
 
-Ran on Linux CPython 3.13 using the independently preserved frozen source and a functionally equivalent v1.1 diagnostic copy; **8/8 v1.2 regression tests passed locally**. A hosted cross-platform result must be inspected before claiming that exact committed revision is independently verified.
+Local reproduction used Linux CPython 3.13 and the independently preserved frozen source; **8/8 fictional tests passed locally**. The hosted [GitHub Actions run #41101111460](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41101111460) subsequently **completed successfully**. Both job logs were inspected: **Ubuntu CPython 3.13.17 (job 124218346384) and Windows CPython 3.13.16 (job 124218346264) each passed 8/8 tests**, checked the unchanged frozen evaluator blob `2becec81a8002cc5ff2f445889b7617baf9937b9`, and recomputed the same 200-pair aggregate counts as the committed registry. This verifies the fictional experiment on two hosted operating systems; it does **not** validate EEG, online selection, or an independent data-generating process.
 
 | 200 fictional test pairs; 120 actions per policy per pair | Result |
 |---|---:|
@@ -43,7 +43,7 @@ python -B wbi_v12_multiseed.py --output /tmp/wbi_v12_result.json
 python -c "import json;print(json.load(open('/tmp/wbi_v12_result.json'))['aggregate'])"
 ```
 
-The script refuses to overwrite an existing result path. Its JSON includes **all 200 per-seed counts**, the seed formulas, selected alphas and provenance; no dataset or personal information. A dedicated non-scheduled GitHub Actions workflow checks frozen-source integrity and the expected aggregate on Ubuntu and Windows. **Hosted result: TBD until the workflow completes and its logs are independently inspected.**
+The script refuses to overwrite an existing result path. Its JSON includes **all 200 per-seed counts**, the seed formulas, selected alphas and provenance; no dataset or personal information. A dedicated non-scheduled GitHub Actions workflow checks frozen-source integrity and the expected aggregate on Ubuntu and Windows. **Hosted result: SUCCESS, both operating systems; 8/8 tests each; logs inspected 2026-10-30 UTC.**
 
 ## Decision, failure learning and next experiment
 
