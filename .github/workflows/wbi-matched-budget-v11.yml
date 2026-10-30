@@ -1,0 +1,39 @@
+name: WBI exploratory matched-budget v1.1
+
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/wbi_matched_coverage_v11.py'
+      - 'benchmarks/wireless-brain-interface/test_wbi_matched_coverage_v11.py'
+      - 'benchmarks/wireless-brain-interface/synthetic_evaluator.py'
+      - '.github/workflows/wbi-matched-budget-v11.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run synthetic negative controls
+        run: python -m unittest discover -s benchmarks/wireless-brain-interface -p "test_wbi_matched_coverage_v11.py" -v
+      - name: Run pinned frozen-fixture diagnostic
+        run: python benchmarks/wireless-brain-interface/wbi_matched_coverage_v11.py --output wbi_matched_v11_result.json
+      - name: Print machine-readable synthetic result
+        run: python -c "from pathlib import Path; print(Path('wbi_matched_v11_result.json').read_text())"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-v11-${{ matrix.os }}
+          path: wbi_matched_v11_result.json
+          retention-days: 14
