@@ -1,0 +1,36 @@
+{
+  "schema": "ZHOU2020_SESSION_INDEX_SPLIT_V07_REGISTRY",
+  "date_utc": "2026-10-30",
+  "project": "Wireless Brain Interface",
+  "stage": "Research / Simulation",
+  "evidence_type": "pre-outcome candidate session-index split derived from public event-TSV metadata",
+  "source": "Zhou2020 corrected public event metadata census v0.5",
+  "source_upstream_ref": "a291ed8a2afab3f93b85a540134dceb98092fcaf",
+  "source_census_sha256": "b891a3edfd8b1c535bc50032f7d46717de4f45d0eddbfd500f06430e757ec6b1",
+  "output_manifest_sha256": "5ccad200cb36ca0414cef25e19d3dc5530f1a352bb9520b7d188170a162783d8",
+  "output_manifest_bytes": 228606,
+  "files": 833,
+  "subjects": 20,
+  "role_file_counts": {
+    "train": 588,
+    "calibration": 123,
+    "test_candidate": 122
+  },
+  "local_python_version": "3.13.5",
+  "local_tests_with_original_source": "10 passed / 0 skipped",
+  "local_tests_without_original_source": "8 passed / 2 skipped",
+  "original_npz_verified": false,
+  "event_to_npz_pairing_verified": false,
+  "acquisition_chronology_verified": false,
+  "previous_event_label_preview_disclosed": true,
+  "heldout_EEG_outcomes": "TBD",
+  "maturity_advanced": false,
+  "largest_gap": "original NPZ byte authentication and event-to-recording pairing, plus untouched held-out outcome protocol",
+  "next_experiment": "validate original NPZ file hashes and one-to-one event mapping; independently review/freeze split before decoding outcomes",
+  "no_claims": [
+    "clinical safety",
+    "drift-gate superiority",
+    "public EEG held-out performance",
+    "independent external review"
+  ]
+}
