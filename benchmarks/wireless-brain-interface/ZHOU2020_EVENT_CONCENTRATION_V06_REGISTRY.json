@@ -1,0 +1,99 @@
+{
+  "schema": "ZHOU2020_EVENT_CONCENTRATION_V06_SUMMARY",
+  "date": "2026-10-30",
+  "evidence_type": "secondary structural analysis of pinned corrected public event TSV metadata; not original EEG",
+  "source": {
+    "upstream_ref": "a291ed8a2afab3f93b85a540134dceb98092fcaf",
+    "v05_json_sha256": "b891a3edfd8b1c535bc50032f7d46717de4f45d0eddbfd500f06430e757ec6b1",
+    "v05_json_bytes": 216160,
+    "offline_archive_sha256": "561791e4d5d8bcc9d555db2ad50f53f6b034b99f5022d4456857eee6b94d16c8",
+    "v05_report": "https://github.com/Vermicare/Haridas-Satheesh/blob/research/wbi-independent-repro-20261026/benchmarks/wireless-brain-interface/ZHOU2020_EVENT_CENSUS_V05.md"
+  },
+  "run_conditions": {
+    "python": "CPython 3.13.5",
+    "platform": "local Linux",
+    "standard_library_only": true,
+    "tests": "9/9 passed with pinned original JSON",
+    "hosted_cross_platform_v06": "TBD",
+    "original_npz_verified": "TBD"
+  },
+  "results": {
+    "files": 833,
+    "structural_rows": 33534,
+    "non40_files": 18,
+    "subjects_with_non40": 8,
+    "delta_vs_833_times_40": 214,
+    "delta_vs_840_times_40": -66,
+    "by_subject_non40_and_delta": {
+      "2": [
+        2,
+        -2
+      ],
+      "5": [
+        2,
+        -4
+      ],
+      "9": [
+        3,
+        -25
+      ],
+      "10": [
+        2,
+        -5
+      ],
+      "11": [
+        1,
+        -3
+      ],
+      "12": [
+        1,
+        -3
+      ],
+      "17": [
+        4,
+        136
+      ],
+      "20": [
+        3,
+        120
+      ]
+    },
+    "by_session_non40_and_delta": {
+      "ses-0": [
+        8,
+        254
+      ],
+      "ses-1": [
+        0,
+        0
+      ],
+      "ses-2": [
+        3,
+        -7
+      ],
+      "ses-3": [
+        0,
+        0
+      ],
+      "ses-4": [
+        4,
+        -30
+      ],
+      "ses-5": [
+        2,
+        -2
+      ],
+      "ses-6": [
+        1,
+        -1
+      ]
+    }
+  },
+  "interpretation": "Row counts are structural, not authenticated independent EEG trials; observed nonuniformity can distort weighting.",
+  "next_experiment": "Freeze actual availability and weighting; preregister original NPZ checksum subset and sealed subject-specific held-out evaluation.",
+  "maturity": "Research / Simulation",
+  "maturity_advanced": false,
+  "human_review": "TBD",
+  "novelty_claim": false,
+  "release": false
+}
