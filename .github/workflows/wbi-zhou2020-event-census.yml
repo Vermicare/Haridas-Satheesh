@@ -1,0 +1,55 @@
+name: WBI Zhou2020 full structural event-row census (no EEG scoring)
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - '.github/workflows/wbi-zhou2020-event-census.yml'
+      - 'benchmarks/wireless-brain-interface/zhou2020_event_census_v05.py'
+      - 'benchmarks/wireless-brain-interface/test_zhou2020_event_census_v05.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 8
+    steps:
+      - name: Preserve line endings
+        shell: bash
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run fictional negative controls only
+        shell: bash
+        run: python -B -m unittest discover -s benchmarks/wireless-brain-interface -p 'test_zhou2020_event_census_v05.py' -v
+  pinned-census:
+    needs: fictional-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Read only pinned public corrected event TSVs; no label interpretation
+        shell: bash
+        run: python -B benchmarks/wireless-brain-interface/zhou2020_event_census_v05.py --output "${RUNNER_TEMP}/zhou2020_event_census_v05.json" --workers 6
+      - name: Preserve source-path/hash/count provenance only
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zhou2020-event-row-census-v05
+          path: ${{ runner.temp }}/zhou2020_event_census_v05.json
+          retention-days: 14
+          if-no-files-found: error
