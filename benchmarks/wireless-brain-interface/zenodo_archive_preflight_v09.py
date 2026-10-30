@@ -44,7 +44,8 @@ def audit(path, expected_md5, max_zip_bytes=2_000_000_000,
         with zipfile.ZipFile(path) as archive:
             seen = set(); total = 0; files = 0
             for entry in archive.infolist():
-                name = entry.filename
+                name = entry.orig_filename
+                check(name == entry.filename, 'no normalized ZIP filename changes: ' + repr(name))
                 canonical = name.replace('\\', '/')
                 parts = PurePosixPath(canonical).parts
                 check(name == canonical and not name.startswith('/') and
