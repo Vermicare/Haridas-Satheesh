@@ -32,5 +32,29 @@
     "drift-gate superiority",
     "public EEG held-out performance",
     "independent external review"
-  ]
+  ],
+  "hosted_verification": {
+    "date_utc": "2026-10-30",
+    "run_id": 41004917344,
+    "head_sha": "0cfc30790dc4207cd26f47e3561cf3be10488d38",
+    "ubuntu": {
+      "python": "3.13.17",
+      "tests_passed": 10,
+      "tests_skipped": 0,
+      "artifact_id": 12955017991,
+      "zip_sha256": "de28d0476b01d792c2be3d232131f493a825afbe2b991a7edcea2a110a5d30d7"
+    },
+    "windows": {
+      "python": "3.13.16",
+      "tests_passed": 10,
+      "tests_skipped": 0,
+      "artifact_id": 12955037887,
+      "zip_sha256": "b410e92a2f2899f50bef7b402a06769a473039f85b243f7a1d400f9e0d724980"
+    },
+    "canonical_json_sha256": "5ccad200cb36ca0414cef25e19d3dc5530f1a352bb9520b7d188170a162783d8",
+    "canonical_json_bytes": 228606,
+    "original_artifacts_independently_downloaded_and_inspected": true,
+    "identical_json_members": true,
+    "hosted_artifact_expiry_utc": "2026-11-06"
+  }
 }
