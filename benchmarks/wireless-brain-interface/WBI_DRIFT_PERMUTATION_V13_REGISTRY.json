@@ -1,0 +1,46 @@
+{
+  "date_utc": "2026-10-30",
+  "evidence_class": "FICTIONAL_SYNTHETIC_ONLY",
+  "stage": "Research / Simulation",
+  "method": "Post-hoc 200 independent calibration/test seed pairs; 240 test observations/pair; 120 selected/policy; calibration-only alpha grid; separately shuffled drift columns in calibration and/or test; fixed deterministic permutation seeds.",
+  "source_evaluator_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+  "v13_script_git_blob": "bea36867b2b17a367e433c0e94de820581707f5d",
+  "v13_tests_git_blob": "cb57d5d610ac0314d054c7bfd58135255533ad16",
+  "local_environment": "CPython 3.13.5 Linux x86_64",
+  "local_tests": "8/8 PASS",
+  "hosted_ci": "TBD",
+  "original": {
+    "baseline_wrong": 3716,
+    "candidate_wrong": 3645,
+    "delta_wrong": -71,
+    "better": 76,
+    "tied": 86,
+    "worse": 38,
+    "alpha_zero_pairs": 64
+  },
+  "permuted_both": {
+    "baseline_wrong": 3716,
+    "candidate_wrong": 3773,
+    "delta_wrong": 57,
+    "better": 13,
+    "tied": 153,
+    "worse": 34,
+    "alpha_zero_pairs": 131
+  },
+  "permuted_test_only": {
+    "baseline_wrong": 3716,
+    "candidate_wrong": 3857,
+    "delta_wrong": 141,
+    "better": 39,
+    "tied": 86,
+    "worse": 75,
+    "alpha_zero_pairs": 64
+  },
+  "unknowns": {
+    "real_eeg": "TBD",
+    "online_action_policy": "TBD",
+    "clinical_or_safety_benefit": "TBD",
+    "multi_permutation_uncertainty": "TBD"
+  },
+  "interpretation": "Apparent advantage is contingent on synthetic drift informativeness and alignment; no EEG superiority or stage advance."
+}
