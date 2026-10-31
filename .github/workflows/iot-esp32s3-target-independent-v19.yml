@@ -1,0 +1,143 @@
+name: ESP32-S3 target-asserted immutable builds v19 (unflashed)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/iot-digest-pinned-independent-v19.yml'
+      - 'benchmarks/hardware-iot/configs/esp32s3_target_v19.defaults'
+      - 'benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  independent-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 70
+    steps:
+      - name: Checkout exactly the event commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # verified v4 tag, 2026-10-31
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Pull immutable ESP-IDF image and build once without flashing
+        shell: bash
+        env:
+          IMAGE: espressif/idf@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c
+          OS_LABEL: ${{ matrix.os }}
+        run: |
+          set -euo pipefail
+          stage="$GITHUB_WORKSPACE/evidence_v19/$OS_LABEL"
+          mkdir -p "$stage"
+          git rev-parse HEAD > "$stage/checkout_sha.txt"
+          test "$(cat "$stage/checkout_sha.txt")" = "$GITHUB_SHA"
+          printf '%s\n' "$IMAGE" > "$stage/requested_image.txt"
+          printf '%s\n' "$OS_LABEL" > "$stage/runner_os.txt"
+          uname -a > "$stage/runner_uname.txt"
+          docker version --format '{{.Server.Version}}' > "$stage/docker_server_version.txt"
+          # No fallback to mutable v6.1: unavailable digest must fail visibly.
+          docker pull "$IMAGE" 2>&1 | tee "$stage/image_pull.log"
+          docker image inspect --format '{{.Id}}' "$IMAGE" > "$stage/image_config_digest.txt"
+          docker image inspect --format '{{json .RepoDigests}}' "$IMAGE" > "$stage/image_repo_digests.json"
+          grep -F '81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c' "$stage/image_repo_digests.json"
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace/benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture \
+            --env STAGE="/workspace/evidence_v19/$OS_LABEL" \
+            "$IMAGE" bash -euo pipefail -c '
+              idf.py --version > "$STAGE/idf_version.txt"
+              xtensa-esp-elf-gcc --version | head -n 1 > "$STAGE/compiler_version.txt"
+              defaults=/workspace/benchmarks/hardware-iot/configs/esp32s3_target_v19.defaults
+              sha256sum "$defaults" > "$STAGE/target_defaults_sha256.txt"
+              # Fresh explicit target selection, never silently accept the ESP32 default.
+              idf.py -D SDKCONFIG_DEFAULTS="$defaults" set-target esp32s3 2>&1 | tee "$STAGE/set_target.log"
+              idf.py -D SDKCONFIG_DEFAULTS="$defaults" build 2>&1 | tee "$STAGE/build.log"
+              grep -Fx "CONFIG_IDF_TARGET=\"esp32s3\"" sdkconfig
+              grep -Fx "CONFIG_IDF_TARGET_ESP32S3=y" sdkconfig
+              grep -Fx "CONFIG_ESPTOOLPY_FLASHSIZE=\"8MB\"" sdkconfig
+              python3 -c "import json; d=json.load(open(\"build/flasher_args.json\")); assert d[\"extra_esptool_args\"][\"chip\"] == \"esp32s3\", d; assert d[\"flash_settings\"][\"flash_size\"] == \"8MB\", d"
+              printf "%s\n" "ESP32-S3 target and 8MB nominal flash settings verified in effective build configuration" > "$STAGE/target_assertions.txt"
+              grep -qx CONFIG_APP_REPRODUCIBLE_BUILD=y sdkconfig
+              grep -qx CONFIG_APP_PROJECT_VER_FROM_CONFIG=y sdkconfig
+              grep -q iot-repro-v19-s3 sdkconfig
+              sha256sum sdkconfig > "$STAGE/sdkconfig_sha256.txt"
+              cp build/iot_dual_sensor_capture.bin "$STAGE/app.bin"
+              cp build/bootloader/bootloader.bin "$STAGE/bootloader.bin"
+              cp build/partition_table/partition-table.bin "$STAGE/partition.bin"
+              cp build/flasher_args.json "$STAGE/flasher_args.json"
+              cd "$STAGE"
+              sha256sum app.bin bootloader.bin partition.bin flasher_args.json > SHA256SUMS.txt
+              sha256sum --check SHA256SUMS.txt
+            '
+      - name: Preserve binary members and failed-build logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # verified v4 tag
+        with:
+          name: iot-v19-${{ matrix.os }}
+          path: evidence_v19/${{ matrix.os }}/
+          if-no-files-found: warn
+          retention-days: 14
+          compression-level: 0
+
+  compare-independent-runners:
+    needs: independent-build
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Download independently retained member sets
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # verified v4 tag
+        with:
+          pattern: iot-v19-*
+          path: evidence_v19/
+          merge-multiple: false
+      - name: Verify manifests, source identity and member byte equality
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p comparison
+          exec > >(tee comparison/comparison.log) 2>&1
+          a=evidence_v19/iot-v19-ubuntu-22.04
+          b=evidence_v19/iot-v19-ubuntu-24.04
+          test -s "$a/SHA256SUMS.txt"
+          test -s "$b/SHA256SUMS.txt"
+          for folder in "$a" "$b"; do
+            test -s "$folder/requested_image.txt"
+            grep -Fx 'espressif/idf@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c' "$folder/requested_image.txt"
+            test -s "$folder/image_repo_digests.json"
+            test -s "$folder/sdkconfig_sha256.txt"
+            test -s "$folder/target_defaults_sha256.txt"
+            test -s "$folder/target_assertions.txt"
+            grep -Fx "ESP32-S3 target and 8MB nominal flash settings verified in effective build configuration" "$folder/target_assertions.txt"
+            (cd "$folder" && sha256sum --check SHA256SUMS.txt)
+          done
+          cmp "$a/checkout_sha.txt" "$b/checkout_sha.txt"
+          cmp "$a/sdkconfig_sha256.txt" "$b/sdkconfig_sha256.txt"
+          cmp "$a/target_defaults_sha256.txt" "$b/target_defaults_sha256.txt"
+          cmp "$a/target_assertions.txt" "$b/target_assertions.txt"
+          cmp "$a/image_config_digest.txt" "$b/image_config_digest.txt"
+          for member in app.bin bootloader.bin partition.bin flasher_args.json; do
+            if cmp -s "$a/$member" "$b/$member"; then
+              echo "MATCH $member"
+            else
+              echo "MISMATCH $member"
+              sha256sum "$a/$member" "$b/$member"
+              exit 1
+            fi
+          done
+          echo "MATCH: four unflashed members from independently provisioned runner images"
+      - name: Preserve comparison log, including failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: iot-v19-comparison
+          path: comparison/
+          if-no-files-found: warn
+          retention-days: 14
+
+# Research-only: neither job flashes hardware or acquires physical sensor readings.
+# A PASS requires explicit esp32s3/8MB settings and byte agreement under one pinned image.
+# Physical flash-ID, PSRAM, sensor identity and measurements remain unverified.
