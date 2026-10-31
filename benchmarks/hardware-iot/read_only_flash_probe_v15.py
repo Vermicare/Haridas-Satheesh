@@ -2,6 +2,8 @@
 
 Never connects to hardware or authorizes flashing. A transcript is an operator
 assertion, not authenticated device evidence. Avoids emitting MAC/serial data.
+An explicit image flash-size argument is mandatory: historic 2MB and current
+8MB research builds must never be silently interchanged.
 """
 import argparse
 import json
@@ -21,11 +23,13 @@ _ERROR = re.compile(r"(?im)(?:^\s*(?:WARNING\b|ERROR\b|A fatal error occurred:)|
 _ALLOWED_SIZES = {1, 2, 4, 8, 16, 32, 64, 128}
 
 
-def inspect_transcript(raw: str, declared_build_flash_mb: int = 2) -> dict:
-    """Return privacy-safe gate; fail closed on ambiguous/unrecognized output."""
+def inspect_transcript(raw: str, declared_build_flash_mb: int | None = None) -> dict:
+    """Return privacy-safe gate; reject an absent/ambiguous image flash size."""
     if not isinstance(raw, str) or len(raw) > 100_000:
         raise ProbeError("transcript missing or oversized")
-    if declared_build_flash_mb not in _ALLOWED_SIZES or isinstance(declared_build_flash_mb, bool):
+    if declared_build_flash_mb is None:
+        raise ProbeError("explicit build flash size required; never infer from a prior image")
+    if isinstance(declared_build_flash_mb, bool) or declared_build_flash_mb not in _ALLOWED_SIZES:
         raise ProbeError("unsupported declared build flash size")
     if _ERROR.search(raw):
         raise ProbeError("probe reports warning/error; manual review required")
@@ -57,8 +61,12 @@ def inspect_transcript(raw: str, declared_build_flash_mb: int = 2) -> dict:
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("transcript", type=Path, help="Private esptool flash-id text output; never commit")
-    ap.add_argument("--build-flash-mb", type=int, default=2)
+    ap.add_argument("--build-flash-mb", type=int, default=None,
+                    help="Required: nominal flash size from the EXACT candidate image (not a board guess)")
     ns = ap.parse_args(argv)
+    if ns.build_flash_mb is None:
+        print(json.dumps({"gate": "HOLD_PROBE_REJECTED", "reason": "explicit --build-flash-mb required; no implicit 2MB/8MB image selection", "flash_authorized": False}))
+        return 2
     try:
         raw = ns.transcript.read_text(encoding="utf-8")
         report = inspect_transcript(raw, ns.build_flash_mb)
