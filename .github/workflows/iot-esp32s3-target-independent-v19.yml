@@ -2,7 +2,7 @@ name: ESP32-S3 target-asserted immutable builds v19 (unflashed)
 on:
   pull_request:
     paths:
-      - '.github/workflows/iot-digest-pinned-independent-v19.yml'
+      - '.github/workflows/iot-esp32s3-target-independent-v19.yml'
       - 'benchmarks/hardware-iot/configs/esp32s3_target_v19.defaults'
       - 'benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/**'
   workflow_dispatch:
