@@ -6,6 +6,14 @@ This roadmap is an evidence-gated control document for the public portfolio. It 
 
 **Idea → Research → Simulation → Prototype → Bench Validation → External Review → Real-world Pilot → Product Candidate**
 
+### October 31 — CORTEX v0.8: reproducible fictional source-only reviewer bundle (no stage advance)
+
+[Unmerged draft PR #4 source-only packaging report](https://github.com/Vermicare/Haridas-Satheesh/blob/research/cortex-fixture-integrity-v04-20261023/benchmarks/cortex/CORTEX_SOURCE_ONLY_BUNDLE_V08.md), [executable builder](https://github.com/Vermicare/Haridas-Satheesh/blob/research/cortex-fixture-integrity-v04-20261023/benchmarks/cortex/source_only_reviewer_bundle_v01.py), and [completed hosted run #41221401780](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41221401780) establish a **software packaging/provenance gate only**: Ubuntu and Windows each passed **210/210 fictional tests**, including nine new fail-closed source-bundle controls; both generated the exact same in-memory three-member source-only ZIP SHA-256 `aa72cf4b47fe15220922716b9540870fc405b2af8d92c8d220bb38d59fb0449f`. Original pinned fictional case/archive bytes were unchanged; CI did not publish a reviewer ZIP or private submissions. Existing public example interpretations mean the source-only bundle **cannot prove genuine reviewer blinding**.
+
+**Decision:** CORTEX remains **Research / Architecture**. **Strongest evidence:** independently hosted cross-platform fixed-case provenance/graph controls plus byte-identical source-only packaging, **not** semantic agreement. **Largest gap:** two truly independent prior-exposure-screened human annotations, adjudicated semantic disagreements and measured correction burden versus manual notes all **TBD**. **Next experiment:** privately screen voluntary reviewers for prior exposure, independently lock two source-only first-pass annotations before author labels are shown, and separately time fair manual versus correction tasks. **Kill/reframe:** if prior exposure prevents blinding, author a new unseen fictional case; if unsupported lineage or correction burden exceeds manual notes, narrow to provenance rather than automated governance benefit. No external reviewer, stage change, deployment, employer record, release, merge or patentability claim.
+
+
+
 A project may skip a gate only when existing evidence genuinely satisfies that gate's intent. A project can also move backward, merge, or be archived when evidence weakens the thesis.
 
 
