@@ -32,10 +32,11 @@ jobs:
         shell: bash
         working-directory: benchmarks/cortex
         run: |
-          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py test_archive_citation_gate_v04.py test_prov_o_mapping_v01.py test_reviewer_pair_preflight_v01.py test_source_span_completeness_v01.py test_source_span_gold_coverage_v02.py test_semantic_annotation_contract_v02.py test_semantic_annotation_integration_v02.py test_reviewer_pair_semantic_gate_v03.py test_reviewer_pair_exact_disagreement_v04.py
+          python -B -m unittest -v fixture_integrity_preflight.py test_lineage_shift.py test_supersession_graph.py test_blind_review_preflight.py test_archive_citation_gate_v04.py test_prov_o_mapping_v01.py test_reviewer_pair_preflight_v01.py test_source_span_completeness_v01.py test_source_span_gold_coverage_v02.py test_semantic_annotation_contract_v02.py test_semantic_annotation_integration_v02.py test_reviewer_pair_semantic_gate_v03.py test_reviewer_pair_exact_disagreement_v04.py test_source_only_reviewer_bundle_v01.py
           python -B demo_reviewer_pair_exact_disagreement_v04.py > cortex-exact-disagreement-v04.json
           python -c "import json; d=json.load(open('cortex-exact-disagreement-v04.json')); assert d['human_reviewers']==0 and d['external_actions']==0; assert d['matching']['pair_ready'] and not d['matching']['exact_disagreement_detected']; assert d['different_text']['field_mismatch_counts']['statement']==1; assert d['semantic_accuracy']=='TBD'"
           python -B blind_review_preflight.py manifest blind_case_20261024.json blind_archive_20261024.json
+          python -c "from pathlib import Path; from source_only_reviewer_bundle_v01 import CASE,ARCHIVE,build_packet; p=Path('.'); data,meta=build_packet((p/CASE).read_bytes(),(p/ARCHIVE).read_bytes()); assert meta['reviewers']=='TBD'; print('CORTEX_SOURCE_ONLY_V01: in-memory ZIP SHA-256='+meta['bundle_sha256'])"
           python -B archive_citation_gate_v04.py demo
           python -B source_span_completeness_v01.py demo
           python -B source_span_gold_coverage_v02.py demo
