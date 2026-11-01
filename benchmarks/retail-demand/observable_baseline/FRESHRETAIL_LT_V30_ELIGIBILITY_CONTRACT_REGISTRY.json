@@ -1,0 +1,43 @@
+{
+  "schema": "freshretail-lt-eligibility-v3.0-evidence-registry",
+  "date": "2026-11-01",
+  "stage": "Research / Architecture",
+  "source": {
+    "publisher": "Dingdong-Inc/FreshRetailNet-LT",
+    "publisher_notes": "https://dingdong-inc-freshretailnet-lt-leaderboard.static.hf.space/index.html",
+    "train_revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "eval_sha256": "370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626",
+    "psd_reference_sha256": "TBD"
+  },
+  "implementation": {
+    "branch": "research/retail-store-disjoint-v15-20261027",
+    "source": "freshretail_lt_eligibility_contract_v30.py",
+    "tests": "test_freshretail_lt_eligibility_contract_v30.py",
+    "existing_coverage_gate": "freshretail_lt_full_target_gate_v27.py",
+    "full_target_rows_required": 70000,
+    "mask": "psd >= 0 AND stock_hour6_22_cnt == 0"
+  },
+  "run": {
+    "github_actions": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41327299853",
+    "head_sha": "3dd5e37839e3e362eb66398c22a8a6764a9856c5",
+    "python": "3.13",
+    "ubuntu_total_tests_passed": 282,
+    "windows_total_tests_passed": 282,
+    "new_tests_passed_per_os": 16,
+    "log_inspection": "both original job logs independently inspected",
+    "data": "fictional only",
+    "real_eval_read": false
+  },
+  "limitations": {
+    "publisher_psd_reference_parity": "TBD",
+    "publisher_metric_aggregation_parity": "TBD",
+    "real_eligible_row_count": "TBD",
+    "real_eval_sales_labels_read": false,
+    "real_eval_stockout_mask_read": false,
+    "official_score": "TBD",
+    "independent_review": "TBD",
+    "external_outcomes": "TBD",
+    "maturity_change": "NONE"
+  },
+  "next_experiment": "pin independent publisher psd reference and exact scoring implementation, then run explicitly exploratory 70,000-row private scoring"
+}
