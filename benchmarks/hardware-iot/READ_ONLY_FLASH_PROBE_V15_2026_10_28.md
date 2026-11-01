@@ -34,3 +34,17 @@ The retained unflashed ESP-IDF v6.1 bundle reports a **2 MB flash-size setting**
 ## Next evidence gate
 
 Obtain a **genuine, private, independently reviewed** device/flash-ID transcript and source/board configuration record, then decide whether a board-matched rebuild is necessary. Only after an approved flash and wiring review attempt a >=600-second raw dual-sensor session with host/device continuity, hashes, light perturbation and independent physical-origin review. No stage change, release, physical-performance claim or novelty assertion.
+
+## v2.0 fail-closed correction — 2026-10-31 (software-only)
+
+**Reproduced configuration hazard:** the original offline parser silently defaulted to `--build-flash-mb 2`, appropriate to the historical v1.2/v1.8 ESP32-targeted artifact but **not** to the independently verified v1.9 ESP32-S3-targeted **nominal 8MB** build. A fictional `Detected flash size: 8MB` transcript would be reported as `DIFFERENT_REQUIRES_BOARD_CONFIGURATION_REVIEW` when the caller omitted the flag, despite the v1.9 image declaring 8MB. More importantly, the result did not disclose that the comparison used an implicit *old* image assumption. This is a test-configuration error, **not** evidence about a physical board.
+
+**Correction:** the offline parser and command-line interface now reject a missing image-size declaration. The operator must inspect the **exact candidate** build's flash arguments and pass its size explicitly. For v1.9, only after independently checking that exact image's metadata, use:
+
+```bash
+python read_only_flash_probe_v15.py PATH_TO_PRIVATE_TRANSCRIPT --build-flash-mb 8
+```
+
+For a genuinely reviewed historical 2MB image, `--build-flash-mb 2` remains an explicit, separate comparison. **Never infer physical capacity from the board's advertised N8R8 designation, and never substitute the 8MB flag without verifying the candidate image.** Both matching and mismatching results remain `TRANSCRIPT_PARSED_FLASH_NOT_AUTHORIZED` (or fail-closed rejection); they do not attest the device, validate PSRAM, or authorize a flash.
+
+**Evidence:** 21/21 fictional-only local regression tests passed under CPython 3.13.5/Linux, including missing-flag rejection, 8MB match and 2MB mismatch controls, privacy non-disclosure and all previous malformed-transcript cases. [GitHub Actions #41189702175](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41189702175) **PASSED 130/130 fictional contract tests on Ubuntu (job 124503758297) and 130/130 on Windows (job 124503758445)**; both completed job logs were independently inspected at the latest research-branch head, including the new missing-size, 8MB match, 2MB mismatch and privacy tests. No genuine esptool transcript was supplied or generated, no physical flash/PSRAM was measured, and no firmware was flashed. Stage remains Prototype / Hardware Architecture. Next: genuine private read-only chip/flash-ID evidence and independently reviewed PSRAM/partition/firmware configuration, then the >=600-second physical sensor capture in Issue #8.

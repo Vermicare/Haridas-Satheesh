@@ -1,0 +1,7 @@
+# v1.9 predeclared software-build configuration only; no flash or hardware claim.
+# ESP32-S3 target is selected explicitly by idf.py set-target in the workflow.
+CONFIG_APP_REPRODUCIBLE_BUILD=y
+CONFIG_APP_PROJECT_VER_FROM_CONFIG=y
+CONFIG_APP_PROJECT_VER="iot-repro-v19-s3"
+# Intended N8R8 board's nominal flash size; physical flash identity remains unverified.
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
