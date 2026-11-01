@@ -1,6 +1,6 @@
 # Companion v2.0 — dynamic fictional legacy-effect reachability (negative evidence)
 
-**Date:** 2026-11-01. **Maturity:** In Progress / synthetic governance research, **unchanged**. **Scope:** public, disposable local SQLite fixtures; no network, real user, production service, physical action or external connector.
+**Date:** 2026-11-01. **Public evidence stage:** Research / Simulation (fictional software only), **unchanged**; private implementation maturity **TBD**. **Scope:** public, disposable local SQLite fixtures; no network, real user, production service, physical action or external connector.
 
 ## Question and falsifiable experiment
 
