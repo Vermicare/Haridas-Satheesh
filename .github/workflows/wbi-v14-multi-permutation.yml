@@ -1,0 +1,43 @@
+name: WBI v1.4 fictional repeated drift permutations
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - 'benchmarks/wireless-brain-interface/wbi_v14_multi_permutation.py'
+      - 'benchmarks/wireless-brain-interface/test_wbi_v14_multi_permutation.py'
+      - '.github/workflows/wbi-v14-multi-permutation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-multi-permutation:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: benchmarks/wireless-brain-interface
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Check frozen original evaluator Git blob
+        run: |
+          test "$(git hash-object synthetic_evaluator.py)" = '2becec81a8002cc5ff2f445889b7617baf9937b9'
+      - name: Run eleven synthetic-only regression tests
+        run: python -B -m unittest -v test_wbi_v14_multi_permutation.py
+      - name: Reproduce fixed-seed eight-repeat sensitivity
+        run: |
+          python -B wbi_v14_multi_permutation.py --pairs 200 --repeats 8 --output v14_ci_result.json
+          python -c 'import json; a=json.load(open("v14_ci_result.json")); assert (a["original"]["baseline_wrong"],a["original"]["candidate_wrong"])==(3716,3645); assert a["summary"]["permuted_both_delta_min"]==18 and a["summary"]["permuted_both_delta_max"]==68; assert a["summary"]["permuted_test_only_delta_min"]==113 and a["summary"]["permuted_test_only_delta_max"]==184; assert a["summary"]["permuted_both_nonnegative_repeats"]==8 and a["summary"]["permuted_test_only_nonnegative_repeats"]==8; print("WBI v1.4 SYNTHETIC sensitivity VERIFIED",a["summary"])'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wbi-v14-aggregate-${{ matrix.os }}
+          path: benchmarks/wireless-brain-interface/v14_ci_result.json
+          if-no-files-found: error
+          retention-days: 14
