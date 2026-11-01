@@ -117,7 +117,7 @@ This project investigates the **latent state behind observable events** and what
 
 `Research / Architecture → reproducible public-data benchmark → intervention evidence`
 
-**Verified evidence:** [7.87M pinned TRAIN rows: daily = sum of hourly normalized quantities](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_TRAIN_HOURLY_IDENTITY_V26.md) within frozen numeric tolerance; **latent-demand and commercial benefits remain unverified**.
+**Verified evidence:** [7.87M pinned TRAIN rows: daily = sum of hourly normalized quantities](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_TRAIN_HOURLY_IDENTITY_V26.md) within frozen tolerance; [70,000/70,000 TRAIN-only last-observed baseline targets covered](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V28_FULL_TARGET_EXECUTION_20261101.md) (**not scored**). **Latent-demand and commercial benefits remain unverified.**
 
 ### 06 // MACHINE ↔ PHYSICAL WORLD — [Hardware & IoT](projects/hardware-iot.md)
 
