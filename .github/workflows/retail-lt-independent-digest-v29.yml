@@ -1,0 +1,78 @@
+name: Retail LT v2.9 independent full-target digest reproduction
+on:
+  push:
+    branches: [research/retail-store-disjoint-v15-20261027]
+    paths:
+      - '.github/workflows/retail-lt-independent-digest-v29.yml'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_full_target_last_observed_v28.py'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_full_target_gate_v27.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-pinned-reproduction:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned public-data reader
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0
+      - name: Download and independently verify publisher-pinned TRAIN and EVAL
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-LT/resolve/01c3bb306415e09d3ccd2fe762f33eb3aeb2affd/data'
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 900 --silent --show-error "$base/train.parquet" -o "$RUNNER_TEMP/train.parquet"
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 300 --silent --show-error "$base/eval.parquet" -o "$RUNNER_TEMP/eval.parquet"
+          printf '%s  %s\n' 'e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3' "$RUNNER_TEMP/train.parquet" | sha256sum --check
+          printf '%s  %s\n' '370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626' "$RUNNER_TEMP/eval.parquet" | sha256sum --check
+      - name: Regenerate canonical private predictions from TRAIN only
+        working-directory: benchmarks/retail-demand/observable_baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B freshretail_lt_full_target_last_observed_v28.py --train "$RUNNER_TEMP/train.parquet" --eval "$RUNNER_TEMP/eval.parquet" --predictions "$RUNNER_TEMP/private-predictions.csv" --report "$RUNNER_TEMP/v29-aggregate.json"
+      - name: Independent exact-key coverage and previously published digest check
+        working-directory: benchmarks/retail-demand/observable_baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B freshretail_lt_full_target_gate_v27.py --eval "$RUNNER_TEMP/eval.parquet" --predictions "$RUNNER_TEMP/private-predictions.csv" --output "$RUNNER_TEMP/v29-coverage.json"
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          a=json.loads((root/'v29-aggregate.json').read_text(encoding='utf-8'))
+          b=json.loads((root/'v29-coverage.json').read_text(encoding='utf-8'))
+          expected='54b5bdd957b6e3c367489b2236109df95a27e95b141d088cc23c8155be6792d1'
+          actual=hashlib.sha256((root/'private-predictions.csv').read_bytes()).hexdigest()
+          assert actual==expected==a['result']['csv_sha256'], 'published prediction digest not reproduced'
+          assert a['result']['target_rows']==70000 and a['result']['predicted_rows']==70000
+          assert a['result']['zero_fallback_rows']==0
+          assert a['result']['evaluation_labels_read'] is False
+          assert a['result']['evaluation_features_read'] is False
+          assert all(v==10000 for v in a['result']['per_day'].values())
+          assert len(a['result']['per_day'])==7
+          assert b['result']['coverage']=='PASS_FULL_TARGET_ONLY'
+          assert b['result']['official_leaderboard_comparable'] is False
+          print('REPRODUCED_FULL_TARGET_DIGEST',json.dumps({'sha256':actual,'targets':70000,'os':os.environ.get('RUNNER_OS','TBD'),'labels_used':False},sort_keys=True))
+          PY
+      - name: Preserve aggregate-only evidence (never predictions or raw Parquet)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-v29-${{ matrix.os }}-aggregate-only
+          path: |
+            ${{ runner.temp }}/v29-aggregate.json
+            ${{ runner.temp }}/v29-coverage.json
+          if-no-files-found: warn
+          retention-days: 14
