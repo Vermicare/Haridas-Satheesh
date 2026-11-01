@@ -6,6 +6,8 @@
 
 The [v1.8 negative control](DISPATCH_EXPIRY_GAP_V18.md) demonstrated that the v1.4 fictional atomic outbox could stage a valid signed approval and then create a fake sink row after the hypothetical approval expiry: its `dispatch(nonce)` accepted neither an approval token nor a clock. Can a *separate candidate* reject expired fictional approvals at simulated dispatch without breaking idempotency, restart and concurrent single-row behavior?
 
+**Machine-readable provenance:** [v2.1 benchmark registry](EXPIRY_CHECKED_DISPATCH_V21_REGISTRY.json), including source/test blob hashes, runner versions, artifact metadata, and unknown trust boundaries.
+
 **Candidate:** [expiry_checked_delivery_v21.py](expiry_checked_delivery_v21.py), intentionally separate from the frozen v1.4 negative control. **Tests:** [14 adversarial cases](test_expiry_checked_delivery_v21.py). **Demonstration:** `python demo_expiry_checked_delivery_v21.py` emits aggregate-only JSON in a few seconds; no real action.
 
 ## Protocol and observations
