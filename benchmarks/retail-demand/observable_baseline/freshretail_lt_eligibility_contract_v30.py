@@ -3,7 +3,7 @@
 The publisher's pre-evaluator scores only (psd >= 0) AND
 (stock_hour6_22_cnt == 0), after full 70,000-target coverage.
 This module requires an independently supplied per-series psd reference;
-it does NOT calculate psd, inspect EVAL labels, or claim reference equivalence.
+it does NOT calculate psd, inspect EVAL sales labels, or claim reference equivalence.
 Only exact allowed input fields are accepted; aggregate counts are returned.
 """
 from __future__ import annotations
@@ -119,7 +119,8 @@ def audit(target_rows, prediction_rows, psd_reference_rows, *, expected=EXPECTED
         "psd_reference_provenance": "CALLER_SUPPLIED_UNVERIFIED",
         "publisher_reference_equivalence": "TBD",
         "metrics": "TBD",
-        "eval_labels_read": False,
+        "eval_sales_labels_read": False,
+        "eval_stockout_mask_read": True,
         "official_leaderboard_comparable": False,
         "maturity_change": "NONE",
     }
