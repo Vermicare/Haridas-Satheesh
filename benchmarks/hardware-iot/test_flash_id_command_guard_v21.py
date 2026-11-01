@@ -93,6 +93,15 @@ class CommandGuardTests(unittest.TestCase):
             with self.assertRaisesRegex(CommandGuardError, "hold for manual review"):
                 assess(GOOD, LOG, 8)
 
+    def test_real_v15_parser_integration(self):
+        # The repository's actual v1.5 parser is imported, not mocked.
+        result = assess(GOOD, LOG, 8)
+        self.assertEqual(result["claimed_flash_mb"], 8)
+        self.assertFalse(result["flash_authorized"])
+        self.assertFalse(result["physical_device_attested"])
+        with self.assertRaises(CommandGuardError):
+            assess(GOOD, LOG, 2)
+
     def test_cli_rejects_without_echoing_sensitive_content(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d)
