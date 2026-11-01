@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/iot-esp32s3-target-independent-v19.yml'
       - 'benchmarks/hardware-iot/configs/esp32s3_target_v19.defaults'
+      - 'benchmarks/hardware-iot/effective_config_attestation_v20.py'
       - 'benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/**'
   workflow_dispatch:
 permissions:
@@ -64,6 +65,10 @@ jobs:
               grep -qx CONFIG_APP_PROJECT_VER_FROM_CONFIG=y sdkconfig
               grep -q iot-repro-v19-s3 sdkconfig
               sha256sum sdkconfig > "$STAGE/sdkconfig_sha256.txt"
+              # Privacy-minimized effective settings: no complete sdkconfig or secrets in public artifacts.
+              python3 /workspace/benchmarks/hardware-iot/effective_config_attestation_v20.py self-test > "$STAGE/config_selftest_v20.log"
+              python3 /workspace/benchmarks/hardware-iot/effective_config_attestation_v20.py extract sdkconfig "$STAGE/effective_config_v20.json"
+              (cd "$STAGE" && sha256sum effective_config_v20.json > CONFIG_SHA256SUMS_v20.txt)
               cp build/iot_dual_sensor_capture.bin "$STAGE/app.bin"
               cp build/bootloader/bootloader.bin "$STAGE/bootloader.bin"
               cp build/partition_table/partition-table.bin "$STAGE/partition.bin"
@@ -109,6 +114,10 @@ jobs:
             grep -Fx 'espressif/idf@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c' "$folder/requested_image.txt"
             test -s "$folder/image_repo_digests.json"
             test -s "$folder/sdkconfig_sha256.txt"
+            test -s "$folder/effective_config_v20.json"
+            grep -F 'PASS: 4 positive/structural checks, 7 rejection controls' "$folder/config_selftest_v20.log"
+            (cd "$folder" && sha256sum --check CONFIG_SHA256SUMS_v20.txt)
+            python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); h=open(sys.argv[2]).read().split()[0]; assert d["schema"] == "iot-effective-config-subset-v20"; assert d["full_sdkconfig_sha256"] == h; assert d["selected_settings"]["CONFIG_IDF_TARGET"] == "\"esp32s3\""; assert d["selected_settings"]["CONFIG_ESPTOOLPY_FLASHSIZE"] == "\"8MB\""; assert d["physical_psram_identity"] == "TBD"' "$folder/effective_config_v20.json" "$folder/sdkconfig_sha256.txt"
             test -s "$folder/target_defaults_sha256.txt"
             test -s "$folder/target_assertions.txt"
             grep -Fx "ESP32-S3 target and 8MB nominal flash settings verified in effective build configuration" "$folder/target_assertions.txt"
@@ -116,6 +125,7 @@ jobs:
           done
           cmp "$a/checkout_sha.txt" "$b/checkout_sha.txt"
           cmp "$a/sdkconfig_sha256.txt" "$b/sdkconfig_sha256.txt"
+          cmp "$a/effective_config_v20.json" "$b/effective_config_v20.json"
           cmp "$a/target_defaults_sha256.txt" "$b/target_defaults_sha256.txt"
           cmp "$a/target_assertions.txt" "$b/target_assertions.txt"
           cmp "$a/image_config_digest.txt" "$b/image_config_digest.txt"
@@ -140,4 +150,6 @@ jobs:
 
 # Research-only: neither job flashes hardware or acquires physical sensor readings.
 # A PASS requires explicit esp32s3/8MB settings and byte agreement under one pinned image.
+# v2.0 additive: preserve allowlisted effective Kconfig/PSRAM settings with SHA and negative controls.
+# Full sdkconfig bytes are not published; PSRAM hardware identity remains TBD.
 # Physical flash-ID, PSRAM, sensor identity and measurements remain unverified.
