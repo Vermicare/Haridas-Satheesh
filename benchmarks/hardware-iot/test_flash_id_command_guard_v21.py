@@ -78,6 +78,21 @@ class CommandGuardTests(unittest.TestCase):
         self.assertNotIn("aa:bb", json.dumps(result))
         self.assertNotIn("COM7", json.dumps(result))
 
+    def test_mismatched_flash_size_fails_closed(self):
+        stub = types.ModuleType("read_only_flash_probe_v15")
+        class ProbeError(ValueError):
+            pass
+        stub.ProbeError = ProbeError
+        stub.inspect_transcript = lambda transcript, size: {
+            "gate": "TRANSCRIPT_PARSED_FLASH_NOT_AUTHORIZED",
+            "chip_family_claimed": "ESP32-S3", "observed_flash_mb_claimed": 2,
+            "build_flash_mb_declared": size,
+            "flash_size_comparison": "DIFFERENT_REQUIRES_BOARD_CONFIGURATION_REVIEW",
+        }
+        with patch.dict(sys.modules, {"read_only_flash_probe_v15": stub}):
+            with self.assertRaisesRegex(CommandGuardError, "hold for manual review"):
+                assess(GOOD, LOG, 8)
+
     def test_cli_rejects_without_echoing_sensitive_content(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d)
