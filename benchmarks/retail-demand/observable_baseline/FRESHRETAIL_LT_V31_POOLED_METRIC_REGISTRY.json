@@ -1,6 +1,6 @@
 {
   "schema": "retail-lt-v31-pooled-metric-evidence",
-  "date_utc": "2026-11-02",
+  "date_utc": "2026-11-01",
   "stage": "Research / Architecture",
   "evidence_type": "fictional local software contract and direct publisher source inspection",
   "publisher_repo": "Dingdong-Inc/frn-baseline",
@@ -33,5 +33,7 @@
     "pooled_wape": 0.1,
     "unweighted_daily_wape": 0.5
   },
-  "next": "Authenticate browser evaluator and precomputed psd reference; test parity before exploratory EVAL scoring"
+  "next": "Authenticate browser evaluator and precomputed psd reference; test parity before exploratory EVAL scoring",
+  "date_local": "2026-11-02",
+  "local_timezone": "Asia/Kolkata"
 }
