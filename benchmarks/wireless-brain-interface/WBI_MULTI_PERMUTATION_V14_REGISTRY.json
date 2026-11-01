@@ -1,0 +1,49 @@
+{
+  "schema": "WBI_MULTI_PERMUTATION_V14_AGGREGATE",
+  "date_utc": "2026-11-01",
+  "stage": "Research / Simulation",
+  "evidence_class": "FICTIONAL_SYNTHETIC_ONLY",
+  "source_evaluator_git_blob": "2becec81a8002cc5ff2f445889b7617baf9937b9",
+  "v14_script_git_blob": "4d11cd7bc03da69e224618199211f15fde1f01f5",
+  "v14_tests_git_blob": "431689d876a26f97247d99e81580855cefc8c030",
+  "method": "200 deterministic calibration/test pairs, 240 synthetic rows per test pair, 120 selected per policy, eight drift-only permutations per pair; post-hoc descriptive, not statistical inference",
+  "permutation_seed_formula": "1400000 + 20000*repeat + 2*pair (+1 for test)",
+  "hosted_ci": {
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41322810271",
+    "head_sha": "761de946a139097d994edfb2274b121bbe48fa63",
+    "status": "SUCCESS",
+    "ubuntu_job": 124896434650,
+    "windows_job": 124896434824,
+    "tests_per_os": "11/11",
+    "both_job_logs_inspected": true,
+    "aggregate_artifact_ubuntu": 13090370584,
+    "aggregate_artifact_windows": 13090051297,
+    "artifact_zip_bytes_independently_rehashed": false
+  },
+  "original": {
+    "baseline_wrong": 3716,
+    "candidate_wrong": 3645,
+    "delta_wrong": -71
+  },
+  "permuted_both": {
+    "repeat_count": 8,
+    "delta_wrong_min": 18,
+    "delta_wrong_median": 35.5,
+    "delta_wrong_max": 68,
+    "repeats_with_nonnegative_delta": 8
+  },
+  "permuted_test_only": {
+    "repeat_count": 8,
+    "delta_wrong_min": 113,
+    "delta_wrong_median": 134.5,
+    "delta_wrong_max": 184,
+    "repeats_with_nonnegative_delta": 8
+  },
+  "unknowns": {
+    "original_EEG_source_authenticity": "TBD",
+    "real_EEG_effect": "TBD",
+    "online_policy": "TBD",
+    "clinical_safety_benefit": "TBD"
+  },
+  "maturity_advanced": false
+}
