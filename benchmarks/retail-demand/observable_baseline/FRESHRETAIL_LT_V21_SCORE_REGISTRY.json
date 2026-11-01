@@ -1,0 +1,95 @@
+{
+  "experiment": "retail-lt-v21-presealed-2025-temporal-transfer",
+  "date_utc": "2026-10-28",
+  "status": "PASSED_PREREGISTERED_MAE_GATE_NO_MATURITY_ADVANCEMENT",
+  "code_bearing_head": "22296e4db214f9eeb59b2db846d5fda9aee01aed",
+  "public_source": {
+    "dataset": "Dingdong-Inc/FreshRetailNet-LT",
+    "revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "train_sha256": "e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3",
+    "eval_sha256": "370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626",
+    "publisher_authenticity_independently_attested": false
+  },
+  "frozen_inputs": {
+    "cohort_sha256": "dc128d3bed90035214c80529bf58e685ad7d49c717d95bd10c30c2b9407ca016",
+    "prediction_sha256": "5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20",
+    "prediction_regenerated_and_matched_before_eval_label_parsing": true,
+    "training_window": "2025-04-15..2025-07-13",
+    "evaluation_window": "2025-07-14..2025-07-20"
+  },
+  "runs": [
+    {
+      "id": 40728652213,
+      "event": "push",
+      "status": "success",
+      "ubuntu_tests": "15/15",
+      "windows_tests": "15/15",
+      "dataset_job": "success",
+      "artifact_id": 12834606437,
+      "artifact_zip_sha256": "53064330ff8b41befa16ea07897443c845da0cea782748bc761ab6069d9a9bf1",
+      "aggregate_json_sha256": "e785209bac38685d0a050a0c6b43d4377132653721c5d1e1e064cb5dcd71a3f9"
+    },
+    {
+      "id": 40728662310,
+      "event": "pull_request",
+      "status": "success",
+      "ubuntu_tests": "15/15",
+      "windows_tests": "15/15",
+      "dataset_job": "success",
+      "artifact_id": 12833923411,
+      "artifact_zip_sha256": "5099403d5818bdd564e00b4c99bb4f7efd1018cd934e47e78e6a83ed940c2cfa",
+      "aggregate_json_sha256": "60e4e3c76f460a1b70be8411a084a63fd88570f88a48f3e476e94ab7cc73af5e"
+    }
+  ],
+  "independent_artifact_comparison": "substantive JSON equal; only provenance.git_checkout differs (push head versus PR merge checkout)",
+  "run_conditions": {
+    "python": "3.13.16",
+    "pyarrow": "20.0.0",
+    "dataset_execution_os": "Linux",
+    "bootstrap_seed": 20261028,
+    "bootstrap_replicates": 2000,
+    "unit_test_os": [
+      "Ubuntu",
+      "Windows"
+    ]
+  },
+  "evaluation": {
+    "selected_series": 512,
+    "selected_stores": 374,
+    "selected_products": 104,
+    "expected_days": 3584,
+    "scored_in_stock_days": 1766,
+    "censored_excluded_days": 1818,
+    "missing_future_days": 0,
+    "mae_day_weighted": {
+      "last_observed": 0.647911664779162,
+      "seasonal_naive": 0.607722536806342,
+      "causal_stockout_history": 0.5769351642129105,
+      "weekday_median_last4": 0.5672638731596829
+    },
+    "weekday_minus_last_delta": -0.08064779161947905,
+    "paired_whole_store_ci95": [
+      -0.1373623633543856,
+      -0.030217302506779398
+    ],
+    "scored_store_clusters": 374,
+    "relative_mae_reduction_vs_last_observed_pct": 12.447343674074395,
+    "primary_gate": "PASSED_PREREGISTERED_MAE_GATE",
+    "previous_2024_v15_primary_gate": "FAILED_UNCHANGED"
+  },
+  "limits": {
+    "public_labels_not_blinded": true,
+    "same_publisher_as_prior_study": true,
+    "comparison_vs_causal_stockout_history_ci95": "TBD",
+    "latent_demand_truth": "UNAVAILABLE",
+    "opportunity_ranking_truth": "TBD",
+    "inventory_revenue_uplift": "TBD",
+    "independent_publisher_validation": "TBD",
+    "external_review": "TBD",
+    "patentability": "NOT_ASSESSED",
+    "maturity_change": "NONE",
+    "release": "NONE",
+    "raw_rows_published": false,
+    "employer_data_used": false
+  }
+}

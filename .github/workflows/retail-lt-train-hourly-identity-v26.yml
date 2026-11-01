@@ -1,0 +1,73 @@
+name: Retail LT v2.6 TRAIN-only daily-hourly consistency (NO EVAL)
+on:
+  push:
+    branches: [research/retail-store-disjoint-v15-20261027]
+    paths:
+      - '.github/workflows/retail-lt-train-hourly-identity-v26.yml'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_train_hourly_identity_v26.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_train_hourly_identity_v26.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-controls:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned numeric dependency
+        run: python -m pip install --disable-pip-version-check numpy==2.2.6
+      - name: Run 12 fictional controls (NO source rows)
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_freshretail_lt_train_hourly_identity_v26
+  publisher-train-only:
+    needs: fictional-controls
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned Parquet and numeric readers
+        run: python -m pip install --disable-pip-version-check pyarrow==20.0.0 numpy==2.2.6
+      - name: Acquire ONLY pinned TRAIN to temporary storage
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-LT/resolve/01c3bb306415e09d3ccd2fe762f33eb3aeb2affd/data/train.parquet'
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 900 --silent --show-error "$url" -o "$RUNNER_TEMP/lt_train.parquet"
+          printf '%s  %s\n' 'e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3' "$RUNNER_TEMP/lt_train.parquet" | sha256sum --check
+      - name: Run all-TRAIN-row daily/hourly numeric consistency audit
+        shell: bash
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: |
+          set -euo pipefail
+          python -B freshretail_lt_train_hourly_identity_v26.py --train "$RUNNER_TEMP/lt_train.parquet" --output "$RUNNER_TEMP/retail-lt-train-hourly-identity-v26.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads((Path(os.environ['RUNNER_TEMP'])/'retail-lt-train-hourly-identity-v26.json').read_text())
+          assert r['evaluation_file_opened'] is False and r['evaluation_labels_read'] is False
+          assert r['summary']['rows']==7869549
+          print('Aggregate-only identity status:',r['summary']['numeric_identity_status'])
+          PY
+      - name: Upload aggregate-only provenance (no source rows)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-lt-v26-train-only-hourly-identity
+          path: ${{ runner.temp }}/retail-lt-train-hourly-identity-v26.json
+          if-no-files-found: warn
+          retention-days: 14

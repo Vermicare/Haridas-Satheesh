@@ -1,0 +1,94 @@
+{
+  "experiment": "retail-lt-train-only-prediction-seal-v20",
+  "date": "2026-10-28",
+  "evidence_class": "PUBLIC_PUBLISHER_TRAIN_ONLY_PREDICTION_COMMITMENT_NO_EVAL_LABEL_ACCESS",
+  "stage": "Research / Architecture (unchanged)",
+  "status": "TRAIN_ONLY_PREDICTIONS_SEALED_NO_EVAL_ACCESS",
+  "source": {
+    "dataset": "Dingdong-Inc/FreshRetailNet-LT",
+    "publisher_revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "train_bytes": 315398578,
+    "train_sha256": "e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3",
+    "publisher_authenticity_independently_attested": false
+  },
+  "training": {
+    "window": [
+      "2025-04-15",
+      "2025-07-13"
+    ],
+    "rows_in_window": 974406,
+    "distinct_series": 13255,
+    "eligible_complete_valid_series": 7552,
+    "duplicate_rows": 0,
+    "invalid_stock_status_rows": 0,
+    "selected_series": 512,
+    "cohort_sha256": "dc128d3bed90035214c80529bf58e685ad7d49c717d95bd10c30c2b9407ca016"
+  },
+  "predictions": {
+    "future_window": [
+      "2025-07-14",
+      "2025-07-20"
+    ],
+    "series": 512,
+    "days": 3584,
+    "models": [
+      "last_observed",
+      "seasonal_naive",
+      "causal_stockout_history",
+      "weekday_median_last4"
+    ],
+    "sha256": "5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20",
+    "canonical_schema": "retail-lt-v20-per-series-seven-day-canonical-jsonl-v1",
+    "weekday_fallback_counts": {
+      "weekday": 3534,
+      "recent14": 42,
+      "zero": 8
+    }
+  },
+  "verification": {
+    "code_branch": "research/retail-store-disjoint-v15-20261027",
+    "final_head_sha": "99f54de22d2f783d1270f420f21658fc454f99f6",
+    "python": "3.13.17",
+    "pyarrow": "20.0.0",
+    "fictional_tests_per_os": 17,
+    "ubuntu": "PASS",
+    "windows": "PASS",
+    "runs": [
+      {
+        "id": 40709694133,
+        "event": "push",
+        "conclusion": "success",
+        "artifact_id": 12825178261,
+        "artifact_zip_sha256": "6b66d3bc84fc9b84818ca9f0989edcd929b553bdad602989536f97c7ccfd7d2c",
+        "artifact_json_sha256": "8fcb27ede62f293d6593466076f068cc46d85d95777b28b5817bdcf92568248b"
+      },
+      {
+        "id": 40709707033,
+        "event": "pull_request",
+        "conclusion": "success",
+        "artifact_id": 12826470081,
+        "artifact_zip_sha256": "ecb13b7a8787a4f99f3b5fc8c9038c6b99e2e95bda6a4b6c1fdd50423f514e5f",
+        "artifact_json_sha256": "7b45a07ec89fc1b57ac0db060243d1294786db2a358189e3ef82ed9dfd827f52"
+      }
+    ],
+    "substantive_outputs_identical": true,
+    "artifact_difference": "checkout provenance only; PR run uses merge checkout"
+  },
+  "negative_learning": {
+    "failed_run_id": 40709259647,
+    "observed": "initial v2.0 implementation rejected selected series' legitimate pre-window TRAIN rows",
+    "correction": "filter to the frozen 90-day TRAIN window before passing selected rows to the forecast evaluator",
+    "verified_by_final_runs": true
+  },
+  "boundaries": {
+    "evaluation_file_downloaded": false,
+    "evaluation_labels_read": false,
+    "forecast_accuracy": "TBD",
+    "matched_store_cluster_interval": "TBD",
+    "latent_demand_truth": "UNAVAILABLE",
+    "inventory_or_revenue_value": "TBD",
+    "independent_external_review": "TBD",
+    "maturity_advanced": false,
+    "release": false
+  }
+}

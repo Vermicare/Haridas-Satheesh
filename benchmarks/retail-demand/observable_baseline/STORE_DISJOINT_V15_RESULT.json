@@ -1,0 +1,76 @@
+{
+  "analysis_type": "PROSPECTIVE_STORE_DISJOINT_SERIES_TRANSFER_ON_SEEN_TEMPORAL_HOLDOUT",
+  "decision_value_or_revenue_uplift": "TBD",
+  "experiment_id": "retail-store-disjoint-transfer-v15",
+  "frozen_comparators": [
+    "weekday_median_last4",
+    "last_observed",
+    "seasonal_naive",
+    "causal_stockout_history"
+  ],
+  "independent_external_review": "TBD",
+  "independent_temporal_holdout": "TBD",
+  "latent_demand_ground_truth": "UNAVAILABLE",
+  "maturity": "Research / Architecture; unchanged",
+  "method_selection": "weekday-median was chosen post-hoc on other stores, same eval dates",
+  "metrics": {
+    "original_v12_metrics": {
+      "bootstrap_unit": "store-product series, paired resampling, not causal inference",
+      "causal_minus_seasonal_macro_mae_delta": -0.010984333147321427,
+      "censored_eval_days_excluded": 1492,
+      "day_weighted_mae": {
+        "causal_stockout_history": 0.4998797801147227,
+        "last_observed": 0.5368599426386234,
+        "seasonal_naive": 0.5142127151051625
+      },
+      "frozen_train_selected_series": 512,
+      "paired_series_bootstrap_95pct_ci_for_macro_delta": [
+        -0.03881823393322173,
+        0.017871549595423992
+      ],
+      "series_macro_mae": {
+        "causal_stockout_history": 0.48983750465029763,
+        "last_observed": 0.5248657366071429,
+        "seasonal_naive": 0.500821837797619
+      },
+      "series_with_at_least_one_uncensored_eval_day": 512,
+      "series_with_no_uncensored_eval_day": 0,
+      "uncensored_eval_days_scored": 2092
+    },
+    "scored_days": 2092,
+    "scored_series": 512,
+    "training_only_fallback_counts_all_7day_predictions": {
+      "recent14": 16,
+      "weekday": 3553,
+      "zero": 15
+    },
+    "weekday_median_last4_day_weighted_mae": 0.5164060707456979,
+    "weekday_median_last4_series_macro_mae": 0.5106364490327381,
+    "weekday_median_minus_correction_series_macro_delta": 0.020798944382440475,
+    "weekday_median_minus_correction_store_cluster_ci95": [
+      0.0008754153379112861,
+      0.043309623797926064
+    ],
+    "weekday_median_minus_last_observed_series_macro_delta": -0.014229287574404765,
+    "weekday_median_minus_last_observed_store_cluster_ci95": [
+      -0.06301918683448345,
+      0.03328524212354505
+    ]
+  },
+  "new_cohort_sha256": "5ff7374dc363778bb3d0657ccb98c3d6a4f55e9400017de60a4f6cb07b6b129f",
+  "new_cohort_stores": 293,
+  "original_cohort_sha256": "7c14c678af51878ac68a3359e3dae0be1208feba4b0fa30d437191e855f62710",
+  "original_cohort_stores": 374,
+  "overlapping_stores": 0,
+  "primary_gate": {
+    "cluster_interval_excludes_zero_in_favorable_direction": false,
+    "conditional_store_transfer_gate_passed": false,
+    "interpretation_limit": "same previously inspected publisher evaluation dates; not an independent temporal confirmation",
+    "point_mae_better": true,
+    "predeclared_primary_comparator": "weekday-median minus last-observed per-series MAE, paired store-cluster 95% interval"
+  },
+  "publisher_dataset": "Dingdong-Inc/FreshRetailNet-50K",
+  "publisher_eval_sha256": "1b118840664280c6b88bffc84c80ee1f54c05d911e354b7599e5da10995e960e",
+  "publisher_train_sha256": "6706832db892bbae4969c19d87e07975d2543d2ba7d7d4756360654785de5a3d",
+  "train_only_selection_seed": "retail-store-disjoint-v15-20261027"
+}

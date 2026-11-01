@@ -1,0 +1,50 @@
+name: Retail v1.6 post-hoc estimand alignment audit (no dataset download)
+on:
+  push:
+    branches:
+      - research/retail-store-disjoint-v15-20261027
+    paths:
+      - '.github/workflows/retail-estimand-audit-v16.yml'
+      - 'benchmarks/retail-demand/observable_baseline/estimand_alignment_v16.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_estimand_alignment_v16.py'
+      - 'benchmarks/retail-demand/observable_baseline/STORE_DISJOINT_V15_RESULT.json'
+  pull_request:
+    paths:
+      - '.github/workflows/retail-estimand-audit-v16.yml'
+      - 'benchmarks/retail-demand/observable_baseline/estimand_alignment_v16.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_estimand_alignment_v16.py'
+      - 'benchmarks/retail-demand/observable_baseline/STORE_DISJOINT_V15_RESULT.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  estimand-audit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Protect original v1.5 published result blob
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD:benchmarks/retail-demand/observable_baseline/STORE_DISJOINT_V15_RESULT.json)" = 399099b75745ccaae6ad1aa1cc62ef6c67bc7a67
+      - name: Run synthetic adversarial tests and preserved aggregate audit
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_estimand_alignment_v16
+      - name: Produce aggregate-only post-hoc audit
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B estimand_alignment_v16.py --source STORE_DISJOINT_V15_RESULT.json --output estimand_alignment_v16_output.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: retail-estimand-audit-v16-${{ matrix.os }}
+          path: benchmarks/retail-demand/observable_baseline/estimand_alignment_v16_output.json
+          retention-days: 14
+          if-no-files-found: error

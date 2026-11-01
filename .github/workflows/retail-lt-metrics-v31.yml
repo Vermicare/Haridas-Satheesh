@@ -1,0 +1,31 @@
+name: Retail LT v3.1 pooled metrics fictional contract
+on:
+  push:
+    branches: [research/retail-store-disjoint-v15-20261027]
+    paths:
+      - '.github/workflows/retail-lt-metrics-v31.yml'
+      - 'benchmarks/retail-demand/observable_baseline/freshretail_lt_pooled_metric_contract_v31.py'
+      - 'benchmarks/retail-demand/observable_baseline/test_freshretail_lt_pooled_metric_contract_v31.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fictional-pooled-metrics:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run fictional-only pooled arithmetic negative controls
+        working-directory: benchmarks/retail-demand/observable_baseline
+        run: python -B -m unittest -v test_freshretail_lt_pooled_metric_contract_v31
+      - name: State scientific boundary
+        run: python -c "print('FICTIONAL_METRICS_ONLY; PUBLISHER_EVAL=NOT_READ; BROWSER_PARITY=TBD')"

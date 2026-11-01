@@ -1,0 +1,98 @@
+{
+  "schema": "retail-lt-v25-conditional-sales-floor-evidence-registry-v1",
+  "date_utc": "2026-10-29",
+  "stage": "Research / Architecture",
+  "stage_change": "NONE",
+  "scope": "post-hoc conditional logical bounds; no censored latent demand imputation",
+  "run": {
+    "id": 40924685434,
+    "source_head": "c8b0ddc08e2dfcedd6981df0726947ec9c6d63e4",
+    "checkout_merge": "f5b8eef8a3fc5adc4b99dfa9843b56e2c28e366d",
+    "conclusion": "success",
+    "jobs_inspected": [
+      "fictional-contracts ubuntu-latest",
+      "fictional-contracts windows-latest",
+      "pinned-public-2025-bounds"
+    ],
+    "python_linux": "3.13.17",
+    "python_windows": "3.13.16",
+    "tests_per_os": {
+      "v24": 12,
+      "floor_engine": 11,
+      "v25_transfer": 7,
+      "v23_selftest": 12,
+      "total": 42
+    }
+  },
+  "source": {
+    "publisher_dataset": "Dingdong-Inc/FreshRetailNet-LT",
+    "revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "train_sha256": "e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3",
+    "eval_sha256": "370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626",
+    "independently_authenticated": false,
+    "frozen_prediction_sha256": "5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20"
+  },
+  "denominator": {
+    "series": 512,
+    "stores": 374,
+    "days": 3584,
+    "observed": 1766,
+    "censored": 1818,
+    "positive_censored_sales_floor": 1729
+  },
+  "artifacts": {
+    "v25": {
+      "id": 12920657262,
+      "zip_sha256": "dcb10422ce94946980d3df5dd629525e2611f7e8fe7eebf391786a4cb44dfbf6",
+      "json_sha256": "db925976c15fd49d6466acdad5db7221b6abd2f9b4ccca557380448197ccabfa"
+    },
+    "v24": {
+      "id": 12920617414,
+      "zip_sha256": "87ade5be920eaa38753472ceaf557846c2bf6e44321d46f11817025fc19491cb",
+      "json_sha256": "399073647ce3802735c31b8ba275071154fba8b2689ad17835fbf7a2f65862c8"
+    },
+    "expires": "2026-11-12",
+    "zip_and_member_sha256_independently_checked": true,
+    "json_consistency_independently_checked": true
+  },
+  "paired_mae_delta_a_minus_b": {
+    "causal_stockout_history": {
+      "nonnegative_only": [
+        -0.11809640066964286,
+        0.1085654296875
+      ],
+      "conditional_floor": [
+        -0.04650013950892857,
+        0.07001436941964287
+      ],
+      "decision": "UNDETERMINED"
+    },
+    "last_observed": {
+      "nonnegative_only": [
+        -0.4150673828125,
+        0.33558970424107143
+      ],
+      "conditional_floor": [
+        -0.1759965122767857,
+        0.26096888950892855
+      ],
+      "decision": "UNDETERMINED"
+    }
+  },
+  "assumptions": {
+    "same_target_sales_le_latent_demand": "ASSUMED_NOT_INDEPENDENTLY_VERIFIED",
+    "no_arbitrary_demand_cap": true,
+    "confidence_intervals": false,
+    "latent_demand_truth": "UNAVAILABLE",
+    "independent_temporal_or_external_validation": "TBD",
+    "inventory_decision_value": "TBD",
+    "physical_deployment": "NONE"
+  },
+  "historical_results": {
+    "v15_2024": "FAILED_UNCHANGED",
+    "v21_2025": "PASSED_UNCHANGED_NARROW_IN_STOCK",
+    "v22_2025": "INCONCLUSIVE_UNCHANGED"
+  },
+  "next_experiment": "verify publisher target/sales/returns/substitution semantics, then freeze external or blinded temporal strongest-baseline decision-cost evaluation",
+  "kill_reframe": "withdraw conditional floor interpretation if sales<=demand target semantics fail; do not claim latent-demand ranking or commercial value"
+}

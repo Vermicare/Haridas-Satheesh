@@ -1,0 +1,39 @@
+{
+  "schema": "retail-lt-v31-pooled-metric-evidence",
+  "date_utc": "2026-11-01",
+  "stage": "Research / Architecture",
+  "evidence_type": "fictional local software contract and direct publisher source inspection",
+  "publisher_repo": "Dingdong-Inc/frn-baseline",
+  "publisher_commit": "e1791eac10c49ebedba1c1440ce229d0c542a6ab",
+  "publisher_tft_blob": "26ab9f2f71bb565ae9208918866370a46c7879e2",
+  "publisher_ssa_blob": "dfd8797e0accc0a86d8a2c5859866c6db2f60e8f",
+  "local_python": "3.13.5",
+  "local_platform": "Linux (exact patch TBD)",
+  "local_tests_passed": 15,
+  "local_tests_total": 15,
+  "hosted_ci": {
+    "run_id": 41337999653,
+    "head": "800f28e89cc0fcd2bd5b6546cc54810e569a3526",
+    "ubuntu_24_04": "15/15 PASS",
+    "windows_2022": "15/15 PASS",
+    "both_job_logs_inspected": true
+  },
+  "source_git_blob_sha1": "f9c0a2d79b1346f71f54a447d6a2491006c1fa77",
+  "test_git_blob_sha1": "ece9626af204e5ae89cc9db467424fb837768364",
+  "browser_reference_equivalence": "TBD",
+  "precomputed_psd_reference": "TBD",
+  "actual_eval_labels_used": false,
+  "official_score": "TBD",
+  "maturity_change": "NONE",
+  "negative_control": {
+    "day1_actual": 1,
+    "day1_pred": 0,
+    "day2_actual": 9,
+    "day2_pred": 9,
+    "pooled_wape": 0.1,
+    "unweighted_daily_wape": 0.5
+  },
+  "next": "Authenticate browser evaluator and precomputed psd reference; test parity before exploratory EVAL scoring",
+  "date_local": "2026-11-02",
+  "local_timezone": "Asia/Kolkata"
+}

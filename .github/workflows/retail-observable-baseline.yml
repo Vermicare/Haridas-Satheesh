@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install pinned dependency required by TRAIN-only v2.6 fictional tests
+        run: python -m pip install --disable-pip-version-check numpy==2.2.6
       - name: Run schema, chronology, provenance and disk-backed equivalence tests
         working-directory: benchmarks/retail-demand/observable_baseline
         run: python -m unittest discover -v

@@ -1,0 +1,70 @@
+{
+  "experiment": "retail-lt-v22-exploratory-strongest-simple-comparator",
+  "date_local": "2026-10-29",
+  "analysis": "POST_HOC_ALREADY_SEEN_PUBLIC_2025_LABELS_NOT_CONFIRMATORY",
+  "status": "EXPLORATORY_INCONCLUSIVE_INTERVAL_INCLUDES_ZERO",
+  "maturity": "Research / Architecture",
+  "maturity_change": "NONE",
+  "code_head": "47feca726dd7581a3064fb0ae2ede226d877e911",
+  "git_blobs": {
+    "source": "6ff48485af45fa490180a8b9ac72a37f21f75a4b",
+    "tests": "b11789d557ddacd3367bd62cef02449d64c380d9",
+    "workflow": "ebbba61e772aedaf967425c9e387c400ebb3183f"
+  },
+  "sources": {
+    "dataset": "Dingdong-Inc/FreshRetailNet-LT",
+    "revision": "01c3bb306415e09d3ccd2fe762f33eb3aeb2affd",
+    "train_sha256": "e744c537ed16a8254c50f8456de7c5614866d4d8b6787e3cc3b67be02ea2f1e3",
+    "eval_sha256": "370ca7f995d2a059744e1659eb681e60db694bec2f80a84252426afdd2b6d626",
+    "cohort_sha256": "dc128d3bed90035214c80529bf58e685ad7d49c717d95bd10c30c2b9407ca016",
+    "prediction_sha256": "5c21bce8c9a436ecc0d3173128b0812e4408cc025558faedc2ed0e3497a54e20",
+    "publisher_authenticity_independently_attested": false
+  },
+  "run": {
+    "id": 40774565289,
+    "conclusion": "success",
+    "ubuntu_fictional_tests": "26/26",
+    "windows_fictional_tests": "26/26",
+    "python_dataset": "3.13.17",
+    "pyarrow": "20.0.0",
+    "bootstrap_replicates": 2000,
+    "bootstrap_seed": 20261029,
+    "artifact_id": 12854936334,
+    "artifact_zip_sha256": "8e32cd8dcf53c6dc3dd77ae0df05408e54d044dd1edc8d2b985157e46afb4d65",
+    "preserved_v21_artifact_id": 12855310638,
+    "preserved_v21_zip_sha256": "ff94c99ff28b2480d0ab299a066c07a276f1ea423f38e9b029d5b7ed07c80058"
+  },
+  "results": {
+    "selected_series": 512,
+    "scored_stores": 374,
+    "observed_in_stock_days": 1766,
+    "stockout_censored_days": 1818,
+    "weekday_mae": 0.5672638731596829,
+    "causal_stockout_history_mae": 0.5769351642129105,
+    "weekday_minus_causal": -0.009671291053227622,
+    "paired_store_cluster_ci95": [
+      -0.027864692471855287,
+      0.010120075076629188
+    ],
+    "leave_one_store_out_range": [
+      -0.013108670849971466,
+      -0.006834943181818171
+    ],
+    "v21_primary": "PASSED_UNCHANGED",
+    "v15_2024_primary": "FAILED_UNCHANGED"
+  },
+  "limits": {
+    "post_hoc": true,
+    "public_labels": true,
+    "same_publisher": true,
+    "stockout_censoring_gt_half": true,
+    "multiple_comparisons_adjusted": false,
+    "independent_publisher": "TBD",
+    "latent_demand_truth": "UNAVAILABLE",
+    "inventory_decision_value": "TBD",
+    "external_review": "TBD",
+    "full_official_leaderboard_coverage": false,
+    "patentability": "NOT_ASSESSED",
+    "employer_data_used": false
+  }
+}
