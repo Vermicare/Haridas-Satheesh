@@ -40,3 +40,18 @@ No NPZ arrays were decoded or unpickled. No signal bytes, original filenames or 
 **Next:** independently reacquire S01 in a separate environment and compare its SHA-256 with `897c8316...`; if equal, inspect only bounded selected NPZ structural metadata with `allow_pickle=False`, then preregister a source-to-corrected-BIDS event mapping and held-out EEG outcome rules. **Stop/reframe** on checksum discrepancy, ambiguous event mapping, unsafe NPZ structure, or label leakage. Until independently verified, all mapping and real-data drift-effect claims remain **TBD**.
 
 **Four lenses:** hiring manager — actual public-source acquisition, not a simulated-only milestone; technical reviewer — one-host transfer plus independently audited metadata, not independent re-download; innovation leader — source equivalence remains unresolved; founder — no measured real-world efficacy, users or deployment.
+
+
+## 2026-11-01 addendum — expiring hosted metadata independently preserved (no stage advance)
+
+The original metadata-only ZIP from [run #41057530771](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41057530771) was recovered before its **2026-11-06T12:50:35Z** retention deadline. A standalone local CPython **3.13.5** audit of the original **2,401-byte ZIP** and its **4,185-byte JSON** passed **16/16** recorded metadata assertions; this was **not** a second download of the 1,143,862,039-byte EEG source archive. The original ZIP is retained separately in the conversation reproducibility package, not committed as binary to this research branch.
+
+To prevent expiration from erasing the independently inspected *metadata bytes*, the JSON member was committed **byte-for-byte** as [ZHOU2020_S01_HOSTED_METADATA_20261030.json](ZHOU2020_S01_HOSTED_METADATA_20261030.json), Git blob `cb2552eca9874cef9f6bc67f3187bc43add43b4d`, SHA-256 `4dd22f27bd72f21200976372fb238517b1affdd224d27b884afec4f69f61631b`. GitHub's post-write blob was reread and matched the locally computed original blob exactly. The [standard-library source-only verifier](verify_zhou2020_s01_metadata_v11.py), Git blob `3dbf314c1a6e9204de6ff8a0bc468a57f3c22a8c`, was likewise reread and matched the locally executed script. The two files were added in commits [68a85cf](https://github.com/Vermicare/Haridas-Satheesh/commit/68a85cf39e2e982e15d5c58105853e9a2308f1ad) and [09d1179](https://github.com/Vermicare/Haridas-Satheesh/commit/09d11793953a35fe9d66e8dbc43eb8b17e430ed1), respectively.
+
+From the repository root (Python 3.9+ standard library):
+
+```bash
+python benchmarks/wireless-brain-interface/verify_zhou2020_s01_metadata_v11.py benchmarks/wireless-brain-interface/ZHOU2020_S01_HOSTED_METADATA_20261030.json
+```
+
+**Observed locally:** `PASS 6/6 metadata-only checks`; three altered-metadata negative controls were rejected. With the separately preserved original ZIP supplied as `--zip /path/to/wbi-s01-transfer-v10-metadata-only.zip`, **11/11** metadata/ZIP checks passed; an externally modified `member_count` fixture exited nonzero. These are local checks, **not** a new independent hosted workflow result. The preserved JSON records source-transfer claims from the one hosted acquisition; it does **not** authenticate or rehash the 1.14 GB source independently. Original IEEE equivalence, EEG decoding, event mapping, clinical validation and drift-gate benefit remain **TBD / not performed**. No merge, release or maturity change.
