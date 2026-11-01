@@ -77,6 +77,8 @@ def assess(command: str, transcript: str, build_flash_mb: int) -> dict:
         parsed = inspect_transcript(transcript, build_flash_mb)
     except ProbeError as exc:
         raise CommandGuardError("existing v1.5 transcript gate rejected input: " + str(exc)) from exc
+    if parsed["flash_size_comparison"] != "MATCH":
+        raise CommandGuardError("declared build flash size differs from detected size; hold for manual review")
     return {
         **command_record,
         "transcript_gate": parsed["gate"],
