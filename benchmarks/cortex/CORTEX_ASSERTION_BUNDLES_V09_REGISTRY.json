@@ -1,0 +1,42 @@
+{
+  "schema": "cortex-assertion-bundles-v0.9-registry",
+  "date": "2026-11-01",
+  "branch": "research/cortex-fixture-integrity-v04-20261023",
+  "scope": "fixed author-created fictional provenance-of-assertion negative control",
+  "stage": "Research / Architecture",
+  "stage_advanced": false,
+  "runtime_local": {
+    "python": "3.13.5",
+    "os": "Linux 6.18.57 x86_64",
+    "rdflib": "7.5.0",
+    "command": "python -B -m unittest -v test_cortex_assertion_bundles_v09.py",
+    "tests_passed": 17,
+    "tests_total": 17
+  },
+  "hosted_ubuntu": "TBD",
+  "hosted_windows": "TBD",
+  "example": {
+    "serialization": "N-Quads",
+    "sha256": "040503af2458cd5c9e3bbbea855409ffabd6895df7da096c67ffb472e9de0cc2",
+    "quads": 10,
+    "fictional_assertion_bundles": 2,
+    "real_source_records": 0,
+    "real_human_reviewers": 0
+  },
+  "limitations": [
+    "fixed-case exact-quad contract only",
+    "no authenticated agents",
+    "no real governance authority",
+    "no independent truth adjudication",
+    "no human semantic agreement",
+    "no correction-time measurement"
+  ],
+  "truth": "TBD",
+  "authorization": "TBD",
+  "reviewer_correction_minutes": "TBD",
+  "primary_sources": [
+    "https://www.w3.org/TR/prov-o/",
+    "https://www.w3.org/TR/prov-dm/",
+    "https://www.w3.org/TR/prov-links/"
+  ]
+}
