@@ -35,6 +35,8 @@ class FictionalEligibilityContractTests(unittest.TestCase):
         self.assertFalse(r["official_leaderboard_comparable"])
         self.assertEqual(r["publisher_reference_equivalence"], "TBD")
         self.assertEqual(r["metrics"], "TBD")
+        self.assertFalse(r["eval_sales_labels_read"])
+        self.assertTrue(r["eval_stockout_mask_read"])
 
     def test_order_invariant(self):
         self.assertEqual(self.run_audit(), self.run_audit(
