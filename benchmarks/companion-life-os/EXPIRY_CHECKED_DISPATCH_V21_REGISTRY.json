@@ -1,0 +1,60 @@
+{
+  "schema": "companion-expiry-checked-dispatch-registry-v2.1",
+  "date_local": "2026-11-02",
+  "repository": "Vermicare/Haridas-Satheesh",
+  "branch": "research/companion-auth-negative-controls-20261024",
+  "workflow_commit": "4d768746f4bdd05badb608f6e0e33fc459071aa4",
+  "source_blob_sha": "c8807d2a1621152dac4b3bb8ebc9e563f6cea50d",
+  "tests_blob_sha": "f269a397f2748f393fee7e2a3e96f449ef686c9c",
+  "workflow_run_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41343453670",
+  "runtime": "CPython 3.13.17",
+  "dependencies": "Python standard library",
+  "platforms": [
+    {
+      "os": "Ubuntu 24.04",
+      "tests_total": 169,
+      "tests_passed": 169,
+      "new_tests_passed": 14,
+      "job_id": 124958163402,
+      "artifact_id": 13098407514,
+      "artifact_zip_sha256_runner_reported": "db15e7c341c64b9a4b1d7e3914d39707e43078fa902ba7bc7ee678f8667b68c2"
+    },
+    {
+      "os": "Windows 2022",
+      "tests_total": 169,
+      "tests_passed": 169,
+      "new_tests_passed": 14,
+      "job_id": 124958163740,
+      "artifact_id": 13098173659,
+      "artifact_zip_sha256_runner_reported": "caec6c37152855e84d2974d85fff06c6db9d74b1df18fed86767c5ff4d4a772c"
+    }
+  ],
+  "fixture": "fictional disposable SQLite; no external services",
+  "reproduction_commands": [
+    "python -m unittest -v test_expiry_checked_delivery_v21",
+    "python demo_expiry_checked_delivery_v21.py"
+  ],
+  "evidence": {
+    "test_harness_approval_expiry_denial": true,
+    "test_harness_identity_expiry_denial": true,
+    "revocation_denial": true,
+    "single_fake_sink_row_under_restart_and_concurrency": true,
+    "real_external_actions": 0,
+    "original_v18_negative_control_preserved": true,
+    "four_legacy_v20_routes_still_reachable": true,
+    "cross_platform_logs_independently_inspected": true,
+    "artifact_zip_bytes_independently_rehashed": false
+  },
+  "unknowns": {
+    "trusted_clock": "TBD",
+    "real_identity_authentication": "TBD",
+    "legacy_bypass_elimination": "TBD",
+    "production_security": "TBD",
+    "external_adapter_semantics": "TBD",
+    "independent_security_review": "TBD",
+    "user_outcomes": "TBD"
+  },
+  "stage": "Research / Simulation (fictional only); unchanged",
+  "kill_reframe": "Keep advisory/read-only if trusted time or a single enforced effect gateway cannot be established.",
+  "limitations": "Caller-supplied clock, publicly forgeable test HMAC keys, and four ungated fictional legacy routes prevent any global authorization or real-world safety claim."
+}
