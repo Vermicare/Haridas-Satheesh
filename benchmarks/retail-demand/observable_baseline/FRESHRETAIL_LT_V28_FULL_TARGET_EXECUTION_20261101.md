@@ -26,7 +26,7 @@ python -B freshretail_lt_full_target_last_observed_v28.py --train /private/train
 python -B freshretail_lt_full_target_gate_v27.py --eval /private/eval.parquet --predictions /private/predictions.csv --output /private/v28_coverage.json
 ```
 
-The [read-only workflow](../../../../.github/workflows/retail-lt-full-target-v28.yml) pins PyArrow 20.0.0 and uploads **only aggregate reports**. The forecast implementation retains only the latest historical value per series; it does **not** independently audit duplicates on earlier, nonselected history dates. All physical/private or employer data are excluded.
+The [read-only workflow](../../../.github/workflows/retail-lt-full-target-v28.yml) pins PyArrow 20.0.0 and uploads **only aggregate reports**. The forecast implementation retains only the latest historical value per series; it does **not** independently audit duplicates on earlier, nonselected history dates. All physical/private or employer data are excluded.
 
 ## Interpretation / decision
 
