@@ -1,0 +1,49 @@
+name: WBI S01 preserved metadata v1.1 independent check (no EEG)
+on:
+  push:
+    branches:
+      - research/wbi-independent-repro-20261026
+    paths:
+      - '.github/workflows/wbi-s01-metadata-v11.yml'
+      - 'benchmarks/wireless-brain-interface/verify_zhou2020_s01_metadata_v11.py'
+      - 'benchmarks/wireless-brain-interface/ZHOU2020_S01_HOSTED_METADATA_20261030.json'
+  pull_request:
+    paths:
+      - '.github/workflows/wbi-s01-metadata-v11.yml'
+      - 'benchmarks/wireless-brain-interface/verify_zhou2020_s01_metadata_v11.py'
+      - 'benchmarks/wireless-brain-interface/ZHOU2020_S01_HOSTED_METADATA_20261030.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  metadata-only-reproduction:
+    name: Metadata-only integrity / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Preserve Git source bytes across operating systems
+        shell: bash
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Check pinned preserved JSON and frozen synthetic evaluator Git blobs
+        shell: bash
+        run: |
+          test "$(git hash-object benchmarks/wireless-brain-interface/ZHOU2020_S01_HOSTED_METADATA_20261030.json)" = 'cb2552eca9874cef9f6bc67f3187bc43add43b4d'
+          test "$(git hash-object benchmarks/wireless-brain-interface/synthetic_evaluator.py)" = '2becec81a8002cc5ff2f445889b7617baf9937b9'
+      - name: Verify exact metadata bytes, schema and three adversarial mutations
+        shell: bash
+        run: |
+          python -B benchmarks/wireless-brain-interface/verify_zhou2020_s01_metadata_v11.py benchmarks/wireless-brain-interface/ZHOU2020_S01_HOSTED_METADATA_20261030.json
+      - name: State explicit evidence boundary
+        shell: bash
+        run: |
+          echo 'Only committed 4,185-byte metadata JSON checked. Original 1.14 GB S01 archive not acquired or independently authenticated. No EEG decoding, matched-coverage performance or clinical validation.'
