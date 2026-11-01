@@ -71,7 +71,7 @@ class EntryPointInventoryTests(unittest.TestCase):
     def test_lf_and_crlf_normalized_hash_equal(self):
         a = scan(self.root)
         p = self.root / MODULES[0]
-        p.write_bytes(p.read_bytes().replace(b'\n', b'\r\n'))
+        p.write_bytes(p.read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))
         b = scan(self.root)
         self.assertEqual(a['source_files'][0]['sha256_normalized_lf'],
                          b['source_files'][0]['sha256_normalized_lf'])
