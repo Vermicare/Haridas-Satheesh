@@ -67,7 +67,7 @@ class FictionalBundleTests(unittest.TestCase):
         self.assertFalse(m.audit_bytes(b"".join(x for x in lines if b"prov#Bundle" not in x))["valid"])
 
     def test_invalid_utf8_fails_closed(self):
-        self.assertEqual(m.audit_bytes(b"\\xff")["error"], "invalid_nquads")
+        self.assertEqual(m.audit_bytes(b"\xff")["error"], "invalid_nquads")
 
     def test_oversized_input_fails_closed(self):
         self.assertEqual(m.audit_bytes(b"x" * (m.MAX_BYTES + 1))["error"], "invalid_or_oversized_input")
