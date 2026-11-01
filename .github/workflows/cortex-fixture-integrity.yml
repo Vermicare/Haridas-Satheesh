@@ -63,6 +63,13 @@ jobs:
           python -B cortex_prov_boundary_v05.py export blind_case_20261024.json blind_archive_20261024.json > cortex-prov-v05.ttl
           python -B cortex_graph_contract_v07.py audit cortex-prov-v05.ttl > cortex-graph-contract-v07.json
           python -c "import json; d=json.load(open('cortex-graph-contract-v07.json')); assert d['valid'] is True and d['observed_triples']==14 and d['missing_triples']==0 and d['unexpected_triples']==0; print('CORTEX_V07_VERIFIED: frozen v0.5 exporter output passes independent RDF graph contract')"
+      - name: Verify fictional assertion-bundle attribution v0.9
+        shell: bash
+        working-directory: benchmarks/cortex
+        run: |
+          python -B -m unittest -v test_cortex_assertion_bundles_v09.py
+          python -B cortex_assertion_bundles_v09.py demo > cortex-assertion-bundles-v09.json
+          python -c "import json,hashlib; from cortex_assertion_bundles_v09 import build_example; d=json.load(open('cortex-assertion-bundles-v09.json')); assert d['valid'] and d['observed_quads']==10 and d['bundle_count']==2 and d['authorization']=='TBD' and d['independent_truth']=='TBD'; assert hashlib.sha256(build_example()).hexdigest() == '040503af2458cd5c9e3bbbea855409ffabd6895df7da096c67ffb472e9de0cc2'; print('CORTEX_V09_VERIFIED: fictional assertions isolated; attribution not authenticated')"
       - name: Compare fictional graph traversal scaling (non-gating timing)
         shell: bash
         working-directory: benchmarks/cortex
@@ -73,4 +80,5 @@ jobs:
           path: |
             benchmarks/cortex/synthetic_lineage_shift_results.json
             benchmarks/cortex/cortex-exact-disagreement-v04.json
+            benchmarks/cortex/cortex-assertion-bundles-v09.json
           if-no-files-found: error
