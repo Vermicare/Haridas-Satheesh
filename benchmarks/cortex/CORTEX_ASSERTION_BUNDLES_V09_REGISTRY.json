@@ -13,8 +13,16 @@
     "tests_passed": 17,
     "tests_total": 17
   },
-  "hosted_ubuntu": "TBD",
-  "hosted_windows": "TBD",
+  "hosted_ubuntu": {
+    "status": "PASS",
+    "tests": "17/17",
+    "job_id": 124837691698
+  },
+  "hosted_windows": {
+    "status": "PASS",
+    "tests": "17/17",
+    "job_id": 124837691535
+  },
   "example": {
     "serialization": "N-Quads",
     "sha256": "040503af2458cd5c9e3bbbea855409ffabd6895df7da096c67ffb472e9de0cc2",
@@ -38,5 +46,14 @@
     "https://www.w3.org/TR/prov-o/",
     "https://www.w3.org/TR/prov-dm/",
     "https://www.w3.org/TR/prov-links/"
-  ]
+  ],
+  "hosted_run": {
+    "id": 41303016167,
+    "head_sha": "001c04c17739b3688fc77c2aa4401db095bcbf61",
+    "conclusion": "success",
+    "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41303016167",
+    "original_existing_suite_tests_per_os": 210,
+    "original_graph_contract": "PASS",
+    "example_sha256_assertion": "PASS"
+  }
 }
