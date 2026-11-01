@@ -68,9 +68,14 @@ def inspect_json(raw):
 
 def inspect_zip(path, preserved_json):
     checks = {}
+    # Reject before decompression: only the exact, independently hashed 2,401-byte ZIP is admissible.
+    checks["original_metadata_zip_size"] = path.stat().st_size == 2401
+    if not checks["original_metadata_zip_size"]:
+        return checks
     raw = path.read_bytes()
     checks["original_metadata_zip_sha256"] = sha256(raw) == ZIP_SHA256
-    checks["original_metadata_zip_size"] = len(raw) == 2401
+    if not checks["original_metadata_zip_sha256"]:
+        return checks
     try:
         with zipfile.ZipFile(path) as z:
             checks["single_expected_zip_member"] = z.namelist() == ["s01-metadata-only.json"]
@@ -98,6 +103,8 @@ def main():
     parser.add_argument("--zip", type=Path, help="optional original 2,401-byte GitHub Actions metadata ZIP")
     args = parser.parse_args()
     try:
+        if args.json_path.stat().st_size > 4185:
+            raise ValueError("JSON exceeds pinned 4,185-byte limit")
         raw = args.json_path.read_bytes()
         checks = inspect_json(raw)
         checks["three_mutation_negative_controls"] = check_negative_controls(raw)
