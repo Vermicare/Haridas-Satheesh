@@ -25,7 +25,7 @@ python -B cortex_assertion_bundles_v09.py demo
 
 Expected demo: `valid=true`, `observed_quads=10`, `bundle_count=2`, `independent_truth=TBD`, `authorization=TBD`. It makes no external calls or writes. Optional bounded input: `python -B cortex_assertion_bundles_v09.py audit FILE.nq`; any deviation returns nonzero. Expected deterministic N-Quads SHA-256: `040503af2458cd5c9e3bbbea855409ffabd6895df7da096c67ffb472e9de0cc2`.
 
-**Local execution:** CPython 3.13.5, Linux 6.18.57 x86_64, RDFLib 7.5.0: **17/17 fictional tests passed**; demo verified 10/10 quads and two bundles. **Independent hosted Ubuntu/Windows verification: TBD until final-head workflow logs are inspected.** See [machine-readable registry](CORTEX_ASSERTION_BUNDLES_V09_REGISTRY.json).
+**Local execution:** CPython 3.13.5, Linux 6.18.57 x86_64, RDFLib 7.5.0: **17/17 fictional tests passed**; demo verified 10/10 quads and two bundles. **Independent hosted verification: PASS** — [GitHub Actions run #41303016167](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41303016167), source/test/workflow head `001c04c17739b3688fc77c2aa4401db095bcbf61`. Both **Ubuntu** (job `124837691698`) and **Windows** (job `124837691535`) logs were independently inspected: **17/17 new v0.9 tests passed on each**, plus the prior **210/210 fictional suite tests per operating system**, unchanged v0.5-to-v0.7 graph contract PASS, deterministic example SHA-256 assertion PASS. This verifies software behavior only, not asserting-agent identity or human validation. See [machine-readable registry](CORTEX_ASSERTION_BUNDLES_V09_REGISTRY.json).
 
 ## Maturity and decision
 
