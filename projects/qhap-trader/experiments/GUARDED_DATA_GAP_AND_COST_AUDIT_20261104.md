@@ -1,7 +1,7 @@
 # QHAP-TRADER — Data-gap, execution uncertainty and 2026 cost-scenario audit
 
 **Research date:** 2026-11-04  
-**Status:** Code candidate in [review PR #30](https://github.com/Vermicare/Haridas-Satheesh/pull/30), undergoing automated regression verification. **Not a production simulator, profitable signal, or real-money trading service.**
+**Status:** Validated as a **software safety prototype** in GitHub Actions on PR #30; **not** a production simulator, profitable signal, or real-money trading service. Tests and historical execution results are recorded below.
 
 ## Reason for this change
 
@@ -73,7 +73,23 @@ Any future API-based retail algorithm requires a separate regulatory feasibility
 
 **Already verified before this PR:** Old replay's exact 24 input file blob fingerprints and 8 old net P&L outputs reproduced in [GitHub Actions run #41695270798](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41695270798). This was a development-sample deterministic check, **not proof of edge**.
 
-**Pending here until actual run logs confirm:** 19 new synthetic state/fee tests; execution of new guarded CLI on the 24 pinned files; recording its precise trial outcomes and whether they differ from the original simulation.
+**Verified in actual GitHub Actions job logs:**
+- [Offline Paper Tests run #41698482817](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41698482817): **27/27 tests passed** — 8 legacy synthetic tests and **19 new fail-closed chronology/fee tests**, 0 failures.
+- [Pinned Historical Replay run #41698482717](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41698482717): **24/24 pinned stock-day Git blobs** verified, the 8 original net-profit snapshots passed, and the guarded CLI independently processed both stocks at **5 and 15 basis points per side**.
+- The guarded engine **matched all eight legacy simulated net results exactly** on the complete February 2021 source sessions. Every such guarded stock-session was either `CLOSED` or `NO_TRADE` (no unresolved live-source gaps in this small clean sample).
+
+| Stock | Strategy | 5 bps/side guarded net P&L | 15 bps/side guarded net P&L |
+|---|---|---:|---:|
+| ACC | Plain breakout | −₹3.613323 | −₹22.987469 |
+| ACC | Breakout + DTT veto | −₹22.784561 | −₹31.688167 |
+| RELIANCE | Plain breakout | +₹17.168397 | −₹27.294151 |
+| RELIANCE | Breakout + DTT veto | −₹34.806530 | −₹60.705623 |
+
+The guarded CLI output SHA-256 fingerprints in the workflow log were:
+- 5 bps/side: `cee5b60150f1769b41acfaa3d532409c2085bca8802a3baae5375450c2e2c57d`
+- 15 bps/side: `4ebd9f280b1ea622b4aceb9df6854d158181317bef14e239c170a2a7209d0847`
+
+**Interpretation:** Successful deterministic simulation replication and synthetic fail-closed checks, **not** evidence of historical price accuracy, real executed stops, low-risk profitability or a live deployable strategy.
 
 **Release gate:** No real trades, no live broker connections, no trading credentials, no agent-managed order execution. A successful build or historical replay does not certify profitable performance, robustness, or deployability.
 
