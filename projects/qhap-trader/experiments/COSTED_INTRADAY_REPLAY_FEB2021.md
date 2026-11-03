@@ -1,5 +1,7 @@
 # QHAP-TRADER — First costed intraday stock replay
 
+> **Correction audit, 2026-11-03:** A real 14:55 exit look-ahead defect was corrected in [research audit](REPLAY_CAUSALITY_AUDIT_20261103.md), and the amended core passed [8/8 GitHub Actions tests](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41693339038). Re-running exact original and corrected core functions on the same 24 stock-day files left the eight net P&L scenarios **unchanged**. The standalone local historical CLI reproduction is still pending.
+
 **Recorded:** 2026-11-03  
 **Stage:** Software feasibility + exploratory historical demonstration. **Not an out-of-sample profitability result, not investment advice, not an active bot.**  
 **Decision:** Keep the baseline experimental. **Do not promote the DTT filter**; it reduced net results on both securities under both modeled slippage settings.
