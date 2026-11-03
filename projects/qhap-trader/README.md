@@ -1,5 +1,8 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
+> **Latest historical research (2026-11-03):** A preliminary index-only October 2026 holdout found **NO incremental DTT advantage**: simple volatility baseline AUC 0.6994, DTT alone 0.4560, combined 0.6902. The outcome is future absolute movement, **not trading profit**. [See transparent negative-result report](experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md) and [reproducer](experiments/dtt_2026_index_replay.mjs). The strategy remains **paper-only/unvalidated**.
+
+
 **Status:** Research Program / Architecture — documentation only (2026-11-03)  
 **Market:** Indian equities, NSE cash segment; liquid unleveraged long-only instruments at inception  
 **Account:** ₹10,000 **simulated**, zero live capital deployed  
