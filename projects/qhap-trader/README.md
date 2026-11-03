@@ -1,9 +1,9 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
-> **Latest historical research (2026-11-03):** A preliminary index-only October 2026 holdout found **NO incremental DTT advantage**: simple volatility baseline AUC 0.6994, DTT alone 0.4560, combined 0.6902. The outcome is future absolute movement, **not trading profit**. [See transparent negative-result report](experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md) and [reproducer](experiments/dtt_2026_index_replay.mjs). The strategy remains **paper-only/unvalidated**.
+> **Latest historical research (2026-11-03):** DTT failed to improve a simple volatility baseline in a 2026 NIFTY 50 index test **and** February 2021 ACC / RELIANCE equity pilots. For the five-day equity holdout, baseline/combined AUC were **0.6713/0.6485** (ACC) and **0.6683/0.6250** (RELIANCE). These predict future *absolute movement*, **not trading profit**. See [equity research report](experiments/EQUITY_DTT_FEB2021_PILOT.md), [equity reproducer](experiments/equity_dtt_feb2021_pilot.mjs), and [previous index report](experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md). **DTT is quarantined; no verified trading edge or live deployment.**
 
 
-**Status:** Research Program / Architecture — documentation only (2026-11-03)  
+**Status:** Research Program / Experimental offline prototype; initial DTT historical diagnostics negative (2026-11-03)  
 **Market:** Indian equities, NSE cash segment; liquid unleveraged long-only instruments at inception  
 **Account:** ₹10,000 **simulated**, zero live capital deployed  
 **Broker:** none; no order-routing connection  
@@ -11,7 +11,7 @@
 
 > **Research question:** Can an evidence-gated intraday decision engine identify and skip low-quality trades, and generate a repeatable **net-of-cost** advantage over simple rules and no-trade alternatives on genuinely unseen market days?
 
-This is **not** a promise of daily income, an operating bot, an approved trading algorithm, or a verified profitable strategy. No historical intraday market-data corpus, running backtest, trained model, or forward-paper ledger has been verified for this project yet.
+This is **not** a promise of daily income, an operating bot, an approved trading algorithm, or a verified profitable strategy. Only preliminary third-party historical index and individual-stock OHLCV samples have been examined; no independently exchange-verified corpus, audited trading-profit backtest, trained trading model, or forward paper-trading ledger has been established.
 
 ## Why this is different from another "AI predicts the next candle" bot
 
