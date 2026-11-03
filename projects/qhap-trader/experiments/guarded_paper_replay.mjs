@@ -188,7 +188,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
     }
   }
-  const unknown=ledger.some(x=>x.status==="UNRESOLVED_POSITION");
+  const unknown=ledger.some(x=>["UNRESOLVED_POSITION","ENTRY_UNCONFIRMED"].includes(x.status));
   const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status));
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
