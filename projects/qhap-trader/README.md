@@ -59,6 +59,8 @@ NSE cash continuous trading normally begins at **09:15 IST**. In 2026, the NSE C
 
 ## Project documents
 
+- [Behavioral microstructure, pre-market agents and autonomous paper operation](AGENT_AUTONOMY_BLUEPRINT.md)
+- [Offline paper replay prototype and five synthetic safety tests](prototype/README.md)
 - [Design, hypotheses and differentiated AI research](DESIGN_AND_RESEARCH.md)
 - [Risk contract, replay quality and release gates](RISK_AND_VALIDATION.md)
 - [Main portfolio index](../../PROJECT_INDEX.md)
