@@ -5,11 +5,17 @@ on:
     paths:
       - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
       - 'projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/guarded_paper_replay.mjs'
+      - 'projects/qhap-trader/experiments/test_guarded_paper_replay.mjs'
+      - 'projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs'
       - '.github/workflows/qhap-trader-offline-tests.yml'
   pull_request:
     paths:
       - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
       - 'projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/guarded_paper_replay.mjs'
+      - 'projects/qhap-trader/experiments/test_guarded_paper_replay.mjs'
+      - 'projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs'
       - '.github/workflows/qhap-trader-offline-tests.yml'
 
 permissions:
@@ -26,6 +32,8 @@ jobs:
         with:
           node-version: '22'
       - name: Run offline risk-and-cost tests
-        run: node --test projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs
+        run: |
+          node --test projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs
+          node --test projects/qhap-trader/experiments/test_guarded_paper_replay.mjs
       - name: State evidence boundary
         run: echo 'Synthetic tests verify code invariants only; no historical data, trading edge or live orders.'
