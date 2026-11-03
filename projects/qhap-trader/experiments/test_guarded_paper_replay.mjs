@@ -151,3 +151,13 @@ test("bad settings and duplicate research days fail validation",()=>{
   assert.throws(()=>replayDay({symbol:"TEST",day:src.day,source:src.content,
     slippageBps:-5}));
 });
+
+test("uncertain entry must not certify an ending portfolio balance",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({breakout:true,missing:"09:41"}),
+    fixture({day:"02",breakout:true})]});
+  assert.equal(book.ledger[0].status,"ENTRY_UNCONFIRMED");
+  assert.equal(book.finalEquity,null);
+  assert.equal(book.certified,false);
+  assert.equal(book.ledger[1].status,"LOCKED");
+});
