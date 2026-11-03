@@ -6,6 +6,8 @@ on:
       - 'projects/qhap-trader/experiments/SOURCE_BLOBS_FEB2021.tsv'
       - 'projects/qhap-trader/experiments/assert_historical_snapshot.mjs'
       - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/guarded_paper_replay.mjs'
+      - 'projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs'
       - '.github/workflows/qhap-trader-pinned-replay.yml'
   workflow_dispatch:
 
@@ -58,6 +60,32 @@ jobs:
           node projects/qhap-trader/experiments/assert_historical_snapshot.mjs "${RUNNER_TEMP}/qhap-5.json" "${RUNNER_TEMP}/qhap-15.json"
           sha256sum "${RUNNER_TEMP}/qhap-5.json" "${RUNNER_TEMP}/qhap-15.json"
           echo "NOTICE: This is a deterministic regression of an exploratory development sample, NOT a statistically valid profitable trading claim."
+      - name: Run new fail-closed stateful paper replay (exploratory only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_dir="${RUNNER_TEMP}/qhap-replay-source"
+          node projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs "$source_dir" 5 > "${RUNNER_TEMP}/guarded-5.json"
+          node projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs "$source_dir" 15 > "${RUNNER_TEMP}/guarded-15.json"
+          node - "${RUNNER_TEMP}/guarded-5.json" "${RUNNER_TEMP}/guarded-15.json" <<'NODE'
+          const fs=require("node:fs");
+          for(const filename of process.argv.slice(2)){
+            const run=JSON.parse(fs.readFileSync(filename,"utf8"));
+            if(run.results.length!==4)throw Error("Expected two stocks and two variants");
+            for(const r of run.results){
+              if(!r.certified||r.unresolvedPositions!==0||r.ledger.length!==12||
+                 !Number.isFinite(r.knownRealizedPnl))
+                throw Error("Failed to certify complete historical replay for "+r.symbol+" "+r.variant);
+              console.log("GUARDED_REPLAY",r.symbol,r.variant,
+                "slippage_bps",r.slippageBps,
+                "net_INR",r.knownRealizedPnl,
+                "closed_trades",r.closedTrades,
+                "state",JSON.stringify(r.stateSummary));
+            }
+          }
+          console.log("Exploratory data only: passing complete-day replay does NOT prove real fills or profitability.");
+          NODE
+          sha256sum "${RUNNER_TEMP}/guarded-5.json" "${RUNNER_TEMP}/guarded-15.json"
       - name: Privacy and licensing boundary
         run: |
           echo "Third-party source bytes remain temporary; no uploads or artifacts."
