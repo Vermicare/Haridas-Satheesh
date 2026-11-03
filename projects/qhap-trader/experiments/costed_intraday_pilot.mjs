@@ -2,6 +2,7 @@
 /** Offline exploratory cash-equity paper replay. Not an investment result. See research report. */
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 const DAYS = ["01","02","03","04","05","08","09","10","11","12","15","16"];
 const runPilot = function runPilot(symbol, sourceFiles, slipBps=5) {
@@ -108,6 +109,8 @@ const runPilot = function runPilot(symbol, sourceFiles, slipBps=5) {
     feeAssumptions:"Zerodha reference 2026 schedule 0.03% capped 20/order; intraday STT 0.025% sell INR-rounded; NSE 0.00307%; SEBI 0.0001%; stamp 0.003% buy; GST 18% qualifying levies",
     scenarios};
 };
+export { runPilot };
+if (process.argv[1] && path.resolve(process.argv[1])===path.resolve(fileURLToPath(import.meta.url))) {
 const root=process.argv[2];
 if (!root) throw Error('Usage: node costed_intraday_pilot.mjs /path/to/nse-intraday-data [slippage_bps_per_side]');
 const slip=process.argv[3]?Number(process.argv[3]):5;
@@ -122,3 +125,5 @@ for(const symbol of ['ACC','RELIANCE']){
  output.push({inputFiles:files.map(f=>({day:f.day,sha256:f.sha256})),...runPilot(symbol,files,slip)});
 }
 console.log(JSON.stringify({classification:'EXPLORATORY THIRD-PARTY DATA; SIMULATION ONLY; NOT PROFIT EVIDENCE',slipBpsPerSide:slip,output},null,2));
+
+}
