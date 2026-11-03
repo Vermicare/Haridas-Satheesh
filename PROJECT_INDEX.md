@@ -170,7 +170,7 @@ This index consolidates the projects, systems, prototypes, research programs and
 - JCPenney / Catalyst Brands EPMO Microsoft 365 Automation Portfolio
 
 ## Market Microstructure & Trading Research
-- [QHAP-TRADER — Counterfactual Intraday Trading Intelligence](projects/qhap-trader/README.md) — **Research Program / Architecture; paper-only**, ₹10,000 simulated account, no broker or established trading edge. [Historical index and ACC/RELIANCE equity pilots: DTT did NOT outperform the baseline](projects/qhap-trader/experiments/EQUITY_DTT_FEB2021_PILOT.md). [First exploratory costed intraday paper replay](projects/qhap-trader/experiments/COSTED_INTRADAY_REPLAY_FEB2021.md): a small positive result on one stock at low slippage disappears at higher slippage; **no validated profitable strategy**.
+- [QHAP-TRADER — Counterfactual Intraday Trading Intelligence](projects/qhap-trader/README.md) — **Research Program / Architecture; paper-only**, ₹10,000 simulated account, no broker or established trading edge. [Historical index and ACC/RELIANCE equity pilots: DTT did NOT outperform the baseline](projects/qhap-trader/experiments/EQUITY_DTT_FEB2021_PILOT.md). [First exploratory costed intraday paper replay](projects/qhap-trader/experiments/COSTED_INTRADAY_REPLAY_FEB2021.md) ([causality correction, 8 passing synthetic CI tests](projects/qhap-trader/experiments/REPLAY_CAUSALITY_AUDIT_20261103.md)): a small positive result on one stock at low slippage disappears at higher slippage; **no validated profitable strategy**.
   - [Design, hypotheses and differentiated AI research](projects/qhap-trader/DESIGN_AND_RESEARCH.md)
   - [Paper-trading risk limits and validation gates](projects/qhap-trader/RISK_AND_VALIDATION.md)
 
