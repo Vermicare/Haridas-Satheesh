@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {runPilot} from './costed_intraday_pilot.mjs';
 
 /* All tests are synthetic; none establishes market or profit validity. */
-function source({symbol='TEST',day='01',breakout=false,remove=null,bothTouched=false}={}) {
+function source({symbol='TEST',day='01',breakout=false,remove=null,bothTouched=false,lateExit=false}={}) {
   const data=[symbol+',202102'+day+',09:08,100,100,100,100,100,0'];
   for (let minute=570;minute<=900;minute++){
     const tm=String(Math.floor(minute/60)).padStart(2,'0')+':'+String(minute%60).padStart(2,'0');
@@ -12,6 +12,11 @@ function source({symbol='TEST',day='01',breakout=false,remove=null,bothTouched=f
     if(breakout&&tm==='09:40'){o=100;h=102;l=99.8;c=101;}
     if(breakout&&tm==='09:41'){o=101;h=bothTouched?110:101.5;l=bothTouched?90:100.9;c=101;}
     if(breakout&&tm==='09:42'){o=101;h=101.1;l=99.5;c=100;}
+    // At the scheduled 14:55 exit, intraminute extremes must be ignored:
+    // only the opening price exists when the exit decision is due.
+    if(lateExit&&tm==='14:30'){o=100;h=102;l=99.6;c=101;}
+    if(lateExit&&tm>='14:31'&&tm<'14:55'){o=101;h=101.5;l=100.9;c=101;}
+    if(lateExit&&tm==='14:55'){o=101;h=110;l=90;c=100;}
     data.push([symbol,'202102'+day,tm,o,h,l,c,500,0].join(','));
   }
   return {day,content:data.join('\n'),sha:'SYNTHETIC'};
@@ -48,4 +53,13 @@ test('no-trade and full loss report remain internally consistent',()=>{
   const r=testResult({breakout:true});
   assert.ok(Math.abs(r.finalEquity-(10000+r.netPnl))<1e-3);
   assert.ok(r.maxDrawdown>=0);
+});
+
+test('14:55 opening exit cannot be selected from later 14:55 high/low',()=>{
+  const r=testResult({lateExit:true});
+  assert.equal(r.count,1);
+  assert.equal(r.ledger[0].entry,'14:31');
+  assert.equal(r.ledger[0].exit,'14:55');
+  assert.equal(r.ledger[0].exitReason,'TIME');
+  assert.ok(r.netPnl<0);  // round-trip fees and slippage, not an instant win
 });
