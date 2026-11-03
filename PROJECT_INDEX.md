@@ -169,6 +169,11 @@ This index consolidates the projects, systems, prototypes, research programs and
 - B2B Dashboard / UI-UX Design Work
 - JCPenney / Catalyst Brands EPMO Microsoft 365 Automation Portfolio
 
+## Market Microstructure & Trading Research
+- [QHAP-TRADER — Counterfactual Intraday Trading Intelligence](projects/qhap-trader/README.md) — **Research Program / Architecture; paper-only**, Indian cash equities, proposed ₹10,000 simulated account, no broker and no demonstrated trading edge.
+  - [Design, hypotheses and differentiated AI research](projects/qhap-trader/DESIGN_AND_RESEARCH.md)
+  - [Paper-trading risk limits and validation gates](projects/qhap-trader/RISK_AND_VALIDATION.md)
+
 ## Venture & Product Explorations
 - Enterprise Decision & Action Intelligence Platform
 - AI-native Enterprise Operations Intelligence
