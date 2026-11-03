@@ -1,5 +1,7 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
+> **Fail-closed data-integrity milestone (2026-11-04):** The [chronology-first guarded replay](experiments/guarded_paper_replay.mjs) preserves open paper positions when candles disappear, refuses to fabricate unknown exit P&L, and locks further activity. [Audit and fee notes](experiments/GUARDED_DATA_GAP_AND_COST_AUDIT_20261104.md). [GitHub Actions](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41698482817) passed **27/27** synthetic checks (8 legacy + 19 new); [pinned replay](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41698482717) matched all **8/8** prior historical outcomes. **No validated profitability or live trading.**
+
 > **Verified reproducibility (2026-11-04):** [Pinned historical GitHub Actions replay](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41695270798) **PASSED**: 24/24 third-party stock-day Git blob fingerprints and all 8/8 modeled P&L snapshots. [Full costed-replay study](experiments/COSTED_INTRADAY_REPLAY_FEB2021.md). **Reproducible does not mean profitable or exchange-certified.**
 
 > **Simulator integrity audit (2026-11-03):** [The 14:55 exit look-ahead bug was reproduced and fixed](experiments/REPLAY_CAUSALITY_AUDIT_20261103.md). GitHub Actions [run #41693339038](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41693339038) passed **8/8 offline synthetic tests**. Recalculated February 2021 ACC/RELIANCE numbers are **unchanged**; no profitable edge has been demonstrated.
