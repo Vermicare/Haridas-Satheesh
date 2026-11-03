@@ -1,6 +1,6 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
-> **Latest historical research (2026-11-03):** DTT failed to improve a simple volatility baseline in a 2026 NIFTY 50 index test **and** February 2021 ACC / RELIANCE equity pilots. For the five-day equity holdout, baseline/combined AUC were **0.6713/0.6485** (ACC) and **0.6683/0.6250** (RELIANCE). These predict future *absolute movement*, **not trading profit**. See [equity research report](experiments/EQUITY_DTT_FEB2021_PILOT.md), [equity reproducer](experiments/equity_dtt_feb2021_pilot.mjs), and [previous index report](experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md). **DTT is quarantined; no verified trading edge or live deployment.**
+> **Latest evidence (2026-11-03):** Added an exploratory, **costed historical intraday paper replay** on February 2021 ACC and RELIANCE minute candles. The DTT veto worsened results versus a simple breakout on both stocks; the breakout's small **+₹17.17 RELIANCE** result at 5 bps/side turned **−₹27.29** at 15 bps/side. No edge established. [Study and limitations](experiments/COSTED_INTRADAY_REPLAY_FEB2021.md) · [Reproducer](experiments/costed_intraday_pilot.mjs) · [Synthetic tests](experiments/test_costed_intraday_pilot.mjs). Previous [equity DTT AUC pilot](experiments/EQUITY_DTT_FEB2021_PILOT.md) and [index pilot](experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md) were also negative. **Paper-only; no broker.**
 
 
 **Status:** Research Program / Experimental offline prototype; initial DTT historical diagnostics negative (2026-11-03)  
@@ -11,7 +11,7 @@
 
 > **Research question:** Can an evidence-gated intraday decision engine identify and skip low-quality trades, and generate a repeatable **net-of-cost** advantage over simple rules and no-trade alternatives on genuinely unseen market days?
 
-This is **not** a promise of daily income, an operating bot, an approved trading algorithm, or a verified profitable strategy. Only preliminary third-party historical index and individual-stock OHLCV samples have been examined; no independently exchange-verified corpus, audited trading-profit backtest, trained trading model, or forward paper-trading ledger has been established.
+This is **not** a promise of daily income, an operating bot, an approved trading algorithm, or a verified profitable strategy. Only preliminary third-party index and stock candle samples, and a limited costed historical **simulation**, have been examined. No independently exchange-verified data, statistically defensible net-profit edge, running autonomous trading daemon, or forward-paper ledger has been established.
 
 ## Why this is different from another "AI predicts the next candle" bot
 
