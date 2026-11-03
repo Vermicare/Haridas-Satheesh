@@ -66,7 +66,10 @@ const runPilot = function runPilot(symbol, sourceFiles, slipBps=5) {
       const next=bars[i+1];
       if(next.tm>"14:31")break;
       const buy=next.o*(1+slipBps/10000);
-      const qty=Math.min(Math.floor(positionLimit/buy),Math.floor((initialCash-reserve)/(buy*1.001)),Math.floor(50/(buy*0.013)));
+      // Conservative *estimated* stop risk; gaps and unobserved liquidity may
+      // cause larger realized losses. Include the configured round-trip slippage.
+      const perShareRisk=buy*(0.01+2*slipBps/10000+0.002);
+      const qty=Math.min(Math.floor(positionLimit/buy),Math.floor((initialCash-reserve)/(buy*1.001)),Math.floor(50/perShareRisk));
       if(qty<1){skipped++;continue;}
       entry={tm:next.tm,buy,qty,stop:buy*0.99,target:buy*1.015,signalAt:tm,dtt};
       order=bars.findIndex(x=>x.tm===next.tm);
@@ -76,9 +79,11 @@ const runPilot = function runPilot(symbol, sourceFiles, slipBps=5) {
     let exit=null;
     for(let i=order;i<bars.length;i++){
       const b=bars[i]; if(b.tm>"14:55")break;
+      // A scheduled 14:55 open exit MUST be decided before inspecting that candle's
+      // future high/low; otherwise the replay retroactively uses look-ahead data.
+      if(b.tm==="14:55"){exit={tm:b.tm,reason:"TIME",raw:b.o};break;}
       if(b.l<=entry.stop){exit={tm:b.tm,reason:"STOP",raw:Math.min(entry.stop,b.o)};break;}
       if(b.h>=entry.target){exit={tm:b.tm,reason:"TARGET",raw:entry.target};break;}
-      if(b.tm==="14:55"){exit={tm:b.tm,reason:"TIME",raw:b.o};break;}
     }
     if(!exit)throw Error("Incomplete exit window "+s.day);
     const sell=exit.raw*(1-slipBps/10000);
@@ -92,8 +97,10 @@ const runPilot = function runPilot(symbol, sourceFiles, slipBps=5) {
     const ledger=[];
     for(const s of sessions){
       const d=new Date(`2021-02-${s.day}T00:00:00Z`);
-      const week=Math.floor((Number(s.day)-1)/7); // conservative fixed 7-day blocks, not exchange calendar weeks
-      const wk=`2021-02-${week}`;
+      // Trading week resets on Monday, not every seven calendar dates of a month.
+      // d is fixed to the 2021 research input; no exchange calendar inferred here.
+      const mondayUTC=d.getTime()-((d.getUTCDay()+6)%7)*86400000;
+      const wk=new Date(mondayUTC).toISOString().slice(0,10);
       if(wk!==currentWeek){currentWeek=wk;weeklyLoss=0;}
       if(halted||weeklyLoss<=-300){ledger.push({day:s.day,trade:false,skipped:"portfolio_risk_lock"});continue;}
       const rec=strategy(s,gate,equity);
