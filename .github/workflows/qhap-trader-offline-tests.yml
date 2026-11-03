@@ -1,0 +1,31 @@
+name: QHAP-TRADER Offline Paper Tests
+
+on:
+  push:
+    paths:
+      - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs'
+      - '.github/workflows/qhap-trader-offline-tests.yml'
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs'
+      - '.github/workflows/qhap-trader-offline-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  safety-tests:
+    name: Synthetic replay invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline risk-and-cost tests
+        run: node --test projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs
+      - name: State evidence boundary
+        run: echo 'Synthetic tests verify code invariants only; no historical data, trading edge or live orders.'
