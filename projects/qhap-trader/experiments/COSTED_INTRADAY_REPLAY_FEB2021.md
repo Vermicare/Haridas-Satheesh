@@ -1,5 +1,7 @@
 # QHAP-TRADER — First costed intraday stock replay
 
+> **Verified CLI reproduction (2026-11-04):** [GitHub Actions run #41695270798](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41695270798) completed **successfully**. It verified **24/24** pinned source Git blobs and reproduced **8/8** costed February 2021 scenario snapshots using the committed Node CLI. Output SHA-256: 5 bps `96a8c3baa1c63f35b2e1a55f533fc9c59ef99590e3fa90026e1efbd31e950f1a`; 15 bps `2316f6081534ab54b0031c713b6ee8f15277da9f8e3827cc40901f4560f16886`. [Pinned-source manifest](SOURCE_BLOBS_FEB2021.tsv) · [Snapshot assertion](assert_historical_snapshot.mjs). **This is deterministic replay validation, not prospective profitability evidence.**
+
 > **Correction audit, 2026-11-03:** A real 14:55 exit look-ahead defect was corrected in [research audit](REPLAY_CAUSALITY_AUDIT_20261103.md), and the amended core passed [8/8 GitHub Actions tests](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41693339038). Re-running exact original and corrected core functions on the same 24 stock-day files left the eight net P&L scenarios **unchanged**. The standalone local historical CLI reproduction is still pending.
 
 **Recorded:** 2026-11-03  
@@ -82,7 +84,7 @@ At 5 basis points/side:
 **G2: Net profitability — FAIL / INSUFFICIENT EVIDENCE.** No out-of-sample, multiple-regime, independent historical proof of positive post-cost expectancy. DTT must stay **QUARANTINED**.
 
 Next:
-1. Independently execute committed runner and tests; archive checksums, environment and complete outputs.
+1. **Completed for this development sample:** GitHub Actions executed the committed Node CLI, verified 24/24 pinned stock-day blobs, matched 8/8 snapshot results and logged output hashes. This is not validation of the data source's fidelity or a trading edge.
 2. Obtain authorized, high-quality intraday individual-equity data across **multiple years and regimes**, including verified corporate actions and trade calendars. Preserve point-in-time universe membership.
 3. Audit current and historical broker/statutory charges and broker order semantics with a trusted reference calculator. Add bid-ask, partial fills, realistic adverse gaps and order rejection; stop-price fills cannot be guaranteed.
 4. Preregister later untouched chronological evaluation *before model/feature tuning*, compare NO TRADE, simple breakout, VWAP control and any new behavioral veto with consistent sizing and equal trade-selection opportunity sets.
