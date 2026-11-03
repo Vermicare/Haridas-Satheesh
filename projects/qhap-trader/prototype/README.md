@@ -6,6 +6,9 @@ This folder contains the **first executable**, isolated **single-instrument/sing
 
 - [paper_mvp.py](paper_mvp.py) — Python standard-library-only CSV reader, opening-range teaching rule, next-bar paper entries, position/risk limits, simulated exits, data-gap halt and JSON audit journal.
 - [test_paper_mvp.py](test_paper_mvp.py) — five synthetic-data checks for the replay boundary.
+- [dtt_prototype.py](dtt_prototype.py) — deterministic hypothetical policy-switching scanner (no market data, orders or profitability claim).
+- [test_dtt_prototype.py](test_dtt_prototype.py) — seven synthetic invariant tests for the DTT calculation.
+
 
 ## Run
 
