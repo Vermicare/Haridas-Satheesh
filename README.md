@@ -129,6 +129,21 @@ Intelligence with no sensory boundary lives inside somebody else's dataset.
 
 ---
 
+### 07 // MARKET ↔ BEHAVIOR — [QHAP-TRADER](projects/qhap-trader/README.md)
+
+What if an automated trading system studied not only prices, but also where hypothetical trader plans might change together?
+
+QHAP-TRADER investigates **Decision-Threshold Tomography (DTT)**, a falsifiable research proposal for measuring fictional policy-switching density and whether it adds information beyond simple intraday volatility signals.
+
+**The first real-data test did not support the initial prediction method.** A 62-session, 23,250-candle NIFTY 50 index diagnostic (August–October 2026) found October holdout AUC **0.6994** for a simple baseline, **0.4560** for DTT, and **0.6902** when combined. These numbers describe prediction of *future absolute movement*, **not trading accuracy or profit**.
+
+[**Inspect negative-result research and reproducible code →**](projects/qhap-trader/experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md)
+
+`Research / Historical index diagnostic → independently verified equity data → paper-mode validation`  
+**No live trading. No demonstrated financial edge.**
+
+---
+
 ## `// THE CHESS PROBLEM`
 
 Prediction is not intelligence. Choosing the locally optimal action is not enough either.
@@ -240,6 +255,7 @@ The long game is understanding what happens when those layers begin to converge 
 | **Adaptive Personal Cooling** | Prototype / R&D; bench evidence pending | [Case study](case-studies/adaptive-personal-cooling.md) · [Bench protocol](benchmarks/adaptive-cooling/README.md) |
 | **Hardware / IoT** | **Prototype / Hardware Architecture**; [v1.9 independent cross-host unflashed ESP32-S3 firmware](https://github.com/Vermicare/Haridas-Satheesh/blob/research/iot-esp32s3-target-independent-v19-20261031/benchmarks/hardware-iot/ESP32S3_TARGET_INDEPENDENT_V19.md) plus [v2.0 effective-config inspection](https://github.com/Vermicare/Haridas-Satheesh/blob/research/iot-esp32s3-target-independent-v19-20261031/benchmarks/hardware-iot/EFFECTIVE_CONFIG_V20_2026_11_01.md) plus [v2.1 offline flash-ID command negative controls](https://github.com/Vermicare/Haridas-Satheesh/blob/research/iot-esp32s3-target-independent-v19-20261031/benchmarks/hardware-iot/FLASH_ID_COMMAND_GUARD_V21_2026_11_02.md) (137/137 Ubuntu and Windows tests; **not physical attestation**) (**PSRAM configured off in software, physical identity TBD**); [v1.8 wrong-target failure](https://github.com/Vermicare/Haridas-Satheesh/blob/research/iot-digest-pinned-independent-v18-20261031/benchmarks/hardware-iot/IMMUTABLE_IMAGE_INDEPENDENT_RUN_V18.md) retained; **no genuine dual-sensor capture** | [Project](projects/hardware-iot.md) · [Evidence gate](https://github.com/Vermicare/Haridas-Satheesh/issues/8) · [Reproducibility issue](https://github.com/Vermicare/Haridas-Satheesh/issues/21) |
 | **Retail Demand Intelligence** | Research / Architecture; 2025 preregistered **in-stock-only** MAE gate passed vs last-observed, but [post-hoc strongest-comparator interval spans zero](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V22_EXPLORATORY_STRONGEST_COMPARATOR.md) and [v2.4 full-period logical bounds cross zero](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V24_BOUNDS_RESULT.md); [v2.5 conditional sales-floor sensitivity still crosses zero](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V25_SALES_FLOOR_RESULT.md) — no identified latent-demand ranking or business-impact validation | [Case study](case-studies/retail-demand-intelligence.md) · [Verified 2025 experiment](https://github.com/Vermicare/Haridas-Satheesh/blob/research/retail-store-disjoint-v15-20261027/benchmarks/retail-demand/observable_baseline/FRESHRETAIL_LT_V21_TEMPORAL_TRANSFER_RESULT.md) |
+| **QHAP-TRADER** | **Research / Negative pilot finding**; 62-session 2026 index data diagnostic: DTT AUC **0.4560** vs simple volatility baseline **0.6994** for later absolute movement. **No equity trading P&L or verified edge** | [Evidence report](projects/qhap-trader/experiments/HISTORICAL_DTT_DIAGNOSTIC_2026_AUG_OCT.md) · [Reproducer](projects/qhap-trader/experiments/dtt_2026_index_replay.mjs) |
 | **EPMO Microsoft 365 Automation** | Implemented / In Progress | [Case study](case-studies/epmo-automation-portfolio.md) |
 
 ---
