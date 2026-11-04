@@ -266,3 +266,23 @@ test("invalid synthetic exit quantities and timestamps are rejected",()=>{
   assert.throws(()=>go({kind:"REJECTED",at:"09:42",filledQty:1}));
   assert.throws(()=>go({kind:"REJECTED",at:"garbage"}));
 });
+
+test("source-data halt with no known position locks book and withholds final equity",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",missing:"09:39"}),
+    fixture({day:"02"})]});
+  assert.equal(book.ledger[0].status,"HALTED_DATA");
+  assert.equal(book.ledger[0].position,null);
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.lockedReason,"HALTED_DATA");
+  assert.equal(book.knownRealizedPnl,0);
+  assert.equal(book.finalEquity,null);
+  assert.equal(book.certified,false);
+});
+test("complete synthetic no-trade book retains certified starting equity",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01"}),fixture({day:"02"})]});
+  assert.equal(book.finalEquity,10000);
+  assert.equal(book.certified,true);
+  assert.equal(book.lockedReason,null);
+});
