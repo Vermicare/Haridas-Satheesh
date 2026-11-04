@@ -161,3 +161,63 @@ test("uncertain entry must not certify an ending portfolio balance",()=>{
   assert.equal(book.certified,false);
   assert.equal(book.ledger[1].status,"LOCKED");
 });
+
+
+/** Adversarial order-failure scenarios are TEST-ONLY; not actual broker fills. */
+test("synthetic entry rejection halts with no invented filled position",()=>{
+  const src=fixture({breakout:true});
+  const r=replayDay({symbol:"TEST",day:src.day,source:src.content,
+    executionFault:{kind:"REJECTED",at:"09:41"}});
+  assert.equal(r.status,"ENTRY_REJECTED");
+  assert.equal(r.position,null);
+  assert.equal(r.netPnl,null);
+  assert.equal(r.detail.requestedQty>0,true);
+});
+test("synthetic stale entry quote blocks a fake next-minute fill",()=>{
+  const src=fixture({breakout:true});
+  const r=replayDay({symbol:"TEST",day:src.day,source:src.content,
+    executionFault:{kind:"STALE_QUOTE",at:"09:41"}});
+  assert.equal(r.status,"STALE_QUOTE");
+  assert.equal(r.position,null);
+  assert.equal(r.netPnl,null);
+});
+test("synthetic partial fill preserves known exposure and unknown exit",()=>{
+  const src=fixture({breakout:true});
+  const r=replayDay({symbol:"TEST",day:src.day,source:src.content,
+    executionFault:{kind:"PARTIAL_FILL",at:"09:41",filledQty:2}});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.position.entry,"09:41");
+  assert.equal(r.position.qty,2);
+  assert.ok(r.position.requestedQty>2);
+  assert.equal(r.detail.filledQty,2);
+  assert.equal(r.netPnl,null);
+});
+test("partial-fill uncertainty locks subsequent sessions and withholds equity",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true}),
+    fixture({day:"02",breakout:true})],
+    executionFaultsByDay:{"01":{kind:"PARTIAL_FILL",at:"09:41",filledQty:2}}});
+  assert.equal(book.ledger[0].status,"UNRESOLVED_POSITION");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.finalEquity,null);
+  assert.equal(book.certified,false);
+});
+test("a rejected entry never becomes an invented PnL in the book",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true}),
+    fixture({day:"02",breakout:true})],
+    executionFaultsByDay:{"01":{kind:"REJECTED",at:"09:41"}}});
+  assert.equal(book.ledger[0].status,"ENTRY_REJECTED");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.finalEquity,null);
+  assert.equal(book.certified,false);
+});
+test("invalid synthetic fill quantities and unsupported fault types fail",()=>{
+  const src=fixture({breakout:true});
+  const go=(fault)=>replayDay({symbol:"TEST",day:src.day,source:src.content,
+    executionFault:fault});
+  assert.throws(()=>go({kind:"PARTIAL_FILL",at:"09:41",filledQty:0}));
+  assert.throws(()=>go({kind:"PARTIAL_FILL",at:"09:41",filledQty:100000}));
+  assert.throws(()=>go({kind:"FAKE_SUCCESS",at:"09:41"}));
+  assert.throws(()=>go({kind:"STALE_QUOTE",at:"09:41",filledQty:1}));
+});
