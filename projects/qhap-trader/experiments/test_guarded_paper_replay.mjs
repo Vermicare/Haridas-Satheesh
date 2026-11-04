@@ -286,3 +286,18 @@ test("complete synthetic no-trade book retains certified starting equity",()=>{
   assert.equal(book.certified,true);
   assert.equal(book.lockedReason,null);
 });
+
+// Calendar-integrity regression: reject impossible February 2021 dates.
+test("nonexistent February 2021 dates are rejected before replay",()=>{
+  for(const day of ["00","29","30","31","3","aa"]){
+    const src=fixture({day});
+    assert.throws(()=>replayDay({symbol:"TEST",day,source:src.content}));
+    assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[src]}));
+  }
+});
+test("calendar-day validity is NOT an exchange holiday or weekend check",()=>{
+  const src=fixture({day:"28"}); // Sunday: intentionally exposes remaining gate.
+  const result=replayBook({symbol:"TEST",sourceFiles:[src]});
+  assert.equal(result.certified,true);
+  assert.equal(result.ledger[0].status,"NO_TRADE");
+});
