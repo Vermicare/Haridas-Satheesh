@@ -48,24 +48,44 @@ export function parse2021Source(symbol,day,source) {
 }
 
 export function replayDay({symbol,day,source,initialEquity=10000,
-                           slippageBps=5,variant="BASELINE"}) {
+                           slippageBps=5,variant="BASELINE",executionFault=null}) {
   if(!["BASELINE","DTT_VETO"].includes(variant)||!Number.isFinite(initialEquity)||
      initialEquity<0||!Number.isFinite(slippageBps)||
      slippageBps<0||slippageBps>200)throw Error("Bad replay settings");
+  // Synthetic adversarial testing only: never derived from a broker or real order feed.
+  // Faults are injected at the hypothetical NEXT-bar open, never retroactively.
+  if(executionFault!==null){
+    if(typeof executionFault!=="object"||
+       !["REJECTED","STALE_QUOTE","PARTIAL_FILL"].includes(executionFault.kind)||
+       !/^\d\d:\d\d$/.test(executionFault.at||"")||
+       executionFault.at<"09:40"||executionFault.at>"14:31")
+      throw Error("Invalid synthetic execution fault");
+    if(executionFault.kind==="PARTIAL_FILL"){
+      if(!Number.isInteger(executionFault.filledQty)||
+         executionFault.filledQty<1)
+        throw Error("Partial-fill fault must specify positive integer filledQty");
+    }else if(executionFault.filledQty!==undefined)throw Error("Unexpected filledQty");
+  }
   const bars=parse2021Source(symbol,day,source);
   const opening=[],history=[];
   let cumPriceVolume=0,cumVolume=0,priorClose=null,position=null,
     pending=null,skipped=0;
 
-  const halt=(status,tm)=>({
+  const halt=(status,tm,detail=null)=>({
     symbol,day,status,at:tm,
     position:position?{signalAt:position.signalAt,entry:position.entry,
-      qty:position.qty,buy:money(position.buy)}:null,
+      qty:position.qty,buy:money(position.buy),
+      requestedQty:position.requestedQty??position.qty}:null,
+    detail,
     skippedSignals:skipped,netPnl:null,
     reason:status==="UNRESOLVED_POSITION"
-      ?"Market data missing/invalid after simulated entry; cannot certify exit"
+      ?"Paper position may remain open; cannot certify exit or final valuation"
       :status==="ENTRY_UNCONFIRMED"
       ?"Data unavailable when simulated next-bar entry would occur; no fill assumed"
+      :status==="ENTRY_REJECTED"
+      ?"Synthetic order-rejection test; no entry confirmation and no further orders"
+      :status==="STALE_QUOTE"
+      ?"Synthetic stale-quote test; no trustworthy entry price"
       :"Cannot trust price data; no new trades"
   });
   const finish=(bar,reason,raw)=>{
@@ -99,6 +119,26 @@ export function replayDay({symbol,day,source,initialEquity=10000,
       ));
       if(qty===0){pending=null;skipped++;}
       else{
+        if(executionFault?.at===tm){
+          // These are explicit synthetic failure scenarios, not broker events.
+          if(executionFault.kind==="REJECTED")
+            return halt("ENTRY_REJECTED",tm,{fault:"REJECTED",requestedQty:qty});
+          if(executionFault.kind==="STALE_QUOTE")
+            return halt("STALE_QUOTE",tm,{fault:"STALE_QUOTE",requestedQty:qty});
+          if(executionFault.kind==="PARTIAL_FILL"){
+            if(executionFault.filledQty>=qty)
+              throw Error("Synthetic partial fill must be smaller than intended quantity");
+            position={signalAt:pending.signalAt,entry:tm,buy,
+              qty:executionFault.filledQty,requestedQty:qty,
+              dtt:pending.dtt,stop:buy*0.99,target:buy*1.015};
+            // A partial entry is a real exposure in this synthetic ledger.
+            // No stop, target, or final balance is fabricated in its absence.
+            return halt("UNRESOLVED_POSITION",tm,{
+              fault:"PARTIAL_FILL",
+              requestedQty:qty,filledQty:executionFault.filledQty
+            });
+          }
+        }
         position={signalAt:pending.signalAt,entry:tm,buy,qty,
           dtt:pending.dtt,stop:buy*0.99,target:buy*1.015};
         pending=null;
@@ -150,7 +190,7 @@ export function replayDay({symbol,day,source,initialEquity=10000,
 }
 
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
-                            slippageBps=5,variant="BASELINE"}) {
+                            slippageBps=5,variant="BASELINE",executionFaultsByDay=null}) {
   if(!Array.isArray(sourceFiles)||!sourceFiles.length)throw Error("No source files");
   const sorted=[...sourceFiles].sort((a,b)=>a.day.localeCompare(b.day));
   const unique=new Set(sorted.map(x=>x.day));
@@ -173,9 +213,10 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       continue;
     }
     const x=replayDay({symbol,day:s.day,source:s.content,
-      initialEquity:equity,slippageBps,variant});
+      initialEquity:equity,slippageBps,variant,
+      executionFault:executionFaultsByDay?.[s.day]??null});
     ledger.push(x);
-    if(["HALTED_DATA","ENTRY_UNCONFIRMED","UNRESOLVED_POSITION"].includes(x.status)){
+    if(["HALTED_DATA","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE","UNRESOLVED_POSITION"].includes(x.status)){
       locked=x.status;
       continue;
     }
@@ -188,7 +229,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
     }
   }
-  const unknown=ledger.some(x=>["UNRESOLVED_POSITION","ENTRY_UNCONFIRMED"].includes(x.status));
+  const unknown=ledger.some(x=>["UNRESOLVED_POSITION","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE"].includes(x.status));
   const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status));
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
