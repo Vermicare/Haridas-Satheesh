@@ -311,3 +311,17 @@ test("weekday-only validation does not falsely certify exchange holidays",()=>{
   assert.equal(r.ledger[0].status,"NO_TRADE");
   assert.equal(r.certified,true); // Technical replay certification only.
 });
+
+// Source-backed exceptional session: NSE's 24 Feb 2021 outage cannot be
+// replayed by a continuous 09:30–14:55 minute-bar engine.
+// SEBI PR 9/2021 (25 Feb 2021), not a trading holiday:
+// https://www.sebi.gov.in/media/press-releases/feb-2021/trading-halt-at-nse-on-february-24-2021_49287.html
+test("NSE February 24 2021 intraday halt is quarantined rather than certified",()=>{
+  const exceptional=fixture({day:"24",breakout:true});
+  assert.throws(()=>replayDay({symbol:"TEST",day:"24",source:exceptional.content}),
+    /exceptional intraday halt/);
+  assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[exceptional]}),
+    /exceptional intraday halt/);
+  const ordinary=fixture({day:"23"});
+  assert.equal(replayDay({symbol:"TEST",day:"23",source:ordinary.content}).status,"NO_TRADE");
+});
