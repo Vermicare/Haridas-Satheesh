@@ -48,7 +48,7 @@ export function parse2021Source(symbol,day,source) {
 }
 
 export function replayDay({symbol,day,source,initialEquity=10000,
-                           slippageBps=5,variant="BASELINE",executionFault=null}) {
+                           slippageBps=5,variant="BASELINE",executionFault=null,exitFault=null}) {
   if(!["BASELINE","DTT_VETO"].includes(variant)||!Number.isFinite(initialEquity)||
      initialEquity<0||!Number.isFinite(slippageBps)||
      slippageBps<0||slippageBps>200)throw Error("Bad replay settings");
@@ -66,6 +66,16 @@ export function replayDay({symbol,day,source,initialEquity=10000,
         throw Error("Partial-fill fault must specify positive integer filledQty");
     }else if(executionFault.filledQty!==undefined)throw Error("Unexpected filledQty");
   }
+  // Exit failures are synthetic adversarial events, not observed broker responses.
+  if(exitFault!==null &&
+    (typeof exitFault!=="object"||
+     !["REJECTED","PARTIAL_FILL","STALE_QUOTE"].includes(exitFault.kind)||
+     !/^\\d\\d:\\d\\d$/.test(exitFault.at||"")||
+     exitFault.at<"09:41"||exitFault.at>"14:55"||
+     (exitFault.kind==="PARTIAL_FILL"
+       ? !Number.isInteger(exitFault.filledQty)||exitFault.filledQty<1
+       : exitFault.filledQty!==undefined)))
+    throw Error("Invalid synthetic exit fault");
   const bars=parse2021Source(symbol,day,source);
   const opening=[],history=[];
   let cumPriceVolume=0,cumVolume=0,priorClose=null,position=null,
@@ -89,6 +99,22 @@ export function replayDay({symbol,day,source,initialEquity=10000,
       :"Cannot trust price data; no new trades"
   });
   const finish=(bar,reason,raw)=>{
+    if(exitFault?.at===bar.tm){
+      if(exitFault.kind==="PARTIAL_FILL"){
+        if(exitFault.filledQty>=position.qty)
+          throw Error("Synthetic partial exit must leave positive open quantity");
+        // Partial exit is an unresolved exposure: no invented realized fees or equity.
+        position={...position,qty:position.qty-exitFault.filledQty};
+        return halt("UNRESOLVED_POSITION",bar.tm,{
+          fault:"EXIT_PARTIAL_FILL",exitReason:reason,
+          filledExitQty:exitFault.filledQty,remainingQty:position.qty
+        });
+      }
+      return halt("UNRESOLVED_POSITION",bar.tm,{
+        fault:exitFault.kind==="REJECTED"?"EXIT_REJECTED":"EXIT_STALE_QUOTE",
+        exitReason:reason,remainingQty:position.qty
+      });
+    }
     const sell=raw*(1-slippageBps/10000);
     const fee=charges2026Scenario(position.buy,sell,position.qty);
     const gross=(sell-position.buy)*position.qty,net=gross-fee.total;
@@ -190,7 +216,7 @@ export function replayDay({symbol,day,source,initialEquity=10000,
 }
 
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
-                            slippageBps=5,variant="BASELINE",executionFaultsByDay=null}) {
+                            slippageBps=5,variant="BASELINE",executionFaultsByDay=null,exitFaultsByDay=null}) {
   if(!Array.isArray(sourceFiles)||!sourceFiles.length)throw Error("No source files");
   const sorted=[...sourceFiles].sort((a,b)=>a.day.localeCompare(b.day));
   const unique=new Set(sorted.map(x=>x.day));
@@ -214,7 +240,8 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
     }
     const x=replayDay({symbol,day:s.day,source:s.content,
       initialEquity:equity,slippageBps,variant,
-      executionFault:executionFaultsByDay?.[s.day]??null});
+      executionFault:executionFaultsByDay?.[s.day]??null,
+      exitFault:exitFaultsByDay?.[s.day]??null});
     ledger.push(x);
     if(["HALTED_DATA","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE","UNRESOLVED_POSITION"].includes(x.status)){
       locked=x.status;
