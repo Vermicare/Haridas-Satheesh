@@ -25,7 +25,7 @@ export function charges2026Scenario(buy,sell,qty) {
 }
 
 export function parse2021Source(symbol,day,source) {
-  if(!/^[A-Z]+$/.test(symbol)||!/^[0-3][0-9]$/.test(day)||
+  if(!/^[A-Z]+$/.test(symbol)||!/^(0[1-9]|1[0-9]|2[0-8])$/.test(day)||
     typeof source!=="string")throw Error("Bad source parameters");
   const date="202102"+day, map=new Map();
   for(const line of source.trim().split(/\r?\n/)) {
@@ -218,6 +218,9 @@ export function replayDay({symbol,day,source,initialEquity=10000,
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
                             slippageBps=5,variant="BASELINE",executionFaultsByDay=null,exitFaultsByDay=null}) {
   if(!Array.isArray(sourceFiles)||!sourceFiles.length)throw Error("No source files");
+  if(sourceFiles.some(x=>!x||typeof x.day!=="string"||
+    !/^(0[1-9]|1[0-9]|2[0-8])$/.test(x.day)))
+    throw Error("Invalid February 2021 research day");
   const sorted=[...sourceFiles].sort((a,b)=>a.day.localeCompare(b.day));
   const unique=new Set(sorted.map(x=>x.day));
   if(unique.size!==sorted.length)throw Error("Duplicate research day");
