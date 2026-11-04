@@ -27,6 +27,13 @@ export function charges2026Scenario(buy,sell,qty) {
 export function parse2021Source(symbol,day,source) {
   if(!/^[A-Z]+$/.test(symbol)||!/^(0[1-9]|1[0-9]|2[0-8])$/.test(day)||
     typeof source!=="string")throw Error("Bad source parameters");
+  // Fail closed on ordinary non-session weekends. This deliberately does
+  // NOT certify weekdays as NSE sessions: holidays, suspensions, and special
+  // weekend sessions require independently authenticated exchange calendars.
+  // Exceptional weekend sessions are rejected until that evidence exists.
+  const calendarDay=new Date("2021-02-"+day+"T00:00:00Z");
+  if(calendarDay.getUTCDay()===0||calendarDay.getUTCDay()===6)
+    throw Error("Unverified weekend exchange session");
   const date="202102"+day, map=new Map();
   for(const line of source.trim().split(/\r?\n/)) {
     if(!line.trim())continue;
