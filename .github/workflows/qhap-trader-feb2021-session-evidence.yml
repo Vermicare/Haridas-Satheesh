@@ -1,0 +1,27 @@
+name: QHAP-TRADER February 2021 session evidence
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/experiments/feb2021_session_evidence.mjs'
+      - '.github/workflows/qhap-trader-feb2021-session-evidence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'projects/qhap-trader/experiments/feb2021_session_evidence.mjs'
+      - '.github/workflows/qhap-trader-feb2021-session-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fail-closed-calendar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Node version and deterministic calendar assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          sha256sum projects/qhap-trader/experiments/feb2021_session_evidence.mjs
+          node --input-type=module -e "import {assertManifest} from './projects/qhap-trader/experiments/feb2021_session_evidence.mjs'; const r=assertManifest(); if(r.authorizedSessions!==0 || r.count!==28) process.exit(1); console.log(JSON.stringify({assertions:8,...r}));"
