@@ -70,7 +70,7 @@ export function replayDay({symbol,day,source,initialEquity=10000,
   if(exitFault!==null &&
     (typeof exitFault!=="object"||
      !["REJECTED","PARTIAL_FILL","STALE_QUOTE"].includes(exitFault.kind)||
-     !/^\\d\\d:\\d\\d$/.test(exitFault.at||"")||
+     !/^\d\d:\d\d$/.test(exitFault.at||"")||
      exitFault.at<"09:41"||exitFault.at>"14:55"||
      (exitFault.kind==="PARTIAL_FILL"
        ? !Number.isInteger(exitFault.filledQty)||exitFault.filledQty<1
