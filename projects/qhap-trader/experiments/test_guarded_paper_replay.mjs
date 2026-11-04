@@ -295,9 +295,19 @@ test("nonexistent February 2021 dates are rejected before replay",()=>{
     assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[src]}));
   }
 });
-test("calendar-day validity is NOT an exchange holiday or weekend check",()=>{
-  const src=fixture({day:"28"}); // Sunday: intentionally exposes remaining gate.
-  const result=replayBook({symbol:"TEST",sourceFiles:[src]});
-  assert.equal(result.certified,true);
-  assert.equal(result.ledger[0].status,"NO_TRADE");
+test("unverified Saturday and Sunday research sessions fail closed",()=>{
+  for(const day of ["06","07","27","28"]){
+    const src=fixture({day});
+    assert.throws(()=>replayDay({symbol:"TEST",day,source:src.content}),
+      /Unverified weekend exchange session/);
+    assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[src]}),
+      /Unverified weekend exchange session/);
+  }
+});
+test("weekday-only validation does not falsely certify exchange holidays",()=>{
+  // 2021-02-01 is a Monday; valid weekday is NOT proof of an NSE session.
+  const src=fixture({day:"01"});
+  const r=replayBook({symbol:"TEST",sourceFiles:[src]});
+  assert.equal(r.ledger[0].status,"NO_TRADE");
+  assert.equal(r.certified,true); // Technical replay certification only.
 });
