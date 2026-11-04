@@ -221,3 +221,48 @@ test("invalid synthetic fill quantities and unsupported fault types fail",()=>{
   assert.throws(()=>go({kind:"FAKE_SUCCESS",at:"09:41"}));
   assert.throws(()=>go({kind:"STALE_QUOTE",at:"09:41",filledQty:1}));
 });
+
+test("synthetic rejected stop exit retains position and unknown net PnL",()=>{
+  const s=fixture({breakout:true,earlyStop:true});
+  const r=replayDay({symbol:"TEST",day:s.day,source:s.content,
+    exitFault:{kind:"REJECTED",at:"09:42"}});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.position.qty>0,true);
+  assert.equal(r.detail.fault,"EXIT_REJECTED");
+  assert.equal(r.netPnl,null);
+});
+test("synthetic partial stop exit records remaining exposure without invented profit",()=>{
+  const s=fixture({breakout:true,earlyStop:true});
+  const r=replayDay({symbol:"TEST",day:s.day,source:s.content,
+    exitFault:{kind:"PARTIAL_FILL",at:"09:42",filledQty:2}});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.detail.filledExitQty,2);
+  assert.equal(r.position.qty,r.detail.remainingQty);
+  assert.equal(r.netPnl,null);
+});
+test("synthetic stale scheduled exit leaves paper exposure unresolved",()=>{
+  const s=fixture({breakout:true});
+  const r=replayDay({symbol:"TEST",day:s.day,source:s.content,
+    exitFault:{kind:"STALE_QUOTE",at:"14:55"}});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.detail.fault,"EXIT_STALE_QUOTE");
+  assert.equal(r.netPnl,null);
+});
+test("uncertain synthetic exit locks later days and hides ending equity",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,earlyStop:true}),
+    fixture({day:"02",breakout:true})],
+    exitFaultsByDay:{"01":{kind:"REJECTED",at:"09:42"}}});
+  assert.equal(book.ledger[0].status,"UNRESOLVED_POSITION");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.finalEquity,null);
+  assert.equal(book.certified,false);
+});
+test("invalid synthetic exit quantities and timestamps are rejected",()=>{
+  const s=fixture({breakout:true,earlyStop:true});
+  const go=(exitFault)=>replayDay({symbol:"TEST",day:s.day,source:s.content,exitFault});
+  assert.throws(()=>go({kind:"PARTIAL_FILL",at:"09:42",filledQty:0}));
+  assert.throws(()=>go({kind:"PARTIAL_FILL",at:"09:42",filledQty:1000}));
+  assert.throws(()=>go({kind:"REJECTED",at:"09:42",filledQty:1}));
+  assert.throws(()=>go({kind:"REJECTED",at:"garbage"}));
+});
