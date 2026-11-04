@@ -256,12 +256,12 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
     }
   }
-  const unknown=ledger.some(x=>["UNRESOLVED_POSITION","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE"].includes(x.status));
+  const unknown=ledger.some(x=>["HALTED_DATA","UNRESOLVED_POSITION","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE"].includes(x.status));
   const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status));
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
-    // position's exit is unknown. Other locks also fail certification.
+    // position's exit or source-data completeness is unknown. Other locks also fail certification.
     finalEquity:unknown?null:money(equity),
     maxKnownDrawdown:money(drawdown),certified,
     lockedReason:locked,unresolvedPositions:ledger.filter(x=>x.status==="UNRESOLVED_POSITION").length,
