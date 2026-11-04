@@ -34,6 +34,14 @@ export function parse2021Source(symbol,day,source) {
   const calendarDay=new Date("2021-02-"+day+"T00:00:00Z");
   if(calendarDay.getUTCDay()===0||calendarDay.getUTCDay()===6)
     throw Error("Unverified weekend exchange session");
+  // NSE's ordinary 2021 holiday circular does not encode intraday outages.
+  // SEBI PR 9/2021 (2021-02-25) documents an NSE cash-market halt on
+  // 2021-02-24 from 11:40 IST, with resumption at 15:30 and extension
+  // to 17:00. Our fixed 09:30–14:55 continuous-session adapter cannot
+  // faithfully replay this exceptional session. Quarantine it, rather
+  // than manufacture continuous executable prices or a certified P&L.
+  // https://www.sebi.gov.in/media/press-releases/feb-2021/trading-halt-at-nse-on-february-24-2021_49287.html
+  if(day==="24")throw Error("NSE 2021-02-24 exceptional intraday halt unsupported");
   const date="202102"+day, map=new Map();
   for(const line of source.trim().split(/\r?\n/)) {
     if(!line.trim())continue;
