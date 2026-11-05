@@ -1,0 +1,23 @@
+name: QHAP-TRADER fee formula synthetic audit
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/test_fee_formula_audit.mjs'
+      - '.github/workflows/qhap-trader-fee-audit.yml'
+  workflow_dispatch:
+jobs:
+  fee-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline synthetic fee assertions and source provenance
+        run: |
+          node --version
+          sha256sum projects/qhap-trader/experiments/costed_intraday_pilot.mjs projects/qhap-trader/experiments/test_fee_formula_audit.mjs
+          node projects/qhap-trader/experiments/test_fee_formula_audit.mjs
