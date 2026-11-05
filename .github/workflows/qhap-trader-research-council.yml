@@ -1,0 +1,34 @@
+name: QHAP-TRADER Research Council Offline Tests
+
+on:
+  push:
+    paths:
+      - 'projects/qhap-trader/research_council/**'
+      - '.github/workflows/qhap-trader-research-council.yml'
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/research_council/**'
+      - '.github/workflows/qhap-trader-research-council.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-council:
+    name: No-key independent multi-model council tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test research council offline with no credentials
+        env:
+          OPENROUTER_API_KEY: ''
+          QHAP_ENABLE_PAID_COUNCIL: ''
+        run: |
+          node --test projects/qhap-trader/research_council/test_council.mjs
+          node projects/qhap-trader/research_council/council.mjs --demo projects/qhap-trader/research_council/sample_brief.json > /dev/null
+      - name: Evidence disclaimer
+        run: echo 'No AI providers called, no market evidence, no broker API, no orders.'
