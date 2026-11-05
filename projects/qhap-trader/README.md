@@ -1,5 +1,8 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
+> **Independent multi-AI research council (2026-11-05):** Added [research-only GPT/Claude/Gemini provider council](research_council/README.md) with three independent model critiques and a judge, followed by separate falsification requirements. [Offline test suite](research_council/test_council.mjs) verifies no order execution, manual API-cost opt-in, prompt/input guards and audit fingerprints. **CI tests are synthetic only; external models have not been called and no strategy advantage has been established.**
+
+
 > **Fail-closed data-integrity milestone (2026-11-04):** The [chronology-first guarded replay](experiments/guarded_paper_replay.mjs) preserves open paper positions when candles disappear, refuses to fabricate unknown exit P&L, and locks further activity. [Audit and fee notes](experiments/GUARDED_DATA_GAP_AND_COST_AUDIT_20261104.md). [GitHub Actions](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41698482817) passed **27/27** synthetic checks (8 legacy + 19 new); [pinned replay](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41698482717) matched all **8/8** prior historical outcomes. **No validated profitability or live trading.**
 
 > **Verified reproducibility (2026-11-04):** [Pinned historical GitHub Actions replay](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/41695270798) **PASSED**: 24/24 third-party stock-day Git blob fingerprints and all 8/8 modeled P&L snapshots. [Full costed-replay study](experiments/COSTED_INTRADAY_REPLAY_FEB2021.md). **Reproducible does not mean profitable or exchange-certified.**
