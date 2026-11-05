@@ -1,0 +1,12 @@
+{
+  "project": "QHAP-TRADER",
+  "title": "Falsify an intraday strategy abstention filter",
+  "question": "Propose falsifiable tests of a proposed NSE cash-equity intraday breakout abstention filter against NO_TRADE and simple comparators. Require licensed point-in-time data, correct timestamps, full costs, realistic fills, frozen parameters and unseen days. Do not claim a profitable strategy.",
+  "sources": [
+    "https://github.com/Vermicare/Haridas-Satheesh/tree/main/projects/qhap-trader",
+    "https://github.com/Vermicare/Haridas-Satheesh/issues/27"
+  ],
+  "publicOnly": true,
+  "realOrderExecution": false,
+  "usesPrivateMarketData": false
+}
