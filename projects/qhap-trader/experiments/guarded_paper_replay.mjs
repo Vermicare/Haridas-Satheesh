@@ -289,7 +289,9 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       }
     }
   }
-  // An emergency lock on the final source day has no later LOCKED ledger row.\n  // Do not certify that terminal portfolio state merely because its exit P&L is known.\n  const certified=locked===null&&ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
+  // An emergency lock on the final source day has no later LOCKED ledger row.
+  // Do not certify that terminal portfolio state merely because its exit P&L is known.
+  const certified=locked===null&&ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
