@@ -400,3 +400,27 @@ test("cross-week maximum drawdown locks later sessions and hides final equity",(
   assert.equal(book.finalEquity,null);
   assert.ok(Number.isFinite(book.knownRealizedPnl));
 });
+
+test("post-exit missing candle preserves known trade but prevents session certification",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,earlyStop:true,missing:"14:00"}),
+    fixture({day:"02"})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.equal(book.ledger[0].exit,"09:42");
+  assert.equal(book.ledger[0].sessionComplete,false);
+  assert.equal(book.ledger[0].firstPostExitGap,"14:00");
+  assert.ok(Number.isFinite(book.ledger[0].netPnl));
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+test("complete post-exit session remains eligible for technical certification",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01",breakout:true,earlyStop:true})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.equal(book.ledger[0].sessionComplete,true);
+  assert.equal(book.ledger[0].firstPostExitGap,null);
+  assert.equal(book.certified,true);
+  assert.ok(Number.isFinite(book.finalEquity));
+});
