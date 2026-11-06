@@ -133,7 +133,14 @@ export function replayDay({symbol,day,source,initialEquity=10000,
     const sell=raw*(1-slippageBps/10000);
     const fee=charges2026Scenario(position.buy,sell,position.qty);
     const gross=(sell-position.buy)*position.qty,net=gross-fee.total;
-    return {symbol,day,status:"CLOSED",signalAt:position.signalAt,
+    // Outcome is known at exit, but later missing candles prevent full-session certification.
+    // This scan never changes the already-determined exit price or realized P&L.
+    let firstPostExitGap=null;
+    for(let minute=Number(bar.tm.slice(0,2))*60+Number(bar.tm.slice(3))+1;minute<=895;minute++){
+      if(!bars.get(minuteText(minute))){firstPostExitGap=minuteText(minute);break;}
+    }
+    return {symbol,day,status:"CLOSED",sessionComplete:firstPostExitGap===null,
+      firstPostExitGap,signalAt:position.signalAt,
       entry:position.entry,exit:bar.tm,exitReason:reason,
       qty:position.qty,buy:money(position.buy),sell:money(sell),
       gross:money(gross),fees:money(fee.total),netPnl:money(net),
@@ -267,6 +274,9 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       continue;
     }
     if(x.status==="CLOSED"){
+      // A closed trade may have known P&L while the later session feed is incomplete.
+      // Preserve realized P&L but prevent subsequent sessions and certification.
+      if(x.sessionComplete===false)locked="POST_EXIT_DATA_GAP";
       equity+=x.netPnl;
       weeklyPnL+=x.netPnl;
       peak=Math.max(peak,equity);
@@ -275,7 +285,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
     }
   }
-  const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status));
+  const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
