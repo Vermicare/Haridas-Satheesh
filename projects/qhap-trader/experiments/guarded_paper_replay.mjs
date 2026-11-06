@@ -281,8 +281,12 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       weeklyPnL+=x.netPnl;
       peak=Math.max(peak,equity);
       drawdown=Math.max(drawdown,peak-equity);
-      if(x.netPnl<=-100)locked="DAILY_LOSS_BREACH";
-      else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
+      // Data-integrity failure takes precedence over concurrent loss locks.
+      // Known losses still update risk counters, but cannot erase fault provenance.
+      if(!locked){
+        if(x.netPnl<=-100)locked="DAILY_LOSS_BREACH";
+        else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
+      }
     }
   }
   const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
