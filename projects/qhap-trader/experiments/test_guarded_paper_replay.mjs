@@ -370,3 +370,33 @@ test("weekly loss lock withholds uncertified portfolio equity",()=>{
   assert.equal(book.finalEquity,null);
   assert.ok(book.knownRealizedPnl<=-300);
 });
+
+// Drawdown is accumulated across weekly resets; weekly veto must not reset peak.
+// Synthetic prices only; no assumption about exchange-authorized historical bars.
+test("cross-week maximum drawdown locks later sessions and hides final equity",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  // Four sub-₹100 losses in each of the first two weeks; weekly counters
+  // reset but the portfolio drawdown does not. Third week crosses ₹800.
+  const days=["01","02","03","04","08","09","10","11","15","16","17","18"];
+  const book=replayBook({symbol:"TEST",sourceFiles:days.map(losingDay)});
+  assert.deepEqual(book.ledger.slice(0,11).map(x=>x.status),
+    Array(11).fill("CLOSED"));
+  assert.equal(book.ledger[11].status,"LOCKED");
+  assert.equal(book.ledger[11].reason,"MAX_DRAWDOWN_BREACH");
+  assert.equal(book.lockedReason,"MAX_DRAWDOWN_BREACH");
+  assert.ok(book.maxKnownDrawdown>=800);
+  assert.equal(book.closedTrades,11);
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
