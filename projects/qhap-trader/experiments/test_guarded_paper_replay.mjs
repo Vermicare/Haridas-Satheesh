@@ -477,3 +477,40 @@ test("post-exit data gap remains primary lock despite concurrent maximum drawdow
   assert.equal(book.finalEquity,null);
   assert.ok(Number.isFinite(book.knownRealizedPnl));
 });
+
+
+test("terminal-day daily loss lock withholds portfolio certification",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true})]});
+  assert.equal(book.ledger.length,1);
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.ok(book.ledger[0].netPnl<=-100);
+  assert.equal(book.ledger[0].sessionComplete,true);
+  assert.equal(book.lockedReason,"DAILY_LOSS_BREACH");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+test("terminal-day cross-week maximum drawdown lock withholds certification",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const days=["01","02","03","04","08","09","10","11","15","16","17"];
+  const book=replayBook({symbol:"TEST",sourceFiles:days.map(losingDay)});
+  assert.equal(book.ledger.length,days.length);
+  assert.ok(book.ledger.every(x=>x.status==="CLOSED"&&x.sessionComplete===true));
+  assert.ok(book.maxKnownDrawdown>=800);
+  assert.equal(book.lockedReason,"MAX_DRAWDOWN_BREACH");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
