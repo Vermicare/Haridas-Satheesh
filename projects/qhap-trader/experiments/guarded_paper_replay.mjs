@@ -232,6 +232,7 @@ export function replayDay({symbol,day,source,initialEquity=10000,
 
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
                             slippageBps=5,variant="BASELINE",executionFaultsByDay=null,exitFaultsByDay=null}) {
+  if(!Number.isFinite(initialEquity)||initialEquity<=0)throw Error("Invalid portfolio initial equity");
   if(!Array.isArray(sourceFiles)||!sourceFiles.length)throw Error("No source files");
   if(sourceFiles.some(x=>!x||typeof x.day!=="string"||
     !/^(0[1-9]|1[0-9]|2[0-8])$/.test(x.day)))
@@ -274,13 +275,12 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
     }
   }
-  const unknown=ledger.some(x=>["HALTED_DATA","UNRESOLVED_POSITION","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE"].includes(x.status));
   const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status));
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
     // position's exit or source-data completeness is unknown. Other locks also fail certification.
-    finalEquity:unknown?null:money(equity),
+    finalEquity:certified?money(equity):null,
     maxKnownDrawdown:money(drawdown),certified,
     lockedReason:locked,unresolvedPositions:ledger.filter(x=>x.status==="UNRESOLVED_POSITION").length,
     closedTrades:ledger.filter(x=>x.status==="CLOSED").length,ledger};
