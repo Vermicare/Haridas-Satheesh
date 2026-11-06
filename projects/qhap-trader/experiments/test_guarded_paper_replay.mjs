@@ -424,3 +424,21 @@ test("complete post-exit session remains eligible for technical certification",(
   assert.equal(book.certified,true);
   assert.ok(Number.isFinite(book.finalEquity));
 });
+
+// A known adverse gap and missing post-exit candle can coexist. Data-quality
+// provenance must not be replaced by a concurrent emergency-loss veto.
+test("post-exit data gap remains primary lock despite simultaneous daily loss",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true,missing:"14:00"}),
+    fixture({day:"02"})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.ok(book.ledger[0].netPnl<=-100);
+  assert.equal(book.ledger[0].sessionComplete,false);
+  assert.equal(book.ledger[0].firstPostExitGap,"14:00");
+  assert.equal(book.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.ledger[1].reason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
