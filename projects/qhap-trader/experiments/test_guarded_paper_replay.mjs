@@ -325,3 +325,32 @@ test("NSE February 24 2021 intraday halt is quarantined rather than certified",(
   const ordinary=fixture({day:"23"});
   assert.equal(replayDay({symbol:"TEST",day:"23",source:ordinary.content}).status,"NO_TRADE");
 });
+
+
+test("portfolio rejects invalid capital before any replay",()=>{
+  const src=fixture({day:"01"});
+  for(const initialEquity of [0,-1,NaN,Infinity,-Infinity,"10000",null]){
+    assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[src],initialEquity}),
+      /Invalid portfolio initial equity/);
+  }
+});
+test("daily loss lock never publishes uncertified final equity",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true}),
+    fixture({day:"02",breakout:true})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.lockedReason,"DAILY_LOSS_BREACH");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+test("weekly lock cannot be mistaken for a certified final valuation",()=>{
+  // An independent weekly-lock fixture is not yet available; preserve
+  // this as a separate pending gate rather than inventing a PASS.
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true}),
+    fixture({day:"02"})]});
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+});
