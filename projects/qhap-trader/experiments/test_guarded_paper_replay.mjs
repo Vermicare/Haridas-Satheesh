@@ -351,14 +351,14 @@ test("daily loss lock never publishes uncertified final equity",()=>{
 test("weekly loss lock withholds uncertified portfolio equity",()=>{
   const losingDay=day=>{
     const src=fixture({day,breakout:true});
-    const rows=src.content.split("\\n").map(row=>{
+    const rows=src.content.split("\n").map(row=>{
       const p=row.split(",");
       if(p[2]==="09:42"){
         p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
       }
       return p.join(",");
     });
-    return {day,content:rows.join("\\n")};
+    return {day,content:rows.join("\n")};
   };
   const book=replayBook({symbol:"TEST",sourceFiles:
     ["01","02","03","04","05"].map(losingDay)});
