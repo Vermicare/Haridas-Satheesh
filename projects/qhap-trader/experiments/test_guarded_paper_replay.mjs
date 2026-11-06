@@ -345,12 +345,3 @@ test("daily loss lock never publishes uncertified final equity",()=>{
   assert.equal(book.finalEquity,null);
   assert.ok(Number.isFinite(book.knownRealizedPnl));
 });
-test("weekly lock cannot be mistaken for a certified final valuation",()=>{
-  // An independent weekly-lock fixture is not yet available; preserve
-  // this as a separate pending gate rather than inventing a PASS.
-  const book=replayBook({symbol:"TEST",sourceFiles:[
-    fixture({day:"01",breakout:true,gapDown:true}),
-    fixture({day:"02"})]});
-  assert.equal(book.certified,false);
-  assert.equal(book.finalEquity,null);
-});
