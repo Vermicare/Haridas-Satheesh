@@ -442,3 +442,38 @@ test("post-exit data gap remains primary lock despite simultaneous daily loss",(
   assert.equal(book.finalEquity,null);
   assert.ok(Number.isFinite(book.knownRealizedPnl));
 });
+
+
+// A drawdown breach can coincide with a missing post-exit candle. The
+// cumulative peak survives weekly resets; data provenance must still win.
+test("post-exit data gap remains primary lock despite concurrent maximum drawdown",()=>{
+  const losingDay=(day,missing=null)=>{
+    const src=fixture({day,breakout:true,missing});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const prior=["01","02","03","04","08","09","10","11","15","16"];
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    ...prior.map(day=>losingDay(day)),
+    losingDay("17","14:00"),losingDay("18")
+  ]});
+  assert.ok(book.ledger.slice(0,10).every(x=>x.status==="CLOSED"));
+  assert.equal(book.ledger[10].status,"CLOSED");
+  assert.equal(book.ledger[10].sessionComplete,false);
+  assert.equal(book.ledger[10].firstPostExitGap,"14:00");
+  assert.ok(book.ledger[10].netPnl<0&&book.ledger[10].netPnl>-100);
+  assert.ok(book.maxKnownDrawdown>=800);
+  assert.equal(book.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.ledger[11].status,"LOCKED");
+  assert.equal(book.ledger[11].reason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.closedTrades,11);
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
