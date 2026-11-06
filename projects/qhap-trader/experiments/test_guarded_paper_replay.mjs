@@ -345,3 +345,28 @@ test("daily loss lock never publishes uncertified final equity",()=>{
   assert.equal(book.finalEquity,null);
   assert.ok(Number.isFinite(book.knownRealizedPnl));
 });
+
+// Five consecutive February 2021 weekdays, four known sub-₹100 losses.
+// Synthetic-only weekly lock; no exchange provenance or real fills implied.
+test("weekly loss lock withholds uncertified portfolio equity",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\\n")};
+  };
+  const book=replayBook({symbol:"TEST",sourceFiles:
+    ["01","02","03","04","05"].map(losingDay)});
+  assert.deepEqual(book.ledger.slice(0,4).map(x=>x.status),
+    ["CLOSED","CLOSED","CLOSED","CLOSED"]);
+  assert.ok(book.ledger.slice(0,4).every(x=>x.netPnl<0&&x.netPnl>-100));
+  assert.equal(book.ledger[4].status,"WEEKLY_LOCK");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(book.knownRealizedPnl<=-300);
+});
