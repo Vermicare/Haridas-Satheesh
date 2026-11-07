@@ -514,3 +514,28 @@ test("terminal-day cross-week maximum drawdown lock withholds certification",()=
   assert.equal(book.finalEquity,null);
   assert.ok(Number.isFinite(book.knownRealizedPnl));
 });
+
+
+// Regression: the fourth loss ends the entire source set; no next-day WEEKLY_LOCK row exists.
+test("terminal-day weekly loss veto withholds portfolio certification",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const days=["01","02","03","04"];
+  const book=replayBook({symbol:"TEST",sourceFiles:days.map(losingDay)});
+  assert.equal(book.ledger.length,4);
+  assert.ok(book.ledger.every(x=>x.status==="CLOSED"&&x.sessionComplete===true));
+  assert.ok(book.ledger.every(x=>x.netPnl<0&&x.netPnl>-100));
+  assert.ok(book.knownRealizedPnl<=-300);
+  assert.equal(book.lockedReason,null); // Weekly veto is not a permanent cross-week lock.
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+});
