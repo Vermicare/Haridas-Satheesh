@@ -576,3 +576,26 @@ test("cross-week no-trade Monday cannot erase prior weekly loss breach",()=>{
   assert.equal(control.certified,true);
   assert.ok(Number.isFinite(control.finalEquity));
 });
+
+// A zero-volume candle is not evidence that a paper exit could execute.
+test("zero-volume scheduled exit preserves unresolved exposure",()=>{
+  const s=fixture({breakout:true});
+  const rows=s.content.split("\n").map(row=>{
+    const p=row.split(",");if(p[2]==="14:55")p[7]="0";return p.join(",");
+  });
+  const r=replayDay({symbol:"TEST",day:s.day,source:rows.join("\n")});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.detail.fault,"NON_EXECUTABLE_EXIT");
+  assert.equal(r.netPnl,null);
+  assert.ok(r.position.qty>0);
+});
+test("zero-volume stop candle does not fabricate a stop fill",()=>{
+  const s=fixture({breakout:true,earlyStop:true});
+  const rows=s.content.split("\n").map(row=>{
+    const p=row.split(",");if(p[2]==="09:42")p[7]="0";return p.join(",");
+  });
+  const r=replayDay({symbol:"TEST",day:s.day,source:rows.join("\n")});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.detail.fault,"NON_EXECUTABLE_EXIT");
+  assert.equal(r.netPnl,null);
+});
