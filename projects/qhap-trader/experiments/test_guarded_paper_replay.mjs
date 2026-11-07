@@ -599,3 +599,26 @@ test("zero-volume stop candle does not fabricate a stop fill",()=>{
   assert.equal(r.detail.fault,"NON_EXECUTABLE_EXIT");
   assert.equal(r.netPnl,null);
 });
+
+// Entirely synthetic source-integrity adversarial controls.
+test("all-zero-volume complete session cannot certify a no-trade portfolio",()=>{
+  const src=fixture();
+  const rows=src.content.split("\n");
+  const inert={...src,content:rows.map(row=>{
+    const fields=row.split(",");
+    if(fields[2]>="09:30"&&fields[2]<="14:55")fields[7]="0";
+    return fields.join(",");
+  }).join("\n")};
+  const day=replayDay({symbol:"TEST",day:"01",source:inert.content});
+  assert.equal(day.status,"HALTED_DATA");
+  assert.equal(day.netPnl,null);
+  assert.equal(day.detail.fault,"ZERO_VOLUME_SESSION");
+  const book=replayBook({symbol:"TEST",sourceFiles:[inert]});
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+});
+test("complete ordinary no-trade session with positive volume stays eligible",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[fixture()]});
+  assert.equal(book.certified,true);
+  assert.equal(book.finalEquity,10000);
+});
