@@ -248,7 +248,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
   const unique=new Set(sorted.map(x=>x.day));
   if(unique.size!==sorted.length)throw Error("Duplicate research day");
   let equity=initialEquity,peak=equity,drawdown=0,week=null,
-    weeklyPnL=0,locked=null;
+    weeklyPnL=0,weeklyLimitBreached=false,locked=null;
   const ledger=[];
   for(const s of sorted){
     const date=new Date("2021-02-"+s.day+"T00:00:00Z");
@@ -279,6 +279,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       if(x.sessionComplete===false)locked="POST_EXIT_DATA_GAP";
       equity+=x.netPnl;
       weeklyPnL+=x.netPnl;
+      if(weeklyPnL<=-300)weeklyLimitBreached=true;
       peak=Math.max(peak,equity);
       drawdown=Math.max(drawdown,peak-equity);
       // Data-integrity failure takes precedence over concurrent loss locks.
@@ -293,7 +294,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
   // Do not certify that terminal portfolio state merely because its exit P&L is known.
   // A weekly veto reached on the terminal day has no following WEEKLY_LOCK row.
   // It is not a certified terminal portfolio even when realized P&L is known.
-  const certified=locked===null&&weeklyPnL>-300&&ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
+  const certified=locked===null&&!weeklyLimitBreached&&ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
