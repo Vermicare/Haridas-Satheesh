@@ -246,7 +246,8 @@ export function replayDay({symbol,day,source,initialEquity=10000,
 }
 
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
-                            slippageBps=5,variant="BASELINE",executionFaultsByDay=null,exitFaultsByDay=null}) {
+                            slippageBps=5,variant="BASELINE",executionFaultsByDay=null,exitFaultsByDay=null,
+                            expectedSessionDays=null}) {
   if(!Number.isFinite(initialEquity)||initialEquity<=0)throw Error("Invalid portfolio initial equity");
   if(!Array.isArray(sourceFiles)||!sourceFiles.length)throw Error("No source files");
   if(sourceFiles.some(x=>!x||typeof x.day!=="string"||
@@ -255,6 +256,25 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
   const sorted=[...sourceFiles].sort((a,b)=>a.day.localeCompare(b.day));
   const unique=new Set(sorted.map(x=>x.day));
   if(unique.size!==sorted.length)throw Error("Duplicate research day");
+  // A caller-supplied manifest is a completeness constraint, NOT proof of
+  // NSE calendar authenticity. Without independently checked provenance,
+  // certification remains limited to supplied research days.
+  if(expectedSessionDays!==null){
+    if(!Array.isArray(expectedSessionDays)||!expectedSessionDays.length||
+       expectedSessionDays.some(d=>typeof d!=="string"||
+         !/^(0[1-9]|1[0-9]|2[0-8])$/.test(d))||
+       new Set(expectedSessionDays).size!==expectedSessionDays.length)
+      throw Error("Invalid expected-session manifest");
+    const expected=new Set(expectedSessionDays);
+    if(sorted.some(x=>!expected.has(x.day)))
+      throw Error("Research day absent from expected-session manifest");
+    const missing=expectedSessionDays.filter(d=>!unique.has(d));
+    if(missing.length)return {symbol,variant,slippageBps,initialEquity,
+      knownRealizedPnl:null,finalEquity:null,maxKnownDrawdown:null,
+      certified:false,certificationScope:"UNVERIFIED_MANIFEST_INCOMPLETE",
+      lockedReason:"MISSING_EXPECTED_SESSION",missingExpectedDays:missing,
+      unresolvedPositions:0,closedTrades:0,ledger:[]};
+  }
   let equity=initialEquity,peak=equity,drawdown=0,week=null,
     weeklyPnL=0,weeklyLimitBreached=false,locked=null;
   const ledger=[];
@@ -309,6 +329,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
     // position's exit or source-data completeness is unknown. Other locks also fail certification.
     finalEquity:certified?money(equity):null,
     maxKnownDrawdown:money(drawdown),certified,
+    certificationScope:expectedSessionDays===null?"SUPPLIED_DAYS_ONLY":"CALLER_MANIFEST_MATCHED_UNVERIFIED",
     lockedReason:locked,unresolvedPositions:ledger.filter(x=>x.status==="UNRESOLVED_POSITION").length,
     closedTrades:ledger.filter(x=>x.status==="CLOSED").length,ledger};
 }
