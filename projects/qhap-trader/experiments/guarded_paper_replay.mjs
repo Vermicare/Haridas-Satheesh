@@ -291,7 +291,9 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
   }
   // An emergency lock on the final source day has no later LOCKED ledger row.
   // Do not certify that terminal portfolio state merely because its exit P&L is known.
-  const certified=locked===null&&ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
+  // A weekly veto reached on the terminal day has no following WEEKLY_LOCK row.
+  // It is not a certified terminal portfolio even when realized P&L is known.
+  const certified=locked===null&&weeklyPnL>-300&&ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&x.sessionComplete!==false);
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
