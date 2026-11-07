@@ -193,6 +193,11 @@ export function replayDay({symbol,day,source,initialEquity=10000,
       }
     }
 
+    // Zero reported volume cannot establish an executable exit. Retain exposure
+    // and unknown P&L instead of assuming a fill at the displayed OHLC price.
+    if(position&&b.volume<=0)return halt("UNRESOLVED_POSITION",tm,{
+      fault:"NON_EXECUTABLE_EXIT",remainingQty:position.qty
+    });
     // 14:55 scheduled open exit must not inspect this bar's later high/low.
     if(position&&tm==="14:55")return finish(b,"TIME",b.o);
     if(position){
