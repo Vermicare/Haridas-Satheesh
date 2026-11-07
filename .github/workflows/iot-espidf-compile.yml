@@ -1,0 +1,69 @@
+name: ESP32-S3 dual-sensor firmware compile (no hardware)
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/**'
+      - '.github/workflows/iot-espidf-compile.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  espidf-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Compile with official ESP-IDF v6.1 container
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v6.1
+          target: esp32s3
+          path: benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture
+          command: 'idf.py --version && idf.py build && sha256sum build/iot_dual_sensor_capture.bin'
+      - name: Verify and record unflashed build bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=benchmarks/hardware-iot/firmware/espidf_dual_sensor_capture/build
+          stage="$RUNNER_TEMP/esp32s3-unflashed"
+          test -s "$root/iot_dual_sensor_capture.bin"
+          test -s "$root/bootloader/bootloader.bin"
+          test -s "$root/partition_table/partition-table.bin"
+          test -s "$root/flasher_args.json"
+          # The official container may leave build/ root-owned. Stage in a
+          # runner-writable directory instead of chmod/chown on source output.
+          mkdir -p "$stage/bootloader" "$stage/partition_table"
+          cp "$root/iot_dual_sensor_capture.bin" "$stage/"
+          cp "$root/bootloader/bootloader.bin" "$stage/bootloader/"
+          cp "$root/partition_table/partition-table.bin" "$stage/partition_table/"
+          cp "$root/flasher_args.json" "$stage/"
+          (
+            cd "$stage"
+            sha256sum iot_dual_sensor_capture.bin bootloader/bootloader.bin partition_table/partition-table.bin flasher_args.json > SHA256SUMS.txt
+            sha256sum --check SHA256SUMS.txt
+          )
+          {
+            printf 'repository=%s\n' "$GITHUB_REPOSITORY"
+            printf 'checked_out_sha=%s\n' "$(git rev-parse HEAD)"
+            printf 'event=%s\n' "$GITHUB_EVENT_NAME"
+            printf 'pr_head_sha=%s\n' "${{ github.event.pull_request.head.sha }}"
+            printf 'run_id=%s\n' "$GITHUB_RUN_ID"
+            printf 'run_attempt=%s\n' "$GITHUB_RUN_ATTEMPT"
+            printf 'esp_idf_requested=v6.1\n'
+            printf 'target=esp32s3\n'
+            printf 'evidence=UNFLASHED_CI_BUILD_ONLY\n'
+            printf 'device_identity=TBD\n'
+            printf 'physical_sensor_capture=NOT_PERFORMED\n'
+            printf 'calibration=TBD\n'
+          } > "$stage/BUILD_PROVENANCE.txt"
+          test -s "$stage/BUILD_PROVENANCE.txt"
+      - name: Preserve downloadable unflashed firmware and hashes
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32s3-unflashed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/esp32s3-unflashed/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+# Uploading a build is not flash attestation, sensor-origin proof, calibration, or physical validation.

@@ -1,0 +1,55 @@
+{
+  "schema_version": "iot-host-capture-numeric-integrity-registry-v1",
+  "date_utc": "2026-10-25",
+  "experiment_id": "IOT_HOST_CAPTURE_NUMERIC_FAIL_CLOSED_V06",
+  "family": "Hardware/IoT",
+  "stage": "Prototype / Hardware Architecture (unchanged)",
+  "evidence_kind": "synthetic malformed JSON manifests; injected-port contract; no hardware",
+  "question": "Can nonfinite JSON numeric values bypass a host-capture integrity verifier's duration/offset comparisons?",
+  "source": {
+    "repository": "Vermicare/Haridas-Satheesh",
+    "branch": "research/iot-capture-preflight-20261023",
+    "prior_validator_blob": "c8b1b2a94f5c834a7941d8b0952b9a5619acbcd0",
+    "test_commit": "90e71de073fe7470665d309f5ec8503b0b272780",
+    "fix_commit": "878f5e0bc5db417a71d36a13dd3aba5ced1eba49",
+    "corrected_validator_blob": "cc6eeae8c7998893340c3ee43ef4d29ec4955a1d",
+    "regression_test_blob": "87b655f46e643a87e6d8b9dc30697d3bda03e046"
+  },
+  "method": {
+    "baseline": "v0.5 json.loads default numeric parsing",
+    "candidate": "v0.6 reject nonstandard NaN/Infinity and exponent overflow in all JSON fields",
+    "test_methods_added": 6,
+    "environment": "GitHub Actions ubuntu-latest and windows-latest, Python 3.13, unittest discover",
+    "fixtures": "fully fictional raw serial bytes; SHA256 internally consistent"
+  },
+  "results": {
+    "before_fix": {
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40169706985",
+      "ubuntu": "failure; 6 assertions/subtests reproduced",
+      "windows": "cancelled; no before-fix Windows result"
+    },
+    "after_fix": {
+      "url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40169745261",
+      "ubuntu": "63/63 passed",
+      "windows": "63/63 passed"
+    },
+    "real_sensor_measurements": 0,
+    "physical_sensor_origin_verified": false,
+    "firmware_attested": false,
+    "device_monotonic_span_verified": false,
+    "accuracy": "TBD",
+    "field_performance": "TBD"
+  },
+  "limitations": [
+    "Operator can jointly forge raw bytes and matching manifest",
+    "No authenticated device clock or independent witness",
+    "No real physical sensor acquisition",
+    "GitHub runner image digest and exact OS dependency lock TBD"
+  ],
+  "decision": "Close numeric parsing defect; no stage advancement or release",
+  "next_experiment": "Issue #8 genuine >=600-second dual-sensor physical capture and independent review",
+  "kill_reframe": "Reframe as host logging tooling if authentic physical provenance/continuity cannot be independently demonstrated",
+  "outreach": {
+    "new_cold_emails": 0
+  }
+}

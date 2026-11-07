@@ -1,0 +1,55 @@
+{
+  "experiment_id": "iot-manifest-parser-integrity-v0.8",
+  "date_ist": "2026-10-26",
+  "repo": "Vermicare/Haridas-Satheesh",
+  "branch": "research/iot-capture-preflight-20261023",
+  "stage": "Prototype / Hardware Architecture",
+  "hypothesis": "Reject conflicting duplicate manifest keys and nonfinite JSON values before structural acceptance",
+  "data_origin": "fictional",
+  "raw_hardware_measurements": 0,
+  "baseline": {
+    "commit": "f430e3262f1d30d94500ba0715b780fccb7cac6e",
+    "workflow_run_id": 40245700265,
+    "ubuntu_tests_run": 80,
+    "ubuntu_tests_failed": 4,
+    "windows": "cancelled",
+    "failure_types": [
+      "duplicate capture_origin",
+      "duplicate nested SCD40 mode",
+      "NaN metadata",
+      "1e400 overflow"
+    ]
+  },
+  "correction": {
+    "commit": "04d029e6b897a5ac4df53904f409294306b6863f",
+    "source_blob": "ca1a179bdd2287aec21d55dd2b91a1144e0f959b",
+    "test_blob": "a724490f0a8d96c072b8630172be514f3608967f",
+    "workflow_run_id": 40245744561,
+    "ubuntu": {
+      "python": "3.13",
+      "tests_passed": 80,
+      "tests_failed": 0
+    },
+    "windows": {
+      "python": "3.13",
+      "tests_passed": 80,
+      "tests_failed": 0
+    },
+    "command": "python -m unittest discover -v"
+  },
+  "unknowns": {
+    "physical_capture": "TBD",
+    "firmware_attestation": "TBD",
+    "sensor_accuracy": "TBD",
+    "uptime": "TBD",
+    "independent_review": "TBD"
+  },
+  "decision": "draft-only; no stage advance",
+  "next": "physical >=600-second dual-sensor capture under issue #8",
+  "limitations": [
+    "GitHub CI uses fictional inputs only",
+    "JSON schema integrity is not source authentication",
+    "operator-controlled clocks and hashes cannot attest hardware"
+  ],
+  "confidentiality": "No employer data, personal telemetry or device credentials"
+}
