@@ -622,3 +622,34 @@ test("complete ordinary no-trade session with positive volume stays eligible",()
   assert.equal(book.certified,true);
   assert.equal(book.finalEquity,10000);
 });
+
+
+// Calendar inputs below are deliberately synthetic, not authenticated NSE sessions.
+test("missing expected weekday fails closed before any P&L is certified",()=>{
+  const r=replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01"}),fixture({day:"03"})],
+    expectedSessionDays:["01","02","03"]});
+  assert.equal(r.certified,false);
+  assert.equal(r.finalEquity,null);
+  assert.equal(r.knownRealizedPnl,null);
+  assert.equal(r.lockedReason,"MISSING_EXPECTED_SESSION");
+  assert.deepEqual(r.missingExpectedDays,["02"]);
+  assert.deepEqual(r.ledger,[]);
+});
+test("explicitly excluded holiday does not invent a missing session",()=>{
+  const r=replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01"}),fixture({day:"03"})],
+    expectedSessionDays:["01","03"]});
+  assert.equal(r.certified,true);
+  assert.equal(r.finalEquity,10000);
+  assert.equal(r.certificationScope,"CALLER_MANIFEST_MATCHED_UNVERIFIED");
+});
+test("without manifest certification explicitly means supplied days only",()=>{
+  const r=replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01"}),fixture({day:"03"})]});
+  assert.equal(r.certified,true);
+  assert.equal(r.certificationScope,"SUPPLIED_DAYS_ONLY");
+});
+test("manifest rejects unexpected observations and duplicate expected dates",()=>{
+  assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01"}),fixture({day:"03"})],
+    expectedSessionDays:["01"]}),/absent from expected-session/);
+  assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01"})],
+    expectedSessionDays:["01","01"]}),/Invalid expected-session/);
+});
