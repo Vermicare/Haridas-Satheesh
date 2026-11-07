@@ -325,3 +325,300 @@ test("NSE February 24 2021 intraday halt is quarantined rather than certified",(
   const ordinary=fixture({day:"23"});
   assert.equal(replayDay({symbol:"TEST",day:"23",source:ordinary.content}).status,"NO_TRADE");
 });
+
+
+test("portfolio rejects invalid capital before any replay",()=>{
+  const src=fixture({day:"01"});
+  for(const initialEquity of [0,-1,NaN,Infinity,-Infinity,"10000",null]){
+    assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[src],initialEquity}),
+      /Invalid portfolio initial equity/);
+  }
+});
+test("daily loss lock never publishes uncertified final equity",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true}),
+    fixture({day:"02",breakout:true})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.lockedReason,"DAILY_LOSS_BREACH");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+// Five consecutive February 2021 weekdays, four known sub-₹100 losses.
+// Synthetic-only weekly lock; no exchange provenance or real fills implied.
+test("weekly loss lock withholds uncertified portfolio equity",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const book=replayBook({symbol:"TEST",sourceFiles:
+    ["01","02","03","04","05"].map(losingDay)});
+  assert.deepEqual(book.ledger.slice(0,4).map(x=>x.status),
+    ["CLOSED","CLOSED","CLOSED","CLOSED"]);
+  assert.ok(book.ledger.slice(0,4).every(x=>x.netPnl<0&&x.netPnl>-100));
+  assert.equal(book.ledger[4].status,"WEEKLY_LOCK");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(book.knownRealizedPnl<=-300);
+});
+
+// Drawdown is accumulated across weekly resets; weekly veto must not reset peak.
+// Synthetic prices only; no assumption about exchange-authorized historical bars.
+test("cross-week maximum drawdown locks later sessions and hides final equity",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  // Four sub-₹100 losses in each of the first two weeks; weekly counters
+  // reset but the portfolio drawdown does not. Third week crosses ₹800.
+  const days=["01","02","03","04","08","09","10","11","15","16","17","18"];
+  const book=replayBook({symbol:"TEST",sourceFiles:days.map(losingDay)});
+  assert.deepEqual(book.ledger.slice(0,11).map(x=>x.status),
+    Array(11).fill("CLOSED"));
+  assert.equal(book.ledger[11].status,"LOCKED");
+  assert.equal(book.ledger[11].reason,"MAX_DRAWDOWN_BREACH");
+  assert.equal(book.lockedReason,"MAX_DRAWDOWN_BREACH");
+  assert.ok(book.maxKnownDrawdown>=800);
+  assert.equal(book.closedTrades,11);
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+test("post-exit missing candle preserves known trade but prevents session certification",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,earlyStop:true,missing:"14:00"}),
+    fixture({day:"02"})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.equal(book.ledger[0].exit,"09:42");
+  assert.equal(book.ledger[0].sessionComplete,false);
+  assert.equal(book.ledger[0].firstPostExitGap,"14:00");
+  assert.ok(Number.isFinite(book.ledger[0].netPnl));
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+test("complete post-exit session remains eligible for technical certification",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[fixture({day:"01",breakout:true,earlyStop:true})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.equal(book.ledger[0].sessionComplete,true);
+  assert.equal(book.ledger[0].firstPostExitGap,null);
+  assert.equal(book.certified,true);
+  assert.ok(Number.isFinite(book.finalEquity));
+});
+
+// A known adverse gap and missing post-exit candle can coexist. Data-quality
+// provenance must not be replaced by a concurrent emergency-loss veto.
+test("post-exit data gap remains primary lock despite simultaneous daily loss",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true,missing:"14:00"}),
+    fixture({day:"02"})]});
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.ok(book.ledger[0].netPnl<=-100);
+  assert.equal(book.ledger[0].sessionComplete,false);
+  assert.equal(book.ledger[0].firstPostExitGap,"14:00");
+  assert.equal(book.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.ledger[1].status,"LOCKED");
+  assert.equal(book.ledger[1].reason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+
+// A drawdown breach can coincide with a missing post-exit candle. The
+// cumulative peak survives weekly resets; data provenance must still win.
+test("post-exit data gap remains primary lock despite concurrent maximum drawdown",()=>{
+  const losingDay=(day,missing=null)=>{
+    const src=fixture({day,breakout:true,missing});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const prior=["01","02","03","04","08","09","10","11","15","16"];
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    ...prior.map(day=>losingDay(day)),
+    losingDay("17","14:00"),losingDay("18")
+  ]});
+  assert.ok(book.ledger.slice(0,10).every(x=>x.status==="CLOSED"));
+  assert.equal(book.ledger[10].status,"CLOSED");
+  assert.equal(book.ledger[10].sessionComplete,false);
+  assert.equal(book.ledger[10].firstPostExitGap,"14:00");
+  assert.ok(book.ledger[10].netPnl<0&&book.ledger[10].netPnl>-100);
+  assert.ok(book.maxKnownDrawdown>=800);
+  assert.equal(book.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.ledger[11].status,"LOCKED");
+  assert.equal(book.ledger[11].reason,"POST_EXIT_DATA_GAP");
+  assert.equal(book.closedTrades,11);
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+
+test("terminal-day daily loss lock withholds portfolio certification",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true})]});
+  assert.equal(book.ledger.length,1);
+  assert.equal(book.ledger[0].status,"CLOSED");
+  assert.ok(book.ledger[0].netPnl<=-100);
+  assert.equal(book.ledger[0].sessionComplete,true);
+  assert.equal(book.lockedReason,"DAILY_LOSS_BREACH");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+test("terminal-day cross-week maximum drawdown lock withholds certification",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const days=["01","02","03","04","08","09","10","11","15","16","17"];
+  const book=replayBook({symbol:"TEST",sourceFiles:days.map(losingDay)});
+  assert.equal(book.ledger.length,days.length);
+  assert.ok(book.ledger.every(x=>x.status==="CLOSED"&&x.sessionComplete===true));
+  assert.ok(book.maxKnownDrawdown>=800);
+  assert.equal(book.lockedReason,"MAX_DRAWDOWN_BREACH");
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+  assert.ok(Number.isFinite(book.knownRealizedPnl));
+});
+
+
+// Regression: the fourth loss ends the entire source set; no next-day WEEKLY_LOCK row exists.
+test("terminal-day weekly loss veto withholds portfolio certification",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const days=["01","02","03","04"];
+  const book=replayBook({symbol:"TEST",sourceFiles:days.map(losingDay)});
+  assert.equal(book.ledger.length,4);
+  assert.ok(book.ledger.every(x=>x.status==="CLOSED"&&x.sessionComplete===true));
+  assert.ok(book.ledger.every(x=>x.netPnl<0&&x.netPnl>-100));
+  assert.ok(book.knownRealizedPnl<=-300);
+  assert.equal(book.lockedReason,null); // Weekly veto is not a permanent cross-week lock.
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+});
+
+
+// Certification fault is durable even though weekly trading veto resets on Monday.
+// Synthetic February 2021 fixtures; this is NOT a verified exchange session or live fill.
+test("cross-week no-trade Monday cannot erase prior weekly loss breach",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const prior=["01","02","03","04"].map(losingDay);
+  const monday=fixture({day:"08"});
+  const breached=replayBook({symbol:"TEST",sourceFiles:[...prior,monday]});
+  assert.deepEqual(breached.ledger.map(x=>x.status),
+    ["CLOSED","CLOSED","CLOSED","CLOSED","NO_TRADE"]);
+  assert.ok(breached.knownRealizedPnl<=-300);
+  assert.equal(breached.lockedReason,null); // Weekly veto resets, certification fault does not.
+  assert.equal(breached.certified,false);
+  assert.equal(breached.finalEquity,null);
+
+  // Positive control: below-threshold prior week remains technically certifiable.
+  const control=replayBook({symbol:"TEST",sourceFiles:[
+    ...prior.slice(0,3),monday
+  ]});
+  assert.deepEqual(control.ledger.map(x=>x.status),
+    ["CLOSED","CLOSED","CLOSED","NO_TRADE"]);
+  assert.ok(control.knownRealizedPnl>-300);
+  assert.equal(control.lockedReason,null);
+  assert.equal(control.certified,true);
+  assert.ok(Number.isFinite(control.finalEquity));
+});
+
+// A zero-volume candle is not evidence that a paper exit could execute.
+test("zero-volume scheduled exit preserves unresolved exposure",()=>{
+  const s=fixture({breakout:true});
+  const rows=s.content.split("\n").map(row=>{
+    const p=row.split(",");if(p[2]==="14:55")p[7]="0";return p.join(",");
+  });
+  const r=replayDay({symbol:"TEST",day:s.day,source:rows.join("\n")});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.detail.fault,"NON_EXECUTABLE_EXIT");
+  assert.equal(r.netPnl,null);
+  assert.ok(r.position.qty>0);
+});
+test("zero-volume stop candle does not fabricate a stop fill",()=>{
+  const s=fixture({breakout:true,earlyStop:true});
+  const rows=s.content.split("\n").map(row=>{
+    const p=row.split(",");if(p[2]==="09:42")p[7]="0";return p.join(",");
+  });
+  const r=replayDay({symbol:"TEST",day:s.day,source:rows.join("\n")});
+  assert.equal(r.status,"UNRESOLVED_POSITION");
+  assert.equal(r.detail.fault,"NON_EXECUTABLE_EXIT");
+  assert.equal(r.netPnl,null);
+});
+
+// Entirely synthetic source-integrity adversarial controls.
+test("all-zero-volume complete session cannot certify a no-trade portfolio",()=>{
+  const src=fixture();
+  const rows=src.content.split("\n");
+  const inert={...src,content:rows.map(row=>{
+    const fields=row.split(",");
+    if(fields[2]>="09:30"&&fields[2]<="14:55")fields[7]="0";
+    return fields.join(",");
+  }).join("\n")};
+  const day=replayDay({symbol:"TEST",day:"01",source:inert.content});
+  assert.equal(day.status,"HALTED_DATA");
+  assert.equal(day.netPnl,null);
+  assert.equal(day.detail.fault,"ZERO_VOLUME_SESSION");
+  const book=replayBook({symbol:"TEST",sourceFiles:[inert]});
+  assert.equal(book.certified,false);
+  assert.equal(book.finalEquity,null);
+});
+test("complete ordinary no-trade session with positive volume stays eligible",()=>{
+  const book=replayBook({symbol:"TEST",sourceFiles:[fixture()]});
+  assert.equal(book.certified,true);
+  assert.equal(book.finalEquity,10000);
+});
