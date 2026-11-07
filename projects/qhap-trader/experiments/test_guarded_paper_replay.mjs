@@ -539,3 +539,40 @@ test("terminal-day weekly loss veto withholds portfolio certification",()=>{
   assert.equal(book.certified,false);
   assert.equal(book.finalEquity,null);
 });
+
+
+// Certification fault is durable even though weekly trading veto resets on Monday.
+// Synthetic February 2021 fixtures; this is NOT a verified exchange session or live fill.
+test("cross-week no-trade Monday cannot erase prior weekly loss breach",()=>{
+  const losingDay=day=>{
+    const src=fixture({day,breakout:true});
+    const rows=src.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const prior=["01","02","03","04"].map(losingDay);
+  const monday=fixture({day:"08"});
+  const breached=replayBook({symbol:"TEST",sourceFiles:[...prior,monday]});
+  assert.deepEqual(breached.ledger.map(x=>x.status),
+    ["CLOSED","CLOSED","CLOSED","CLOSED","NO_TRADE"]);
+  assert.ok(breached.knownRealizedPnl<=-300);
+  assert.equal(breached.lockedReason,null); // Weekly veto resets, certification fault does not.
+  assert.equal(breached.certified,false);
+  assert.equal(breached.finalEquity,null);
+
+  // Positive control: below-threshold prior week remains technically certifiable.
+  const control=replayBook({symbol:"TEST",sourceFiles:[
+    ...prior.slice(0,3),monday
+  ]});
+  assert.deepEqual(control.ledger.map(x=>x.status),
+    ["CLOSED","CLOSED","CLOSED","NO_TRADE"]);
+  assert.ok(control.knownRealizedPnl>-300);
+  assert.equal(control.lockedReason,null);
+  assert.equal(control.certified,true);
+  assert.ok(Number.isFinite(control.finalEquity));
+});
