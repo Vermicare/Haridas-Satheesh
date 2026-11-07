@@ -239,7 +239,10 @@ export function replayDay({symbol,day,source,initialEquity=10000,
   }
   if(position)return halt("UNRESOLVED_POSITION","END_OF_FEED");
   if(pending)return halt("ENTRY_UNCONFIRMED","END_OF_FEED");
-  // A full session of zero-volume bars is not evidence of a trustworthy\n  // no-trade observation. Do not certify equity from an inert feed.\n  if(cumVolume===0)return halt("HALTED_DATA","14:55",{fault:"ZERO_VOLUME_SESSION"});\n  return {symbol,day,status:"NO_TRADE",skippedSignals:skipped,netPnl:0};
+  // A full session of zero-volume bars is not evidence of a trustworthy
+  // no-trade observation. Do not certify equity from an inert feed.
+  if(cumVolume===0)return halt("HALTED_DATA","14:55",{fault:"ZERO_VOLUME_SESSION"});
+  return {symbol,day,status:"NO_TRADE",skippedSignals:skipped,netPnl:0};
 }
 
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
