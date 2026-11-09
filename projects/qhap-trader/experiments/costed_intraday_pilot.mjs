@@ -43,7 +43,14 @@ const runPilot = function runPilot(symbol, sourceFiles, slipBps=5) {
     const openingHigh=Math.max(...open.map(x=>x.h)),openingLow=Math.min(...open.map(x=>x.l));
     let pv=0,volume=0, signal=null,skipped=0;
     const VW=new Map();
-    for(const b of bars){pv+=b.c*b.vol;volume+=b.vol;VW.set(b.tm,pv/volume);}
+    for(const b of bars){
+      pv+=b.c*b.vol;volume+=b.vol;
+      // Missing cumulative volume makes VWAP undefined. Never infer a signal
+      // or report simulated P&L from an invalid indicator window.
+      if(!(volume>0)||!Number.isFinite(pv/volume))
+        throw Error(`HALT_UNKNOWN: undefined VWAP on ${s.day} ${b.tm}`);
+      VW.set(b.tm,pv/volume);
+    }
     let entry=null,order=null;
     let prev=bars[9];
     for(let i=10;i<bars.length-1;i++){
