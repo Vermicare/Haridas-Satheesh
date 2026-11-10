@@ -1,0 +1,30 @@
+name: QHAP-TRADER NSE Session Gate Offline Tests
+on:
+  push:
+    paths:
+      - 'projects/qhap-trader/session_gate/**'
+      - '.github/workflows/qhap-trader-session-gate.yml'
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/session_gate/**'
+      - '.github/workflows/qhap-trader-session-gate.yml'
+permissions:
+  contents: read
+jobs:
+  session-gate-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test published holiday/date logic without secret or vendor API
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: |
+          node --test projects/qhap-trader/session_gate/test_nse_2026_probe_gate.mjs
+          node projects/qhap-trader/session_gate/nse_2026_probe_gate.mjs --now
+      - name: Evidence limitation
+        run: echo 'Only offline schedule tested; no live exchange session attestation, quote, broker or orders.'
