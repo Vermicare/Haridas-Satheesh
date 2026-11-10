@@ -1,5 +1,8 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
+> **Historical day-block robustness audit (2026-11-10):** Re-examined the *existing* 12-date February 2021 ACC/RELIANCE stock pilot with [10,000 seeded date-block resamples, leave-one-day-out and 5/15bps cost stress](experiments/HISTORICAL_DAY_ROBUSTNESS_20261110.md). [GitHub Actions](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/42875490082) verified 24 pinned third-party source blobs, reproduced 8 historical P&L snapshots and passed 14/14 new tests. The only earlier positive low-friction result reverses when one date is removed; **no untouched out-of-sample edge or live proof**.
+
+
 > **NSE 2026 read-only session gate (2026-11-10):** Added [offline exchange-calendar preflight](session_gate/README.md) to reject weekends, published equity holidays, unsupported years, and times outside a conservative 09:30–15:00 IST data-probe window. **20 synthetic tests passed in GitHub Actions; this is not live exchange status certification, a fresh quote, market-data license, order permission or profit evidence.**
 
 
