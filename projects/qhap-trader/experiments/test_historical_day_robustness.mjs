@@ -16,10 +16,10 @@ function run(slip,override={}){
     symbol,validSessions:12,sourceDays:12,excluded:[],
     inputFiles:DAYS.map(day=>({day,sha256:'a'.repeat(64)})),
     scenarios:{
-      BASELINE:scenario(Array.from({length:12},(_,i)=>(i===0?12:
-        (i===1?-9:null))-(slip-5)*.01)),
-      DTT_VETO:scenario(Array.from({length:12},(_,i)=>(i===0?8:
-        (i===1?-15:null))-(slip-5)*.01)),
+      BASELINE:scenario(Array.from({length:12},(_,i)=>i===0?12-(slip-5)*.01:
+        i===1?-9-(slip-5)*.01:null)),
+      DTT_VETO:scenario(Array.from({length:12},(_,i)=>i===0?8-(slip-5)*.01:
+        i===1?-15-(slip-5)*.01:null)),
     }
   }))};
 }
