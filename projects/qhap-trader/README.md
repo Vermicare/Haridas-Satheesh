@@ -1,5 +1,8 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
+> **NSE 2026 read-only session gate (2026-11-10):** Added [offline exchange-calendar preflight](session_gate/README.md) to reject weekends, published equity holidays, unsupported years, and times outside a conservative 09:30–15:00 IST data-probe window. **20 synthetic tests passed in GitHub Actions; this is not live exchange status certification, a fresh quote, market-data license, order permission or profit evidence.**
+
+
 > **Independent multi-AI research council (2026-11-05):** Added [research-only GPT/Claude/Gemini provider council](research_council/README.md) with three independent model critiques and a judge, followed by separate falsification requirements. [Offline test suite](research_council/test_council.mjs) verifies no order execution, manual API-cost opt-in, prompt/input guards and audit fingerprints. **CI tests are synthetic only; external models have not been called and no strategy advantage has been established.**
 
 
