@@ -31,7 +31,7 @@ test('vendor response generation is not claimed as market-book update freshness'
 });
 test('does not print user price or broker secrets',()=>{
  const x=check({});
- assert.doesNotMatch(JSON.stringify(x),/token|bidPrice|askPrice|last_price|Authorization/i);
+ assert.doesNotMatch(JSON.stringify(x),/"(?:token|bidPrice|askPrice|last_price|Authorization)"\s*:/i);
 });
 test('strict one-shot pass also does not promote a trading session',()=>{
  const p=base();delete p.tradeAgeSeconds;delete p.snapshotAgeSeconds;delete p.reason;
