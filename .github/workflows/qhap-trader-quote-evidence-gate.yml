@@ -1,0 +1,28 @@
+name: QHAP-TRADER Sanitized Quote Evidence Gate
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/read_only_quote/**'
+      - '.github/workflows/qhap-trader-quote-evidence-gate.yml'
+  push:
+    paths:
+      - 'projects/qhap-trader/read_only_quote/**'
+      - '.github/workflows/qhap-trader-quote-evidence-gate.yml'
+permissions:
+  contents: read
+jobs:
+  offline-quote-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: All quote evidence boundary checks (offline)
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: node --test projects/qhap-trader/read_only_quote/test_quote_evidence_gate.mjs
+      - name: Synthetic evidence-only demonstration (no vendor or broker requests)
+        run: node projects/qhap-trader/read_only_quote/quote_evidence_gate.mjs --demo
