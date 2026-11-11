@@ -1,0 +1,33 @@
+name: QHAP-TRADER Independent Evidence Gates (synthetic)
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/experiments/independent_evidence_gates.mjs'
+      - 'projects/qhap-trader/experiments/test_independent_evidence_gates.mjs'
+      - '.github/workflows/qhap-trader-independent-evidence-gates.yml'
+  push:
+    paths:
+      - 'projects/qhap-trader/experiments/independent_evidence_gates.mjs'
+      - 'projects/qhap-trader/experiments/test_independent_evidence_gates.mjs'
+      - '.github/workflows/qhap-trader-independent-evidence-gates.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-evidence-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source checksums and execute offline regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          sha256sum projects/qhap-trader/experiments/independent_evidence_gates.mjs projects/qhap-trader/experiments/test_independent_evidence_gates.mjs
+          node --test projects/qhap-trader/experiments/test_independent_evidence_gates.mjs
+      - name: State research boundary
+        run: echo 'Synthetic screening only; neither market-data rights nor trading readiness is certified.'
