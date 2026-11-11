@@ -1,5 +1,8 @@
 # QHAP-TRADER — Counterfactual Intraday Trading Intelligence
 
+> **Upstox read-only quote diagnosis (2026-11-11):** A user-local authorized V3 REST diagnostic reported a recent response snapshot (0s) carrying a 5-second-old last trade, causing the existing strict 3s normalizer to reject `STALE_OR_FUTURE_LAST_TRADE`. This is a correct **execution fail-closed** result, not necessarily stale connectivity. Added [sanitized evidence-only classifier and tests](read_only_quote/README.md) without changing the original strict adapter or submitting orders. User's Upstox token remains local; REST response-generation time cannot certify fresh book updates or a paper-trading session.
+
+
 > **Historical day-block robustness audit (2026-11-10):** Re-examined the *existing* 12-date February 2021 ACC/RELIANCE stock pilot with [10,000 seeded date-block resamples, leave-one-day-out and 5/15bps cost stress](experiments/HISTORICAL_DAY_ROBUSTNESS_20261110.md). [GitHub Actions](https://github.com/Vermicare/Haridas-Satheesh/actions/runs/42875490082) verified 24 pinned third-party source blobs, reproduced 8 historical P&L snapshots and passed 14/14 new tests. The only earlier positive low-friction result reverses when one date is removed; **no untouched out-of-sample edge or live proof**.
 
 
