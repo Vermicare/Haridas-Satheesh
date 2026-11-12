@@ -43,12 +43,16 @@ const isObj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const exact=(x,keys)=>isObj(x)&&Object.keys(x).length===keys.length&&
   Object.keys(x).every(k=>keys.includes(k));
 const nonNeg=n=>Number.isSafeInteger(n)&&n>=0;
+const validTime=n=>nonNeg(n)&&n<=8640000000000000-19800000;
 const validDate=s=>{
   if(typeof s!=='string'||!DATE.test(s))return false;
   const d=new Date(s+'T00:00:00Z');
   return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===s;
 };
-const localDate=t=>new Date(t+19800000).toISOString().slice(0,10);
+const localDate=t=>{
+  const d=new Date(t+19800000);
+  return Number.isFinite(d.getTime())?d.toISOString().slice(0,10):null;
+};
 const sha=data=>createHash('sha256').update(data).digest('hex');
 const payload=f=>JSON.stringify({
   ordinal:f.ordinal,eventId:f.eventId,kind:f.kind,
@@ -79,13 +83,13 @@ const report=(status,reasons,counts={})=>Object.freeze({
  * A "clean" result means only that the MOCK dates/digests are consistent.
  */
 export function auditSyntheticFeedChronology(window,options={}){
-  if(!exact(options,['observedAtMs'])||!nonNeg(options.observedAtMs))
+  if(!exact(options,['observedAtMs'])||!validTime(options.observedAtMs))
     return report('BLOCKED_INVALID_CLOCK',['INVALID_INJECTED_OBSERVATION_CLOCK']);
   if(!exact(window,ROOT_KEYS)||window.schemaVersion!==1||
     window.fixtureKind!=='HANDCRAFTED_SYNTHETIC_METADATA_ONLY'||
     !ID.test(window.observationId||'')||
     !validDate(window.sessionDate)||window.instrumentAlias!=='MOCK_EQ_1'||
-    !nonNeg(window.captureStartMs)||!nonNeg(window.captureEndMs)||
+    !validTime(window.captureStartMs)||!validTime(window.captureEndMs)||
     window.captureStartMs>=window.captureEndMs||
     window.captureEndMs-window.captureStartMs>MAX_WINDOW_MS||
     window.coverageClaim!=='MOCK_COMPLETE_CAPTURE'||
@@ -111,11 +115,11 @@ export function auditSyntheticFeedChronology(window,options={}){
     const f=window.frames[i];
     if(!exact(f,FRAME_KEYS)||!nonNeg(f.ordinal)||
       !ID.test(f.eventId||'')||!EVENT_KINDS.has(f.kind)||
-      !nonNeg(f.receivedAtMs)||!HASH.test(f.sampleSha256||'')||
+      !validTime(f.receivedAtMs)||!HASH.test(f.sampleSha256||'')||
       !HASH.test(f.prevSha256||'')||!HASH.test(f.sha256||'')||
-      (f.vendorCurrentTsMs!==null&&!nonNeg(f.vendorCurrentTsMs))||
+      (f.vendorCurrentTsMs!==null&&!validTime(f.vendorCurrentTsMs))||
       (f.declaredBookObservedAtMs!==null&&
-       !nonNeg(f.declaredBookObservedAtMs))){
+       !validTime(f.declaredBookObservedAtMs))){
       issues.push('INVALID_OR_SECRET_BEARING_FRAME');continue;
     }
     if(f.ordinal!==i+1)issues.push('MISSING_OR_REORDERED_LOCAL_FRAME_SEQUENCE');
