@@ -79,3 +79,26 @@ The new journal's 20 tests passed in a local runtime. The GitHub Actions PR #51 
 
 
 **Trusted CI validation note (2026-11-12):** The main branch now carries a separate [read-only safety CI workflow](../../../.github/workflows/qhap-trader-trusted-offline-safety-ci.yml) that checks all three suites (risk, mock lifecycle, durable recovery). The workflow has no trading tokens or order permissions. PR checks must show an actual completed successful job before this change is considered CI validated; creation of a YAML file alone is not proof.
+
+
+## Paper capital-conservation hardening (2026-11-12)
+
+The previously merged low-level `paper_order_lifecycle.mjs` reducer tracked confirmed *units* but did NOT verify starting cash or gross buying notional. This defect was identified by the existing hourly research task. It could accept an impossible ₹10,00,000 hypothetical BUY. This fix enforces the constraints **inside** the event reducer rather than relying only on the separate pretrade firewall.
+
+- Starting paper cash: ₹10,000, allocated in integer paise. Maximum capital committed across all pending buys and filled positions: ₹2,500; minimum unreserved cash: ₹4,000; at most two hypothetical BUY intents per session.
+- A BUY `CREATE` immediately reserves the full limit-price notional plus a conservative 1% paper cost buffer, rounded **per share** so partial fill ordering cannot consume more than allocated. Confirmation alone spends no money.
+- Cumulative BUY fills are never allowed above the stated limit. Each accepted delta debits its actual hypothetical fill price plus an illustrative 0.30% per-side friction reserve. Duplicate confirmation IDs cannot double spend.
+- Cancel acknowledgment or valid full rejection releases only the unfilled pending reservation. A cancel *request* does not release cash; a fill racing cancellation remains accounted for.
+- SELL fills require pre-existing confirmed unreserved units and cannot execute below their hypothetical limit. Sale proceeds are placed into a **non-reusable unsettled** bucket, never automatically available for more purchases.
+- Every reducer transition verifies the conservation identity `available + reserved + spent = ₹10,000`, positive positions, pending notional constraints and nonnegative balances. Invalid state or impossible fills trigger a persistent halt.
+- The durable journal now retains and replays available, reserved, spent, unsettled and position-cost aggregates. Its new **synthetic capital-snapshot** comparison can detect balance mismatches but can NEVER certify broker reconciliation or permit trading.
+
+Fees, market impact, settlement semantics, actual Upstox margins, exchange instrument tick schedules, broker client account reconciliation, multi-instrument inventory, cash from real settled sales and distributed transaction atomicity remain **outside this mock engine**. The numeric risk values are provisional research limits, not a guarantee of loss containment.
+
+Tests from repository root on Node.js 22:
+
+```bash
+node --test projects/qhap-trader/live_readiness/test_*.mjs
+```
+
+Do not merge until automated CI passes; there is still no real-order route or trading authorization.
