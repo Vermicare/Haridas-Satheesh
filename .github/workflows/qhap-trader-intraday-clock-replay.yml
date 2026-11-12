@@ -1,0 +1,29 @@
+name: QHAP-TRADER Offline Intraday Clock Replay
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/experiments/intraday_clock_replay.mjs'
+      - 'projects/qhap-trader/experiments/test_intraday_clock_replay.mjs'
+      - 'projects/qhap-trader/experiments/TIME_OF_DAY_RESEARCH_20261112.md'
+      - '.github/workflows/qhap-trader-intraday-clock-replay.yml'
+  push:
+    paths:
+      - 'projects/qhap-trader/experiments/intraday_clock_replay.mjs'
+      - 'projects/qhap-trader/experiments/test_intraday_clock_replay.mjs'
+      - '.github/workflows/qhap-trader-intraday-clock-replay.yml'
+permissions:
+  contents: read
+jobs:
+  offline-intraday-clock-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Synthetic clock, causal, gap, loss, cost, no-trade and privacy gates
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: node --test projects/qhap-trader/experiments/test_intraday_clock_replay.mjs
