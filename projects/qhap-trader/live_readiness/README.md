@@ -37,3 +37,7 @@ The second command should show `BLOCKED_REQUIREMENTS_INCOMPLETE` and `realOrderS
 5. **G5 — Human sign-off, monitored deployment:** independent security/operations review, a tiny initially approved exposure cap, supervised operations, independent emergency cancellation/exit, and written go/no-go authorization. No automatic promotion in this repository.
 
 Any failed gate -> **NO TRADE**. Until all gates pass after independent review, stay read-only/research.
+
+## Deterministic synthetic order lifecycle audit
+
+The pure offline [`mock_order_lifecycle.mjs`](mock_order_lifecycle.mjs) records fake acknowledgement, partial/final fills, cancellation races, rejection, duplicated event IDs and sequence gaps. It **retains partial exposure** on cancellation/rejection, demands reconciliation after disconnect or impossible events, and never unlocks risk or emits a broker request. It is a test harness for future durable broker-order reconciliation, not a connector; it currently stores no durable order journal and proves no account-side trading capability. Test with `node --test projects/qhap-trader/live_readiness/test_mock_order_lifecycle.mjs`.
