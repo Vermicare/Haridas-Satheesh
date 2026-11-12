@@ -57,3 +57,52 @@ Primary reference starting points (review current effective documents, not merel
 - https://upstox.com/developer/api-documentation/v3/get-market-data-feed/
 - https://www.nseindia.com/resources/exchange-communication-holidays?apiversion=v2
 - https://github.com/Vermicare/Haridas-Satheesh/issues/27
+
+
+## 12 November 2026 — independently reviewed compliance caveat
+
+Read the consolidated [NSE Data Sharing & Usage Policy](https://www.nseindia.com/static/market-data/nse-data-policy),
+whose linked [official PDF §7.4](https://nsearchives.nseindia.com/web/sites/default/files/inline-files/NSE_Data_Sharing%26Usage_Policy.pdf)
+explicitly addresses data provision to entities, apps and websites engaging
+in virtual trading or simulation. **Our current Upstox feed possession, a
+read-only analytics token, or a standard market-data agreement must never
+be interpreted as consent to use NSE data in a simulated-trading product.**
+This is a potentially disqualifying restriction. Only a documented,
+current determination from the data provider and suitably qualified
+compliance reviewer could establish whether a *particular* proposed
+research/backtest activity and data product are permitted. No market-data
+ingestion or market-data-driven paper execution is authorized here.
+
+## Offline signed mock review checks, not trust certification
+
+[signed_mock_review_attestation.mjs](signed_mock_review_attestation.mjs)
+uses Node.js native Ed25519 verification over a domain-separated, canonical
+**handcrafted mock-only statement**. The signer key is **not embedded in
+the statement**. The verifier takes a separately supplied public key and
+SHA-256 SPKI fingerprint; the simulated statement must match the expected
+frozen plan and observation alias, timestamp window and narrow mock
+scope. Tests generate throwaway key pairs in memory: no private key is
+stored in the source tree, GitHub secrets, files or CI output.
+
+This catches some classes of accidental or malicious evidence modification:
+wrong key or key fingerprint, invalid signature, changed mock observation
+or frozen plan, expired or future review time, evidence replay, key type
+substitution, duplicated mock source digest, unexpected raw quote fields
+and embedded access tokens. A valid result is explicitly
+\`MOCK_SIGNATURE_MATHEMATICALLY_VALID_ONLY\`. A self-generated public/private
+key pair can pass mathematical verification; **it does not establish an
+independently vetted identity, trustworthy key custody, certified clock,
+real market data, contract rights, or authorization to simulate or trade**.
+No real reviewer trust root has been pinned. Even two valid synthetic
+signatures yield **zero authenticated source sessions** and
+\`canTrade:false\`.
+
+This code is a preparation/checklist for a later *private* review, not a
+mechanism to fabricate permission. No actual key, licensed agreement text,
+broker account identifier, source price, order or API credential belongs
+in this repository or in ChatGPT. A signed mock statement never upgrades
+source evidence to T2 or T3.
+
+Run in the existing read-only workflow:
+
+    node --test projects/qhap-trader/live_readiness/test_*.mjs
