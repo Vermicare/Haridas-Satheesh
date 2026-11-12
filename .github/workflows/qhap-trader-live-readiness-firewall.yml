@@ -24,6 +24,6 @@ jobs:
           UPSTOX_ANALYTICS_TOKEN: ''
           UPSTOX_ACCESS_TOKEN: ''
           OPENROUTER_API_KEY: ''
-        run: node --test projects/qhap-trader/live_readiness/test_readiness_gate.mjs
+        run: node --test projects/qhap-trader/live_readiness/test_readiness_gate.mjs projects/qhap-trader/live_readiness/test_mock_order_lifecycle.mjs
       - name: Never permit self-certified live order readiness
         run: node projects/qhap-trader/live_readiness/readiness_gate.mjs | grep -F '"realOrderSubmissionPossible": false'
