@@ -184,3 +184,21 @@ strategy from these reused development examples**, and obtain independent
 licensed holdout and forward evidence before any real-money consideration.
 
 To reproduce: `node --test projects/qhap-trader/live_readiness/test_*.mjs`.
+
+
+## Prospective anti-selection evidence ledger (2026-11-12)
+
+The new [prospective_evidence_ledger.mjs](prospective_evidence_ledger.mjs)
+and [offline regression suite](test_prospective_evidence_ledger.mjs) enforce
+a **pre-frozen** day manifest to catch missing, duplicate, out-of-order,
+future/premature, or incomplete self-reported evaluation sessions. It counts
+no-trade days, discloses exceptions, checks closed-trade fee arithmetic and
+blocks partial P&L summaries when data are unknown. The study compares
+estimated returns against `NO_TRADE = ₹0` and requires 60 complete
+prospective research observations before even **external review**.
+Read [the full preregistration and hard limitations](FORWARD_EVIDENCE_PROTOCOL_20261112.md).
+A deterministic SHA-256 manifest digest is not a third-party timestamp or
+proof of an actual exchange/market-data event; closure dates, market-data
+entitlements, any actual source or broker state and a profitable net edge
+all remain **unverified**. The tool never counts any independently certified
+forward session and **cannot** authorize or route live orders.
