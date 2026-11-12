@@ -244,3 +244,26 @@ real broker/quote data and access tokens, and the output remains
 \`canTrade:false\`, \`canMakePaperFill:false\`, and
 \`realOrderRoutePresent:false\`. No real market data has been used.
 See [scope and future private-adapter requirements](SYNTHETIC_FEED_CHRONOLOGY_20261112.md).
+
+
+## Private evidence review & signed synthetic attestation (2026-11-12)
+
+[The private source-evidence protocol](PRIVATE_SOURCE_EVIDENCE_REVIEW_PROTOCOL_20261112.md)
+sets an independent licensing and source/time review boundary, and flags
+the [NSE data usage policy §7.4](https://www.nseindia.com/static/market-data/nse-data-policy)
+restriction relating to virtual trading and simulation. A read-only
+vendor token cannot itself authorize feed-based paper trading.
+
+The [signed_mock_review_attestation.mjs](signed_mock_review_attestation.mjs)
+and its [offline tests](test_signed_mock_review_attestation.mjs) use
+Ed25519 verification of **handcrafted mock-only metadata** to detect
+untrusted keys, forged signatures, expired statements, modified frozen
+manifest commitments, replay and private/raw fields. All keys used by
+tests are ephemeral, generated in memory. An authentic signature against
+a self-declared key is **not** an independent reviewer, permission
+determination or original exchange event. Nothing in these modules
+requests, reads, stores or authorizes real data, credentials or broker
+orders. `canTrade:false`, `sourceOrMarketDataAuthenticated:false`
+and `legalLicenseRightsVerified:false` are immutable output
+boundaries. Verified independently permitted data and live order
+authorization remain separate external gates.
