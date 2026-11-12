@@ -60,7 +60,7 @@ test('partial fills mismatch even if status identical',t=>{
 });
 test('filled quantity mismatch',t=>{
  const r=journal(t,[create(),ack(),fill()]);
- const s=snapshot(r);s.orders[0].quantity=6;
+ const s=snapshot(r);s.orders[0].quantity=6;s.orders[0].cumulativeFilled=6;
  expectReason(r,s,'ORDER_STATE_OR_FILL_MISMATCH');
 });
 test('order canceled locally but fixture says filled',t=>{
