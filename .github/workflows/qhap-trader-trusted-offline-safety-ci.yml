@@ -1,0 +1,37 @@
+name: QHAP-TRADER Trusted Offline Safety CI
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/live_readiness/**'
+      - '.github/workflows/qhap-trader-trusted-offline-safety-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: qhap-offline-safety-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  node22-pure-offline-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail if the expected safety test modules are absent
+        run: |
+          test -f projects/qhap-trader/live_readiness/test_readiness_gate.mjs
+          test -f projects/qhap-trader/live_readiness/test_paper_order_lifecycle.mjs
+          test -f projects/qhap-trader/live_readiness/test_durable_paper_journal.mjs
+      - name: Pure-offline paper risk, lifecycle and recovery tests
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          UPSTOX_ACCESS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: node --test projects/qhap-trader/live_readiness/test_*.mjs
+      - name: Block self-approval of live trades
+        run: |
+          node projects/qhap-trader/live_readiness/readiness_gate.mjs | grep -F '"realOrderSubmissionPossible": false'
