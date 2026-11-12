@@ -202,3 +202,29 @@ proof of an actual exchange/market-data event; closure dates, market-data
 entitlements, any actual source or broker state and a profitable net edge
 all remain **unverified**. The tool never counts any independently certified
 forward session and **cannot** authorize or route live orders.
+
+
+## NSE 2026 public holiday overlay and unverified data rights (2026-11-12)
+
+[market_data_calendar_preflight.mjs](market_data_calendar_preflight.mjs)
+and [its offline tests](test_market_data_calendar_preflight.mjs)
+strengthen the forward-protocol research boundary. The public
+[NSE 2026 equity holiday table](https://www.nseindia.com/resources/exchange-communication-holidays?apiversion=v2)
+lists **24 November 2026** and **25 December 2026** as closed, and the
+module checks whether those dates were incorrectly included in our
+frozen calendar manifest. It **does not** have a pinned 2027 market
+calendar: forward plans spanning 2027 remain blocked from any claim of
+independent calendar verification, regardless of correct 2026 exclusions.
+Unknown special sessions, instrument halts and amendments require external
+official evidence.
+
+The redacted, strict metadata-only rights gate flags missing or denied
+non-display research, **paper simulation** and local retention permission
+claims, invalid effective dates, and secret/raw-data fields. A positive
+metadata claim or hash still **cannot attest a license or entitle us to
+ingest a feed**. The current
+[NSE usage policy](https://www.nseindia.com/static/market-data/nse-data-policy)
+makes specific allowed uses contractual. All outputs remain
+`marketDataUseAuthorizedBySoftware:false`, `canTrade:false`, and
+`realOrderRoutePresent:false`.
+Read [source references, caveats and next evidence needs](MARKET_DATA_CALENDAR_PREFLIGHT_20261112.md).
