@@ -1,0 +1,29 @@
+name: QHAP-TRADER Live-Readiness Safety Firewall
+on:
+  pull_request:
+    paths:
+      - 'projects/qhap-trader/live_readiness/**'
+      - '.github/workflows/qhap-trader-live-readiness-firewall.yml'
+  push:
+    paths:
+      - 'projects/qhap-trader/live_readiness/**'
+      - '.github/workflows/qhap-trader-live-readiness-firewall.yml'
+permissions:
+  contents: read
+jobs:
+  offline-risk-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail-closed paper risk and live-readiness safeguards
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          UPSTOX_ACCESS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: node --test projects/qhap-trader/live_readiness/test_*.mjs projects/qhap-trader/live_readiness/test_mock_order_lifecycle.mjs
+      - name: Never permit self-certified live order readiness
+        run: node projects/qhap-trader/live_readiness/readiness_gate.mjs | grep -F '"realOrderSubmissionPossible": false'
