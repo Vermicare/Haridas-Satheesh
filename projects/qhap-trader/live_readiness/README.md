@@ -228,3 +228,19 @@ makes specific allowed uses contractual. All outputs remain
 `marketDataUseAuthorizedBySoftware:false`, `canTrade:false`, and
 `realOrderRoutePresent:false`.
 Read [source references, caveats and next evidence needs](MARKET_DATA_CALENDAR_PREFLIGHT_20261112.md).
+
+
+## Source-metadata feed chronology (2026-11-12)
+
+New [synthetic_feed_chronology.mjs](synthetic_feed_chronology.mjs) and
+[adversarial regression suite](test_synthetic_feed_chronology.mjs)
+exercise strict **mock-only** event ordering, local receive time, vendor
+\`currentTs\` vs hypothetical book-event timestamps, SHA-256 chain integrity,
+stale heartbeats, session rollover, outage/reconnect halts and incomplete
+capture intervals. Unkeyed hashes cannot prove source identity; vendor
+tick time cannot certify real exchange book freshness. The input rejects
+real broker/quote data and access tokens, and the output remains
+\`independentlyAuthenticatedExchangeBookUpdates:0\`,
+\`canTrade:false\`, \`canMakePaperFill:false\`, and
+\`realOrderRoutePresent:false\`. No real market data has been used.
+See [scope and future private-adapter requirements](SYNTHETIC_FEED_CHRONOLOGY_20261112.md).
