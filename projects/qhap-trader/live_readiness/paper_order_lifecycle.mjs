@@ -70,7 +70,8 @@ export function applyPaperEvent(state,e){
       }
       if(e.side==='BUY'){
         const limitNotional=toPaise(e.limitPrice)*e.quantity;
-        const buyReserve=Math.ceil(limitNotional*(10000+RESERVE_BPS)/10000);
+        const perUnitReservePaise=Math.ceil(toPaise(e.limitPrice)*(10000+RESERVE_BPS)/10000);
+        const buyReserve=perUnitReservePaise*e.quantity;
         if(!safe(limitNotional)||!safe(buyReserve)){failure='NOTIONAL_OVERFLOW';break;}
         if(committed(positionCostPaise,orders)+limitNotional>POSITION_CAP){
           failure='POSITION_NOTIONAL_CAP';break;
@@ -85,7 +86,7 @@ export function applyPaperEvent(state,e){
         buyIntentCount++;
         orders[e.orderId]={orderId:e.orderId,side:e.side,quantity:e.quantity,
           cumulativeFilled:0,limitPrice:e.limitPrice,status:'PENDING_ACK',
-          cancelRequested:false,cashReservePaise:buyReserve,
+          cancelRequested:false,cashReservePaise:buyReserve,perUnitReservePaise,
           notionalReservePaise:limitNotional};
       }else{
         const alreadyReserved=Object.values(orders).filter(o=>o.side==='SELL'&&!terminal(o))
@@ -93,7 +94,8 @@ export function applyPaperEvent(state,e){
         if(e.quantity>longUnits-alreadyReserved){failure='UNBACKED_SELL';break;}
         orders[e.orderId]={orderId:e.orderId,side:e.side,quantity:e.quantity,
           cumulativeFilled:0,limitPrice:e.limitPrice,status:'PENDING_ACK',
-          cancelRequested:false,cashReservePaise:0,notionalReservePaise:0};
+          cancelRequested:false,cashReservePaise:0,perUnitReservePaise:0,
+          notionalReservePaise:0};
       }
       break;
     }
@@ -115,10 +117,8 @@ export function applyPaperEvent(state,e){
       if(order.side==='BUY'&&price>limit){failure='BUY_LIMIT_BREACH';break;}
       if(order.side==='SELL'&&price<limit){failure='SELL_LIMIT_BREACH';break;}
       if(order.side==='BUY'){
-        const pendingBefore=remaining(order);
-        const released=delta===pendingBefore?order.cashReservePaise:
-          Math.floor(order.cashReservePaise*delta/pendingBefore);
-        const spend=Math.ceil(price*delta*(10000+FILL_FRICTION_BPS)/10000);
+        const released=order.perUnitReservePaise*delta;
+        const spend=Math.ceil(price*(10000+FILL_FRICTION_BPS)/10000)*delta;
         if(!safe(spend)||spend>released){failure='BUY_RESERVE_INSUFFICIENT';break;}
         cashReservedPaise-=released;
         cashAvailablePaise+=released-spend;
