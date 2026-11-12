@@ -76,3 +76,6 @@ node --test projects/qhap-trader/live_readiness/test_*.mjs
 ```
 
 The new journal's 20 tests passed in a local runtime. The GitHub Actions PR #51 workflow lookup is still returning zero runs and therefore CI PASS is NOT verified. This component cannot authorize real orders.
+
+
+**Trusted CI validation note (2026-11-12):** The main branch now carries a separate [read-only safety CI workflow](../../../.github/workflows/qhap-trader-trusted-offline-safety-ci.yml) that checks all three suites (risk, mock lifecycle, durable recovery). The workflow has no trading tokens or order permissions. PR checks must show an actual completed successful job before this change is considered CI validated; creation of a YAML file alone is not proof.
