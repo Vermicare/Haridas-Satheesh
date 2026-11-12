@@ -297,7 +297,7 @@ test('sha and times from a self-claimed fixture never authenticate source',()=>{
 
 test('timestamp outside JavaScript Date range fails rather than throwing',()=>{
  const w=windowOf();w.captureEndMs=Number.MAX_SAFE_INTEGER;
- const result=run(w);
+ const result=audit(w,{observedAtMs:base+10000});
  assert.equal(result.status,'BLOCKED_INVALID_ENVELOPE');
  const v=windowOf();v.frames[0].receivedAtMs=Number.MAX_SAFE_INTEGER;
  const auditResult=run(v);
