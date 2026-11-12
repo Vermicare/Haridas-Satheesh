@@ -119,3 +119,30 @@ node --test projects/qhap-trader/live_readiness/test_*.mjs
 ```
 
 **No real-order capability exists.** The synthetic mock snapshot schema is not an official Upstox schema and its matched statuses are not evidence of current broker connectivity. This contract does not solve the unresolved market-data license, strategy profitability, or regulatory gates.
+
+
+## Upstox documentation-shaped synthetic fixture adapter (2026-11-12)
+
+[upstox_doc_shaped_fixture.mjs](upstox_doc_shaped_fixture.mjs) and
+[test_upstox_doc_shaped_fixture.mjs](test_upstox_doc_shaped_fixture.mjs)
+add a pure offline, **redacted/mock-only** parser inspired by Upstox's published
+[v2 order book](https://upstox.com/developer/api-documentation/get-order-book/),
+[v2 positions](https://upstox.com/developer/api-documentation/get-positions/),
+[v2 holdings](https://upstox.com/developer/api-documentation/get-holdings/),
+[v3 funds](https://upstox.com/developer/api-documentation/get-funds-and-margin-v3/),
+and [order statuses](https://upstox.com/developer/api-documentation/appendix/order-status/).
+It intentionally accepts only an explicit `SYNTHETIC_UPSTOX_DOC_SHAPE`
+fixture with a small *pre-sanitized* field subset; never supply raw vendor
+responses, credentials, an actual client identifier or access token.
+
+Tests exercise incomplete coverage, stale/future clocks, pending and unknown
+orders, impossible quantities, duplicate identities, cross-session snapshots,
+regressed cumulative fills, disappearing orders, pledged holdings/funds, and
+unsupported instruments. Only NSE delivery-equity, LIMIT and single-instrument
+mock cases are in scope. All results carry `canTrade:false`,
+`brokerReconciled:false`, and `realOrderRoutePresent:false`. A matching shape
+is emphatically **not** an authenticated broker snapshot, independent account
+reconciliation, correct fees/settlement, or evidence of an executable strategy.
+The order book is day-scoped; overnight positions can move into holdings,
+so calendar rollover explicitly requires re-baselining rather than an inferred
+zero position. Run the existing offline test glob to include this suite.
