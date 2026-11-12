@@ -4,7 +4,7 @@ import {emptyJournal,applyPaperEvent,reducePaperEvents,paperStatus} from './pape
 const ev=(seq,type,orderId='A',rest={})=>({seq,eventId:'e'+seq,type,orderId,...rest});
 const create=(seq=1,quantity=10,side='BUY',id='A')=>ev(seq,'CREATE',id,{side,quantity,limitPrice:100});
 const ack=(seq=2,id='A')=>ev(seq,'ACK',id);
-const fill=(seq=3,cumulativeFilled=10,id='A')=>ev(seq,'FILL',id,{cumulativeFilled,fillPrice:100.05});
+const fill=(seq=3,cumulativeFilled=10,id='A')=>ev(seq,'FILL',id,{cumulativeFilled,fillPrice:id==='B'?100.05:99.95});
 const run=(events)=>reducePaperEvents(events);
 test('empty journal is always non-trading',()=>{const s=paperStatus(emptyJournal());assert.equal(s.realOrdersSent,0);assert.equal(s.tradingAuthorized,false);});
 test('creation does not assume exchange acceptance',()=>{const s=run([create()]);assert.equal(s.orders.A.status,'PENDING_ACK');assert.equal(s.longUnits,0);});
