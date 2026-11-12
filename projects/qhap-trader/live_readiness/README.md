@@ -56,3 +56,23 @@ node --test projects/qhap-trader/live_readiness/test_readiness_gate.mjs projects
 The new lifecycle reducer's **20 regression tests passed locally**, but this does not verify the broker's actual message ordering or reconnect behavior. Local journal state is **not durable after process restart**; persistent idempotent event storage, integration with independently validated real broker positions, and external deployment approval are still separate milestones. The test-only event reducer does not turn QHAP-TRADER live-ready.
 
 Official Upstox April 2026 static-IP / algo guidance: https://upstox.com/developer/api-documentation/announcements/algo-trading-circular/. The announcement says certain high-frequency algorithms (over 10 orders/second) must undergo exchange registration and the configured `X-Algo-Name` is used when applicable. Under-10 orders/second is not a blanket exemption from registered IP, risk rules, app approval, data entitlements, or any other relevant regulatory obligations. Confirm exact applicability with Upstox before real API development.
+
+
+## Durable restart audit (2026-11-12)
+
+[durable_paper_journal.mjs](durable_paper_journal.mjs) adds a strictly offline, append-only JSON Lines simulated event journal and [20 tests](test_durable_paper_journal.mjs). It is NOT production broker order management.
+
+- New journals are created exclusively with `wx`; existing files cannot be reopened automatically for appends, or silently overwritten.
+- Strict event allowlist; SHA-256 chained record digests and sequential numbers; each write requests `fsync`. Corrupted/missing/reordered/truncated records block recovery.
+- On restart, even a valid journal returns `RECOVERED_RECONCILIATION_REQUIRED` with `canAppend=false`. Confirmed hypothetical holdings are never presumed flat.
+- Duplicate identical events are idempotent; conflicting event IDs or disconnects persist a hard halt. No assumed fills, cancels or automatic recovery.
+- A supplied matching synthetic reference returns `canTrade=false` and `brokerReconciled=false`: software does not authenticate the broker's external positions.
+- The unkeyed hash chain detects accidental modification, not malicious tampering. Process distribution, cross-platform crash atomicity, protected backups, real broker reconciliation and incident response are separate engineering gates.
+
+Run all standalone offline tests on Node 22:
+
+```bash
+node --test projects/qhap-trader/live_readiness/test_*.mjs
+```
+
+The new journal's 20 tests passed in a local runtime. The GitHub Actions PR #51 workflow lookup is still returning zero runs and therefore CI PASS is NOT verified. This component cannot authorize real orders.
