@@ -8,7 +8,7 @@ const tmp=(t)=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'qhap-test-'));t.
 const evt=(seq,type,orderId='A',more={})=>({eventId:'e'+seq,seq,type,orderId,...more});
 const create=()=>evt(1,'CREATE','A',{quantity:10,side:'BUY',limitPrice:100});
 const ack=()=>evt(2,'ACK');
-const fill=(seq=3,cumulativeFilled=10)=>evt(seq,'FILL','A',{cumulativeFilled,fillPrice:101});
+const fill=(seq=3,cumulativeFilled=10)=>evt(seq,'FILL','A',{cumulativeFilled,fillPrice:99.95});
 const full=(file)=>{const w=createNewPaperJournal(file);w.append(create());w.append(ack());w.append(fill());w.close();return recoverPaperJournal(file);};
 test('empty journal is created but NOT reopenable for writing',t=>{const file=tmp(t),w=createNewPaperJournal(file);w.close();assert.throws(()=>createNewPaperJournal(file),/EEXIST/);const r=recoverPaperJournal(file);assert.equal(r.longUnits,0);assert.equal(r.canAppend,false);});
 test('hash-chained replay preserves confirmed simulated holdings',t=>{const r=full(tmp(t));assert.equal(r.status,'RECOVERED_RECONCILIATION_REQUIRED');assert.equal(r.longUnits,10);assert.equal(r.entries,3);assert.equal(r.hashChainVerified,true);});
