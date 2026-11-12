@@ -293,3 +293,20 @@ test('sha and times from a self-claimed fixture never authenticate source',()=>{
  assert.equal(r.exchangeEventTimeIndependentlyProven,false);
  assert.equal(r.licensedRawFramesExamined,0);
 });
+
+
+test('timestamp outside JavaScript Date range fails rather than throwing',()=>{
+ const w=windowOf();w.captureEndMs=Number.MAX_SAFE_INTEGER;
+ const result=run(w);
+ assert.equal(result.status,'BLOCKED_INVALID_ENVELOPE');
+ const v=windowOf();v.frames[0].receivedAtMs=Number.MAX_SAFE_INTEGER;
+ const auditResult=run(v);
+ assert.equal(auditResult.status,'HALT_SYNTHETIC_CHRONOLOGY_INTEGRITY');
+ assert.ok(auditResult.reasons.includes('INVALID_OR_SECRET_BEARING_FRAME'));
+});
+test('upstream-like quote blob pretending to be a snapshot cannot enter fixture',()=>{
+ const w=windowOf();
+ w.frames[0].feeds={currentTs:w.frames[0].receivedAtMs,
+   ltpc:{ltp:100}};
+ assert.ok(run(w).reasons.includes('INVALID_OR_SECRET_BEARING_FRAME'));
+});
