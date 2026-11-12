@@ -41,3 +41,18 @@ Any failed gate -> **NO TRADE**. Until all gates pass after independent review, 
 ## Deterministic synthetic order lifecycle audit
 
 The pure offline [`mock_order_lifecycle.mjs`](mock_order_lifecycle.mjs) records fake acknowledgement, partial/final fills, cancellation races, rejection, duplicated event IDs and sequence gaps. It **retains partial exposure** on cancellation/rejection, demands reconciliation after disconnect or impossible events, and never unlocks risk or emits a broker request. It is a test harness for future durable broker-order reconciliation, not a connector; it currently stores no durable order journal and proves no account-side trading capability. Test with `node --test projects/qhap-trader/live_readiness/test_mock_order_lifecycle.mjs`.
+
+
+## Offline hypothetical order-state lifecycle
+
+The separate [paper_order_lifecycle.mjs](paper_order_lifecycle.mjs) now models CREATE → ACK → partial or full cumulative FILL → CANCEL_REQUEST/CANCEL_ACK, rejection, and disconnection using *pure offline fixtures*. It tracks confirmed simulated long holdings; a SELL intent can never exceed holdings after accounting for outstanding simulated sell reservations. Duplicate identical events are idempotent, but conflicting replays, sequence gaps, impossible fills, late cancellation acknowledgments, and disconnections **latch a hard halt**. No automatic halt reset, no inferred broker cancel or flat position, and no actual order transport exists. For an irreconcilable order state, manual externally verified reconciliation remains required.
+
+Offline tests:
+
+```bash
+node --test projects/qhap-trader/live_readiness/test_readiness_gate.mjs projects/qhap-trader/live_readiness/test_paper_order_lifecycle.mjs
+```
+
+The new lifecycle reducer's **20 regression tests passed locally**, but this does not verify the broker's actual message ordering or reconnect behavior. Local journal state is **not durable after process restart**; persistent idempotent event storage, integration with independently validated real broker positions, and external deployment approval are still separate milestones. The test-only event reducer does not turn QHAP-TRADER live-ready.
+
+Official Upstox April 2026 static-IP / algo guidance: https://upstox.com/developer/api-documentation/announcements/algo-trading-circular/. The announcement says certain high-frequency algorithms (over 10 orders/second) must undergo exchange registration and the configured `X-Algo-Name` is used when applicable. Under-10 orders/second is not a blanket exemption from registered IP, risk rules, app approval, data entitlements, or any other relevant regulatory obligations. Confirm exact applicability with Upstox before real API development.
