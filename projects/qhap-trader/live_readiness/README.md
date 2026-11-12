@@ -1,0 +1,39 @@
+# QHAP-TRADER — Live-Readiness Engineering Firewall (2026-11-12)
+
+**State: INCOMPLETE / LIVE ORDER ROUTING DISABLED.** This folder prepares the independent risk-control and deployment-gate architecture. It does **not** activate live orders, prove a strategy's profitability, authorize any account operation, or confer regulatory / market-data use rights.
+
+## Why this is needed
+
+The existing user-local read-only Upstox pipeline successfully opened a V3 WebSocket, decoded messages, and completed a 15-minute indicative shadow-paper experiment (₹10,000 simulated initial capital; approximate −₹24.96 indicative P&L on first 15-minute window). The standalone Analytics Token is deliberately **read-only** and cannot place, modify, or cancel orders. A live-ready system must be a completely separate engineering/release milestone, not simply switching an environment variable.
+
+2026 references: Upstox [Analytics Token](https://upstox.com/developer/api-documentation/analytics-token/), [Static IP / Algo circular](https://upstox.com/developer/api-documentation/announcements/algo-trading-circular/), [Order V3 API, including 2026 error semantics](https://upstox.com/developer/api-documentation/v3/place-order/); NSE [retail client direct API algorithmic trading procedures](https://www.nseindia.com/static/trade/platform-services-non-neat-decision-support-tools-algorithm-trading), and [NSE data policy](https://www.nseindia.com/static/market-data/nse-data-policy). The 2026 framework requires applicable broker/app/static IP registration and algo order tagging. Do not infer all obligations from a single example; verify the precise instrument, execution model, rate, and account with Upstox and an appropriately qualified reviewer.
+
+## What the code actually does
+
+- [readiness_gate.mjs](readiness_gate.mjs): read-only **inventory** of 20 prerequisite items. Missing requirements block; *even if all 20 are self-claimed satisfied*, outcome is **EXTERNAL_REVIEW_REQUIRED**, never `READY`. JSON, environment values, user-asserted receipts and synthetic tests do not self-certify live approval.
+- `assessPaperEntry()`: pure deterministic paper-intent pre-trade firewall with cash equity, long BUY, LIMIT-only, tick-size, available cash, one-position, maximum ₹2,500 exposure, ₹4,000 reserve, budgeted ₹50 candidate risk with gap/friction buffer, daily ₹100 and weekly ₹300 loss locks, ₹800 peak drawdown, at most two virtual entries, mandatory kill switch, clock, and book provenance prerequisites.
+- Time gate is research-conservative **09:30–14:30 IST for new paper entries** (not exchange-wide opening/closing hours). Only current / actually confirmed official session calendars and instrument eligibility can prove a session. Upstox vendor timestamp `currentTs` is **not** independently certified exchange book event time.
+- All outputs are sanitized aggregate statuses, never live orders, network calls, source quotes, keys or authenticated requests. Passing the synthetic paper firewall cannot authorize a real trade or certify a quote.
+
+This is **not a production risk-management system**. No broker account/positions/fills reconcile to it yet, the daily risk limits are modeling choices rather than guarantees, a limit order could fill partially, stop orders can fail, and a kill switch cannot guarantee immediate exit. Production requires an independent, persistent, fully tested order-state and reconciliation system, incident monitoring, human-supervised rollback, eligibility/compliance approval, and substantial evidence on net strategy expectancy.
+
+## How to test (Node.js 22+, offline)
+
+```bash
+node --test projects/qhap-trader/live_readiness/test_readiness_gate.mjs
+node projects/qhap-trader/live_readiness/readiness_gate.mjs
+```
+
+The second command should show `BLOCKED_REQUIREMENTS_INCOMPLETE` and `realOrderSubmissionPossible: false`.
+
+**There is intentionally no `--live`, `--enable-orders`, broker URL, OAuth flow, API trading scope, trade mode, or bypass switch in this implementation.** Never add one just because a report says green.
+
+## Evidence-based path to real readiness
+
+1. **G1 — Engineering correctness:** deterministic order intent, time, venue/instrument, account state and risk checks; complete cancellation/modify/fill/partial-fill/rejection retry modeling; idempotent durable journal, independent risk kill switch, alerts, fail-closed reboot.
+2. **G2 — Financial evidence:** licensed and exchange-verified market data, untouched historical holdout, realistic brokerage/STT/GST/spread/slippage/market impact and multiple regimes. No-trade and simpler strategies must be explicit benchmarks; synthetic and already-inspected results cannot prove edge.
+3. **G3 — Forward validation:** at least **60 complete** authorized paper sessions with frozen strategy versions, independent reconciled journals, all missed signals, full incident evidence, final flat position and sufficient trades to assess uncertainty. Even 60 sessions alone is not profitability proof.
+4. **G4 — Broker/compliance:** eligible trading account, broker-approved algo application, *separate* trading OAuth, registered static IP and any applicable algo-name and tags, data-use/virtual-trading rights, applicable SEBI/NSE rules, accurate instrument/lot/tick/bands, broker's official order-reconciliation and trade limits. The current read-only Analytics Token cannot qualify as trading authorization.
+5. **G5 — Human sign-off, monitored deployment:** independent security/operations review, a tiny initially approved exposure cap, supervised operations, independent emergency cancellation/exit, and written go/no-go authorization. No automatic promotion in this repository.
+
+Any failed gate -> **NO TRADE**. Until all gates pass after independent review, stay read-only/research.
