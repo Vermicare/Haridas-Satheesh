@@ -102,3 +102,20 @@ node --test projects/qhap-trader/live_readiness/test_*.mjs
 ```
 
 Do not merge until automated CI passes; there is still no real-order route or trading authorization.
+
+
+## Broker-shaped snapshot reconciliation (offline contract, 2026-11-12)
+
+Added [broker_snapshot_contract.mjs](broker_snapshot_contract.mjs) and [30 offline tests](test_broker_snapshot_contract.mjs). This is a **strict, untrusted SYNTHETIC_FIXTURE-only interface** for future broker reconciliation adapter development. It does not make authenticated broker API requests, submit orders, parse raw vendor payloads, or attest to any actual account's balances.
+
+Each mock snapshot must include an explicit observation time, `ALL_ORDERS_AND_POSITIONS` coverage, unique order IDs, full status/cumulative-fill quantities, positions and all six mock capital fields. Missing or extra top-level fields, non-synthetic claims, stale/future snapshots, incomplete pagination, mismatched cash/units/orders, unexpected broker-like orders, an unknown fill, any pending/open order or a halted journal must fail closed. A matching snapshot returns only `SYNTHETIC_MATCH_EXTERNAL_AUTHENTICATION_REQUIRED`; **canTrade=false** and **brokerReconciled=false** always.
+
+Paired mock snapshots are also tested for distinct capture IDs, chronological order and a mismatch in either capture. Even if both match, the result remains `PAIRED_SYNTHETIC_MATCH_EXTERNAL_AUTHENTICATION_REQUIRED`. A future production broker adapter would need independent account identity, appropriately secured OAuth scopes, complete broker API position/order/fund responses with verified timestamps, trade confirmations, corporate actions and settlement semantics, audit logging, and a human operational signoff before real-money use.
+
+Run all offline tests with Node.js 22:
+
+```bash
+node --test projects/qhap-trader/live_readiness/test_*.mjs
+```
+
+**No real-order capability exists.** The synthetic mock snapshot schema is not an official Upstox schema and its matched statuses are not evidence of current broker connectivity. This contract does not solve the unresolved market-data license, strategy profitability, or regulatory gates.
