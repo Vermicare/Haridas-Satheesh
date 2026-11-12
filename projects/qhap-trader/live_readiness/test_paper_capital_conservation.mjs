@@ -108,3 +108,16 @@ test('cancel following partial fill, then restart replay is deterministic',()=>{
  const a=reducePaperEvents(events),b=reducePaperEvents(events);
  assert.deepEqual(money(a),money(b));conservation(a);
 });
+test('one-paisa shares never underreserve when fills arrive one unit at a time',()=>{
+ const q=3;
+ const s=reducePaperEvents([create(1,q,'A','BUY',.01),ack(),
+  fill(3,1,'A',.01),fill(4,2,'A',.01),fill(5,3,'A',.01)]);
+ const v=conservation(s);assert.equal(v.longUnits,3);near(v.cashReservedRupees,0);
+ assert.equal(s.halted,false);
+});
+test('partial-fill partitioning cannot change cash charges or leave reserves stranded',()=>{
+ const base=[create(1,10),ack()];
+ const one=reducePaperEvents([...base,fill(3,10)]);
+ const many=reducePaperEvents([...base,fill(3,4),fill(4,7),fill(5,10)]);
+ assert.deepEqual(money(one),{...money(many),eventsApplied:money(one).eventsApplied});
+});
