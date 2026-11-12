@@ -227,9 +227,9 @@ test('pair rejects reused signed observation ID',()=>{
   assert.ok(r.reasons.includes('REPLAYED_OBSERVATION_ID'));
 });
 test('pair rejects non-monotonic mock reviewer timestamps',()=>{
-  const e=second();
-  e.statement.reviewedAtMs=t0-1;
-  e=signed(e.statement);
+  const amended=second();
+  amended.statement.reviewedAtMs=t0-1;
+  const e=signed(amended.statement);
   const r=auditPair(first(),e,firstTrust(),secondTrust());
   assert.ok(r.reasons.includes('NON_MONOTONIC_REVIEW_TIME'));
 });
