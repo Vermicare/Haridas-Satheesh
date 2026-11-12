@@ -31,7 +31,13 @@ function validateEvent(event){
 function summary(state){
   const p=paperStatus(state);
   return {longUnits:p.longUnits,orders:p.orders,halted:p.halted,
-    haltReason:p.haltReason,eventsApplied:p.eventsApplied};
+    haltReason:p.haltReason,eventsApplied:p.eventsApplied,
+    cashAvailableRupees:p.cashAvailableRupees,
+    cashReservedRupees:p.cashReservedRupees,
+    cashSpentRupees:p.cashSpentRupees,
+    unsettledSaleProceedsRupees:p.unsettledSaleProceedsRupees,
+    positionCostRupees:p.positionCostRupees,
+    committedExposureRupees:p.committedExposureRupees};
 }
 
 export function createNewPaperJournal(filePath){
@@ -89,6 +95,10 @@ export function recoverPaperJournal(filePath){
   const s=summary(state);
   return {status:'RECOVERED_RECONCILIATION_REQUIRED',reason:state.haltReason,
     longUnits:s.longUnits,orders:s.orders,eventsApplied:s.eventsApplied,
+    cashAvailableRupees:s.cashAvailableRupees,cashReservedRupees:s.cashReservedRupees,
+    cashSpentRupees:s.cashSpentRupees,positionCostRupees:s.positionCostRupees,
+    unsettledSaleProceedsRupees:s.unsettledSaleProceedsRupees,
+    committedExposureRupees:s.committedExposureRupees,
     journalHalted:state.halted,entries:lines.length,hashChainVerified:true,
     canAppend:false,brokerReconciled:false,realOrdersSent:0,
     liveTradingAuthorized:false,
@@ -106,4 +116,25 @@ export function compareSyntheticReference(recovered,reference){
     JSON.stringify(ordered(recovered.orders))===JSON.stringify(ordered(reference.orders));
   return {status:equal?'SYNTHETIC_MATCH_EXTERNAL_VERIFICATION_REQUIRED':'MISMATCH_HALT',
     brokerReconciled:false,canTrade:false,liveTradingAuthorized:false};
+}
+
+/**
+ * Optional full cash/position comparison against an UNAUTHENTICATED synthetic
+ * reference. A matching paper snapshot is NOT a signed broker balance or
+ * sufficient to resume an executable strategy. No live approval is possible.
+ */
+export function compareSyntheticCapitalReference(recovered,reference){
+  const fields=['longUnits','cashAvailableRupees','cashReservedRupees',
+    'cashSpentRupees','positionCostRupees','unsettledSaleProceedsRupees',
+    'committedExposureRupees'];
+  if(!recovered||recovered.status!=='RECOVERED_RECONCILIATION_REQUIRED'||
+     !object(reference)||!Array.isArray(reference.orders)||
+     fields.some(k=>!Number.isFinite(reference[k])||!Number.isFinite(recovered[k])))
+    return {status:'BLOCKED_INCOMPLETE_REFERENCE',
+      canTrade:false,brokerReconciled:false,liveTradingAuthorized:false};
+  const old=compareSyntheticReference(recovered,reference);
+  const numericEqual=fields.every(k=>Math.abs(recovered[k]-reference[k])<0.001);
+  return {status:old.status==='SYNTHETIC_MATCH_EXTERNAL_VERIFICATION_REQUIRED'&&numericEqual?
+    'SYNTHETIC_CAPITAL_MATCH_EXTERNAL_VERIFICATION_REQUIRED':'CAPITAL_OR_ORDER_MISMATCH_HALT',
+    canTrade:false,brokerReconciled:false,liveTradingAuthorized:false};
 }
