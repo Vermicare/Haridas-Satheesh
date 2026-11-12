@@ -146,3 +146,41 @@ reconciliation, correct fees/settlement, or evidence of an executable strategy.
 The order book is day-scoped; overnight positions can move into holdings,
 so calendar rollover explicitly requires re-baselining rather than an inferred
 zero position. Run the existing offline test glob to include this suite.
+
+
+## 2026 Upstox cash-intraday paper-cost stress (2026-11-12)
+
+[upstox_intraday_cost_stress.mjs](upstox_intraday_cost_stress.mjs) contains a
+new **OFFLINE ONLY** synthetic closed-trade fee and execution-adversity audit.
+[Regression tests](test_upstox_intraday_cost_stress.mjs) run under the trusted
+read-only Node 22 workflow. This fixes an important economic modelling mismatch:
+the earlier [February 2021 pilot](../experiments/costed_intraday_pilot.mjs)
+explicitly uses a **Zerodha reference** 0.03% brokerage assumption, while Upstox
+currently advertises **up to 0.1% or ₹20/executed intraday order**, whichever
+is lower. Historical results have *not* been retroactively recalculated or
+relabeled as Upstox profit evidence.
+
+Source: [Upstox published fees](https://upstox.com/brokerage-charges/),
+consulted 12 November 2026. Paper estimates assume ₹20/order brokerage cap,
+0.1%/side brokerage, NSE 0.00307% turnover fee, illustrative 0.0001% SEBI levy,
+0.003% buy stamp, 0.025% sell STT, and 18% GST on selected fee components.
+**Conservative choices:** round individual charge components *up* to a paise,
+STT up to a whole rupee, and separately include a 0.0001% IPFT contingency
+that **might double count** if included in exchange fees. Actual transaction
+notes, eligibility, regulatory rounding, fill-splitting, taxes and broker plan
+must determine real charges; this is not an authoritative Upstox calculator.
+
+The strict input only accepts a single *closed, hypothetical* long transaction
+within the existing ₹2,500 position cap; it never consumes broker messages.
+A published gross profit can become a loss after fees and explicitly modeled
+5/15/50-basis-point *additional economic adversity* on each side, with a
+separate 200-basis-point tail-gap shock for simulated STOP outcomes. These
+penalties are **not** predictions of literal worse-than-limit fills. No liquidity,
+spread or execution availability is authenticated. `NO_TRADE = ₹0` remains
+the benchmark. Every result has `canTrade:false`, `brokerReconciled:false`
+and `realOrderRoutePresent:false`, even when a hypothetical outcome is
+positive. This module is a cost falsification aid only; **never promote a
+strategy from these reused development examples**, and obtain independent
+licensed holdout and forward evidence before any real-money consideration.
+
+To reproduce: `node --test projects/qhap-trader/live_readiness/test_*.mjs`.
