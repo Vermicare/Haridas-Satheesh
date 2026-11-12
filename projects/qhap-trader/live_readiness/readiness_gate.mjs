@@ -7,7 +7,7 @@
  * A client-supplied "verified" value does not establish external certification.
  * Research prototype; NOT a production RMS or a regulatory approval.
  */
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 export const POLICY = Object.freeze({
@@ -196,7 +196,7 @@ export function assessPaperEntry(intent, account, feed, system, timestampIso) {
   });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1])===pathToFileURL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   // No secrets, no external input, no network. Show current system capability.
   console.log(JSON.stringify(assessLiveReadinessInventory(),null,2));
 }
