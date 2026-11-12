@@ -267,3 +267,21 @@ orders. `canTrade:false`, `sourceOrMarketDataAuthenticated:false`
 and `legalLicenseRightsVerified:false` are immutable output
 boundaries. Verified independently permitted data and live order
 authorization remain separate external gates.
+
+
+## 2026-11-12 — actual data-source permission and financial feasibility
+
+[DATA_SOURCE_REQUIREMENTS_AND_RIGHTS_20261112.md](DATA_SOURCE_REQUIREMENTS_AND_RIGHTS_20261112.md)
+documents current primary NSE/Upstox policy, the *explicit* Upstox historical
+equity backtesting technical pathway (one-minute data Jan 2022 onward),
+NSE consolidated policy §7.4 restrictions on virtual trading/simulation,
+March 2026 non-display agreement requirements, 1 Apr 2026 official domestic
+tariffs, Upstox sandbox and actual retail-algo IP/header requirements.
+It separately identifies intended uses (private historical strategy
+evaluation, live-feed synthetic paper execution, eventually real orders);
+none can be assumed legally equivalent. It gives exact questions for
+written Upstox/NSE permission and provenance review, and explains why
+an NSE direct non-display enterprise subscription is not economically
+sensible for the ₹10k research capital.
+**No source account/license was checked; no paid product, broker feed,
+credentials, market data or real trading accessed.** Remain NO_TRADE.
