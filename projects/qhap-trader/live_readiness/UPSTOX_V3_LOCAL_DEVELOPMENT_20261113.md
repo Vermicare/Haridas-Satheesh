@@ -37,7 +37,7 @@ The token temporarily exists in the environment of this PowerShell session/child
 - Home/QHAP-TRADER-PRIVATE/manifests/development-RELIANCE-2025-01-06-to-2025-01-10.json
 - A separate local audit JSON for original CSV SHA-256, missing minutes, unknown weekdays, and authorization/provenance limitations.
 
-Each previously absent weekday is recorded as **unknown** rather than silently a no-trade session (could be official holiday, suspension or missing vendor coverage). The importer refuses duplicate/out-of-range/invalid prices, unexpected IST timestamps, zero-volume sessions, weekends without an exception calendar, and overwriting existing private files. A day is a **candidate** only if 09:16–15:29 IST is complete; actual source/calendar/fill validity remains unverified.
+Each previously absent weekday is recorded as **unknown** rather than silently a no-trade session (could be official holiday, suspension or missing vendor coverage). The importer refuses duplicate/out-of-range/invalid prices, unexpected IST timestamps, zero-volume sessions, weekends without an exception calendar, and overwriting existing private files. A day is a **candidate** only if **all 375 opening timestamps from 09:15 through 15:29 IST** are present; actual source/calendar/fill validity remains unverified.
 
 ## Offline costed experimental replay
 
