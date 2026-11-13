@@ -25,7 +25,7 @@ export function wilsonLower95(wins,count){
   if(!Number.isSafeInteger(wins)||!Number.isSafeInteger(count)||
      count<1||count>10000||wins<0||wins>count)
     throw Error('INVALID_IID_BINOMIAL_COUNTS');
-  const p=wins/count,z2=Z95*Z95,denom=1+z2/count;
+  // Exact zero successes must have an exact zero lower bound; avoid\n  // floating-point cancellation producing a spurious tiny positive value.\n  if(wins===0)return 0;\n  const p=wins/count,z2=Z95*Z95,denom=1+z2/count;
   const center=p+z2/(2*count);
   const radius=Z95*Math.sqrt(p*(1-p)/count+z2/(4*count*count));
   return Math.max(0,(center-radius)/denom);
