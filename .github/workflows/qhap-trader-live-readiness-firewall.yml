@@ -31,3 +31,17 @@ jobs:
         run: |
           set -euo pipefail
           node projects/qhap-trader/live_readiness/readiness_gate.mjs | grep -F '"realOrderSubmissionPossible": false'
+      - name: Validate integrated local operator preflight and external gates
+        run: |
+          set -euo pipefail
+          node --test projects/qhap-trader/live_readiness/operator_offline_preflight.spec.mjs
+      - name: Perform complete offline operator preflight (no broker and no data feed)
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          UPSTOX_ACCESS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: |
+          set -euo pipefail
+          node projects/qhap-trader/live_readiness/operator_offline_preflight.mjs --offline-check |
+            grep -F '"status": "ENGINEERING_OFFLINE_CHECKS_PASSED_EXTERNAL_GATES_OPEN"'
+

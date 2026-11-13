@@ -44,7 +44,7 @@ export function createNewPaperJournal(filePath){
   if(typeof filePath!=='string'||!filePath.length)throw Error('INVALID_JOURNAL_PATH');
   // wx ensures an existing journal can NEVER silently be reopened for writing.
   const fd=fs.openSync(filePath,'wx',0o600);
-  let state=emptyJournal(),lastDigest=GENESIS,count=0,closed=false;
+  let state=emptyJournal(),lastDigest=GENESIS,count=0,closed=false,bytesWritten=0;
   return {
     append(event){
       if(closed||state.halted)throw Error('JOURNAL_CLOSED_OR_HALTED');
@@ -54,9 +54,25 @@ export function createNewPaperJournal(filePath){
       const recordBase={version:1,recordNumber:count+1,previousHash:lastDigest,event:safe};
       const digest=hash(recordBase);
       const line=JSON.stringify({...recordBase,hash:digest})+'\n';
+      const recordBytes=Buffer.from(line,'utf8');
+      // A single writeSync is not contractually guaranteed to write all
+      // bytes. A short/zero write must never be reported as a committed
+      // hypothetical fill. All bytes + fsync precede state advancement.
+      if(bytesWritten+recordBytes.length>MAX_BYTES){
+        closed=true;try{fs.closeSync(fd);}catch{}
+        throw Error('JOURNAL_CAPACITY_EXCEEDED_REVIEW_REQUIRED');
+      }
       try{
-        fs.writeSync(fd,line,null,'utf8');fs.fsyncSync(fd);
+        let offset=0;
+        while(offset<recordBytes.length){
+          const n=fs.writeSync(fd,recordBytes,offset,recordBytes.length-offset,null);
+          if(!Number.isSafeInteger(n)||n<=0||n>recordBytes.length-offset)
+            throw Error('SHORT_OR_ZERO_JOURNAL_WRITE');
+          offset+=n;
+        }
+        fs.fsyncSync(fd);
       }catch(e){closed=true;try{fs.closeSync(fd);}catch{}throw Error('JOURNAL_WRITE_UNCERTAIN_REVIEW_REQUIRED');}
+      bytesWritten+=recordBytes.length;
       count++;lastDigest=digest;state=next;
       return {status:state.halted?'HALTED':'APPENDED',state:summary(state)};
     },

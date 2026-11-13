@@ -72,3 +72,63 @@ test('incomplete mock funds cannot be misrepresented as reconciled',t=>{
  assert.equal(compareSyntheticCapitalReference(r,{orders:r.orders,longUnits:r.longUnits}).status,
    'BLOCKED_INCOMPLETE_REFERENCE');
 });
+
+
+
+test('partial fs.writeSync calls are fully drained before an event is accepted',t=>{
+  const file=tmp(t),w=createNewPaperJournal(file);
+  const native=fs.writeSync;
+  let shortWrites=0;
+  try{
+    fs.writeSync=(fd,buffer,offset,length,position)=>{
+      if(!Buffer.isBuffer(buffer))return native(fd,buffer,offset,length,position);
+      const count=Math.max(1,Math.floor(length/2));
+      if(count<length)shortWrites++;
+      return native(fd,buffer,offset,count,position);
+    };
+    assert.equal(w.append(create()).status,'APPENDED');
+    assert.equal(w.append(ack()).status,'APPENDED');
+    assert.equal(w.append(fill()).status,'APPENDED');
+  }finally{fs.writeSync=native;w.close();}
+  assert.ok(shortWrites>=3);
+  const r=recoverPaperJournal(file);
+  assert.equal(r.status,'RECOVERED_RECONCILIATION_REQUIRED');
+  assert.equal(r.entries,3);
+  assert.equal(r.longUnits,10);
+  assert.equal(r.canAppend,false);
+});
+test('zero-byte journal write cannot be acknowledged as committed',t=>{
+  const file=tmp(t),w=createNewPaperJournal(file);
+  assert.equal(w.append(create()).status,'APPENDED');
+  const native=fs.writeSync;
+  try{
+    fs.writeSync=()=>0;
+    assert.throws(()=>w.append(ack()),/JOURNAL_WRITE_UNCERTAIN_REVIEW_REQUIRED/);
+  }finally{fs.writeSync=native;}
+  assert.equal(w.status().status,'CLOSED');
+  assert.throws(()=>w.append(fill()),/JOURNAL_CLOSED_OR_HALTED/);
+  const r=recoverPaperJournal(file);
+  assert.equal(r.status,'RECOVERED_RECONCILIATION_REQUIRED');
+  assert.equal(r.entries,1);
+  assert.equal(r.longUnits,0);
+  assert.equal(r.canAppend,false);
+});
+test('partial-record I/O failure requires recovery review, not invented fill',t=>{
+  const file=tmp(t),w=createNewPaperJournal(file);
+  assert.equal(w.append(create()).status,'APPENDED');
+  const native=fs.writeSync;
+  let first=true;
+  try{
+    fs.writeSync=(fd,buffer,offset,length,position)=>{
+      if(first){first=false;return native(fd,buffer,offset,Math.min(length,10),position);}
+      return 0;
+    };
+    assert.throws(()=>w.append(ack()),/JOURNAL_WRITE_UNCERTAIN_REVIEW_REQUIRED/);
+  }finally{fs.writeSync=native;}
+  assert.equal(w.status().status,'CLOSED');
+  const r=recoverPaperJournal(file);
+  assert.equal(r.status,'RECOVERY_BLOCKED');
+  assert.equal(r.reason,'TRUNCATED_LAST_RECORD');
+  assert.equal(r.canAppend,false);
+  assert.equal(r.brokerReconciled,false);
+});
