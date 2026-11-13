@@ -70,3 +70,28 @@ Our pre-existing three-provider separate research council already supports **ind
 5. Live brokerage/exchange API review and individual explicit user approval after proven after-cost net edge; never deploy an LLM agreement as execution authority. No risk override.
 
 QHAP-only project user rule: NO send/reply/forward/resend email without specific per-email prior approval, other projects' outreach workflows unaffected. Real orders remain **zero** and **disabled**.
+
+
+## 2026-11-13 — Real 204-day chronological swing results: current WATCH failed
+
+The user ran the already-merged cost-stressed, offline, chronological
+daily replay against their private Upstox RELIANCE 204-bar source
+(2024-01-01 through 2024-10-24; SHA256
+472f6080a0b6ca8a253bd49231af420f708e2b4c0c0f834ef684c04fd578efe7).
+Only sanitized aggregated outcomes were shared; 98 audited decisions while
+flat, 5 WATCH-initiated hypothetical round trips, ZERO net winners.
+
+At 1x/2x/3x assumed execution stress, nine-agent swing P&L was
+−₹442.4580 / −₹478.9865 / −₹515.5149, passive same-position
+−₹195.2920 / −₹201.9775 / −₹208.6631, NO_TRADE ₹0 in
+all scenarios. At 1x gross was already −₹35 before ₹370.9324
+public-Nov2026 fee-model charges and ₹36.5256 execution drag.
+**Reject this specific WATCH rule as a live candidate.**
+These remain 2024 DEVELOPMENT samples with 2026 public fee assumptions,
+not date-correct actual account returns, and are NEVER an untouched holdout.
+
+See [falsification report](../experiments/RELIANCE_UPSTOX_204DAY_SWING_DEVELOPMENT_FALSIFICATION_20261113.md)
+and [sanitized evidence JSON](../experiments/evidence/RELIANCE_UPSTOX_204DAY_SWING_DEVELOPMENT_20261113.json).
+The pure [development evidence reviewer](../live_readiness/review_daily_swing_development_evidence.mjs)
+has mandatory NO_TRADE and cannot authorize broker orders, even for
+a development win. Do not retune on these same bars to claim unseen gains.
