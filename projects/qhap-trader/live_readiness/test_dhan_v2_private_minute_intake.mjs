@@ -14,7 +14,7 @@ const manifest=(overrides={})=>({
   researchPurpose:'DEVELOPMENT_INTAKE_ONLY',
   exchangeSegment:'NSE_EQ',instrument:'EQUITY',securityId:'1234',
   intervalMinutes:1,fromDate:'2026-11-12',toDate:'2026-11-12',
-  supportTicketReference:'DHAN_SUPPORT_6635943_2026-11-13',
+  supportTicketReference:'USER_PRIVATE_DHAN_SUPPORT_REPLY_2026-11-13',
   corporateActionTreatment:'BONUS_SPLIT_ADJUSTED_DIVIDENDS_UNKNOWN',
   externalCalendarCertified:false,sourceInstrumentMappingCertified:false,
   ...overrides
