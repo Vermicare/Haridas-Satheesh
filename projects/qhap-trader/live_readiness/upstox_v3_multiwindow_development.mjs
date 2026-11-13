@@ -119,9 +119,18 @@ export async function runDevelopmentBatch(plan,token,{
       eligible.push(...batch.eligible);
     }catch(e){
       result.status='DEVELOPMENT_BATCH_PARTIAL_HALT_NO_TRADE';
+      // Whitelist only codes emitted by our local read-only adapter.
+      // A backend error message that merely looks like ALL_CAPS could
+      // contain a credential; never return arbitrary injected text.
       const reason=e?.message||'';
-      result.failureReason=/^[A-Z0-9_]+$/.test(reason)?
-        reason:'PRIVATE_DEVELOPMENT_REQUEST_FAILED';
+      const allowed=reason==='PRIVATE_SOURCE_ALREADY_EXISTS_REFUSE_OVERWRITE'||
+        /^UPSTOX_HISTORY_HTTP_[1-5][0-9]{2}$/.test(reason)||
+        ['UPSTOX_HISTORY_READ_ONLY_NETWORK_FAILURE','UPSTOX_HISTORY_TOO_LARGE',
+          'UPSTOX_HISTORY_NOT_JSON','UPSTOX_HISTORY_RESPONSE_READ_FAILURE',
+          'DUPLICATE_PROVIDER_CANDLE','INVALID_OHLCV_OR_OI_CANDLE',
+          'INVALID_UPSTOX_HISTORY_ENVELOPE','INVALID_OR_OUT_OF_RANGE_IST_CANDLE',
+          'OUTSIDE_REGULAR_NSE_MINUTE_REQUIRES_SESSION_REVIEW'].includes(reason);
+      result.failureReason=allowed?reason:'PRIVATE_DEVELOPMENT_REQUEST_FAILED';
       result.failedMonth=window.month;
       return result;
     }
