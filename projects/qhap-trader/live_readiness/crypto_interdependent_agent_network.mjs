@@ -20,6 +20,7 @@ const BASE=Object.freeze({
   project:'QHAP-CRYPTO-RESEARCH',
   marketType:'UNLEVERAGED_SPOT_RESEARCH',
   execution:'DISABLED',
+  finalDecision:'NO_TRADE',
   realOrdersSent:0,paperOrdersSent:0,
   realOrderRoutePresent:false,exchangeCredentialsRead:false,
   apiRequestsMade:0,modelRequestsMade:0,
