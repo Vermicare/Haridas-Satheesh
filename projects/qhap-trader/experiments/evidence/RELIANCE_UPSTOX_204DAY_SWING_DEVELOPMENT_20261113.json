@@ -1,0 +1,94 @@
+{
+  "schema": "QHAP_DEVELOPMENT_AGGREGATE_V1",
+  "asRecordedDate": "2026-11-13",
+  "source": "USER_LOCAL_UPSTOX_V3_NSE_DAILY_SANITIZED_AGGREGATE",
+  "sourceClass": "PRIVATE_REPLAY",
+  "market": "NSE_CASH_EQUITY",
+  "symbol": "RELIANCE",
+  "sourcePeriod": {
+    "first": "2024-01-01",
+    "last": "2024-10-24"
+  },
+  "sourceDailyBarCount": 204,
+  "localArtifactSha256": "472f6080a0b6ca8a253bd49231af420f708e2b4c0c0f834ef684c04fd578efe7",
+  "researchClass": "INSPECTED_DEVELOPMENT_NOT_UNSEEN_HOLDOUT",
+  "virtualInitialCashRupees": 10000,
+  "maxSingleHypotheticalPositionBudgetRupees": 2500,
+  "hypotheticalHoldingSessions": 5,
+  "fullAgentAuditVerifiedDecisions": 98,
+  "realOrdersSent": 0,
+  "paperOrdersSent": 0,
+  "finalBrokerDecision": "NO_TRADE",
+  "tradingEdgeIndependentlyVerified": false,
+  "corporateActionsIndependentlyVerified": false,
+  "exactHistoricalFeesCertified": false,
+  "assumedFeeSchedule": "UPSTOX_PUBLIC_NOV2026_DELIVERY_RATES_PRO_FORMA_ON_2024_PRICES",
+  "publicPrimarySource": "https://upstox.com/brokerage-charges/",
+  "scenarios": [
+    {
+      "multiplier": 1,
+      "agent": {
+        "hypotheticalRoundTrips": 5,
+        "netWinningRoundTrips": 0,
+        "watchDecisions": 5,
+        "grossRupees": -35,
+        "modeledFeesRupees": 370.9324,
+        "modeledExecutionDragRupees": 36.5256,
+        "netRupees": -442.458,
+        "endingVirtualCashRupees": 9557.542
+      },
+      "passive": {
+        "hypotheticalRoundTrips": 1,
+        "grossRupees": -114.7,
+        "modeledFeesRupees": 73.9073,
+        "modeledExecutionDragRupees": 6.6847,
+        "netRupees": -195.292
+      },
+      "noTradeNetRupees": 0
+    },
+    {
+      "multiplier": 2,
+      "agent": {
+        "hypotheticalRoundTrips": 5,
+        "netWinningRoundTrips": 0,
+        "watchDecisions": 5,
+        "grossRupees": -35,
+        "modeledFeesRupees": 370.9353,
+        "modeledExecutionDragRupees": 73.0512,
+        "netRupees": -478.9865,
+        "endingVirtualCashRupees": 9521.0135
+      },
+      "passive": {
+        "hypotheticalRoundTrips": 1,
+        "grossRupees": -114.7,
+        "modeledFeesRupees": 73.9081,
+        "modeledExecutionDragRupees": 13.3694,
+        "netRupees": -201.9775
+      },
+      "noTradeNetRupees": 0
+    },
+    {
+      "multiplier": 3,
+      "agent": {
+        "hypotheticalRoundTrips": 5,
+        "netWinningRoundTrips": 0,
+        "watchDecisions": 5,
+        "grossRupees": -35,
+        "modeledFeesRupees": 370.9381,
+        "modeledExecutionDragRupees": 109.5768,
+        "netRupees": -515.5149,
+        "endingVirtualCashRupees": 9484.4851
+      },
+      "passive": {
+        "hypotheticalRoundTrips": 1,
+        "grossRupees": -114.7,
+        "modeledFeesRupees": 73.9089,
+        "modeledExecutionDragRupees": 20.0542,
+        "netRupees": -208.6631
+      },
+      "noTradeNetRupees": 0
+    }
+  ],
+  "provenanceNote": "Numbers copied only from user-shared sanitized JSON; no source candles, private paths, token, broker account or market-data download in GitHub.",
+  "livePromotionAllowed": false
+}
