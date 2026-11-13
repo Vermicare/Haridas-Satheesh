@@ -23,12 +23,12 @@ test('2026 Upstox public fee arithmetic always distinguishes BUY and SELL delive
  assert.equal(sell.components.brokerage,20);
  assert.equal(buy.components.stt,2.5);
  assert.equal(sell.components.stt,2.5);
- assert.equal(buy.components.stamp,.375);
+ assert.ok(Math.abs(buy.components.stamp-.375)<1e-10);
  assert.equal(sell.components.stamp,0);
  assert.equal(buy.components.dp,0);
  assert.equal(sell.components.dp,20);
- assert.equal(buy.components.exchange,.07675);
- assert.equal(buy.components.sebi,.0025);
+ assert.ok(Math.abs(buy.components.exchange-.07675)<1e-10);
+ assert.ok(Math.abs(buy.components.sebi-.0025)<1e-10);
  assert.ok(buy.total+sell.total>76);
  assert.ok(buy.total+sell.total<77);
  assert.equal(COST_REFERENCE.notAnExactHistoricalTariff,true);
