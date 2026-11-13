@@ -491,3 +491,17 @@ descriptive observed break-even gaps. Nothing forecasts returns,
 approves a real trade, contacts Upstox or copies vendor code.
 These are *hypothesis research* checks, NOT trading signals; real
 execution remains NO_TRADE.
+
+
+## 2026-11-13 — isolated cryptocurrency interdependent research agents (NO TRADE)
+
+New [crypto research lane](../crypto_research/README.md) runs nine in-process
+independently scoped modules in a typed dependency graph: source integrity,
+trend, reversion challenger, volume proxy, volatility, cost stress, adversarial
+skeptic, coordinator and an independent deterministic veto. Each emits a
+hashed, replay-verifiable audit node. BTC-USDT and ETH-USDT **local replays**
+or synthetic fixture only; no exchange data feed, model API calls, wallets,
+orders or persistent paper portfolio. This is NOT nine paid Claude sessions;
+the existing optional [three-provider AI research council](../research_council/README.md)
+remains separate. No QHAP crypto trades, no real or simulated order API route.
+Run the test and synthetic demo documented in crypto_research/README.md.
