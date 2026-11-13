@@ -505,3 +505,23 @@ orders or persistent paper portfolio. This is NOT nine paid Claude sessions;
 the existing optional [three-provider AI research council](../research_council/README.md)
 remains separate. No QHAP crypto trades, no real or simulated order API route.
 Run the test and synthetic demo documented in crypto_research/README.md.
+
+
+## 2026-11-13 — user correction: Claude-style multiagent thinking for NSE, NOT literal crypto
+
+User explicitly clarified they meant the *collaborating/adversarial agents*
+in the Claude multi-agent news, **not cryptocurrency trading**. The
+crypto-specific issue #80 was closed as a misunderstanding. Its archived
+research-only PR #79 is NOT the active trading roadmap. QHAP continues with
+**NSE cash equities via read-only Upstox history and isolated sandbox**.
+New [equity_agents/README.md](../equity_agents/README.md) and
+[nse_swing_interdependent_agent_network.mjs](nse_swing_interdependent_agent_network.mjs)
+implement nine deterministic, typed/dependency-verified *NSE* research
+agents (daily data, trend, gap/volatility, liquidity/cash, missing public
+news, cash delivery cost, adversarial critic, coordinator and non-overrideable
+risk guardian). Read-only local synthetic/private daily replay; NO paid model
+calls, real orders, simulated order submissions or historical profit claims.
+New economic thesis is lower-frequency equity/ETF swing research compared
+fairly to NO_TRADE and passive holding, NOT guaranteed profit. Existing
+three-provider research council remains an optional paid/manual/public-only
+critic. The evidence-first cash equity roadmap is issue #81.
