@@ -45,3 +45,33 @@ jobs:
           node projects/qhap-trader/live_readiness/operator_offline_preflight.mjs --offline-check |
             grep -F '"status": "ENGINEERING_OFFLINE_CHECKS_PASSED_EXTERNAL_GATES_OPEN"'
 
+
+
+  windows-node26-operator-preflight:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+      - name: Verify Windows PowerShell Node 26 parsing and offline preflight
+        shell: pwsh
+        env:
+          UPSTOX_ANALYTICS_TOKEN: ''
+          UPSTOX_ACCESS_TOKEN: ''
+          OPENROUTER_API_KEY: ''
+        run: |
+          $ErrorActionPreference = 'Stop'
+          node .\projects\qhap-trader\live_readiness\operator_offline_preflight.mjs --offline-check
+          if ($LASTEXITCODE -ne 0) {
+            throw "Offline operator preflight failed on Windows Node 26; see bounded failureDiagnostics above."
+          }
+      - name: Verify Windows Node 26 parser regression suite
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          node --test --test-reporter=tap .\projects\qhap-trader\live_readiness\operator_offline_preflight.spec.mjs
+          if ($LASTEXITCODE -ne 0) {
+            throw "Windows Node26 operator parser or complete preflight regression failed."
+          }
