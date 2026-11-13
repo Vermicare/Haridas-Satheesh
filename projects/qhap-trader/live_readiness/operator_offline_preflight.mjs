@@ -29,17 +29,36 @@ const safeEnv=()=>Object.fromEntries(
     .map(k=>[k,process.env[k]])
 );
 /**
- * Node 23+ defaults to 'spec' even for piped output, unlike Node 22.
- * Force TAP on every Node test process, then normalize Windows CRLF.
- * Exported for regression tests on both Linux and Windows.
+ * Node 23+ defaults to 'spec' for both TTY and piped stdout. Force TAP
+ * on child tests, then accept Windows CRLF, whitespace and ANSI prefixes.
  */
 export function parseTapSummary(output){
   if(typeof output!=='string')return null;
-  const lines=output.replace(/\x1b\[[0-9;]*m/g,'').split(/\r?\n/)
-    .map(line=>line.trim());
-  const last=(label)=>{
-    const values=lines.filter(line=>line.startsWith('# '+label+' '))
-      .map(line=>line.match(new RegExp('^# '+label+' (\\d+)
+  const counts={};
+  for(const line of output.replace(/\x1b\[[0-9;]*m/g,'').split(/\r?\n/)){
+    const match=line.trim().match(/^# (tests|pass|fail) (\d+)$/);
+    if(match)counts[match[1]]=Number(match[2]);
+  }
+  const tests=counts.tests,passed=counts.pass,failed=counts.fail;
+  if(![tests,passed,failed].every(Number.isSafeInteger)||
+    tests<1||passed<0||failed<0||passed+failed>tests)return null;
+  return {tests,passed,failed};
+}
+const summaryLines=parseTapSummary;
+
+/** Bounded local test diagnostics, never raw full broker or environment logs. */
+function safeFailureDiagnostic(output){
+  const clean=String(output||'').replace(/\x1b\[[0-9;]*m/g,'');
+  const lines=clean.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const selected=lines.filter(x=>
+    /^(not ok\b|# (?:tests|pass|fail|error|message|code|stack)\b|(?:error|failure):)|\b(?:ERR_[A-Z_]+|AssertionError|SyntaxError|EPERM|EACCES|ENOENT)\b/i.test(x)
+  );
+  const sanitize=x=>x.replace(/([A-Z]:[\\/]Users[\\/])[^\\/\s]+/ig,'$1[USER]')
+    .replace(/\b(Bearer|authorization|access[_-]?token)\s*[:=]\s*[^\s,;]+/ig,'$1=[REDACTED]');
+  return (selected.length?selected.slice(-18):lines.slice(-12))
+    .map(sanitize).map(x=>x.slice(0,220)).join(' | ').slice(0,2400)||
+    'TEST_PROCESS_RETURNED_NO_OUTPUT';
+}
 const validSuite=r=>r&&typeof r==='object'&&r.status==='PASSED'&&
   Number.isSafeInteger(r.tests)&&r.tests>0&&
   r.passed===r.tests&&r.failed===0&&r.exitCode===0;
@@ -108,123 +127,6 @@ export function runLocalEngineeringPreflight(){
     {name:SUITE_NAMES[0],status:'FAILED',exitCode:null,tests:0,
       passed:0,failed:1};
   const second=runNode(['--test','--test-reporter=tap',
-    toRelative(path.join(experiments,'test_costed_intraday_pilot.mjs')),
-    toRelative(path.join(experiments,'test_guarded_paper_replay.mjs')),
-    toRelative(path.join(experiments,'feb2021_calendar_gate.test.mjs'))],
-    SUITE_NAMES[1],summaryLines);
-  const third=runNode([
-    toRelative(path.join(experiments,'test_fee_formula_audit.mjs'))],
-    SUITE_NAMES[2],output=>{
-      const p=output.match(/(^|\n)(\d+)\/(\d+) synthetic fee tests passed;/);
-      return p?{tests:Number(p[3]),passed:Number(p[2]),failed:0}:null;
-    });
-  return summarizeOfflineReleasePreflight([first,second,third]);
-}
-const invoked=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);
-if(invoked){
-  if(process.argv.length!==3||!['--offline-check','--help'].includes(process.argv[2])){
-    console.error('Usage: node projects/qhap-trader/live_readiness/operator_offline_preflight.mjs --offline-check | --help');
-    process.exitCode=2;
-  }else if(process.argv[2]==='--help'){
-    console.log('OFFLINE ONLY: --offline-check runs local QHAP software tests. Green tests NEVER enable broker orders or authorize market-data use.');
-  }else{
-    const result=runLocalEngineeringPreflight();
-    console.log(JSON.stringify(result,null,2));
-    // 0 acknowledges green ENGINEERING TESTS ONLY, never live authorization.
-    process.exitCode=result.testsPassed?0:1;
-  }
-}
-)))
-      .filter(Boolean);
-    return values.length?Number(values.at(-1)[1]):null;
-  };
-  const tests=last('tests'),passed=last('pass'),failed=last('fail');
-  if(![tests,passed,failed].every(Number.isSafeInteger)||
-     tests<1||passed<0||failed<0||passed+failed>tests)return null;
-  return {tests,passed,failed};
-}
-const summaryLines=parseTapSummary;
-
-/** Include bounded, non-sensitive failure hints; never echo full test logs. */
-function safeFailureDiagnostic(output){
-  if(typeof output!=='string')return 'TEST_PROCESS_RETURNED_NO_OUTPUT';
-  const lines=output.replace(/\x1b\[[0-9;]*m/g,'').split(/\r?\n/)
-    .map(s=>s.trim()).filter(Boolean);
-  const match=/^(not ok\b|# (?:tests|pass|fail|error|message|code|stack)\b|(?:error|failure):)|\b(?:ERR_[A-Z_]+|AssertionError|SyntaxError|EPERM|EACCES|ENOENT)\b/i;
-  const selected=lines.filter(s=>match.test(s));
-  // Remove possible user-specific local profile paths and obvious credentials.
-  const sanitize=s=>s.replace(/([A-Z]:[\\/]Users[\\/])[^\\/\s]+/ig,'$1[USER]')
-    .replace(/\b(Bearer|authorization|access[_-]?token)\s*[:=]\s*[^\s,;]+/ig,'$1=[REDACTED]');
-  return (selected.length?selected.slice(-16):lines.slice(-12))
-    .map(sanitize).map(s=>s.slice(0,230)).join(' | ').slice(0,2300)||
-    'TEST_PROCESS_RETURNED_NO_OUTPUT';
-}
-const validSuite=r=>r&&typeof r==='object'&&r.status==='PASSED'&&
-  Number.isSafeInteger(r.tests)&&r.tests>0&&
-  r.passed===r.tests&&r.failed===0&&r.exitCode===0;
-const val={marketDataUseRights:'NOT_INDEPENDENTLY_VERIFIED',
-  unseenMultiRegimeNetEdge:'NOT_INDEPENDENTLY_VERIFIED',
-  genuineForwardSessions:'NOT_INDEPENDENTLY_VERIFIED',
-  brokerAccountAndExecutionPermissions:'NOT_INDEPENDENTLY_VERIFIED',
-  regulatoryAndHumanRelease:'NOT_APPROVED'};
-
-/** Decisions never accept caller supplied license/trading booleans. */
-export function summarizeOfflineReleasePreflight(suites){
-  const names=SUITE_NAMES;
-  const valid=Array.isArray(suites)&&suites.length===names.length&&
-    names.every(name=>suites.filter(x=>x?.name===name).length===1);
-  const passed=valid&&suites.every(validSuite);
-  const inventory=assessLiveReadinessInventory();
-  return {
-    status:passed?'ENGINEERING_OFFLINE_CHECKS_PASSED_EXTERNAL_GATES_OPEN':
-      'ENGINEERING_OFFLINE_CHECKS_FAILED_NO_TRADE',
-    mode:'LOCAL_TEST_ONLY_NO_LIVE_OR_PAPER_DATA_STREAMS',
-    testsPassed:passed,
-    testCount:valid?suites.reduce((a,x)=>a+(Number.isSafeInteger(x.tests)?x.tests:0),0):null,
-    suites:Array.isArray(suites)?suites:[],
-    externalGates:{...val},
-    reviewItemsRequired:inventory.itemsRequired,
-    reviewItemsClaimed:inventory.itemsClaimed,
-    netProfitableStrategyIndependentlyVerified:false,
-    marketDataResearchLicenceIndependentlyVerified:false,
-    liveFeedVirtualTradingRightsIndependentlyVerified:false,
-    brokerOrderEndpointPresent:false,
-    realOrderSubmissionPossible:false,
-    liveTradingAuthorized:false,
-    realOrdersSent:0,
-    canTrade:false,
-    recommendedAction:'NO_TRADE',
-    nextAction:passed?'OBTAIN_WRITTEN_USE_RIGHTS_AND_FROZEN_UNSEEN_NET_COSTED_EVIDENCE':
-      'FIX_FAILED_LOCAL_INVARIANTS_BEFORE_ANY_ADDITIONAL_RESEARCH',
-    explanation:'Passing tests does not authenticate NSE market data, broker accounts, statutory fees, valid live fills, statistical edge, or human compliance approval.'
-  };
-}
-function runNode(args,label,matcher){
-  const processResult=spawnSync(process.execPath,args,{
-    cwd:root,env:safeEnv(),encoding:'utf8',shell:false,
-    timeout:120000,maxBuffer:3*1024*1024,windowsHide:true
-  });
-  const stdout=processResult.stdout||'';
-  const parsed=matcher(stdout);
-  const passed=!processResult.error&&processResult.status===0&&
-    parsed&&parsed.tests>0&&parsed.failed===0&&parsed.passed===parsed.tests;
-  return {name:label,status:passed?'PASSED':'FAILED',
-    exitCode:processResult.status,
-    tests:parsed?.tests??0,passed:parsed?.passed??0,failed:parsed?.failed??1,
-    didTimeOut:processResult.error?.code==='ETIMEDOUT',
-    noNetwork:true,noBrokerCredentialsPassed:true};
-}
-export function runLocalEngineeringPreflight(){
-  let tests;
-  try{
-    tests=fs.readdirSync(here).filter(x=>/^test_.*\.mjs$/.test(x))
-      .map(x=>toRelative(path.join(here,x))).sort();
-  }catch{tests=[];}
-  const first=tests.length?
-    runNode(['--test',...tests],SUITE_NAMES[0],summaryLines):
-    {name:SUITE_NAMES[0],status:'FAILED',exitCode:null,tests:0,
-      passed:0,failed:1};
-  const second=runNode(['--test',
     toRelative(path.join(experiments,'test_costed_intraday_pilot.mjs')),
     toRelative(path.join(experiments,'test_guarded_paper_replay.mjs')),
     toRelative(path.join(experiments,'feb2021_calendar_gate.test.mjs'))],
