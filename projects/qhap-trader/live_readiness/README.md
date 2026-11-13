@@ -379,9 +379,9 @@ historical-fixture integrity and illustrative fee regressions from
 a Windows PowerShell or Terminal in the **repository root** with
 Node.js 22 or later:
 
-\`\`\`powershell
+```powershell
 node projects/qhap-trader/live_readiness/operator_offline_preflight.mjs --offline-check
-\`\`\`
+```
 
 The command is implemented by
 [operator_offline_preflight.mjs](operator_offline_preflight.mjs).
@@ -392,13 +392,13 @@ order access. It produces a structured JSON summary for all three
 test groups, totals and outstanding independent evidence.
 
 On green local engineering tests, the status is deliberately
-\`ENGINEERING_OFFLINE_CHECKS_PASSED_EXTERNAL_GATES_OPEN\`,
-with \`realOrderSubmissionPossible:false\`,
-\`liveTradingAuthorized:false\` and
-\`recommendedAction:"NO_TRADE"\`. A shell exit code of 0 means
+`ENGINEERING_OFFLINE_CHECKS_PASSED_EXTERNAL_GATES_OPEN`,
+with `realOrderSubmissionPossible:false`,
+`liveTradingAuthorized:false` and
+`recommendedAction:"NO_TRADE"`. A shell exit code of 0 means
 *software regression tests passed only*, NEVER broker/financial
 readiness. If a test fails, the command reports
-\`ENGINEERING_OFFLINE_CHECKS_FAILED_NO_TRADE\` and exits 1.
+`ENGINEERING_OFFLINE_CHECKS_FAILED_NO_TRADE` and exits 1.
 Never treat a self-supplied JSON field or green GitHub Actions badge
 as independent legal market-data consent or broker order approval.
 
@@ -411,7 +411,7 @@ data rights, profits or order ability to promote the result.
 
 [durable_paper_journal.mjs](durable_paper_journal.mjs) now writes
 each JSONL event with an explicit bounded complete-write loop and
-\`fsync\` **before** accepting it as committed. If a disk write is
+`fsync` **before** accepting it as committed. If a disk write is
 zero-length, throws after a partial record, or exceeds the 5 MiB
 journal cap, that session closes and **requires manual recovery
 inspection**, never an implied successful fill or auto-resume.
