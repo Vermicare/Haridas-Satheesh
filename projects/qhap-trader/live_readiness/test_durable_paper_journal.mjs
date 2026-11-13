@@ -27,7 +27,55 @@ test('disconnect persists unresolved units without inventing a sell',t=>{const f
 test('partial fills survive restart with correct cumulative quantities',t=>{const file=tmp(t),w=createNewPaperJournal(file);w.append(create());w.append(ack());w.append(fill(3,4));w.close();const r=recoverPaperJournal(file);assert.equal(r.longUnits,4);assert.equal(r.orders[0].cumulativeFilled,4);});
 test('schema disallows token, arbitrary market frames and extra fields',t=>{const file=tmp(t),w=createNewPaperJournal(file);assert.throws(()=>w.append({...create(),token:'SECRET'}),/SCHEMA/);assert.throws(()=>w.append({...create(),marketPrice:88}),/SCHEMA/);w.close();assert.equal(recoverPaperJournal(file).entries,0);});
 test('missing journal blocks instead of assuming flat',t=>{const file=tmp(t);const r=recoverPaperJournal(file);assert.equal(r.status,'RECOVERY_BLOCKED');assert.equal(r.longUnits,null);});
-test('symlink is rejected at recovery, not followed',t=>{const file=tmp(t),original=file+'-real';fs.writeFileSync(original,'');fs.symlinkSync(original,file);assert.equal(recoverPaperJournal(file).reason,'UNSAFE_OR_OVERSIZE_JOURNAL');});
+test('symlink is rejected at recovery, not followed',t=>{
+ const file=tmp(t),original=file+'-real';
+ fs.writeFileSync(original,'');
+ // First verify the security branch on EVERY OS. Windows may prohibit
+ // creating a real file symlink without Developer Mode or SeCreateSymbolicLink.
+ const realLstat=fs.lstatSync;
+ let checkedPath=false;
+ try{
+   fs.lstatSync=(p,...args)=>{
+     if(p===file){
+       checkedPath=true;
+       return {isFile:()=>true,isSymbolicLink:()=>true,size:0};
+     }
+     return realLstat(p,...args);
+   };
+   const result=recoverPaperJournal(file);
+   assert.equal(result.status,'RECOVERY_BLOCKED');
+   assert.equal(result.reason,'UNSAFE_OR_OVERSIZE_JOURNAL');
+   assert.equal(result.canAppend,false);
+   assert.equal(result.longUnits,null);
+ }finally{
+   fs.lstatSync=realLstat;
+ }
+ assert.equal(checkedPath,true,'Recovery must inspect journal lstat metadata');
+ // Also exercise an actual filesystem file symlink wherever creation is
+ // permitted. Do NOT require Windows privileges or suggest policy changes.
+ try{
+   fs.symlinkSync(original,file,'file');
+ }catch(error){
+   if(process.platform==='win32'&&
+      ['EPERM','EACCES'].includes(error?.code)){
+     t.diagnostic('Windows file-symlink creation denied; metadata rejection above was verified without elevation.');
+     return;
+   }
+   throw error;
+ }
+ const actual=recoverPaperJournal(file);
+ assert.equal(actual.status,'RECOVERY_BLOCKED');
+ assert.equal(actual.reason,'UNSAFE_OR_OVERSIZE_JOURNAL');
+ assert.equal(actual.canAppend,false);
+});
+test('directory path is not treated as a valid paper journal',t=>{
+ const file=tmp(t);
+ fs.mkdirSync(file);
+ const result=recoverPaperJournal(file);
+ assert.equal(result.status,'RECOVERY_BLOCKED');
+ assert.equal(result.reason,'UNSAFE_OR_OVERSIZE_JOURNAL');
+ assert.equal(result.canAppend,false);
+});
 test('new journal cannot silently overwrite preexisting records',t=>{const file=tmp(t);full(file);assert.throws(()=>createNewPaperJournal(file),/EEXIST/);assert.equal(recoverPaperJournal(file).longUnits,10);});
 test('paper journal status never reports real order capability',t=>{const file=tmp(t),w=createNewPaperJournal(file);w.append(create());const s=w.status();assert.equal(s.liveTradingAuthorized,false);assert.equal(s.realOrdersSent,0);w.close();});
 
