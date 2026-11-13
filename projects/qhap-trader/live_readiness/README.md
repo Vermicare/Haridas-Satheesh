@@ -305,3 +305,21 @@ adjustments, private storage rights, and account-specific simulation
 permissions remain unverified. All genuine market-data-driven QHAP
 paper fills and real orders are still blocked pending applicable
 legal/contract checks. Strict synthetic offline engineering can continue.
+
+
+## 13 November 2026 — fixed payoff viability falsification
+
+[precommitted_payoff_viability.mjs](precommitted_payoff_viability.mjs)
+and its [offline regression tests](test_precommitted_payoff_viability.mjs)
+reuse the pre-existing Upstox **indicative** fee engine without network,
+licensed market data, credentials, or execution. They algebraically
+calculate theoretical break-even hit-rate thresholds for an imaginary
+₹2,000 BUY, 1.5% TARGET and 1% STOP, under four fixed per-side
+adversity assumptions (0/5/15/50 basis points), plus hypothetical
+0% or 5% of losing outcomes with additional 200-bp stop-gap penalties.
+All 40 win-rate what-if cells are reported; NO_TRADE=₹0 is the reference.
+A profitable *assumed* hit rate is never empirical strategy evidence,
+and an unfilled stop can exceed the modeled ₹50 candidate risk budget.
+See [full explanation and limitations](PAYOFF_VIABILITY_FALSIFICATION_20261113.md).
+There are **zero actual research sessions, data rights, authenticated fills,
+broker orders, or demonstrated trading edge** in this experiment.
