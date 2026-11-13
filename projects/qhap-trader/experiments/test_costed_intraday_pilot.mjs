@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {runPilot} from './costed_intraday_pilot.mjs';
 
 /* All tests are synthetic; none establishes market or profit validity. */
-function source({symbol='TEST',day='01',breakout=false,remove=null,bothTouched=false,lateExit=false}={}) {
+function source({symbol='TEST',day='01',breakout=false,remove=null,bothTouched=false,lateExit=false,zeroOpening=false}={}) {
   const data=[symbol+',202102'+day+',09:08,100,100,100,100,100,0'];
   for (let minute=570;minute<=900;minute++){
     const tm=String(Math.floor(minute/60)).padStart(2,'0')+':'+String(minute%60).padStart(2,'0');
@@ -17,7 +17,7 @@ function source({symbol='TEST',day='01',breakout=false,remove=null,bothTouched=f
     if(lateExit&&tm==='14:30'){o=100;h=102;l=99.6;c=101;}
     if(lateExit&&tm>='14:31'&&tm<'14:55'){o=101;h=101.5;l=100.9;c=101;}
     if(lateExit&&tm==='14:55'){o=101;h=110;l=90;c=100;}
-    data.push([symbol,'202102'+day,tm,o,h,l,c,500,0].join(','));
+    data.push([symbol,'202102'+day,tm,o,h,l,c,zeroOpening&&tm<'09:40'?0:500,0].join(','));
   }
   return {day,content:data.join('\n'),sha:'SYNTHETIC'};
 }
@@ -62,4 +62,16 @@ test('14:55 opening exit cannot be selected from later 14:55 high/low',()=>{
   assert.equal(r.ledger[0].exit,'14:55');
   assert.equal(r.ledger[0].exitReason,'TIME');
   assert.ok(r.netPnl<0);  // round-trip fees and slippage, not an instant win
+});
+
+
+test('zero-volume opening aborts before any fabricated VWAP or trade profit',()=>{
+  assert.throws(()=>testResult({breakout:true,zeroOpening:true}),
+    /HALT_UNKNOWN: undefined VWAP on 01 09:30/);
+});
+test('positive-volume opening still gives a determinate 2021 development result',()=>{
+  const r=testResult({breakout:true});
+  assert.equal(r.count,1);
+  assert.ok(Number.isFinite(r.netPnl));
+  assert.ok(Number.isFinite(r.finalEquity));
 });
