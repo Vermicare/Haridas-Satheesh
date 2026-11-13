@@ -65,6 +65,28 @@ test('missing one regular minute is quarantined, never forward-filled',()=>{
   assert.equal(arr.sessions[0].firstMissingRequiredMinute,'11:40');
   assert.equal(arr.eligible.length,0);
 });
+test('a 374-candle vendor day missing the 09:15 opening minute is NOT eligible',()=>{
+  const batch=buildLocalDevelopmentBatch(
+    normalizeUpstoxCandles(packet(rows('2025-01-06',555)),request),request);
+  assert.equal(batch.candlesticksSeen,374);
+  assert.equal(batch.sessions[0].openingMinutePresent,false);
+  assert.equal(batch.sessions[0].expectedRegularSessionMinuteBars,375);
+  assert.equal(batch.sessions[0].candidateState,'INCOMPLETE_MINUTE_COVERAGE');
+  assert.equal(batch.sessions[0].missingRequiredMinutes,1);
+  assert.equal(batch.sessions[0].firstMissingRequiredMinute,'09:15');
+  assert.deepEqual(batch.eligible,[]);
+  assert.throws(
+    ()=>parseCompleteSession(batch.sessions[0].csv,'RELIANCE','20250106'),
+    /MISSING_OPENING_MINUTE_09_15/);
+});
+test('a full source with 09:15 preserves unchanged 09:16-first replay features',()=>{
+  const batch=buildLocalDevelopmentBatch(
+    normalizeUpstoxCandles(packet(rows()),request),request);
+  assert.equal(batch.sessions[0].openingMinutePresent,true);
+  assert.equal(batch.sessions[0].expectedRegularSessionMinuteBars,375);
+  assert.equal(parseCompleteSession(batch.sessions[0].csv,'RELIANCE','20250106').bars.length,374);
+});
+
 test('no vendor bars for a weekday are unknown, NOT invented zero return',()=>{
   const arr=buildLocalDevelopmentBatch(normalizeUpstoxCandles(
     packet([]),request),request);
