@@ -440,3 +440,18 @@ minutes, weekend sessions without independent calendar evidence, and
 partial/unsafe data; the only actual endpoint permitted is a fixed
 Upstox V3 read-only historical GET. No broker SDK, trading order path,
 financial funds, paid subscription or email involved.
+
+
+## 2026-11-13 — strict Upstox free Sandbox isolated fake-order smoke
+
+User created a dedicated Upstox Sandbox App and generated a sandbox-only token.
+New [UPSTOX_SANDBOX_LOCAL_SMOKE_20261113.md](UPSTOX_SANDBOX_LOCAL_SMOKE_20261113.md)
+shows copy/paste Windows PowerShell usage with private token prompt. The
+upstox_sandbox_smoke.mjs entry point defaults to a network-free --preview;
+only an explicit --sandbox-smoke --confirm-sandbox-only invokes a single
+fake V3 LIMIT buy then a single fake cancellation. Its sole network origin is
+https://api-sandbox.upstox.com, per Upstox SDK. No live-host fallback,
+no brokerage SDK, no real orders, no automatic retries, no raw token or
+order ID printed. Mock-fetch adversarial tests run automatically in CI.
+This tests broker API mechanics only; real-money strategy remains NO_TRADE
+because observed January 2025 development replay performance is negative.
