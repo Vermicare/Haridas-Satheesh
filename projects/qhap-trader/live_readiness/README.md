@@ -285,3 +285,23 @@ an NSE direct non-display enterprise subscription is not economically
 sensible for the ₹10k research capital.
 **No source account/license was checked; no paid product, broker feed,
 credentials, market data or real trading accessed.** Remain NO_TRADE.
+
+
+## 13 November 2026 — independent cross-provider verification
+
+[INDEPENDENT_EXTERNAL_DATA_RIGHTS_CROSSCHECK_20261113.md](INDEPENDENT_EXTERNAL_DATA_RIGHTS_CROSSCHECK_20261113.md)
+separately verifies the seven questions in the Upstox inquiry using
+**original NSE, SEBI, Zerodha and Dhan publications**, rather than
+waiting for a broker support reply. Important update: SEBI's
+**8 May 2026** price-data circular, effective **1 July 2026**, imposes
+a **30-day sharing/usage lag for investor education** and a special
+one-day NISM simulation-lab exception; it is **not** a general
+commercial-backtest or live-feed paper-trading permission.
+Other brokers publish one-minute/history APIs and retail fees, but
+subscription access does not waive NSE non-display or virtual-simulation
+rights. Upstox V3 explicitly uses **start-of-candle** timestamps and
+documents corporate actions via a separate endpoint; automatic price
+adjustments, private storage rights, and account-specific simulation
+permissions remain unverified. All genuine market-data-driven QHAP
+paper fills and real orders are still blocked pending applicable
+legal/contract checks. Strict synthetic offline engineering can continue.
