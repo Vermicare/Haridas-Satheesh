@@ -440,3 +440,54 @@ test("ordinary positive-volume no-trade source stays technically certifiable",()
   assert.equal(b.finalEquity,10000);
   assert.equal(b.certified,true);
 });
+
+
+
+test("terminal weekly loss veto withholds final equity even with no later LOCKED row",()=>{
+  const losingDay=day=>{
+    const s=fixture({day,breakout:true});
+    const rows=s.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const b=replayBook({symbol:"TEST",sourceFiles:
+    ["01","02","03","04"].map(losingDay)});
+  assert.deepEqual(b.ledger.map(x=>x.status),Array(4).fill("CLOSED"));
+  assert.ok(b.ledger.every(x=>x.netPnl<0&&x.netPnl> -100));
+  assert.ok(b.knownRealizedPnl<=-300);
+  assert.equal(b.lockedReason,null);
+  assert.equal(b.certified,false);
+  assert.equal(b.finalEquity,null);
+});
+test("Monday weekly risk counter reset cannot erase a prior uncertified week",()=>{
+  const losingDay=day=>{
+    const s=fixture({day,breakout:true});
+    const rows=s.content.split("\n").map(row=>{
+      const p=row.split(",");
+      if(p[2]==="09:42"){
+        p[3]="97";p[4]="97.1";p[5]="96.9";p[6]="97";
+      }
+      return p.join(",");
+    });
+    return {day,content:rows.join("\n")};
+  };
+  const losing=["01","02","03","04"].map(losingDay);
+  const monday=fixture({day:"08"});
+  const breached=replayBook({symbol:"TEST",sourceFiles:[...losing,monday]});
+  assert.deepEqual(breached.ledger.map(x=>x.status),[
+    "CLOSED","CLOSED","CLOSED","CLOSED","NO_TRADE"
+  ]);
+  assert.ok(breached.knownRealizedPnl<=-300);
+  assert.equal(breached.certified,false);
+  assert.equal(breached.finalEquity,null);
+  const control=replayBook({symbol:"TEST",sourceFiles:[
+    ...losing.slice(0,3),monday
+  ]});
+  assert.equal(control.certified,true);
+  assert.ok(Number.isFinite(control.finalEquity));
+});
