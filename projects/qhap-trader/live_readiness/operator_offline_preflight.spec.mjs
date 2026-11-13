@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   summarizeOfflineReleasePreflight as summarize,
   runLocalEngineeringPreflight as local,
-  SUITE_NAMES
+  SUITE_NAMES,parseTapSummary
 } from './operator_offline_preflight.mjs';
 
 const green=()=>SUITE_NAMES.map((name,i)=>({
@@ -78,4 +78,34 @@ test('local operator entrypoint can run actual entire offline suite with no secr
   assert.equal(r.brokerOrderEndpointPresent,false);
   assert.equal(r.realOrdersSent,0);
   assert.equal(r.recommendedAction,'NO_TRADE');
+});
+
+
+
+test('Windows CRLF Node26 TAP totals are parsed regardless of line ending',()=>{
+  const text='TAP version 13\r\nok 1 - safe\r\n# tests 2\r\n# pass 2\r\n# fail 0\r\n';
+  assert.deepEqual(parseTapSummary(text),{tests:2,passed:2,failed:0});
+});
+test('ANSI-wrapped TAP summaries are parsed without mistaking escape bytes',()=>{
+  const text='\x1b[36m# tests 3\x1b[0m\r\n  # pass 3 \r\n# fail 0\r\n';
+  assert.deepEqual(parseTapSummary(text),{tests:3,passed:3,failed:0});
+});
+test('Node26 default spec reporter cannot falsely pass as a TAP summary',()=>{
+  const text='✔ safe test (1.233ms)\nℹ tests 1\nℹ pass 1\nℹ fail 0\n';
+  assert.equal(parseTapSummary(text),null);
+});
+test('malformed, incomplete or implausible test totals cannot pass',()=>{
+  for(const text of [null,'','# tests 2\n# pass 2\n',
+    '# tests 2\n# pass 3\n# fail 0\n','# tests -1\n# pass 0\n# fail 0\n',
+    '# tests 0\n# pass 0\n# fail 0\n']){
+    assert.equal(parseTapSummary(text),null);
+  }
+});
+test('TAP exit failure summary is parsed but never approved by preflight',()=>{
+  const counts=parseTapSummary('# tests 2\r\n# pass 1\r\n# fail 1\r\n');
+  assert.deepEqual(counts,{tests:2,passed:1,failed:1});
+  const rows=green();
+  rows[0]={...rows[0],...counts,status:'FAILED',exitCode:1};
+  assert.equal(summarize(rows).testsPassed,false);
+  assert.equal(summarize(rows).realOrderSubmissionPossible,false);
 });
