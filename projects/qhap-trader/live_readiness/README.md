@@ -343,3 +343,30 @@ observations, a permission to fetch protected prices, or a live/paper
 trading activation. Real-world evaluation must use permitted unseen
 per-day net-rupee evidence with dependence-aware uncertainty,
 independent source audit and NO_TRADE comparator.
+
+
+## 13 November 2026 — verified market-data access path and NSE prospective-client exception
+
+[MARKET_DATA_ACCESS_VIABILITY_20261113.md](MARKET_DATA_ACCESS_VIABILITY_20261113.md)
+documents a **material primary-source clarification**: NSE's consolidated
+policy §5.1 explicitly provides an exchange-approved, potentially free
+six-month historical tick/trade **strategy testing trial** for qualifying
+prospective/new Indian-market clients, with a **not-currently-trading-that-
+segment declaration** in §5.2 and possible extra approval for up to
+12 months. This is **not** a universal self-service entitlement, and
+neither six nor twelve months alone meets QHAP's multi-year three-regime
+untouched holdout. Live price-driven virtual-paper simulation remains
+separately restricted by §7.4 and NSE/COMP/56426. Existing EPR academic
+noncommercial research is a different route.
+
+Verified alternative technical coverage: **Upstox V3** one-minute since
+January 2022, **DhanHQ** up to 5 years at ₹499 plus GST per automatically
+renewing 30-day Data API, **Zerodha Kite Charts** since 2015 with native
+Streak backtesting (limited strategy fidelity), **Tick Data** leased
+2012+ intraday quotes/trades, **TrueData API** default six-month window
+and **Global Datafeeds API** default three-month window. Product
+availability is NOT an account-specific use-rights or data-completeness
+attestation. A non-sensitive DhanHQ provider-use query was sent to its
+official API help on 13 Nov; existing NSE and Upstox inquiries continue.
+**No market-data access, payment, account, execution or new genuine
+research result. Keep NO_TRADE.**
