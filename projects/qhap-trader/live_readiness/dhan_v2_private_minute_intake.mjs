@@ -5,8 +5,8 @@
  * market-data downloads, strategy signals or P&L generation.
  *
  * Public API documentation: https://dhanhq.co/docs/v2/historical-data/
- * Vendor support ticket #6635943 (2026-11-13) described private individual
- * historical backtesting permission. The ticket does NOT independently prove
+ * A private vendor support reply dated 2026-11-13 described private individual
+ * historical backtesting permission. The reply does NOT independently prove
  * NSE exchange rights, source authenticity, data accuracy or publication rights.
  */
 import fs from 'node:fs';
@@ -77,7 +77,7 @@ export function validateDhanLocalManifest(m){
     typeof m.securityId!=='string'||!/^\d{1,12}$/.test(m.securityId)||
     m.intervalMinutes!==1||!validDate(m.fromDate)||!validDate(m.toDate)||
     m.fromDate>m.toDate||m.fromDate<'2021-11-13'||
-    m.supportTicketReference!=='DHAN_SUPPORT_6635943_2026-11-13'||
+    m.supportTicketReference!=='USER_PRIVATE_DHAN_SUPPORT_REPLY_2026-11-13'||
     m.corporateActionTreatment!=='BONUS_SPLIT_ADJUSTED_DIVIDENDS_UNKNOWN'||
     m.externalCalendarCertified!==false||
     m.sourceInstrumentMappingCertified!==false)
