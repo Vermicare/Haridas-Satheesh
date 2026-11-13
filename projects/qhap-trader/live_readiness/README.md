@@ -455,3 +455,19 @@ no brokerage SDK, no real orders, no automatic retries, no raw token or
 order ID printed. Mock-fetch adversarial tests run automatically in CI.
 This tests broker API mechanics only; real-money strategy remains NO_TRADE
 because observed January 2025 development replay performance is negative.
+
+## 2026-11-13 — real Upstox multi-year development results: every strategy failed net costs
+
+User successfully completed four authenticated read-only historical calendar-month
+imports for RELIANCE: July 2022, 2023, 2024 and 2025, 32,576 total
+one-minute rows and 84 candidate-complete development stock-days. User ran
+the existing no-order offline intraday simulator at 5/15/30 basis points
+slippage per side. At 15bps: FAST (503 round trips) −₹3,499.93,
+ONE (84 round trips) −₹573.82 and TIME_MOMENTUM_GATE (3 round trips)
+−₹25.61; NO_TRADE remained ₹0. All three were negative even at 5bps.
+**REJECT all three strategies as live-release candidates**; don't relabel
+them profitable or select the least negative. No original price bars or
+tokens were transmitted here. For exact development-only source counts,
+friction hurdle, holiday caveat, Upstox fee mismatch and falsification
+decision see
+[UPSTOX_RELIANCE_84DAY_MULTIYEAR_FALSIFICATION_20261113.md](../experiments/UPSTOX_RELIANCE_84DAY_MULTIYEAR_FALSIFICATION_20261113.md).
