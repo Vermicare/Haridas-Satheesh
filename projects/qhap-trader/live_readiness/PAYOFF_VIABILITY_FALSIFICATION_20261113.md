@@ -78,6 +78,35 @@ gaps cannot improve break-even hit rate; high hit-rate *assumptions*
 cannot authorize real orders; a 200-bp stop gap breaches the intended
 ₹50 loss threshold.
 
+
+
+## Computed economic thresholds (fixed 2026 indicative fees)
+
+The table below is produced by applying the already merged cost engine's
+rounded-fee calculation to the fixed synthetic target/stop inputs; no
+signal, price, market-data series or probability distribution is observed.
+The last column assumes **50% imaginary wins in 60 trades**, for
+arithmetic only (with 0% extra tail-gap frequency).
+
+| Adverse slippage per side | Net on TARGET | Net on ordinary STOP | Net on 200bp-gap STOP | Required target hit rate, no gaps | Required hit rate if 5% of losses suffer gap | 60 imaginary trades at assumed 50% wins and no gaps |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0 bps | +₹24.00 | −₹25.94 | −₹65.54 | **51.94%** | 53.78% | −₹58.20 |
+| 5 bps | +₹21.98 | −₹27.93 | −₹67.53 | **55.96%** | 57.64% | −₹178.50 |
+| 15 bps | +₹17.95 | −₹31.91 | −₹71.51 | **64.00%** | 65.37% | −₹418.80 |
+| 50 bps | +₹3.85 | −₹45.84 | −₹85.44 | **92.25%** | 92.55% | −₹1,259.70 |
+
+**Interpretation:** because the assumed stop is smaller than the gross
+target but negative costs apply to *both*, a 50%-hit hypothetical
+strategy is losing even before adverse slippage. At 50bps extra
+adversity on *each* leg the required hit rate is over 92%, which is
+not supported by any observed signal evidence. The 200bp-gap stop
+breaches the ₹50 hypothetical loss budget in **all four** shock cases.
+This is a **strong no-trade warning under the specified math**, not a
+probability of actual future loss, profitable trades or expected bank
+account return. The original fee engine deliberately rounds STT up to
+whole rupees and adds a possible extra IPFT buffer; real contract notes
+may differ.
+
 ## Practical interpretation
 
 - If the calculated required hit rate rises sharply at 15 or 50
