@@ -419,3 +419,24 @@ Regression tests inject short and partial disk writes. The journal
 still uses ordinary unkeyed SHA-256 chaining: **not** a trusted
 signature or independent broker reconciliation. No broker-side
 real execution is present.
+
+
+## 13 November 2026 — actual local Upstox V3 historical importer (development)
+
+The user reports Upstox verbally approved private cash-equity historical
+strategy research **and** read-only live-feed hypothetical paper simulation.
+Do not equate this self-reported permission with independently documented
+exchange entitlement; do not send emails without explicit user approval.
+
+[UPSTOX_V3_LOCAL_DEVELOPMENT_20261113.md](UPSTOX_V3_LOCAL_DEVELOPMENT_20261113.md)
+provides Windows PowerShell instructions for obtaining a strictly read-only
+Analytics Token **locally**, requesting an official 1-minute Upstox V3
+historical candle window with no orders, saving private CSV/audit/manifest
+outside GitHub and running the existing chronology-first offline 2022+
+simulator. The imported sample is explicitly labeled DEVELOPMENT ONLY,
+not unseen multi-regime holdout data or verified trading profitability.
+The parser rejects invalid timestamps, duplicates, missing required
+minutes, weekend sessions without independent calendar evidence, and
+partial/unsafe data; the only actual endpoint permitted is a fixed
+Upstox V3 read-only historical GET. No broker SDK, trading order path,
+financial funds, paid subscription or email involved.
