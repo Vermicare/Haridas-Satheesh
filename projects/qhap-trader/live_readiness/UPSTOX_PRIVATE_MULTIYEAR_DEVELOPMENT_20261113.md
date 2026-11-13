@@ -62,6 +62,30 @@ foreach ($bps in @(5, 15, 30)) {
 
 The simulator currently uses **illustrative 2026 Zerodha-like fees**, not authenticated date-accurate Upstox contract note fees, and assumes minute-level prices that are not executable-book evidence. It resets imaginary capital for every symbol-day; do not add its outcomes as if they were a single compounded real-money account. Report all policies, negative results, source gaps and sensitivities; **do not optimize parameters after seeing these months and then call them an untouched holdout**.
 
+## Previously saved local minute data — no token and no new download
+
+The original 13 Nov importer unintentionally checked **09:16–15:29** (374
+minutes) when assigning `CANDIDATE_COMPLETE_UNVERIFIED`; it did not require
+the **09:15 opening minute**. This has been corrected without changing the
+strategy's frozen **09:16-first feature window** or modifying existing private
+source files. Before trusting an older local manifest, run the new
+aggregate-only, read-only audit:
+
+~~~powershell
+node .\projects\qhap-trader\live_readiness\reaudit_existing_private_upstox.mjs --audit-local
+~~~
+
+The command scans the existing private `*.audit.json` metadata and matching
+local source CSV files, checks their original SHA-256, requires the full
+375-minute source-day shape, and reports only affected date labels and counts.
+It **does not** need an Analytics Token, make a network request, modify a
+saved manifest, load daily swing files, or publish raw candles. If
+`staleCandidateLabels` is positive, treat those historical `eligible`
+manifest entries as **stale** until corrected externally; the replay parser
+now rejects missing openings rather than silently accepting such entries.
+A structurally complete day still lacks independent official-calendar,
+corporate-action, licensed-use and actual-fill certification.
+
 ## Continuing toward live readiness
 
 - Actual Upstox sandbox order place/modify/cancel acknowledgements: **complete**, user confirmed 0 real orders.
