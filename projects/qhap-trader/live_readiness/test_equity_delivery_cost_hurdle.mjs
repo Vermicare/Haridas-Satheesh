@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {COST_HURDLE_POLICY,hypotheticalDeliveryNet,
   assessDeliveryCostHurdle,fixedDeliveryCostHurdleGrid}
   from './equity_delivery_cost_hurdle.mjs';
@@ -70,8 +71,8 @@ test('module never contains market connectivity, secrets or orders',()=>{
     assert.equal(src.includes(forbidden),false,forbidden);
 });
 test('standalone command has identical safe grid',()=>{
-  const raw=execFileSync(process.execPath,[new URL(
-    './equity_delivery_cost_hurdle.mjs',import.meta.url).pathname],
+  const raw=execFileSync(process.execPath,[fileURLToPath(new URL(
+    './equity_delivery_cost_hurdle.mjs',import.meta.url))],
     {encoding:'utf8',timeout:10000});
   assert.deepEqual(JSON.parse(raw),fixedDeliveryCostHurdleGrid());
 });
