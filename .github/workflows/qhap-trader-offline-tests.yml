@@ -5,6 +5,7 @@ on:
     paths:
       - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
       - 'projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/test_fee_formula_audit.mjs'
       - 'projects/qhap-trader/experiments/guarded_paper_replay.mjs'
       - 'projects/qhap-trader/experiments/test_guarded_paper_replay.mjs'
       - 'projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs'
@@ -14,6 +15,7 @@ on:
     paths:
       - 'projects/qhap-trader/experiments/costed_intraday_pilot.mjs'
       - 'projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs'
+      - 'projects/qhap-trader/experiments/test_fee_formula_audit.mjs'
       - 'projects/qhap-trader/experiments/guarded_paper_replay.mjs'
       - 'projects/qhap-trader/experiments/test_guarded_paper_replay.mjs'
       - 'projects/qhap-trader/experiments/guarded_paper_replay_cli.mjs'
@@ -38,5 +40,7 @@ jobs:
           node --test projects/qhap-trader/experiments/test_costed_intraday_pilot.mjs
           node --test projects/qhap-trader/experiments/test_guarded_paper_replay.mjs
           node --test projects/qhap-trader/experiments/feb2021_calendar_gate.test.mjs
+      - name: Validate original historical-reference fee formula under frozen assumptions
+        run: node projects/qhap-trader/experiments/test_fee_formula_audit.mjs
       - name: State evidence boundary
         run: echo 'Synthetic tests verify code invariants only; no historical data, trading edge or live orders.'
