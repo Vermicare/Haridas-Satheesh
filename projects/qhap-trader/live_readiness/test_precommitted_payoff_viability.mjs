@@ -179,3 +179,23 @@ test('no accidental real-money bankroll accounting is represented as outcomes',(
   assert.equal(JSON.stringify(r).includes('marketDataPrice'),false);
   assert.equal(r.strategyHasDemonstratedEdge,false);
 });
+
+
+
+test('published scenario table is anchored to fee-engine exact paise results',()=>{
+  const expected=[
+    [0,24,-25.94,-65.54,51.94,53.78],
+    [5,21.98,-27.93,-67.53,55.96,57.64],
+    [15,17.95,-31.91,-71.51,64.00,65.37],
+    [50,3.85,-45.84,-85.44,92.25,92.55]
+  ];
+  for(const [bps,w,l,g,p0,p5] of expected){
+    const zero=choose(bps,0),gapped=choose(bps,5);
+    assert.equal(zero.hypotheticalTargetNetRupees,w);
+    assert.equal(zero.hypotheticalOrdinaryStopNetRupees,l);
+    assert.equal(zero.hypothetical200BpsGapStopNetRupees,g);
+    assert.equal(zero.theoreticalBreakEvenWinRatePercent,p0);
+    assert.equal(gapped.theoreticalBreakEvenWinRatePercent,p5);
+    assert.equal(gapped.gapCaseBreaches50RupeeCandidateLossBudget,true);
+  }
+});
