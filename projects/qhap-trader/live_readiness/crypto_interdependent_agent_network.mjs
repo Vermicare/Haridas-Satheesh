@@ -213,6 +213,35 @@ export async function runCryptoAgentNetwork(input,{clockMs}={}){
   };
   return output;
 }
+/**
+ * Verify local digest-chain integrity and DAG parent references.
+ * This checks accidental editing and structural tampering only; a digest
+ * is NOT a signature, source attestation, consensus correctness, or proof
+ * of market profitability.
+ */
+export function verifyCryptoAgentLedger(result){
+  if(!result||!Array.isArray(result.agentMessages)||
+     result.agentMessages.length!==9||typeof result.auditChainHash!=='string'||
+     result.realOrdersSent!==0||result.paperOrdersSent!==0||
+     result.autonomousLiveTradingAllowed!==false||
+     result.finalDecision!=='NO_TRADE')return false;
+  const seen=new Set();
+  let prev='GENESIS';
+  for(let i=0;i<result.agentMessages.length;i++){
+    const message=result.agentMessages[i];
+    if(!message||message.id!=='A'+String(i+1)||
+       typeof message.name!=='string'||!Array.isArray(message.dependsOn)||
+       !message.dependsOn.every(id=>seen.has(id))||
+       typeof message.vote!=='string'||!message.metadata||
+       typeof message.evidenceFamily!=='string')return false;
+    const {digest,...content}=message;
+    if(digest!==hash({prev,content}))return false;
+    prev=digest;seen.add(message.id);
+  }
+  return prev===result.auditChainHash&&
+    result.agentMessages.at(-1).name==='NON_OVERRIDABLE_RISK_GUARDIAN'&&
+    result.agentMessages.at(-1).vote==='VETO_REAL_AND_PAPER_EXECUTION';
+}
 export function syntheticFixture(){
   const base=Date.parse('2026-11-13T12:00:00.000Z')-59*60000;
   const candles=Array.from({length:60},(_,i)=>{
