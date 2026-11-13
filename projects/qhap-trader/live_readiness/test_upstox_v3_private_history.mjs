@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {parseCompleteSession,simulateSession} from '../experiments/intraday_clock_replay.mjs';
 import {
   validateRequest,createReadOnlyUrl,normalizeUpstoxCandles,
   buildLocalDevelopmentBatch,savePrivateDevelopmentBatch,
@@ -156,4 +157,18 @@ test('PowerShell argument format enforces 4 exact options',()=>{
     '--instrument','NSE_EQ|INE002A01018','--symbol','RELIANCE',
     '--from','2025-01-06','--from','2025-01-10'
   ]),/DUPLICATE/);
+});
+
+
+test('saved local minute rows bridge to existing chronology-first simulator, with no-trade baseline',t=>{
+  const source=buildLocalDevelopmentBatch(normalizeUpstoxCandles(
+    packet(rows()),request),request).sessions[0].csv;
+  const parsed=parseCompleteSession(source,'RELIANCE','20250106');
+  assert.equal(parsed.bars.length,374);
+  assert.equal(parsed.bars[0].t,556);
+  assert.equal(parsed.bars.at(-1).t,929);
+  const noTrade=simulateSession(parsed,'NO_TRADE',{slippageBpsPerSide:15});
+  assert.equal(noTrade.netRupees,0);
+  assert.equal(noTrade.roundTrips,0);
+  assert.equal(noTrade.terminalFlat,true);
 });
