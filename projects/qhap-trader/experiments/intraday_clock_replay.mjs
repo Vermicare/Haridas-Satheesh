@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const START=9*60+16, END=15*60+29, TIME_EXIT=14*60+55, LAST_ENTRY_SIGNAL=14*60+30;
+const OPENING_MINUTE=9*60+15, START=9*60+16, END=15*60+29, TIME_EXIT=14*60+55, LAST_ENTRY_SIGNAL=14*60+30;
 const STARTING_RUPEES=10000, MAX_POSITION_RUPEES=2500;
 const hhmm=m=>`00`; 
 const minutes=s=>{if(!/^\d{2}:\d{2}$/.test(s))throw Error('BAD_TIME');const h=Number(s.slice(0,2)),m=Number(s.slice(3));if(h>23||m>59)throw Error('BAD_TIME');return h*60+m;};
@@ -20,15 +20,19 @@ export function parseCompleteSession(content,symbol,yyyymmdd){
  const map=new Map();
  for(const line of content.trim().split(/\r?\n/)){
   const p=line.split(',');if(p.length!==9||p[0]!==symbol||p[1]!==yyyymmdd)throw Error('SOURCE_SCHEMA_MISMATCH');
-  const t=minutes(p[2]);if(t<START||t>END)continue;
+  const t=minutes(p[2]);if(t<OPENING_MINUTE||t>END)continue;
   const a=p.slice(3,8).map(Number),[o,h,l,c,v]=a;
   if(a.some(x=>!finite(x))||o<=0||c<=0||l<=0||h<Math.max(o,c)||l>Math.min(o,c)||v<0)throw Error('BAD_OHLCV');
   if(map.has(t))throw Error('DUPLICATE_MINUTE');
   map.set(t,{t,o,h,l,c,v});
  }
+ // A complete source session must include 09:15 even though this *frozen*
+ // research signal begins at 09:16. Excluding 09:15 from strategy features
+ // must never be confused with declaring a 374-bar source complete.
+ if(!map.has(OPENING_MINUTE))throw Error('MISSING_OPENING_MINUTE_09_15');
  const missing=[];for(let t=START;t<=END;t++)if(!map.has(t))missing.push(String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0'));
  if(missing.length)throw Error('MISSING_MINUTES_'+missing.length+'_'+missing[0]);
- const bars=[...map.values()].sort((a,b)=>a.t-b.t);let cumulativePV=0,cumulativeVolume=0;
+ const bars=[...map.values()].filter(b=>b.t>=START).sort((a,b)=>a.t-b.t);let cumulativePV=0,cumulativeVolume=0;
  for(const bar of bars){cumulativePV+=bar.c*bar.v;cumulativeVolume+=bar.v;bar.vwap=cumulativeVolume>0?cumulativePV/cumulativeVolume:null;}
  return Object.freeze({symbol,yyyymmdd,bars});
 }
@@ -113,7 +117,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   const rel=path.join(entry.date.slice(0,4),entry.date.slice(4,6),entry.date.slice(6,8),entry.symbol+'.csv');
   const absolute=path.join(root,rel);
   try{sessions.push(parseCompleteSession(fs.readFileSync(absolute,'utf8'),entry.symbol,entry.date));}
-  catch(e){if(e.code==='ENOENT'||/^(MISSING_MINUTES|BAD_OHLCV|DUPLICATE_MINUTE|SOURCE_SCHEMA_MISMATCH)/.test(e.message))exclusions.push({date:entry.date,symbol:entry.symbol,reason:e.message.slice(0,90)});else throw e;}
+  catch(e){if(e.code==='ENOENT'||/^(MISSING_MINUTES|MISSING_OPENING_MINUTE|BAD_OHLCV|DUPLICATE_MINUTE|SOURCE_SCHEMA_MISMATCH)/.test(e.message))exclusions.push({date:entry.date,symbol:entry.symbol,reason:e.message.slice(0,90)});else throw e;}
  }
  if(!sessions.length)throw Error('NO_VALID_SESSIONS');
  const result=summarizeSessions(sessions,{slippageBpsPerSide:slipStr===undefined?15:Number(slipStr)});

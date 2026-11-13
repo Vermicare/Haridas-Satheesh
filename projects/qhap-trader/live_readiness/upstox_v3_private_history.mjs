@@ -88,9 +88,9 @@ export function buildLocalDevelopmentBatch(candles,request){
   }
   const sessions=[],eligible=[];
   for(const [date,bars] of grouped){
-    const observed=new Set(bars.filter(b=>b.minute>=556&&b.minute<=929).map(b=>b.minute));
+    const observed=new Set(bars.filter(b=>b.minute>=555&&b.minute<=929).map(b=>b.minute));
     const missing=[];
-    for(let m=556;m<=929;m++)if(!observed.has(m))missing.push(hhmm(m));
+    for(let m=555;m<=929;m++)if(!observed.has(m))missing.push(hhmm(m));
     const weekday=new Date(dayMs(date)).getUTCDay();
     const exceptional=weekday===0||weekday===6;
     const volume=bars.reduce((n,b)=>n+b.v,0);
@@ -100,7 +100,8 @@ export function buildLocalDevelopmentBatch(candles,request){
       'CANDIDATE_COMPLETE_UNVERIFIED';
     const csv=bars.map(b=>[symbol,ymd(date),hhmm(b.minute),
       b.o,b.h,b.l,b.c,b.v,0].join(',')).join('\n')+'\n';
-    const entry={date,symbol,minuteBars:bars.length,
+    const entry={date,symbol,minuteBars:bars.length,expectedRegularSessionMinuteBars:375,
+      openingMinutePresent:observed.has(555),
       missingRequiredMinutes:missing.length,firstMissingRequiredMinute:missing[0]||null,
       candidateState:state,sha256:SHA(csv),csv};
     sessions.push(entry);

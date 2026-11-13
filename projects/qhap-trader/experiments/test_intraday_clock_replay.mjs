@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {parseCompleteSession,simulateSession,summarizeSessions,indicativeFees} from './intraday_clock_replay.mjs';
 const tstr=t=>String(t/60|0).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
 function fixture({missing=-1,duplicated=-1,badAt=-1,moveAt=-1,dropAt=-1,targetAndStopAt=-1,gapAt=-1}={}){
- const rows=[];for(let t=556;t<=929;t++){
+ const rows=[];for(let t=555;t<=929;t++){
   if(t===missing)continue;
   let o=100,h=100.05,l=99.95,c=100,v=100;
   if(t===moveAt){o=101.0;h=102.5;l=100;c=102;}
@@ -18,6 +18,13 @@ function fixture({missing=-1,duplicated=-1,badAt=-1,moveAt=-1,dropAt=-1,targetAn
 }
 const s=(opts)=>parseCompleteSession(fixture(opts),'TEST','20230203');
 test('requires every historical minute (no forward filling)',()=>{assert.throws(()=>s({missing:761}),/MISSING_MINUTES/);});
+test('requires the 09:15 source opening even when research features start 09:16',()=>{
+ assert.throws(()=>s({missing:555}),/MISSING_OPENING_MINUTE_09_15/);
+});
+test('validates and de-duplicates the 09:15 opening candle',()=>{
+ assert.throws(()=>s({badAt:555}),/BAD_OHLCV/);
+ assert.throws(()=>s({duplicated:555}),/DUPLICATE_MINUTE/);
+});
 test('rejects duplicate minute bars',()=>{assert.throws(()=>s({duplicated:801}),/DUPLICATE/);});
 test('rejects impossible OHLC bar',()=>{assert.throws(()=>s({badAt:700}),/BAD_OHLCV/);});
 test('rejects cross-source symbol/date changes',()=>{assert.throws(()=>parseCompleteSession(fixture(),'BAD','20230203'),/SOURCE_SCHEMA/);});
