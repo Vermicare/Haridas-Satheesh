@@ -65,7 +65,7 @@ export function parse2021Source(symbol,day,source) {
 export function replayDay({symbol,day,source,initialEquity=10000,
                            slippageBps=5,variant="BASELINE",executionFault=null,exitFault=null}) {
   if(!["BASELINE","DTT_VETO"].includes(variant)||!Number.isFinite(initialEquity)||
-     initialEquity<0||!Number.isFinite(slippageBps)||
+     initialEquity<=0||!Number.isFinite(slippageBps)||
      slippageBps<0||slippageBps>200)throw Error("Bad replay settings");
   // Synthetic adversarial testing only: never derived from a broker or real order feed.
   // Faults are injected at the hypothetical NEXT-bar open, never retroactively.
@@ -133,7 +133,19 @@ export function replayDay({symbol,day,source,initialEquity=10000,
     const sell=raw*(1-slippageBps/10000);
     const fee=charges2026Scenario(position.buy,sell,position.qty);
     const gross=(sell-position.buy)*position.qty,net=gross-fee.total;
-    return {symbol,day,status:"CLOSED",signalAt:position.signalAt,
+    // A known closed trade need not imply a complete session. Continue
+    // checking source timestamps for omissions without changing execution
+    // prices or pretending the post-exit bars were known at trade time.
+    let firstPostExitGap=null;
+    const exitMinute=Number(bar.tm.slice(0,2))*60+Number(bar.tm.slice(3));
+    for(let minute=exitMinute+1;minute<=895;minute++){
+      if(!bars.get(minuteText(minute))){
+        firstPostExitGap=minuteText(minute);break;
+      }
+    }
+    return {symbol,day,status:"CLOSED",
+      sessionComplete:firstPostExitGap===null,firstPostExitGap,
+      signalAt:position.signalAt,
       entry:position.entry,exit:bar.tm,exitReason:reason,
       qty:position.qty,buy:money(position.buy),sell:money(sell),
       gross:money(gross),fees:money(fee.total),netPnl:money(net),
@@ -186,6 +198,11 @@ export function replayDay({symbol,day,source,initialEquity=10000,
       }
     }
 
+    // A zero-volume candle cannot independently demonstrate that an
+    // intended cash exit could be executed. Preserve exposure as unknown.
+    if(position&&b.volume<=0)return halt("UNRESOLVED_POSITION",tm,{
+      fault:"NON_EXECUTABLE_EXIT",remainingQty:position.qty
+    });
     // 14:55 scheduled open exit must not inspect this bar's later high/low.
     if(position&&tm==="14:55")return finish(b,"TIME",b.o);
     if(position){
@@ -227,11 +244,17 @@ export function replayDay({symbol,day,source,initialEquity=10000,
   }
   if(position)return halt("UNRESOLVED_POSITION","END_OF_FEED");
   if(pending)return halt("ENTRY_UNCONFIRMED","END_OF_FEED");
+  // Fully inert data must not certify a valid no-trade market session.
+  if(cumVolume===0)return halt("HALTED_DATA","14:55",{
+    fault:"ZERO_VOLUME_SESSION"
+  });
   return {symbol,day,status:"NO_TRADE",skippedSignals:skipped,netPnl:0};
 }
 
 export function replayBook({symbol,sourceFiles,initialEquity=10000,
                             slippageBps=5,variant="BASELINE",executionFaultsByDay=null,exitFaultsByDay=null}) {
+  if(!Number.isFinite(initialEquity)||initialEquity<=0)
+    throw Error("Invalid portfolio initial equity");
   if(!Array.isArray(sourceFiles)||!sourceFiles.length)throw Error("No source files");
   if(sourceFiles.some(x=>!x||typeof x.day!=="string"||
     !/^(0[1-9]|1[0-9]|2[0-8])$/.test(x.day)))
@@ -240,7 +263,7 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
   const unique=new Set(sorted.map(x=>x.day));
   if(unique.size!==sorted.length)throw Error("Duplicate research day");
   let equity=initialEquity,peak=equity,drawdown=0,week=null,
-    weeklyPnL=0,locked=null;
+    weeklyPnL=0,weeklyLimitBreached=false,locked=null;
   const ledger=[];
   for(const s of sorted){
     const date=new Date("2021-02-"+s.day+"T00:00:00Z");
@@ -266,21 +289,32 @@ export function replayBook({symbol,sourceFiles,initialEquity=10000,
       continue;
     }
     if(x.status==="CLOSED"){
+      // Preserve known realized P&L but do not claim a complete research
+      // session when later source candles are missing.
+      if(x.sessionComplete===false)locked="POST_EXIT_DATA_GAP";
       equity+=x.netPnl;
       weeklyPnL+=x.netPnl;
+      if(weeklyPnL<=-300)weeklyLimitBreached=true;
       peak=Math.max(peak,equity);
       drawdown=Math.max(drawdown,peak-equity);
-      if(x.netPnl<=-100)locked="DAILY_LOSS_BREACH";
-      else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
+      // Source-integrity failure takes precedence if a loss veto coincides.
+      if(!locked){
+        if(x.netPnl<=-100)locked="DAILY_LOSS_BREACH";
+        else if(drawdown>=800)locked="MAX_DRAWDOWN_BREACH";
+      }
     }
   }
-  const unknown=ledger.some(x=>["HALTED_DATA","UNRESOLVED_POSITION","ENTRY_UNCONFIRMED","ENTRY_REJECTED","STALE_QUOTE"].includes(x.status));
-  const certified=ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status));
+  // Even on the terminal source day a risk lock cannot produce a
+  // certifiable portfolio. A weekly loss veto stays noted after a
+  // subsequent Monday reset, which cannot erase the earlier breach.
+  const certified=locked===null&&!weeklyLimitBreached&&
+    ledger.every(x=>["CLOSED","NO_TRADE"].includes(x.status)&&
+      x.sessionComplete!==false);
   return {symbol,variant,slippageBps,initialEquity,
     knownRealizedPnl:money(equity-initialEquity),
     // Explicitly DO NOT invent a final account valuation when an open paper
     // position's exit or source-data completeness is unknown. Other locks also fail certification.
-    finalEquity:unknown?null:money(equity),
+    finalEquity:certified?money(equity):null,
     maxKnownDrawdown:money(drawdown),certified,
     lockedReason:locked,unresolvedPositions:ledger.filter(x=>x.status==="UNRESOLVED_POSITION").length,
     closedTrades:ledger.filter(x=>x.status==="CLOSED").length,ledger};
