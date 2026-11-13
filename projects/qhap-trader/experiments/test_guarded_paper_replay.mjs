@@ -491,3 +491,86 @@ test("Monday weekly risk counter reset cannot erase a prior uncertified week",()
   assert.equal(control.certified,true);
   assert.ok(Number.isFinite(control.finalEquity));
 });
+
+
+
+// A predeclared caller's session set is a completeness constraint, NOT
+// exchange verification. All fixtures are synthetic February 2021 days.
+test("missing expected session halts before processing any P&L",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true}),fixture({day:"03",breakout:true})],
+    expectedSessionDays:["01","02","03"]});
+  assert.equal(b.certified,false);
+  assert.equal(b.certificationScope,"UNVERIFIED_MANIFEST_INCOMPLETE");
+  assert.equal(b.lockedReason,"MISSING_EXPECTED_SESSION");
+  assert.deepEqual(b.missingExpectedDays,["02"]);
+  assert.equal(b.finalEquity,null);
+  assert.equal(b.knownRealizedPnl,null);
+  assert.equal(b.maxKnownDrawdown,null);
+  assert.equal(b.closedTrades,0);
+  assert.deepEqual(b.ledger,[]);
+});
+test("more than one missing date is sorted, never inferred as zero-trade",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[fixture({day:"05"})],
+    expectedSessionDays:["05","04","02","01"]});
+  assert.deepEqual(b.missingExpectedDays,["01","02","04"]);
+  assert.deepEqual(b.ledger,[]);
+  assert.equal(b.knownRealizedPnl,null);
+});
+test("unexpected observation not in declared manifest rejects entire run",()=>{
+  assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01"}),fixture({day:"03"})],
+    expectedSessionDays:["01"]}),/Research day absent from expected-session manifest/);
+});
+test("duplicate expected or invalid dates cannot be silently deduplicated",()=>{
+  const f=fixture({day:"01"});
+  for(const expectedSessionDays of [
+    [],["01","01"],["00"],["29"],["02","02"],["not-a-day"],[1],{},true
+  ]) assert.throws(()=>replayBook({symbol:"TEST",sourceFiles:[f],
+      expectedSessionDays}),/Invalid expected-session manifest/);
+});
+test("declared complete synthetic subset can only be caller-matched, not NSE-certified",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"03"}),fixture({day:"01"})],
+    expectedSessionDays:["01","03"]});
+  assert.equal(b.certified,true);
+  assert.equal(b.certificationScope,"CALLER_MANIFEST_MATCHED_UNVERIFIED");
+  assert.equal(b.exchangeCalendarIndependentlyVerified,false);
+  assert.equal(b.sourceDataEntitlementIndependentlyVerified,false);
+  assert.equal(b.finalEquity,10000);
+  assert.equal(b.knownRealizedPnl,0);
+});
+test("omitting expected manifest is explicitly supplied-days-only",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01"}),fixture({day:"03"})]});
+  assert.equal(b.certified,true);
+  assert.equal(b.certificationScope,"SUPPLIED_DAYS_ONLY");
+  assert.equal(b.exchangeCalendarIndependentlyVerified,false);
+  assert.equal(b.sourceDataEntitlementIndependentlyVerified,false);
+});
+test("matching manifest cannot erase an untrusted partial session",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,earlyStop:true,missing:"14:00"})],
+    expectedSessionDays:["01"]});
+  assert.equal(b.certified,false);
+  assert.equal(b.lockedReason,"POST_EXIT_DATA_GAP");
+  assert.equal(b.finalEquity,null);
+  assert.equal(b.certificationScope,"CALLER_MANIFEST_MATCHED_UNVERIFIED");
+});
+test("matching manifest cannot override previous daily emergency loss",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true})],
+    expectedSessionDays:["01"]});
+  assert.equal(b.certified,false);
+  assert.equal(b.lockedReason,"DAILY_LOSS_BREACH");
+  assert.equal(b.finalEquity,null);
+  assert.equal(b.certificationScope,"CALLER_MANIFEST_MATCHED_UNVERIFIED");
+});
+test("manifest check always occurs before first trading P&L calculation",()=>{
+  const b=replayBook({symbol:"TEST",sourceFiles:[
+    fixture({day:"01",breakout:true,gapDown:true})],
+    expectedSessionDays:["01","02"]});
+  assert.equal(b.lockedReason,"MISSING_EXPECTED_SESSION");
+  assert.equal(b.knownRealizedPnl,null);
+  assert.deepEqual(b.ledger,[]);
+});
