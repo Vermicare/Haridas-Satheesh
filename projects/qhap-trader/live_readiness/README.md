@@ -323,3 +323,23 @@ and an unfilled stop can exceed the modeled ₹50 candidate risk budget.
 See [full explanation and limitations](PAYOFF_VIABILITY_FALSIFICATION_20261113.md).
 There are **zero actual research sessions, data rights, authenticated fills,
 broker orders, or demonstrated trading edge** in this experiment.
+
+
+## 13 November 2026 — sample-size feasibility, not edge certification
+
+The [statistical_evidence_sample_design.mjs](statistical_evidence_sample_design.mjs)
+calculates minimal **imaginary independent target-win counts** whose
+two-sided 95% Wilson lower hit-rate bound would exceed the frozen,
+fee-aware synthetic break-even hit-rate scenarios. Its associated
+[research report](STATISTICAL_EVIDENCE_SAMPLE_DESIGN_20261113.md)
+and [offline tests](test_statistical_evidence_sample_design.mjs)
+explain why **60 prospective trading sessions do not imply 60 independent
+closed trades, a valid confidence interval, or a positive net advantage**.
+At 15 basis points of added slippage each side, 46 of 60 independent
+binary target outcomes would be needed for this *hypothetical* 64%
+break-even bound; at 50 basis points 60/60 would be needed. These are
+precommitted mathematical sample thresholds, NOT actual trading
+observations, a permission to fetch protected prices, or a live/paper
+trading activation. Real-world evaluation must use permitted unseen
+per-day net-rupee evidence with dependence-aware uncertainty,
+independent source audit and NO_TRADE comparator.
