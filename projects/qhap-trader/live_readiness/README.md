@@ -471,3 +471,23 @@ tokens were transmitted here. For exact development-only source counts,
 friction hurdle, holiday caveat, Upstox fee mismatch and falsification
 decision see
 [UPSTOX_RELIANCE_84DAY_MULTIYEAR_FALSIFICATION_20261113.md](../experiments/UPSTOX_RELIANCE_84DAY_MULTIYEAR_FALSIFICATION_20261113.md).
+
+
+## 2026-11-13 — GitHub prior-art audit and original economic-hurdle research gate
+
+After real user-local Upstox RELIANCE 84-day development replays
+showed all live candidate policies lost after illustrative costs,
+QHAP cross-referenced mature projects instead of cloning a trading bot:
+QuantConnect LEAN fill/fee models, NautilusTrader order-book matching,
+Indian NSE cost accounting (cash equity distinct from options),
+purged/embargoed cross-validation and deflated Sharpe,
+Qlib feature pipeline, VectorBT research, and research-method references.
+
+Read [GITHUB_PRIOR_ART_REFERENCE_AND_ECONOMIC_HURDLE_20261113.md](../experiments/GITHUB_PRIOR_ART_REFERENCE_AND_ECONOMIC_HURDLE_20261113.md)
+for precise links, code-mapping, licensing and prioritized acceptance
+criteria. Added ORIGINAL offline-only [research_economic_hurdle.mjs](research_economic_hurdle.mjs)
+with fail-closed 1x/2x/3x assumed fee+slippage+spread hurdle and
+descriptive observed break-even gaps. Nothing forecasts returns,
+approves a real trade, contacts Upstox or copies vendor code.
+These are *hypothesis research* checks, NOT trading signals; real
+execution remains NO_TRADE.
