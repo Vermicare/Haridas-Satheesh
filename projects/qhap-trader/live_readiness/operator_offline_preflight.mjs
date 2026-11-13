@@ -28,14 +28,37 @@ const safeEnv=()=>Object.fromEntries(
     .filter(k=>typeof process.env[k]==='string')
     .map(k=>[k,process.env[k]])
 );
-const summaryLines=text=>{
-  const tests=[...text.matchAll(/^# tests (\d+)$/gm)];
-  const passes=[...text.matchAll(/^# pass (\d+)$/gm)];
-  const fails=[...text.matchAll(/^# fail (\d+)$/gm)];
-  return tests.length&&passes.length&&fails.length?
-    {tests:Number(tests.at(-1)[1]),passed:Number(passes.at(-1)[1]),
-      failed:Number(fails.at(-1)[1])}:null;
-};
+/**
+ * Node 23+ defaults to 'spec' for both TTY and piped stdout. Force TAP
+ * on child tests, then accept Windows CRLF, whitespace and ANSI prefixes.
+ */
+export function parseTapSummary(output){
+  if(typeof output!=='string')return null;
+  const counts={};
+  for(const line of output.replace(/\x1b\[[0-9;]*m/g,'').split(/\r?\n/)){
+    const match=line.trim().match(/^# (tests|pass|fail) (\d+)$/);
+    if(match)counts[match[1]]=Number(match[2]);
+  }
+  const tests=counts.tests,passed=counts.pass,failed=counts.fail;
+  if(![tests,passed,failed].every(Number.isSafeInteger)||
+    tests<1||passed<0||failed<0||passed+failed>tests)return null;
+  return {tests,passed,failed};
+}
+const summaryLines=parseTapSummary;
+
+/** Bounded local test diagnostics, never raw full broker or environment logs. */
+function safeFailureDiagnostic(output){
+  const clean=String(output||'').replace(/\x1b\[[0-9;]*m/g,'');
+  const lines=clean.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const selected=lines.filter(x=>
+    /^(not ok\b|# (?:tests|pass|fail|error|message|code|stack)\b|(?:error|failure):)|\b(?:ERR_[A-Z_]+|AssertionError|SyntaxError|EPERM|EACCES|ENOENT)\b/i.test(x)
+  );
+  const sanitize=x=>x.replace(/([A-Z]:[\\/]Users[\\/])[^\\/\s]+/ig,'$1[USER]')
+    .replace(/\b(Bearer|authorization|access[_-]?token)\s*[:=]\s*[^\s,;]+/ig,'$1=[REDACTED]');
+  return (selected.length?selected.slice(-18):lines.slice(-12))
+    .map(sanitize).map(x=>x.slice(0,220)).join(' | ').slice(0,2400)||
+    'TEST_PROCESS_RETURNED_NO_OUTPUT';
+}
 const validSuite=r=>r&&typeof r==='object'&&r.status==='PASSED'&&
   Number.isSafeInteger(r.tests)&&r.tests>0&&
   r.passed===r.tests&&r.failed===0&&r.exitCode===0;
@@ -89,6 +112,8 @@ function runNode(args,label,matcher){
     exitCode:processResult.status,
     tests:parsed?.tests??0,passed:parsed?.passed??0,failed:parsed?.failed??1,
     didTimeOut:processResult.error?.code==='ETIMEDOUT',
+    ...(passed?{}:{failureDiagnostic:safeFailureDiagnostic(
+      [processResult.stderr||'',stdout,processResult.error?.message||''].join('\n'))}),
     noNetwork:true,noBrokerCredentialsPassed:true};
 }
 export function runLocalEngineeringPreflight(){
@@ -98,10 +123,10 @@ export function runLocalEngineeringPreflight(){
       .map(x=>toRelative(path.join(here,x))).sort();
   }catch{tests=[];}
   const first=tests.length?
-    runNode(['--test',...tests],SUITE_NAMES[0],summaryLines):
+    runNode(['--test','--test-reporter=tap',...tests],SUITE_NAMES[0],summaryLines):
     {name:SUITE_NAMES[0],status:'FAILED',exitCode:null,tests:0,
       passed:0,failed:1};
-  const second=runNode(['--test',
+  const second=runNode(['--test','--test-reporter=tap',
     toRelative(path.join(experiments,'test_costed_intraday_pilot.mjs')),
     toRelative(path.join(experiments,'test_guarded_paper_replay.mjs')),
     toRelative(path.join(experiments,'feb2021_calendar_gate.test.mjs'))],
