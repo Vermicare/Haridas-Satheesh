@@ -1,0 +1,106 @@
+{
+  "schema": "QHAP_TRADER_RESEARCH_CANDIDATES_V1",
+  "registeredAs": "PROPOSAL_UNTIL_REVIEWED_MERGE_AND_HOLDOUT_MANIFEST",
+  "createdAt": "2026-11-16",
+  "symbolScope": "NSE_EQ_LONG_ONLY",
+  "data": {
+    "timeZone": "Asia/Kolkata",
+    "barStamp": "open_minute",
+    "regularStart": "09:15",
+    "regularLastBarStart": "15:29",
+    "expectedBars": 375,
+    "historyRequiredCompleteSessions": 14,
+    "openingMinuteMandatory": true,
+    "lookaheadForbidden": true,
+    "executionDelayFullMinutesAfterDecision": 1,
+    "requirePositiveCumulativeVolume": true,
+    "vwap": "HLC3_VOLUME_WEIGHTED_BAR_APPROXIMATION"
+  },
+  "capital": {
+    "virtualInr": 10000,
+    "maxOneOrderTotalInr": 2500,
+    "integerShares": true,
+    "maxPositions": 1,
+    "maxEntryPerSession": 1,
+    "leverage": 1,
+    "shortSelling": false
+  },
+  "clock": {
+    "decisionTimes": [
+      "09:45",
+      "10:15",
+      "10:45",
+      "11:15",
+      "11:45",
+      "12:15",
+      "12:45",
+      "13:15",
+      "13:45",
+      "14:15",
+      "14:45"
+    ],
+    "forcedExitDecision": "15:15",
+    "latestLastBarStart": "15:29"
+  },
+  "candidates": [
+    {
+      "id": "M",
+      "kind": "NSE_ADAPTED_NOISE_AREA_MOMENTUM",
+      "lookback": 14,
+      "noiseSigma": "mean(prior14 abs(closeAtTime/open0915-1))",
+      "upper": "max(todayOpen,priorClose)*(1+sigma)",
+      "entry": "close > upper AND close > cumulativeVWAP",
+      "exit": "close <= max(upper,VWAP) OR forcedExit",
+      "longOnly": true,
+      "noReentry": true,
+      "priorPublishedPerformanceTransferred": false
+    },
+    {
+      "id": "R",
+      "kind": "EXPLORATORY_VWAP_MEAN_REVERSION",
+      "lookback": 14,
+      "delta": "median(prior14 abs(closeAtTime/VWAPAtTime-1))",
+      "entry": "close < VWAP*(1-1.5*delta)",
+      "exit": "close >= VWAP OR close <= entryFillPrice*(1-2*entryDelta) OR forcedExit",
+      "entryDeltaMultiplier": 1.5,
+      "stopDeltaMultiplier": 2,
+      "longOnly": true,
+      "noReentry": true,
+      "publishedProfitableClaim": false
+    }
+  ],
+  "constraints": {
+    "dailyLossStopInr": 250,
+    "maximumPortfolioDrawdownInr": 1000,
+    "missingData": "HALT_UNKNOWN",
+    "ambiguousExecution": "HALT_UNKNOWN",
+    "brokers": "NO_BROKER_ORDER_ROUTE",
+    "defaultDecision": "NO_TRADE"
+  },
+  "validation": {
+    "minUntouchedUniqueTradingDays": 60,
+    "minVerifiedRegimes": 3,
+    "oneTimeHoldout": true,
+    "holdoutManifestRequiredBeforeAnyBar": true,
+    "frictionStressMultipliers": [
+      1,
+      2,
+      3
+    ],
+    "compareWith": [
+      "NO_TRADE",
+      "PASSIVE_INTRADAY_SAME_BUDGET",
+      "EXISTING_SIMPLE_BREAKOUT"
+    ],
+    "dayBlockConfidence": 0.95,
+    "positiveLowerConfidenceBoundRequired": true,
+    "noNegativeRegimeMean": true,
+    "unresolvedRightsOrFees": "REJECT"
+  },
+  "sourceLinks": [
+    "https://www.sfi.ch/en/publications/n-24-97-beat-the-market-an-effective-intraday-momentum-strategy-for-s-p500-etf-spy",
+    "https://github.com/PazSheimy/spy-intraday-momentum-oos",
+    "https://www.nseindia.in/resources/exchange-communication-holidays"
+  ],
+  "noActualDataOrStrategyTrials": true
+}
