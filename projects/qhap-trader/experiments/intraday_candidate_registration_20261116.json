@@ -14,7 +14,13 @@
     "lookaheadForbidden": true,
     "executionDelayFullMinutesAfterDecision": 1,
     "requirePositiveCumulativeVolume": true,
-    "vwap": "HLC3_VOLUME_WEIGHTED_BAR_APPROXIMATION"
+    "vwap": "HLC3_VOLUME_WEIGHTED_BAR_APPROXIMATION",
+    "priorSessionSelection": "EXCHANGE_CALENDAR_IMMEDIATELY_PRECEDING_14_REGULAR_SESSIONS_NO_SKIPS",
+    "priorSessionMissingPolicy": "HALT_UNKNOWN_EXCLUDE_TARGET_SYMBOL_DAY_NO_SUBSTITUTION_NO_BACKFILL",
+    "previousCloseSource": "IMMEDIATELY_PRECEDING_EXCHANGE_SESSION_OFFICIAL_POINT_IN_TIME_CLOSE_REQUIRED",
+    "specialSessionsPolicy": "HALT_UNKNOWN_UNLESS_EXPLICITLY_PREREGISTERED_BEFORE_HOLDOUT",
+    "calendarGaps": "WEEKENDS_AND_OFFICIAL_EXCHANGE_HOLIDAYS_NOT_COUNTED_AS_SESSIONS",
+    "corporateActionAmbiguity": "HALT_UNKNOWN"
   },
   "capital": {
     "virtualInr": 10000,
