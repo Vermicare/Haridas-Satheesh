@@ -101,7 +101,24 @@
     "dayBlockConfidence": 0.95,
     "positiveLowerConfidenceBoundRequired": true,
     "noNegativeRegimeMean": true,
-    "unresolvedRightsOrFees": "REJECT"
+    "unresolvedRightsOrFees": "REJECT",
+    "developmentExclusionGate": {
+      "status": "UNRESOLVED_FAIL_CLOSED",
+      "registryRequiredBeforeHoldoutSelection": true,
+      "registryMustEnumerateAllPreviouslyInspectedSymbolSessions": true,
+      "knownDevelopmentCohorts": [
+        "RELIANCE_2025_JAN_5_INTRADAY_SESSIONS",
+        "RELIANCE_2024_JAN_OCT_204_DAILY_BARS",
+        "RELIANCE_2022_2025_JULY_84_PREVIOUSLY_INSPECTED_SESSIONS",
+        "FEB_2021_ACC_RELIANCE_24_PREVIOUSLY_INSPECTED_STOCK_SESSIONS",
+        "ALL_OTHER_PREVIOUSLY_INSPECTED_DEVELOPMENT_SESSIONS"
+      ],
+      "unknownExactDatesPolicy": "HALT_UNKNOWN_NO_HOLDOUT_SELECTION",
+      "overlapPolicy": "REJECT_HOLDOUT_IF_ANY_SYMBOL_DATE_OVERLAPS_DEVELOPMENT_OR_PRIOR_TEST_OR_RESEARCH_EXPOSURE",
+      "dateDisclosurePolicy": "PRIVATE_LOCAL_REGISTRY_WITH_PUBLIC_SANITIZED_COUNTS_AND_SHA256_ONLY",
+      "registryIntegrity": "FROZEN_BEFORE_FIRST_HOLDOUT_BAR_WITH_PROVENANCE_AND_REVIEW",
+      "neverTreatDevelopmentAsUnseen": true
+    }
   },
   "sourceLinks": [
     "https://www.sfi.ch/en/publications/n-24-97-beat-the-market-an-effective-intraday-momentum-strategy-for-s-p500-etf-spy",
