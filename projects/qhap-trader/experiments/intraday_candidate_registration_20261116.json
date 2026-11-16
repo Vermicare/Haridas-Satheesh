@@ -118,6 +118,36 @@
       "dateDisclosurePolicy": "PRIVATE_LOCAL_REGISTRY_WITH_PUBLIC_SANITIZED_COUNTS_AND_SHA256_ONLY",
       "registryIntegrity": "FROZEN_BEFORE_FIRST_HOLDOUT_BAR_WITH_PROVENANCE_AND_REVIEW",
       "neverTreatDevelopmentAsUnseen": true
+    },
+    "statisticalDecisionContract": {
+      "status": "PROPOSED_NOT_FROZEN",
+      "unit": "EXCHANGE_DAY_INCLUDING_ZERO_TRADE_DAYS",
+      "primaryEstimand": "ARITHMETIC_MEAN_DAILY_NET_INR_DIFFERENCE_CANDIDATE_MINUS_COMPARATOR_ON_MATCHED_ELIGIBLE_DAYS",
+      "candidateIds": [
+        "M",
+        "R"
+      ],
+      "comparators": [
+        "NO_TRADE",
+        "PASSIVE_INTRADAY_SAME_BUDGET",
+        "EXISTING_SIMPLE_BREAKOUT"
+      ],
+      "familyHypotheses": 6,
+      "alphaFamilyWise": 0.05,
+      "correction": "ONE_SIDED_BONFERRONI_ALPHA_0.05_DIVIDED_BY_6_PER_COMPARISON",
+      "resampling": "PAIRED_CIRCULAR_MOVING_BLOCK_BOOTSTRAP_OVER_CHRONOLOGICAL_EXCHANGE_DAYS",
+      "blockLengthExchangeDays": 5,
+      "bootstrapReplicates": 10000,
+      "seedInteger": 20261117,
+      "bootstrapStatistic": "MEAN_OF_PAIRED_DAILY_NET_INR_DIFFERENCES",
+      "lowerBoundPercentile": 0.8333333333333334,
+      "decision": "ACCEPT_ONLY_IF_EACH_OF_6_MULTIPLICITY_ADJUSTED_LOWER_BOUNDS_STRICTLY_GREATER_THAN_ZERO_AND_ALL_OTHER_GATES_PASS",
+      "zeroTradeDay": "INCLUDE_ZERO_NET_INR_FOR_FLAT_VALID_DAYS",
+      "missingOrAmbiguousFill": "HALT_UNKNOWN_REJECT_EVALUATION_NO_ZERO_IMPUTATION",
+      "incompleteDay": "HALT_UNKNOWN_REJECT_EVALUATION_NO_REPLACEMENT",
+      "resamplingOrder": "CHRONOLOGICAL_MATCHED_DAY_PAIRS_KEEP_ALL_SYMBOLS_WITHIN_DAY_AS_ONE_CLUSTER",
+      "holdoutUse": "ONE_TIME_ONLY_NO_RETUNING_OR_ALTERNATE_BOOTSTRAP_AFTER_RESULTS",
+      "caveat": "BLOCK_LENGTH_AND_REGIME_DEPENDENCE_REQUIRE_INDEPENDENT_PRE_HOLDOUT_REVIEW;NOT_A_PROVEN_STATISTICAL_EDGE"
     }
   },
   "sourceLinks": [
