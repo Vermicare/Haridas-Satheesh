@@ -22,6 +22,12 @@ function evaluateFictionalDailyNet(rows, {testOnlyFrozen=false}={}) {
     dates.add(row.date);
     if(row.complete !== true || row.fillsKnown !== true || row.rightsVerified !== true) return fail('UNKNOWN_DAY_FILL_OR_RIGHTS');
     if(names.some(n=>!finite(row[n]))) return fail('MISSING_NONFINITE_NET_INR');
+    // Fictional fixture only: require independently supplied 1x/2x/3x net outcomes;
+    // never infer stressed costs from a 1x P&L or treat this as fee certification.
+    if(!Array.isArray(row.costStress) || row.costStress.length !== 3 ||
+       row.costStress.some((scenario,i)=>scenario?.multiplier !== [1,2,3][i] ||
+         names.some(name=>!finite(scenario[name])))) return fail('MISSING_COST_STRESS_SCENARIOS');
+    if(row.costStress.some(scenario=>spec.candidateIds.some(c=>spec.comparators.some(k=>scenario[c]-scenario[k]<=0)))) return fail('NONPOSITIVE_STRESSED_PAIRED_NET');
   }
   if(spec.familyHypotheses !== spec.candidateIds.length*spec.comparators.length) return fail('FAMILY_SIZE_MISMATCH');
   if(spec.bootstrapReplicates !== 10000 || spec.blockLengthExchangeDays !== 5) return fail('UNREVIEWED_BOOTSTRAP_PARAMETERS');
@@ -52,7 +58,7 @@ function evaluateFictionalDailyNet(rows, {testOnlyFrozen=false}={}) {
   const allPositive=Object.values(lower).every(x=>x>0);
   return {decision:allPositive?'FICTIONAL_STATISTICAL_GATE_PASS_ONLY':'REJECT_STATISTICAL_GATE',accepted:false,allPositive,lower};
 }
-const fictional=(fn,n=60)=>Array.from({length:n},(_,i)=>({date:'FICT-'+String(i).padStart(3,'0'),complete:true,fillsKnown:true,rightsVerified:true,NO_TRADE:0,PASSIVE_INTRADAY_SAME_BUDGET:0,EXISTING_SIMPLE_BREAKOUT:0,M:fn(i),R:fn(i)}));
+const fictional=(fn,n=60)=>Array.from({length:n},(_,i)=>({date:'FICT-'+String(i).padStart(3,'0'),complete:true,fillsKnown:true,rightsVerified:true,NO_TRADE:0,PASSIVE_INTRADAY_SAME_BUDGET:0,EXISTING_SIMPLE_BREAKOUT:0,M:fn(i),R:fn(i),costStress:[1,2,3].map(multiplier=>({multiplier,NO_TRADE:0,PASSIVE_INTRADAY_SAME_BUDGET:0,EXISTING_SIMPLE_BREAKOUT:0,M:fn(i),R:fn(i)}))}));
 test('current proposed contract cannot certify real eligibility',()=>{
  assert.equal(evaluateFictionalDailyNet(fictional(()=>100)).reason,'STATISTICAL_PROTOCOL_NOT_FROZEN');
 });
@@ -93,4 +99,13 @@ test('out-of-order fictional days cannot silently enter a chronological block bo
  const rows=fictional(i=>i);
  [rows[2],rows[3]]=[rows[3],rows[2]];
  assert.equal(evaluateFictionalDailyNet(rows,{testOnlyFrozen:true}).reason,'NONCHRONOLOGICAL_DAYS');
+});
+
+test('fictional missing cost stress fails closed even when base margins are positive',()=>{
+ const rows=fictional(()=>10);delete rows[0].costStress;
+ assert.equal(evaluateFictionalDailyNet(rows,{testOnlyFrozen:true}).reason,'MISSING_COST_STRESS_SCENARIOS');
+});
+test('fictional positive 1x but losing 3x stress fails closed',()=>{
+ const rows=fictional(()=>10);for(const row of rows){row.costStress[2].M=-1;row.costStress[2].R=-1;}
+ assert.equal(evaluateFictionalDailyNet(rows,{testOnlyFrozen:true}).reason,'NONPOSITIVE_STRESSED_PAIRED_NET');
 });
