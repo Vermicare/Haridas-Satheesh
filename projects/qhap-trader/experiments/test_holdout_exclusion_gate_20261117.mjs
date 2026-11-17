@@ -11,9 +11,9 @@ const fail = (reason) => ({ decision: 'HALT_UNKNOWN', eligible: false, reason })
 
 // This function is deliberately fail-closed: a private registry cannot be
 // self-certified by a synthetic test or a GitHub Actions run.
-function checkEligibility({ registry, proposed, registryIndependentlyComplete = false, provenanceReviewed = false }) {
-  if (gate.status !== 'UNRESOLVED_FAIL_CLOSED' && gate.status !== 'FROZEN_VERIFIED') return fail('UNKNOWN_GATE_STATUS');
-  if (!registryIndependentlyComplete || !provenanceReviewed || gate.status !== 'FROZEN_VERIFIED') return fail('REGISTRY_NOT_INDEPENDENTLY_FROZEN');
+function checkEligibility({ registry, proposed, registryIndependentlyComplete = false, provenanceReviewed = false, testOnlyGateStatus = gate.status }) {
+  if (testOnlyGateStatus !== 'UNRESOLVED_FAIL_CLOSED' && testOnlyGateStatus !== 'FROZEN_VERIFIED') return fail('UNKNOWN_GATE_STATUS');
+  if (!registryIndependentlyComplete || !provenanceReviewed || testOnlyGateStatus !== 'FROZEN_VERIFIED') return fail('REGISTRY_NOT_INDEPENDENTLY_FROZEN');
   if (!Array.isArray(registry) || !registry.length || !Array.isArray(proposed) || !proposed.length) return fail('MISSING_REGISTRY_OR_HOLDOUT');
   const known = new Set();
   for (const row of registry) {
@@ -57,10 +57,23 @@ test('unreviewed provenance fails closed', () => {
 });
 test('unresolved proposal cannot pass an overlap by pretending review is complete', () => {
   const proposed=[...fictionalHoldout,{symbol:'FICTIONAL',date:'2020-01-01',regime:'A'}];
-  assert.equal(checkEligibility({...eligibleInputs,proposed}).eligible,false);
+  assert.equal(checkEligibility({...eligibleInputs,proposed,testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'DEVELOPMENT_HOLDOUT_OVERLAP');
 });
 test('guard has no broker route and default remains NO_TRADE', () => {
   assert.equal(registration.constraints.brokers,'NO_BROKER_ORDER_ROUTE');
   assert.equal(registration.constraints.defaultDecision,'NO_TRADE');
   assert.equal(registration.capital.virtualInr,10000);
+});
+
+test('fictional frozen-registry scenario rejects duplicate holdout symbol-days', () => {
+  assert.equal(checkEligibility({...eligibleInputs,proposed:[...fictionalHoldout,fictionalHoldout[0]],testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'DUPLICATE_HOLDOUT_ROW');
+});
+test('fictional frozen-registry scenario rejects fewer than 60 distinct days', () => {
+  assert.equal(checkEligibility({...eligibleInputs,proposed:fictionalHoldout.slice(0,59),testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'INSUFFICIENT_DISTINCT_DAYS');
+});
+test('fictional frozen-registry scenario rejects fewer than three regimes', () => {
+  assert.equal(checkEligibility({...eligibleInputs,proposed:fictionalHoldout.map(x=>({...x,regime:'A'})),testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'INSUFFICIENT_REGIMES');
+});
+test('fictional frozen-registry scenario can reach eligibility branch, never actual authorization', () => {
+  assert.equal(checkEligibility({...eligibleInputs,testOnlyGateStatus:'FROZEN_VERIFIED'}).decision,'ELIGIBLE_FOR_SEPARATE_DATA_RIGHTS_AND_INTEGRITY_REVIEW');
 });
