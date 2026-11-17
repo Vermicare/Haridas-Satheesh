@@ -6,6 +6,14 @@ import { readFileSync } from 'node:fs';
 const registration = JSON.parse(readFileSync(new URL('./intraday_candidate_registration_20261116.json', import.meta.url)));
 const gate = registration.validation.developmentExclusionGate;
 const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
+// Strict Gregorian validation: Date.parse may normalize impossible days.
+const validCalendarDate = value => {
+  if (typeof value !== 'string' || !dayPattern.test(value)) return false;
+  const [year,month,day] = value.split('-').map(Number);
+  if (year < 1900 || year > 9999 || month < 1 || month > 12 || day < 1) return false;
+  const d = new Date(Date.UTC(year,month-1,day));
+  return d.getUTCFullYear() === year && d.getUTCMonth() === month-1 && d.getUTCDate() === day;
+};
 const key = (row) => `${row.symbol}|${row.date}`;
 const fail = (reason) => ({ decision: 'HALT_UNKNOWN', eligible: false, reason });
 
@@ -17,7 +25,7 @@ function checkEligibility({ registry, proposed, registryIndependentlyComplete = 
   if (!Array.isArray(registry) || !registry.length || !Array.isArray(proposed) || !proposed.length) return fail('MISSING_REGISTRY_OR_HOLDOUT');
   const known = new Set();
   for (const row of registry) {
-    if (!row || typeof row.symbol !== 'string' || !row.symbol || !dayPattern.test(row.date ?? '') || !Number.isFinite(Date.parse(row.date + 'T00:00:00Z'))) return fail('INVALID_DEVELOPMENT_ROW');
+    if (!row || typeof row.symbol !== 'string' || !row.symbol || !validCalendarDate(row.date)) return fail('INVALID_DEVELOPMENT_ROW');
     const k = key(row);
     if (known.has(k)) return fail('DUPLICATE_DEVELOPMENT_ROW');
     known.add(k);
@@ -26,7 +34,7 @@ function checkEligibility({ registry, proposed, registryIndependentlyComplete = 
   const days = new Set();
   const regimes = new Set();
   for (const row of proposed) {
-    if (!row || typeof row.symbol !== 'string' || !row.symbol || !dayPattern.test(row.date ?? '') || !Number.isFinite(Date.parse(row.date + 'T00:00:00Z')) || typeof row.regime !== 'string' || !row.regime) return fail('INVALID_HOLDOUT_ROW');
+    if (!row || typeof row.symbol !== 'string' || !row.symbol || !validCalendarDate(row.date) || typeof row.regime !== 'string' || !row.regime) return fail('INVALID_HOLDOUT_ROW');
     const k = key(row);
     if (selected.has(k)) return fail('DUPLICATE_HOLDOUT_ROW');
     if (known.has(k)) return fail('DEVELOPMENT_HOLDOUT_OVERLAP');
@@ -76,4 +84,10 @@ test('fictional frozen-registry scenario rejects fewer than three regimes', () =
 });
 test('fictional frozen-registry scenario can reach eligibility branch, never actual authorization', () => {
   assert.equal(checkEligibility({...eligibleInputs,testOnlyGateStatus:'FROZEN_VERIFIED'}).decision,'ELIGIBLE_FOR_SEPARATE_DATA_RIGHTS_AND_INTEGRITY_REVIEW');
+});
+
+test('impossible Gregorian dates fail closed without rejecting leap days', () => {
+  assert.equal(checkEligibility({...eligibleInputs,registry:[{symbol:'FICTIONAL',date:'2025-02-30'}],testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'INVALID_DEVELOPMENT_ROW');
+  assert.equal(checkEligibility({...eligibleInputs,proposed:fictionalHoldout.map((row,i)=>i===0?{...row,date:'2025-02-30'}:row),testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'INVALID_HOLDOUT_ROW');
+  assert.equal(checkEligibility({...eligibleInputs,proposed:fictionalHoldout.map((row,i)=>i===0?{...row,date:'2024-02-29'}:row),testOnlyGateStatus:'FROZEN_VERIFIED'}).eligible,true);
 });
