@@ -27,7 +27,9 @@ function evaluateFictionalDailyNet(rows, {testOnlyFrozen=false}={}) {
     if(!Array.isArray(row.costStress) || row.costStress.length !== 3 ||
        row.costStress.some((scenario,i)=>scenario?.multiplier !== [1,2,3][i] ||
          names.some(name=>!finite(scenario[name])))) return fail('MISSING_COST_STRESS_SCENARIOS');
-    if(row.costStress.some(scenario=>spec.candidateIds.some(c=>spec.comparators.some(k=>scenario[c]-scenario[k]<=0)))) return fail('NONPOSITIVE_STRESSED_PAIRED_NET');
+    // Cost stress is an aggregate daily-expectancy gate, not a requirement to win each day.
+    // Flat days and occasional losses are valid observations, never discarded.
+    if(names.some(name=>row.costStress[0][name] !== row[name])) return fail('BASE_COST_SCENARIO_MISMATCH');
   }
   if(spec.familyHypotheses !== spec.candidateIds.length*spec.comparators.length) return fail('FAMILY_SIZE_MISMATCH');
   if(spec.bootstrapReplicates !== 10000 || spec.blockLengthExchangeDays !== 5) return fail('UNREVIEWED_BOOTSTRAP_PARAMETERS');
@@ -56,7 +58,21 @@ function evaluateFictionalDailyNet(rows, {testOnlyFrozen=false}={}) {
     lower[p.key]=percentile(samples[p.key],spec.lowerBoundPercentile/100);
   }
   const allPositive=Object.values(lower).every(x=>x>0);
-  return {decision:allPositive?'FICTIONAL_STATISTICAL_GATE_PASS_ONLY':'REJECT_STATISTICAL_GATE',accepted:false,allPositive,lower};
+  // Compare all six matched candidate/comparator pairs under BOTH adverse cost scenarios.
+  // Include every valid day, even when the candidate does not trade or loses money.
+  const stressedMeans={};
+  for(const multiplier of [2,3]) {
+    stressedMeans[multiplier]={};
+    for(const p of pairs) {
+      stressedMeans[multiplier][p.key]=rows.reduce((sum,row)=>{
+        const scenario=row.costStress[multiplier-1];
+        return sum+scenario[p.c]-scenario[p.k];
+      },0)/n;
+    }
+  }
+  const stressedPositive=Object.values(stressedMeans).every(group=>Object.values(group).every(x=>x>0));
+  const passed=allPositive && stressedPositive;
+  return {decision:passed?'FICTIONAL_STATISTICAL_GATE_PASS_ONLY':'REJECT_STATISTICAL_GATE',accepted:false,allPositive,stressedPositive,stressedMeans,lower};
 }
 const fictional=(fn,n=60)=>Array.from({length:n},(_,i)=>({date:'FICT-'+String(i).padStart(3,'0'),complete:true,fillsKnown:true,rightsVerified:true,NO_TRADE:0,PASSIVE_INTRADAY_SAME_BUDGET:0,EXISTING_SIMPLE_BREAKOUT:0,M:fn(i),R:fn(i),costStress:[1,2,3].map(multiplier=>({multiplier,NO_TRADE:0,PASSIVE_INTRADAY_SAME_BUDGET:0,EXISTING_SIMPLE_BREAKOUT:0,M:fn(i),R:fn(i)}))}));
 test('current proposed contract cannot certify real eligibility',()=>{
@@ -107,5 +123,34 @@ test('fictional missing cost stress fails closed even when base margins are posi
 });
 test('fictional positive 1x but losing 3x stress fails closed',()=>{
  const rows=fictional(()=>10);for(const row of rows){row.costStress[2].M=-1;row.costStress[2].R=-1;}
- assert.equal(evaluateFictionalDailyNet(rows,{testOnlyFrozen:true}).reason,'NONPOSITIVE_STRESSED_PAIRED_NET');
+ const result=evaluateFictionalDailyNet(rows,{testOnlyFrozen:true});
+ assert.equal(result.decision,'REJECT_STATISTICAL_GATE');
+ assert.equal(result.stressedPositive,false);
+});
+
+test('fictional valid flat days do not veto positive aggregate net evidence',()=>{
+ const rows=fictional(i=>i%5===0?0:10);
+ const r=evaluateFictionalDailyNet(rows,{testOnlyFrozen:true});
+ assert.equal(r.allPositive,true);
+ assert.equal(r.stressedPositive,true);
+ assert.equal(r.accepted,false);
+});
+test('fictional occasional negative days do not cause premature rejection',()=>{
+ const rows=fictional(i=>i%6===0?-2:10);
+ const r=evaluateFictionalDailyNet(rows,{testOnlyFrozen:true});
+ assert.equal(r.allPositive,true);
+ assert.equal(r.stressedPositive,true);
+ assert.equal(r.accepted,false);
+});
+test('fictional one adverse 3x aggregate comparator fails without daily veto',()=>{
+ const rows=fictional(()=>10);
+ for(const row of rows){row.costStress[2].M=-1;}
+ const r=evaluateFictionalDailyNet(rows,{testOnlyFrozen:true});
+ assert.equal(r.allPositive,true);
+ assert.equal(r.stressedPositive,false);
+ assert.equal(r.decision,'REJECT_STATISTICAL_GATE');
+});
+test('fictional 1x outcome mismatch rejects inconsistent cost records',()=>{
+ const rows=fictional(()=>10);rows[0].costStress[0].M=11;
+ assert.equal(evaluateFictionalDailyNet(rows,{testOnlyFrozen:true}).reason,'BASE_COST_SCENARIO_MISMATCH');
 });
