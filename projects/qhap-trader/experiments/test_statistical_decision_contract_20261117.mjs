@@ -13,8 +13,12 @@ function evaluateFictionalDailyNet(rows, {testOnlyFrozen=false}={}) {
   if (!Array.isArray(rows) || rows.length < config.validation.minUntouchedUniqueTradingDays) return fail('INSUFFICIENT_DAYS');
   const names=[...spec.candidateIds,...spec.comparators];
   const dates=new Set();
+  let previousDate=null;
   for(const row of rows) {
     if(!row || typeof row.date !== 'string' || dates.has(row.date)) return fail('MISSING_OR_DUPLICATE_DATE');
+    // Block resampling assumes input is in chronological order; do not silently sort outcomes.
+    if(previousDate !== null && row.date <= previousDate) return fail('NONCHRONOLOGICAL_DAYS');
+    previousDate=row.date;
     dates.add(row.date);
     if(row.complete !== true || row.fillsKnown !== true || row.rightsVerified !== true) return fail('UNKNOWN_DAY_FILL_OR_RIGHTS');
     if(names.some(n=>!finite(row[n]))) return fail('MISSING_NONFINITE_NET_INR');
@@ -83,4 +87,10 @@ test('no real order route and virtual capital only',()=>{
  assert.equal(config.constraints.defaultDecision,'NO_TRADE');
  assert.equal(config.constraints.brokers,'NO_BROKER_ORDER_ROUTE');
  assert.equal(config.capital.virtualInr,10000);
+});
+
+test('out-of-order fictional days cannot silently enter a chronological block bootstrap',()=>{
+ const rows=fictional(i=>i);
+ [rows[2],rows[3]]=[rows[3],rows[2]];
+ assert.equal(evaluateFictionalDailyNet(rows,{testOnlyFrozen:true}).reason,'NONCHRONOLOGICAL_DAYS');
 });
