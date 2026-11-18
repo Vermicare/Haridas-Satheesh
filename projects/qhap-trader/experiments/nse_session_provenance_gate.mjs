@@ -24,5 +24,5 @@ export function checkSessionProvenance(input) {
   if(input.dataQualityStatus!=='INDEPENDENTLY_VERIFIED'||input.developmentExclusionStatus!=='INDEPENDENTLY_VERIFIED'||input.regimeStatus!=='INDEPENDENTLY_VERIFIED'||input.costStatus!=='INDEPENDENTLY_VERIFIED'||input.rightsStatus!=='INDEPENDENTLY_VERIFIED') return halt('EXTERNAL_GATES_NOT_VERIFIED');
   // The manifest is required to be independently checked against the complete
   // official exchange calendar; this function cannot independently certify omissions.
-  return {accepted:true,decision:'PROVENANCE_INPUTS_ASSERTED_VERIFIED_NOT_HOLDOUT_APPROVAL',reason:'REQUIRES_SEPARATE_HOLDOUT_FREEZE',realOrderSubmissionPossible:false};
+  return halt('EXTERNAL_CALENDAR_COMPLETENESS_NOT_INDEPENDENTLY_CERTIFIED');
 }
