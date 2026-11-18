@@ -1,0 +1,46 @@
+{
+  "schema_version": "iot-host-bundle-chain-registry-v1",
+  "experiment_id": "IOT_HOST_BUNDLE_CHAIN_V07",
+  "date_utc": "2026-10-25",
+  "family": "Hardware/IoT",
+  "branch": "research/iot-capture-preflight-20261023",
+  "stage": "Prototype / Hardware Architecture (unchanged)",
+  "question": "Can a separately verified host serial capture and derived telemetry bundle disagree on raw bytes or conceal a short host byte-arrival window?",
+  "baseline": "Independent host-only verifier and raw-to-CSV bundle verifier; no combined chain/exposure gate",
+  "method": "Verify both upstream contracts; compare byte-exact nonsymlink raw files and SHA-256; require >=600 s host duration, >=600 s first-to-last host byte exposure and >=600000 ms device telemetry span",
+  "provenance": {
+    "input": "Entirely fictional serial/firmware bytes and operator-declared host clocks; no device connection",
+    "source_blob": "1f9e95fe49ca94164cf570f74dad1ebf6688ffc2",
+    "test_blob": "5e3f2a20e6b59b85ace780463278180611b0fc54",
+    "test_commit": "1e758c8ea8eed19c3c1f0578fb350241ee2487e4",
+    "ci_url": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40217485476",
+    "runtime": "GitHub Actions Python 3.13 ubuntu-latest/windows-latest; precise image digests TBD"
+  },
+  "results": {
+    "local": "10/10 mocked-chain tests passed, 2 upstream integration tests skipped (modules unavailable in isolated copy); CPython 3.13.5",
+    "ubuntu": "75/75 full-suite tests passed, including 2 full-integration fictional tests",
+    "windows": "75/75 full-suite tests passed, including 2 full-integration fictional tests",
+    "negative_controls": [
+      "host first-to-last byte span 0.5s despite declared host duration 630s rejected",
+      "derived bundle raw differs from host even with its own recomputed hash rejected",
+      "incomplete host, failed bundle, short device span, symlink and hash mismatch rejected"
+    ],
+    "physical_sensor_sessions": 0,
+    "firmware_flashing_attested": false,
+    "physical_origin_verified": false,
+    "accuracy": "TBD",
+    "reliability": "TBD",
+    "performance": "TBD"
+  },
+  "limitations": [
+    "All data and clocks operator-controlled; coordinated forgery remains possible",
+    "Byte-arrival duration does not prove sensor sampling duration",
+    "No physical capture, calibration, independent review or deployment"
+  ],
+  "decision": "Keep stage; retain draft; no release",
+  "next_experiment": "Issue #8 genuine >=600-second dual-sensor physical capture with independently inspectable setup, light perturbation and private raw-to-bundle evidence chain",
+  "kill_reframe": "If physical provenance cannot be established, classify as logging tooling, not a sensor benchmark",
+  "outreach": {
+    "new_cold_emails": 0
+  }
+}

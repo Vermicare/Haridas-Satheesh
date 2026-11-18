@@ -1,0 +1,59 @@
+{
+  "schema": "iot-unflashed-static-flash-audit-v1.3",
+  "date_utc": "2026-10-27",
+  "project": "Hardware/IoT ESP32-S3 BH1750/SCD40",
+  "stage": "Prototype / Hardware Architecture (unchanged)",
+  "pr": 7,
+  "branch": "research/iot-capture-preflight-20261023",
+  "question": "Can an independently downloaded ESP-IDF firmware artifact be statically checked for provenance, hashes and flash/partition layout before a physical flash?",
+  "provenance": {
+    "artifact_run": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40457717468",
+    "artifact_id": 12713162757,
+    "artifact_zip_sha256": "0a7b0fa13fb80ea7d63f85d756c1729636ffbfe8bd1cda6ff5fdb0985afdd7f3",
+    "artifact_pr_head_sha": "9061ed016a359d6ddf2d6b2fc38412f2dc396140",
+    "artifact_checkout_merge_sha": "b26cc0cc12eba8317bb7f97fa202b7356f221349",
+    "audit_execution": "local CPython 3.13 Linux; standard library; no hardware; actual retained ZIP; exact interpreter patch=TBD",
+    "auditor_git_blob_sha": "2b408b8f81f0ab319d9f690502f4f9668d357e47",
+    "test_git_blob_sha": "afbee476e5cb70911c4f7a1081a7ba0e7caff042",
+    "regression_ci": "https://github.com/Vermicare/Haridas-Satheesh/actions/runs/40468314585",
+    "ci_matrix": "Python 3.13, Ubuntu and Windows; 97/97 each; 14 new fictional tests",
+    "artifact_expires": "2026-11-10 (GitHub 14-day retention)"
+  },
+  "observed": {
+    "declared_flash_bytes": 2097152,
+    "actual_device_flash_bytes": "TBD",
+    "bootloader": {
+      "offset": 0,
+      "size_bytes": 21120
+    },
+    "partition_table": {
+      "offset": 32768,
+      "size_bytes": 3072
+    },
+    "application": {
+      "offset": 65536,
+      "size_bytes": 196080,
+      "sha256": "a1b031bc4413f320f0e33113868e4ee03e102df2298a141509f08c30c26b6046"
+    },
+    "factory_partition": {
+      "offset": 65536,
+      "size_bytes": 1048576
+    },
+    "static_layout": "PASS (non-overlap, application fits factory partition)",
+    "status": "STATIC_PACKAGE_PASS_FLASH_NOT_AUTHORIZED",
+    "physical_flash": "NOT_PERFORMED",
+    "physical_sensor_capture": "NOT_PERFORMED",
+    "device_identity": "TBD",
+    "calibration": "TBD"
+  },
+  "failure_learning": [
+    "Build artifact declares 2 MB; official N8R8 board ordering reference specifies nominal 8 MB flash. Actual board must be probed; do not assume incompatibility or silently rewrite flash settings.",
+    "Static SHA-256 and header checks cannot prove firmware authenticity, source-to-binary determinism, board compatibility, or flashed bytes.",
+    "No real device, sensor, or I2C transaction was available to this run."
+  ],
+  "next_experiment": "Read-only esptool flash identification and exact module/port review, followed by independently reviewed board-matched build and >=600-second physical capture (issue #8).",
+  "advance": "Independently reviewable genuine dual-sensor capture and setup verification; not a static ZIP pass.",
+  "reframe": "Software instrumentation only if physical provenance or continuity cannot be established.",
+  "outreach": "none",
+  "release": "none"
+}
