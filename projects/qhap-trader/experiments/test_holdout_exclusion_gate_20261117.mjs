@@ -14,6 +14,10 @@ const validCalendarDate = value => {
   const d = new Date(Date.UTC(year,month-1,day));
   return d.getUTCFullYear() === year && d.getUTCMonth() === month-1 && d.getUTCDate() === day;
 };
+const isWeekday = date => {
+  const day = new Date(date + 'T00:00:00Z').getUTCDay();
+  return day >= 1 && day <= 5;
+};
 const key = (row) => `${row.symbol}|${row.date}`;
 const fail = (reason) => ({ decision: 'HALT_UNKNOWN', eligible: false, reason });
 
@@ -36,6 +40,7 @@ function checkEligibility({ registry, proposed, registryIndependentlyComplete = 
   for (const row of proposed) {
     if (!row || typeof row.symbol !== 'string' || !row.symbol || !validCalendarDate(row.date) || typeof row.regime !== 'string' || !row.regime) return fail('INVALID_HOLDOUT_ROW');
     const k = key(row);
+    if (!isWeekday(row.date)) return fail('NON_TRADING_WEEKEND');
     if (selected.has(k)) return fail('DUPLICATE_HOLDOUT_ROW');
     if (known.has(k)) return fail('DEVELOPMENT_HOLDOUT_OVERLAP');
     selected.add(k);
@@ -48,8 +53,9 @@ function checkEligibility({ registry, proposed, registryIndependentlyComplete = 
 }
 
 const fictionalRegistry = [{symbol:'FICTIONAL',date:'2020-01-01'}];
-const fictionalHoldout = Array.from({length:60}, (_,i)=>({
-  symbol:'FICTIONAL', date:new Date(Date.UTC(2021,0,1+i)).toISOString().slice(0,10),
+const fictionalWeekdays = Array.from({length:100}, (_,i) => new Date(Date.UTC(2021,0,1+i)).toISOString().slice(0,10)).filter(isWeekday).slice(0,60);
+const fictionalHoldout = fictionalWeekdays.map((date,i)=>({
+  symbol:'FICTIONAL', date,
   regime:['A','B','C'][i%3]
 }));
 const eligibleInputs = {registry:fictionalRegistry,proposed:fictionalHoldout,registryIndependentlyComplete:true,provenanceReviewed:true};
@@ -90,4 +96,11 @@ test('impossible Gregorian dates fail closed without rejecting leap days', () =>
   assert.equal(checkEligibility({...eligibleInputs,registry:[{symbol:'FICTIONAL',date:'2025-02-30'}],testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'INVALID_DEVELOPMENT_ROW');
   assert.equal(checkEligibility({...eligibleInputs,proposed:fictionalHoldout.map((row,i)=>i===0?{...row,date:'2025-02-30'}:row),testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'INVALID_HOLDOUT_ROW');
   assert.equal(checkEligibility({...eligibleInputs,proposed:fictionalHoldout.map((row,i)=>i===0?{...row,date:'2024-02-29'}:row),testOnlyGateStatus:'FROZEN_VERIFIED'}).eligible,true);
+});
+
+// Weekend rejection is necessary, not sufficient: holidays and exceptional sessions
+// still require independently authenticated exchange calendars before real eligibility.
+test('fictional frozen-registry scenario rejects a Saturday despite 60 dates and three regime labels', () => {
+  const proposed = fictionalHoldout.map((row,i) => i === 0 ? {...row,date:'2021-01-02'} : row);
+  assert.equal(checkEligibility({...eligibleInputs,proposed,testOnlyGateStatus:'FROZEN_VERIFIED'}).reason,'NON_TRADING_WEEKEND');
 });
