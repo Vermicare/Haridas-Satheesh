@@ -10,3 +10,5 @@ test('unconfirmed preceding session fails',()=>{const x=valid();x.sessions[19].s
 test('missing required prior count fails',()=>{const x=valid();x.targetDate=x.sessions[12].date;assert.equal(checkSessionProvenance(x).reason,'INSUFFICIENT_IMMEDIATELY_PRECEDING_SESSIONS')});
 test('unverified rights fails',()=>{const x=valid();x.rightsStatus='UNKNOWN';assert.equal(checkSessionProvenance(x).reason,'EXTERNAL_GATES_NOT_VERIFIED')});
 test('fictional asserted provenance never enables orders or holdout',()=>{const x=checkSessionProvenance(valid());assert.equal(x.realOrderSubmissionPossible,false);assert.notEqual(x.decision,'HOLDOUT_APPROVED')});
+
+test('officially exceptional Sunday must not be mislabeled regular (2026-02-01)',()=>{const x=valid();x.sessions=x.sessions.map(s=>({...s}));x.sessions[17].date='2026-02-01';x.sessions.sort((a,b)=>a.date.localeCompare(b.date));x.targetDate=x.sessions[20].date;assert.equal(checkSessionProvenance(x).reason,'WEEKEND_MISLABELED_REGULAR')});
