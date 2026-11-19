@@ -16,6 +16,9 @@ export function checkSessionProvenance(input) {
   const sessions=input.sessions;
   if(sessions.length<15||sessions.some(s=>!dateOK(s.date))||new Set(sessions.map(s=>s.date)).size!==sessions.length) return halt('INVALID_SESSION_MANIFEST');
   if(sessions.some((s,i)=>i&&sessions[i-1].date>=s.date)) return halt('UNSORTED_SESSION_MANIFEST');
+  // Weekends can be official exceptional sessions, but never ordinary REGULAR days.
+  // This check detects mislabeling; it does not establish calendar completeness.
+  if(sessions.some(s=>[0,6].includes(new Date(s.date+'T00:00:00Z').getUTCDay()) && s.kind==='REGULAR')) return halt('WEEKEND_MISLABELED_REGULAR');
   const index=sessions.findIndex(s=>s.date===input.targetDate);
   if(index<14) return halt('INSUFFICIENT_IMMEDIATELY_PRECEDING_SESSIONS');
   const target=sessions[index];
