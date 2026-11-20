@@ -45,8 +45,12 @@
       "14:15",
       "14:45"
     ],
-    "forcedExitDecision": "15:15",
-    "latestLastBarStart": "15:29"
+    "forcedExitDecision": "14:55",
+    "latestLastBarStart": "15:29",
+    "latestPermittedExitFillBarStart": "14:59",
+    "forcedFlatDeadline": "15:00",
+    "sessionPolicy": "CONSERVATIVE_PRE_CAS_EXIT_ALL_SYMBOLS_NO_AUCTION_FILL_ASSUMPTION",
+    "unknownExitPolicy": "HALT_UNKNOWN_NO_ASSUMED_FLAT"
   },
   "candidates": [
     {
