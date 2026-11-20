@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {assessCostAccountedCandidateEvent as run} from './intraday_cost_accounted_adapter.mjs';
+const clock={decision:'09:45',observedBarStart:'09:44',proposedFillBarStart:'09:46'};
+const state={cashInr:10000,positionShares:0,costBasisInr:0};
+const fill={shares:2,priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'};
+const buy={state,sourceAuthorized:true,sessionIntegrityVerified:true,clock,side:'BUY',requestedShares:2,assertedHypotheticalFill:fill,chargesInr:5,chargesBasis:'EXPLICIT_UNCERTIFIED_RESEARCH_SCENARIO'};
+test('atomic hypothetical buy debits all-in charges',()=>{const r=run(buy);assert.equal(r.status,'HYPOTHETICAL_SCENARIO_ONLY');assert.equal(r.state.cashInr,9795);assert.equal(r.state.costBasisInr,205);assert.equal(r.realOrderSubmissionPossible,false)});
+test('unknown charges fail closed without state mutation',()=>{const r=run({...buy,chargesInr:undefined});assert.equal(r.status,'HALT_UNKNOWN');assert.deepEqual(r.state,state)});
+test('charge-inclusive 2500 cap rejects',()=>{const r=run({...buy,assertedHypotheticalFill:{...fill,priceInr:1249},chargesInr:3});assert.equal(r.reason,'POSITION_OR_ALL_IN_BUDGET_EXCEEDED');assert.deepEqual(r.state,state)});
+test('partial fill never updates cash ledger',()=>{const r=run({...buy,assertedHypotheticalFill:{...fill,shares:1}});assert.equal(r.reason,'PARTIAL_FILL_UNRESOLVED');assert.deepEqual(r.state,state)});
+test('complete hypothetical forced exit calculates net',()=>{const entry=run(buy);const exit=run({...buy,state:entry.state,side:'SELL',positionShares:2,clock:{decision:'14:55',observedBarStart:'14:54',proposedFillBarStart:'14:56',kind:'FORCED_EXIT'},assertedHypotheticalFill:{...fill,priceInr:110},chargesInr:6});assert.equal(exit.status,'HYPOTHETICAL_SCENARIO_ONLY');assert.equal(exit.realizedNetInr,9);assert.equal(exit.state.positionShares,0);assert.equal(exit.state.cashInr,10009)});
+test('state mismatch rejects before event processing',()=>assert.equal(run({...buy,positionShares:1}).reason,'STATE_MISMATCH_OR_INVALID'));
