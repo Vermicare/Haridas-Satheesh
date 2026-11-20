@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const registration = JSON.parse(readFileSync(new URL('./intraday_candidate_registration_20261116.json', import.meta.url), 'utf8'));
 const minute = (s) => {
-  assert.match(s, /^\\d{2}:\\d{2}$/);
+  assert.match(s, /^[0-9]{2}:[0-9]{2}$/);
   const [h,m]=s.split(':').map(Number);
   assert.ok(h>=0&&h<24&&m>=0&&m<60);
   return 60*h+m;
