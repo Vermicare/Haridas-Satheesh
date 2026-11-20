@@ -53,3 +53,13 @@ test('shared clock rejects invalid times, late entries, and unknown forced-exit 
   assert.equal(decisionGate('xx:55','14:54','14:56'),'HALT_UNKNOWN');
   assert.equal(assessIntradayClock({decision:'14:55',observedBarStart:'14:54',proposedFillBarStart:'14:56',kind:'FORCED_EXIT'}).confirmedFill,false);
 });
+
+test('off-schedule fictional decisions cannot manufacture candidate eligibility',()=>{
+  for(const decision of ['09:25','09:44','10:00','14:54']) {
+    const m=Number(decision.slice(0,2))*60+Number(decision.slice(3));
+    const stamp=n=>String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+    assert.equal(decisionGate(decision,stamp(m-1),stamp(m+1),'ENTRY'),'HALT_UNKNOWN');
+    assert.equal(decisionGate(decision,stamp(m-1),stamp(m+1),'EXIT'),'HALT_UNKNOWN');
+  }
+  assert.equal(decisionGate('09:45','09:44','09:46','ENTRY'),'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL');
+});
