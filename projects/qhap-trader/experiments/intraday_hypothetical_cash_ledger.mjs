@@ -9,6 +9,11 @@ export function applyHypotheticalLedgerEvent({state,side,quantity,priceInr,charg
       chargesBasis!=='EXPLICIT_UNCERTIFIED_RESEARCH_SCENARIO' ||
       fillBasis!=='EXPLICIT_HYPOTHETICAL_OBSERVATION' || fillComplete!==true)
     return halt('UNVERIFIED_OR_INCOMPLETE_EVENT',state);
+  // A flat position cannot carry basis; an open long position must carry positive basis.
+  // Reject inconsistent reconstructed state before applying either side of a fill.
+  if ((state.positionShares===0 && state.costBasisInr!==0) ||
+      (state.positionShares>0 && state.costBasisInr<=0))
+    return halt('INCONSISTENT_POSITION_COST_BASIS',state);
   const notional=quantity*priceInr;
   if (!Number.isFinite(notional)) return halt('NUMERIC_OVERFLOW',state);
   if (side==='BUY') {
