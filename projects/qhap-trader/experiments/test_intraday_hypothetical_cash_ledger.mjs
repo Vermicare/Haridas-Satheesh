@@ -12,3 +12,18 @@ test('unknown fill basis fails closed',()=>assert.equal(run({...base,fillBasis:'
 test('complete hypothetical exit deducts fees',()=>{const bought=run(base).state;const sold=run({...base,state:bought,side:'SELL',quantity:2,priceInr:110,chargesInr:3});assert.equal(sold.realizedNetInr,15);assert.equal(sold.state.cashInr,10015);assert.equal(sold.realOrderSubmissionPossible,false)});
 test('partial exit remains unresolved',()=>assert.equal(run({...base,state:run(base).state,side:'SELL',quantity:1}).reason,'EXIT_NOT_FULLY_RESOLVED'));
 test('scenario never certifies fees or fills',()=>{const r=run(base);assert.equal(r.feesCertified,false);assert.equal(r.confirmedRealFill,false)});
+
+test('flat position with residual basis is rejected on both sides',()=>{
+  for (const side of ['BUY','SELL']) {
+    const result=run({...base,side,state:{cashInr:10000,positionShares:0,costBasisInr:1}});
+    assert.equal(result.status,'HALT_UNKNOWN');
+    assert.equal(result.reason,'INCONSISTENT_POSITION_COST_BASIS');
+  }
+});
+test('open position without positive cost basis is rejected',()=>{
+  for (const costBasisInr of [0]) {
+    const result=run({...base,side:'SELL',state:{cashInr:9800,positionShares:2,costBasisInr}});
+    assert.equal(result.reason,'INCONSISTENT_POSITION_COST_BASIS');
+    assert.equal(result.realOrderSubmissionPossible,false);
+  }
+});
