@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {assessCandidateEvent as run} from './intraday_candidate_replay_adapter.mjs';
+const clock={decision:'09:45',observedBarStart:'09:44',proposedFillBarStart:'09:46'};
+const base={sourceAuthorized:true,sessionIntegrityVerified:true,clock,side:'BUY',requestedShares:2};
+const fill=(shares=2)=>({shares,priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'});
+test('no source authorization',()=>assert.equal(run({...base,sourceAuthorized:false}).status,'HALT_UNKNOWN'));
+test('no session integrity',()=>assert.equal(run({...base,sessionIntegrityVerified:false}).status,'HALT_UNKNOWN'));
+test('clock rejects same-minute lookahead',()=>assert.equal(run({...base,clock:{...clock,proposedFillBarStart:'09:45'},assertedHypotheticalFill:fill()}).reason,'SAME_MINUTE_OR_LOOKAHEAD_FILL'));
+test('clock rejects unregistered time',()=>assert.equal(run({...base,clock:{...clock,decision:'09:46',proposedFillBarStart:'09:47'},assertedHypotheticalFill:fill()}).reason,'UNREGISTERED_DECISION_TIME'));
+test('no fabricated fill',()=>assert.equal(run(base).reason,'NO_HYPOTHETICAL_FILL_EVIDENCE'));
+test('unsupported fill provenance',()=>assert.equal(run({...base,assertedHypotheticalFill:{...fill(),fillBasis:'BROKER_ACK'}}).status,'HALT_UNKNOWN'));
+test('partial buy unresolved',()=>assert.equal(run({...base,assertedHypotheticalFill:fill(1)}).reason,'PARTIAL_FILL_UNRESOLVED'));
+test('full hypothetical buy remains non-executable',()=>{const r=run({...base,assertedHypotheticalFill:fill()});assert.equal(r.positionShares,2);assert.equal(r.realOrderSubmissionPossible,false);assert.equal(r.confirmedRealFill,false)});
+test('over budget buy rejected',()=>assert.equal(run({...base,assertedHypotheticalFill:{...fill(),priceInr:1300}}).reason,'BUDGET_EXCEEDED'));
+test('partial forced exit halts with unresolved open position',()=>{const r=run({...base,side:'SELL',positionShares:2,clock:{decision:'14:55',observedBarStart:'14:54',proposedFillBarStart:'14:56',kind:'FORCED_EXIT'},assertedHypotheticalFill:fill(1)});assert.equal(r.reason,'PARTIAL_FILL_UNRESOLVED');assert.equal(r.positionShares,1)});
+test('full forced exit hypothetical flat',()=>{const r=run({...base,side:'SELL',positionShares:2,clock:{decision:'14:55',observedBarStart:'14:54',proposedFillBarStart:'14:56',kind:'FORCED_EXIT'},assertedHypotheticalFill:fill()});assert.equal(r.positionShares,0);assert.equal(r.confirmedRealFill,false)});
+test('late forced exit halts',()=>assert.equal(run({...base,side:'SELL',positionShares:2,clock:{decision:'14:55',observedBarStart:'14:54',proposedFillBarStart:'15:00',kind:'FORCED_EXIT'},assertedHypotheticalFill:fill()}).reason,'EXIT_AFTER_FLAT_DEADLINE'));
