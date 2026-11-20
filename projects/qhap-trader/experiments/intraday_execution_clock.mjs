@@ -17,6 +17,9 @@ export function assessIntradayClock({decision, observedBarStart, proposedFillBar
   if (!['ENTRY','EXIT','FORCED_EXIT'].includes(kind)) return reject('INVALID_KIND');
   if (o < 555 || o > 929 || d < 555 || d > 895) return reject('OUTSIDE_RESEARCH_DECISION_SESSION');
   if (o + 1 > d) return reject('UNCOMPLETED_OBSERVATION');
+  // The registered signal is evaluated at each checkpoint from the immediately completed minute.
+  // Older observations cannot masquerade as the current decision candle.
+  if (o !== d - 1) return reject('STALE_DECISION_OBSERVATION');
   if (kind !== 'FORCED_EXIT' && !candidateDecisionMinutes.has(d)) return reject('UNREGISTERED_DECISION_TIME');
   if (f < d + 1) return reject('SAME_MINUTE_OR_LOOKAHEAD_FILL');
   if (kind === 'FORCED_EXIT') {
