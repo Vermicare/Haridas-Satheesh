@@ -63,3 +63,9 @@ test('off-schedule fictional decisions cannot manufacture candidate eligibility'
   }
   assert.equal(decisionGate('09:45','09:44','09:46','ENTRY'),'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL');
 });
+
+test('entry cannot silently move hypothetical fill to a later favorable candle',()=>{
+  assert.equal(decisionGate('09:45','09:44','09:47','ENTRY'),'HALT_UNKNOWN');
+  assert.equal(decisionGate('09:45','09:44','10:14','ENTRY'),'HALT_UNKNOWN');
+  assert.equal(decisionGate('09:45','09:44','09:46','ENTRY'),'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL');
+});
