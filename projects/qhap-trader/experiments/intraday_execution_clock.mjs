@@ -8,6 +8,8 @@ const toMinute = (value) => {
   const h = Number(value.slice(0,2)), m = Number(value.slice(3,5));
   return h < 24 && m < 60 ? h * 60 + m : null;
 };
+// Registered 30-minute checkpoints only; no discretionary or hindsight decisions.
+const candidateDecisionMinutes = new Set([585,615,645,675,705,735,765,795,825,855,885]);
 export function assessIntradayClock({decision, observedBarStart, proposedFillBarStart, kind='ENTRY', confirmedFlat=false}) {
   const d=toMinute(decision), o=toMinute(observedBarStart), f=toMinute(proposedFillBarStart);
   const reject=(reason)=>({status:'HALT_UNKNOWN',reason,confirmedFill:false,realOrderSubmissionPossible:false});
@@ -15,6 +17,7 @@ export function assessIntradayClock({decision, observedBarStart, proposedFillBar
   if (!['ENTRY','EXIT','FORCED_EXIT'].includes(kind)) return reject('INVALID_KIND');
   if (o < 555 || o > 929 || d < 555 || d > 895) return reject('OUTSIDE_RESEARCH_DECISION_SESSION');
   if (o + 1 > d) return reject('UNCOMPLETED_OBSERVATION');
+  if (kind !== 'FORCED_EXIT' && !candidateDecisionMinutes.has(d)) return reject('UNREGISTERED_DECISION_TIME');
   if (f < d + 1) return reject('SAME_MINUTE_OR_LOOKAHEAD_FILL');
   if (kind === 'FORCED_EXIT') {
     if (d !== 895) return reject('FORCED_EXIT_DECISION_MUST_BE_1455');
