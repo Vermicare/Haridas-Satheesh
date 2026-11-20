@@ -8,6 +8,7 @@ test('no source authorization',()=>assert.equal(run({...base,sourceAuthorized:fa
 test('no session integrity',()=>assert.equal(run({...base,sessionIntegrityVerified:false}).status,'HALT_UNKNOWN'));
 test('clock rejects same-minute lookahead',()=>assert.equal(run({...base,clock:{...clock,proposedFillBarStart:'09:45'},assertedHypotheticalFill:fill()}).reason,'SAME_MINUTE_OR_LOOKAHEAD_FILL'));
 test('clock rejects unregistered time',()=>assert.equal(run({...base,clock:{...clock,decision:'09:46',proposedFillBarStart:'09:47'},assertedHypotheticalFill:fill()}).reason,'UNREGISTERED_DECISION_TIME'));
+test('stale completed observation cannot stand in for current decision candle',()=>assert.equal(run({...base,clock:{...clock,observedBarStart:'09:15'},assertedHypotheticalFill:fill()}).reason,'STALE_DECISION_OBSERVATION'));
 test('no fabricated fill',()=>assert.equal(run(base).reason,'NO_HYPOTHETICAL_FILL_EVIDENCE'));
 test('unsupported fill provenance',()=>assert.equal(run({...base,assertedHypotheticalFill:{...fill(),fillBasis:'BROKER_ACK'}}).status,'HALT_UNKNOWN'));
 test('partial buy unresolved',()=>assert.equal(run({...base,assertedHypotheticalFill:fill(1)}).reason,'PARTIAL_FILL_UNRESOLVED'));
