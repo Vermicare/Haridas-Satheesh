@@ -1,0 +1,163 @@
+{
+  "schema": "QHAP_TRADER_RESEARCH_CANDIDATES_V1",
+  "registeredAs": "PROPOSAL_UNTIL_REVIEWED_MERGE_AND_HOLDOUT_MANIFEST",
+  "createdAt": "2026-11-16",
+  "symbolScope": "NSE_EQ_LONG_ONLY",
+  "data": {
+    "timeZone": "Asia/Kolkata",
+    "barStamp": "open_minute",
+    "regularStart": "09:15",
+    "regularLastBarStart": "15:29",
+    "expectedBars": 375,
+    "historyRequiredCompleteSessions": 14,
+    "openingMinuteMandatory": true,
+    "lookaheadForbidden": true,
+    "executionDelayFullMinutesAfterDecision": 1,
+    "requirePositiveCumulativeVolume": true,
+    "vwap": "HLC3_VOLUME_WEIGHTED_BAR_APPROXIMATION",
+    "priorSessionSelection": "EXCHANGE_CALENDAR_IMMEDIATELY_PRECEDING_14_REGULAR_SESSIONS_NO_SKIPS",
+    "priorSessionMissingPolicy": "HALT_UNKNOWN_EXCLUDE_TARGET_SYMBOL_DAY_NO_SUBSTITUTION_NO_BACKFILL",
+    "previousCloseSource": "IMMEDIATELY_PRECEDING_EXCHANGE_SESSION_OFFICIAL_POINT_IN_TIME_CLOSE_REQUIRED",
+    "specialSessionsPolicy": "HALT_UNKNOWN_UNLESS_EXPLICITLY_PREREGISTERED_BEFORE_HOLDOUT",
+    "calendarGaps": "WEEKENDS_AND_OFFICIAL_EXCHANGE_HOLIDAYS_NOT_COUNTED_AS_SESSIONS",
+    "corporateActionAmbiguity": "HALT_UNKNOWN"
+  },
+  "capital": {
+    "virtualInr": 10000,
+    "maxOneOrderTotalInr": 2500,
+    "integerShares": true,
+    "maxPositions": 1,
+    "maxEntryPerSession": 1,
+    "leverage": 1,
+    "shortSelling": false
+  },
+  "clock": {
+    "decisionTimes": [
+      "09:45",
+      "10:15",
+      "10:45",
+      "11:15",
+      "11:45",
+      "12:15",
+      "12:45",
+      "13:15",
+      "13:45",
+      "14:15",
+      "14:45"
+    ],
+    "forcedExitDecision": "14:55",
+    "latestLastBarStart": "15:29",
+    "latestPermittedExitFillBarStart": "14:59",
+    "forcedFlatDeadline": "15:00",
+    "sessionPolicy": "CONSERVATIVE_PRE_CAS_EXIT_ALL_SYMBOLS_NO_AUCTION_FILL_ASSUMPTION",
+    "unknownExitPolicy": "HALT_UNKNOWN_NO_ASSUMED_FLAT"
+  },
+  "candidates": [
+    {
+      "id": "M",
+      "kind": "NSE_ADAPTED_NOISE_AREA_MOMENTUM",
+      "lookback": 14,
+      "noiseSigma": "mean(prior14 abs(closeAtTime/open0915-1))",
+      "upper": "max(todayOpen,priorClose)*(1+sigma)",
+      "entry": "close > upper AND close > cumulativeVWAP",
+      "exit": "close <= max(upper,VWAP) OR forcedExit",
+      "longOnly": true,
+      "noReentry": true,
+      "priorPublishedPerformanceTransferred": false
+    },
+    {
+      "id": "R",
+      "kind": "EXPLORATORY_VWAP_MEAN_REVERSION",
+      "lookback": 14,
+      "delta": "median(prior14 abs(closeAtTime/VWAPAtTime-1))",
+      "entry": "close < VWAP*(1-1.5*delta)",
+      "exit": "close >= VWAP OR close <= entryFillPrice*(1-2*entryDelta) OR forcedExit",
+      "entryDeltaMultiplier": 1.5,
+      "stopDeltaMultiplier": 2,
+      "longOnly": true,
+      "noReentry": true,
+      "publishedProfitableClaim": false
+    }
+  ],
+  "constraints": {
+    "dailyLossStopInr": 250,
+    "maximumPortfolioDrawdownInr": 1000,
+    "missingData": "HALT_UNKNOWN",
+    "ambiguousExecution": "HALT_UNKNOWN",
+    "brokers": "NO_BROKER_ORDER_ROUTE",
+    "defaultDecision": "NO_TRADE"
+  },
+  "validation": {
+    "minUntouchedUniqueTradingDays": 60,
+    "minVerifiedRegimes": 3,
+    "oneTimeHoldout": true,
+    "holdoutManifestRequiredBeforeAnyBar": true,
+    "frictionStressMultipliers": [
+      1,
+      2,
+      3
+    ],
+    "compareWith": [
+      "NO_TRADE",
+      "PASSIVE_INTRADAY_SAME_BUDGET",
+      "EXISTING_SIMPLE_BREAKOUT"
+    ],
+    "dayBlockConfidence": 0.95,
+    "positiveLowerConfidenceBoundRequired": true,
+    "noNegativeRegimeMean": true,
+    "unresolvedRightsOrFees": "REJECT",
+    "developmentExclusionGate": {
+      "status": "UNRESOLVED_FAIL_CLOSED",
+      "registryRequiredBeforeHoldoutSelection": true,
+      "registryMustEnumerateAllPreviouslyInspectedSymbolSessions": true,
+      "knownDevelopmentCohorts": [
+        "RELIANCE_2025_JAN_5_INTRADAY_SESSIONS",
+        "RELIANCE_2024_JAN_OCT_204_DAILY_BARS",
+        "RELIANCE_2022_2025_JULY_84_PREVIOUSLY_INSPECTED_SESSIONS",
+        "FEB_2021_ACC_RELIANCE_24_PREVIOUSLY_INSPECTED_STOCK_SESSIONS",
+        "ALL_OTHER_PREVIOUSLY_INSPECTED_DEVELOPMENT_SESSIONS"
+      ],
+      "unknownExactDatesPolicy": "HALT_UNKNOWN_NO_HOLDOUT_SELECTION",
+      "overlapPolicy": "REJECT_HOLDOUT_IF_ANY_SYMBOL_DATE_OVERLAPS_DEVELOPMENT_OR_PRIOR_TEST_OR_RESEARCH_EXPOSURE",
+      "dateDisclosurePolicy": "PRIVATE_LOCAL_REGISTRY_WITH_PUBLIC_SANITIZED_COUNTS_AND_SHA256_ONLY",
+      "registryIntegrity": "FROZEN_BEFORE_FIRST_HOLDOUT_BAR_WITH_PROVENANCE_AND_REVIEW",
+      "neverTreatDevelopmentAsUnseen": true
+    },
+    "statisticalDecisionContract": {
+      "status": "PROPOSED_NOT_FROZEN",
+      "unit": "EXCHANGE_DAY_INCLUDING_ZERO_TRADE_DAYS",
+      "primaryEstimand": "ARITHMETIC_MEAN_DAILY_NET_INR_DIFFERENCE_CANDIDATE_MINUS_COMPARATOR_ON_MATCHED_ELIGIBLE_DAYS",
+      "candidateIds": [
+        "M",
+        "R"
+      ],
+      "comparators": [
+        "NO_TRADE",
+        "PASSIVE_INTRADAY_SAME_BUDGET",
+        "EXISTING_SIMPLE_BREAKOUT"
+      ],
+      "familyHypotheses": 6,
+      "alphaFamilyWise": 0.05,
+      "correction": "ONE_SIDED_BONFERRONI_ALPHA_0.05_DIVIDED_BY_6_PER_COMPARISON",
+      "resampling": "PAIRED_CIRCULAR_MOVING_BLOCK_BOOTSTRAP_OVER_CHRONOLOGICAL_EXCHANGE_DAYS",
+      "blockLengthExchangeDays": 5,
+      "bootstrapReplicates": 10000,
+      "seedInteger": 20261117,
+      "bootstrapStatistic": "MEAN_OF_PAIRED_DAILY_NET_INR_DIFFERENCES",
+      "lowerBoundPercentile": 0.8333333333333334,
+      "decision": "ACCEPT_ONLY_IF_EACH_OF_6_MULTIPLICITY_ADJUSTED_LOWER_BOUNDS_STRICTLY_GREATER_THAN_ZERO_AND_ALL_OTHER_GATES_PASS",
+      "zeroTradeDay": "INCLUDE_ZERO_NET_INR_FOR_FLAT_VALID_DAYS",
+      "missingOrAmbiguousFill": "HALT_UNKNOWN_REJECT_EVALUATION_NO_ZERO_IMPUTATION",
+      "incompleteDay": "HALT_UNKNOWN_REJECT_EVALUATION_NO_REPLACEMENT",
+      "resamplingOrder": "CHRONOLOGICAL_MATCHED_DAY_PAIRS_KEEP_ALL_SYMBOLS_WITHIN_DAY_AS_ONE_CLUSTER",
+      "holdoutUse": "ONE_TIME_ONLY_NO_RETUNING_OR_ALTERNATE_BOOTSTRAP_AFTER_RESULTS",
+      "caveat": "BLOCK_LENGTH_AND_REGIME_DEPENDENCE_REQUIRE_INDEPENDENT_PRE_HOLDOUT_REVIEW;NOT_A_PROVEN_STATISTICAL_EDGE"
+    }
+  },
+  "sourceLinks": [
+    "https://www.sfi.ch/en/publications/n-24-97-beat-the-market-an-effective-intraday-momentum-strategy-for-s-p500-etf-spy",
+    "https://github.com/PazSheimy/spy-intraday-momentum-oos",
+    "https://www.nseindia.in/resources/exchange-communication-holidays"
+  ],
+  "noActualDataOrStrategyTrials": true
+}
