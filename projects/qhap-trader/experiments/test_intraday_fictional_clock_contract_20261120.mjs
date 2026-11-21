@@ -69,3 +69,10 @@ test('entry cannot silently move hypothetical fill to a later favorable candle',
   assert.equal(decisionGate('09:45','09:44','10:14','ENTRY'),'HALT_UNKNOWN');
   assert.equal(decisionGate('09:45','09:44','09:46','ENTRY'),'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL');
 });
+
+test('ordinary exit cannot select a later favorable hypothetical candle',()=>{
+  assert.equal(decisionGate('09:45','09:44','09:46','EXIT'),'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL');
+  assert.equal(assessIntradayClock({decision:'09:45',observedBarStart:'09:44',proposedFillBarStart:'09:47',kind:'EXIT'}).reason,'EXIT_FILL_NOT_NEXT_OBSERVABLE_MINUTE');
+  assert.equal(decisionGate('09:45','09:44','10:14','EXIT'),'HALT_UNKNOWN');
+  assert.equal(decisionGate('14:55','14:54','14:59','FORCED_EXIT'),'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL');
+});
