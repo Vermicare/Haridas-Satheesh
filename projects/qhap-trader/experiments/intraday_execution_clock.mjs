@@ -24,6 +24,10 @@ export function assessIntradayClock({decision, observedBarStart, proposedFillBar
   if (f < d + 1) return reject('SAME_MINUTE_OR_LOOKAHEAD_FILL');
   // Entry model is fixed to the next observable minute; delayed fills need a separately preregistered model.
   if (kind === 'ENTRY' && f !== d + 1) return reject('ENTRY_FILL_NOT_NEXT_OBSERVABLE_MINUTE');
+  // Ordinary exits also use the immediately next observable minute; otherwise a replay
+  // could select a favorable later exit candle after observing future prices.
+  // Forced exits retain their separately registered 14:55–14:59 deadline window.
+  if (kind === 'EXIT' && f !== d + 1) return reject('EXIT_FILL_NOT_NEXT_OBSERVABLE_MINUTE');
   if (kind === 'FORCED_EXIT') {
     if (d !== 895) return reject('FORCED_EXIT_DECISION_MUST_BE_1455');
     if (f > 899 || f + 1 > 900) return reject('EXIT_AFTER_FLAT_DEADLINE');
