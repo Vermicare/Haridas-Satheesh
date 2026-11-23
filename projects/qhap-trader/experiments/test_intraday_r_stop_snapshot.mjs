@@ -2,10 +2,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {snapshotRStop,evaluateRStop} from './intraday_r_stop_snapshot.mjs';
-const fixture=()=>snapshotRStop({signalDelta:0.02,entryDecision:'09:45',fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}});
+const fixture=()=>snapshotRStop({signalDelta:0.02,entryDecision:'09:45',entryFillBarStart:'09:46',fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}});
 test('entry signal delta is immutable despite later changed delta',()=>{
  const s=fixture();assert.equal(s.stopInr,96);assert.equal(s.deltaAtEntry,0.02);assert.equal(Object.isFrozen(s),true);
- assert.equal(evaluateRStop({snapshot:s,completedCheckpointClose:95,checkpointVWAP:110,afterVerifiedFill:true}).exitSignal,true);
+ assert.equal(evaluateRStop({snapshot:s,completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:'10:14'}).exitSignal,true);
  assert.equal(s.stopInr,96);
 });
 test('next-minute eligibility alone cannot create an asserted hypothetical fill',()=>{
@@ -13,13 +13,17 @@ test('next-minute eligibility alone cannot create an asserted hypothetical fill'
  assert.equal(snapshotRStop({signalDelta:0.02,entryDecision:'09:45',fillClockStatus:'HALT_UNKNOWN',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}}).status,'HALT_UNKNOWN');
 });
 test('same-entry checkpoint exit prohibited; subsequent completed checkpoint only',()=>{
- assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110}).status,'HALT_UNKNOWN');
- assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:97,checkpointVWAP:110,afterVerifiedFill:true}).exitSignal,false);
+ assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:'09:46'}).status,'HALT_UNKNOWN');
+ assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:97,checkpointVWAP:110,completedCheckpointBarStart:'10:14'}).exitSignal,false);
+ for(const t of ['09:45','09:46','09:44','invalid',undefined]) {
+  assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:t}).status,'HALT_UNKNOWN');
+ }
+ assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:'09:47'}).exitSignal,true);
 });
 test('unknown price, zero delta and impossible stop fail closed',()=>{
  assert.equal(snapshotRStop({signalDelta:0,entryDecision:'09:45',fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}}).status,'HALT_UNKNOWN');
  assert.equal(snapshotRStop({signalDelta:0.6,entryDecision:'09:45',fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}}).status,'HALT_UNKNOWN');
- assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:NaN,checkpointVWAP:110,afterVerifiedFill:true}).status,'HALT_UNKNOWN');
+ assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:NaN,checkpointVWAP:110,completedCheckpointBarStart:'10:14'}).status,'HALT_UNKNOWN');
 });
 
 test('accounted-entry integration rejects missing source, missing fill, partial fill and budget excess',async()=>{
