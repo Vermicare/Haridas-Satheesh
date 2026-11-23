@@ -1,3 +1,4 @@
+import {assessIntradayClock} from './intraday_execution_clock.mjs';
 /** Fictional candidate R stop snapshot; pure research arithmetic, never a fill or order. */
 const minute = t => { if(typeof t!=='string'||!/^[0-9]{2}:[0-9]{2}$/.test(t)) return null; const h=+t.slice(0,2),m=+t.slice(3); return h<24&&m<60?h*60+m:null; };
 export function snapshotRStop({signalDelta, hypotheticalFill, entryDecision, entryFillBarStart, fillClockStatus}={}) {
@@ -19,6 +20,14 @@ export function evaluateRStop({snapshot,completedCheckpointClose,checkpointVWAP,
  if(snapshot?.status!=='FICTIONAL_STOP_SNAPSHOT_ONLY' || minute(snapshot.entryFillBarStart)===null ||
     minute(completedCheckpointBarStart)===null || minute(completedCheckpointBarStart)<=minute(snapshot.entryFillBarStart))
     return halt('ENTRY_OR_LATER_CHECKPOINT_UNVERIFIED');
+ // A completed 1-minute bar stamped 10:14 is observed at the registered 10:15 decision.
+ // Reject arbitrary later timestamps (e.g. 09:47) even when after entry.
+ const checkpointMinute=minute(completedCheckpointBarStart);
+ const decisionMinute=checkpointMinute+1;
+ const hhmm=n=>String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+ const clock=assessIntradayClock({decision:hhmm(decisionMinute),observedBarStart:completedCheckpointBarStart,
+   proposedFillBarStart:hhmm(decisionMinute+1),kind:'EXIT'});
+ if(clock.status!=='ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL') return halt('UNREGISTERED_OR_UNVERIFIED_EXIT_CHECKPOINT');
  if(![completedCheckpointClose,checkpointVWAP].every(x=>typeof x==='number'&&Number.isFinite(x)&&x>0)) return halt('INVALID_CHECKPOINT');
  return {status:'FICTIONAL_CHECKPOINT_ONLY',exitSignal:completedCheckpointClose>=checkpointVWAP||
     completedCheckpointClose<=snapshot.stopInr,decision:'NO_TRADE',realOrderSubmissionPossible:false};
