@@ -29,6 +29,9 @@ export function evaluateRStop({snapshot,completedCheckpointClose,checkpointVWAP,
    proposedFillBarStart:hhmm(decisionMinute+1),kind:'EXIT'});
  if(clock.status!=='ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL') return halt('UNREGISTERED_OR_UNVERIFIED_EXIT_CHECKPOINT');
  if(![completedCheckpointClose,checkpointVWAP].every(x=>typeof x==='number'&&Number.isFinite(x)&&x>0)) return halt('INVALID_CHECKPOINT');
+ // No independently source-bound completed-candle contract exists yet. A caller's
+ // timestamp, close and VWAP cannot establish provenance; do not emit an exit signal.
+ return halt('COMPLETED_OBSERVATION_PROVENANCE_NOT_CERTIFIED');
  return {status:'FICTIONAL_CHECKPOINT_ONLY',exitSignal:completedCheckpointClose>=checkpointVWAP||
     completedCheckpointClose<=snapshot.stopInr,decision:'NO_TRADE',realOrderSubmissionPossible:false};
 }
