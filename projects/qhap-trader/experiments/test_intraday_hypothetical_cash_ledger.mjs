@@ -1,0 +1,29 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {applyHypotheticalLedgerEvent as run} from './intraday_hypothetical_cash_ledger.mjs';
+const state={cashInr:10000,positionShares:0,costBasisInr:0};
+const base={state,side:'BUY',quantity:2,priceInr:100,chargesInr:2,chargesBasis:'EXPLICIT_UNCERTIFIED_RESEARCH_SCENARIO',fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION',fillComplete:true};
+test('buy reserves explicit costs',()=>assert.deepEqual(run(base).state,{cashInr:9798,positionShares:2,costBasisInr:202}));
+test('all-in cap includes costs',()=>assert.equal(run({...base,quantity:25,chargesInr:1}).reason,'POSITION_OR_ALL_IN_BUDGET_EXCEEDED'));
+test('unknown fees fail closed',()=>assert.equal(run({...base,chargesInr:undefined}).status,'HALT_UNKNOWN'));
+test('uncertified fee label is mandatory',()=>assert.equal(run({...base,chargesBasis:'BROKER_CERTIFIED'}).status,'HALT_UNKNOWN'));
+test('partial/uncertain fills fail closed',()=>assert.equal(run({...base,fillComplete:false}).status,'HALT_UNKNOWN'));
+test('unknown fill basis fails closed',()=>assert.equal(run({...base,fillBasis:'BROKER_ACK'}).status,'HALT_UNKNOWN'));
+test('complete hypothetical exit deducts fees',()=>{const bought=run(base).state;const sold=run({...base,state:bought,side:'SELL',quantity:2,priceInr:110,chargesInr:3});assert.equal(sold.realizedNetInr,15);assert.equal(sold.state.cashInr,10015);assert.equal(sold.realOrderSubmissionPossible,false)});
+test('partial exit remains unresolved',()=>assert.equal(run({...base,state:run(base).state,side:'SELL',quantity:1}).reason,'EXIT_NOT_FULLY_RESOLVED'));
+test('scenario never certifies fees or fills',()=>{const r=run(base);assert.equal(r.feesCertified,false);assert.equal(r.confirmedRealFill,false)});
+
+test('flat position with residual basis is rejected on both sides',()=>{
+  for (const side of ['BUY','SELL']) {
+    const result=run({...base,side,state:{cashInr:10000,positionShares:0,costBasisInr:1}});
+    assert.equal(result.status,'HALT_UNKNOWN');
+    assert.equal(result.reason,'INCONSISTENT_POSITION_COST_BASIS');
+  }
+});
+test('open position without positive cost basis is rejected',()=>{
+  for (const costBasisInr of [0]) {
+    const result=run({...base,side:'SELL',state:{cashInr:9800,positionShares:2,costBasisInr}});
+    assert.equal(result.reason,'INCONSISTENT_POSITION_COST_BASIS');
+    assert.equal(result.realOrderSubmissionPossible,false);
+  }
+});
