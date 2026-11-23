@@ -21,3 +21,18 @@ test('unknown price, zero delta and impossible stop fail closed',()=>{
  assert.equal(snapshotRStop({signalDelta:0.6,entryDecision:'09:45',fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}}).status,'HALT_UNKNOWN');
  assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:NaN,checkpointVWAP:110,afterVerifiedFill:true}).status,'HALT_UNKNOWN');
 });
+
+test('accounted-entry integration rejects missing source, missing fill, partial fill and budget excess',async()=>{
+ const {snapshotRStopFromAccountedEntry:run}=await import('./intraday_r_stop_snapshot.mjs');
+ const clock={decision:'09:45',observedBarStart:'09:44',proposedFillBarStart:'09:46'};
+ const base={sourceAuthorized:true,sessionIntegrityVerified:true,clock,side:'BUY',requestedShares:2,capitalInr:10000,
+   assertedHypotheticalFill:{shares:2,priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}};
+ const invoke=entryEvent=>run({entryEvent,signalDelta:0.02});
+ assert.equal((await invoke(base)).stopInr,96);
+ assert.equal((await invoke({...base,sourceAuthorized:false})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,assertedHypotheticalFill:null})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,assertedHypotheticalFill:{...base.assertedHypotheticalFill,shares:1}})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,assertedHypotheticalFill:{...base.assertedHypotheticalFill,priceInr:1300}})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,clock:{...clock,proposedFillBarStart:'09:45'}})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,side:'SELL'})).status,'HALT_UNKNOWN');
+});
