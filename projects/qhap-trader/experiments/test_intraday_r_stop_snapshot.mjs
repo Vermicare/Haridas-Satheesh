@@ -26,10 +26,15 @@ test('accounted-entry integration rejects missing source, missing fill, partial 
  const {snapshotRStopFromAccountedEntry:run}=await import('./intraday_r_stop_snapshot.mjs');
  const clock={decision:'09:45',observedBarStart:'09:44',proposedFillBarStart:'09:46'};
  const base={sourceAuthorized:true,sessionIntegrityVerified:true,clock,side:'BUY',requestedShares:2,capitalInr:10000,
+   state:{cashInr:10000,positionShares:0,costBasisInr:0},chargesInr:5,chargesBasis:'EXPLICIT_UNCERTIFIED_RESEARCH_SCENARIO',
    assertedHypotheticalFill:{shares:2,priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}};
  const invoke=entryEvent=>run({entryEvent,signalDelta:0.02});
  assert.equal((await invoke(base)).stopInr,96);
  assert.equal((await invoke({...base,sourceAuthorized:false})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,chargesInr:undefined})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,chargesBasis:undefined})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,chargesInr:2301})).status,'HALT_UNKNOWN');
+ assert.equal((await invoke({...base,state:{cashInr:10000,positionShares:0,costBasisInr:1}})).status,'HALT_UNKNOWN');
  assert.equal((await invoke({...base,assertedHypotheticalFill:null})).status,'HALT_UNKNOWN');
  assert.equal((await invoke({...base,assertedHypotheticalFill:{...base.assertedHypotheticalFill,shares:1}})).status,'HALT_UNKNOWN');
  assert.equal((await invoke({...base,assertedHypotheticalFill:{...base.assertedHypotheticalFill,priceInr:1300}})).status,'HALT_UNKNOWN');
