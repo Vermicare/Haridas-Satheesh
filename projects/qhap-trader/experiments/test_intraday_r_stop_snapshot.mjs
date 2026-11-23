@@ -18,7 +18,8 @@ test('same-entry checkpoint exit prohibited; subsequent completed checkpoint onl
  for(const t of ['09:45','09:46','09:44','invalid',undefined]) {
   assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:t}).status,'HALT_UNKNOWN');
  }
- assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:'09:47'}).exitSignal,true);
+ assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:'09:47'}).status,'HALT_UNKNOWN');
+ assert.equal(evaluateRStop({snapshot:fixture(),completedCheckpointClose:95,checkpointVWAP:110,completedCheckpointBarStart:'10:14'}).exitSignal,true);
 });
 test('unknown price, zero delta and impossible stop fail closed',()=>{
  assert.equal(snapshotRStop({signalDelta:0,entryDecision:'09:45',fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',hypotheticalFill:{priceInr:100,fillBasis:'EXPLICIT_HYPOTHETICAL_OBSERVATION'}}).status,'HALT_UNKNOWN');
