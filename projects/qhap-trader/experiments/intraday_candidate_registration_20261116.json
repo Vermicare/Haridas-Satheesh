@@ -71,12 +71,15 @@
       "lookback": 14,
       "delta": "median(prior14 abs(closeAtTime/VWAPAtTime-1))",
       "entry": "close < VWAP*(1-1.5*delta)",
-      "exit": "close >= VWAP OR close <= entryFillPrice*(1-2*entryDelta) OR forcedExit",
+      "exit": "lastCompletedClose >= currentCheckpointVWAP OR lastCompletedClose <= entryFillPrice*(1-2*deltaAtEntry) OR forcedExit",
       "entryDeltaMultiplier": 1.5,
       "stopDeltaMultiplier": 2,
       "longOnly": true,
       "noReentry": true,
-      "publishedProfitableClaim": false
+      "publishedProfitableClaim": false,
+      "entryDelta": "deltaAtEntry = delta evaluated at the entry signal decision checkpoint, recorded only after a separately established next-eligible-minute hypothetical fill; immutable thereafter; if fill unverified HALT_UNKNOWN",
+      "exitEvaluation": "CHECKPOINT_ONLY_AFTER_VERIFIED_FILL_NO_SAME_BAR_EXIT",
+      "ambiguousIntrabarOrdering": "HALT_UNKNOWN_NO_FAVORABLE_SEQUENCE_ASSUMPTION"
     }
   ],
   "constraints": {
