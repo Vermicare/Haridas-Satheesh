@@ -24,12 +24,14 @@ export function evaluateRStop({snapshot,completedCheckpointClose,checkpointVWAP,
  * The adapter is the single gate for source, session, chronology, budget and partial fills.
  */
 export async function snapshotRStopFromAccountedEntry({entryEvent,signalDelta}={}) {
- const {assessCandidateEvent}=await import('./intraday_candidate_replay_adapter.mjs');
+ const {assessCostAccountedCandidateEvent}=await import('./intraday_cost_accounted_adapter.mjs');
  const halt=reason=>({status:'HALT_UNKNOWN',reason,decision:'NO_TRADE',realOrderSubmissionPossible:false});
  if(!entryEvent || entryEvent.side!=='BUY') return halt('ENTRY_EVENT_REQUIRED');
- const accounted=assessCandidateEvent(entryEvent);
- if(accounted.status!=='HYPOTHETICAL_EVENT_ACCOUNTED_NOT_BROKER_CONFIRMED' ||
-    accounted.confirmedRealFill!==false) return halt(accounted.reason||'ENTRY_NOT_ACCOUNTED');
+ const accounted=assessCostAccountedCandidateEvent(entryEvent);
+ if(accounted.status!=='HYPOTHETICAL_SCENARIO_ONLY' ||
+    accounted.confirmedRealFill!==false || accounted.feesCertified!==false ||
+    accounted.state?.positionShares!==entryEvent.requestedShares ||
+    !(accounted.state?.costBasisInr>0)) return halt(accounted.reason||'ENTRY_NOT_COST_ACCOUNTED');
  return snapshotRStop({signalDelta,entryDecision:entryEvent.clock?.decision,
    fillClockStatus:'ELIGIBLE_TO_SIMULATE_NOT_A_CONFIRMED_FILL',
    hypotheticalFill:entryEvent.assertedHypotheticalFill});
